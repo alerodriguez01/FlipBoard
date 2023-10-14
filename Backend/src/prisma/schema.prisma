@@ -1,0 +1,176 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// many-to-many relation mongo db
+// https://www.prisma.io/docs/concepts/components/prisma-schema/relations/many-to-many-relations#mongodb
+
+// When you define two relations between the same two models, you need to add the name argument in the @relation attribute to disambiguate them.
+// https://www.prisma.io/docs/concepts/components/prisma-schema/relations#disambiguating-relations
+
+// MongoDB: Required fields are not a concept on a MongoDB database level.
+
+// la 'x' hace referencia a que ese campo no va a estar en la base de datos, solo se usa para hacer las relaciones
+
+model Usuario {
+  id         String @id @default(auto()) @map("_id") @db.ObjectId
+  nombre     String
+  apellido   String
+  correo     String @unique
+  contrasena String
+
+  // many-to-many (todos los cursos en los que participa el usuario como alumno)
+  cursosAlumnoModel Curso[]  @relation(name: "alumnos_cursos", fields: [cursosAlumno], references: [id]) // x
+  cursosAlumno      String[] @db.ObjectId
+
+  // many-to-many (todos los cursos en los que participa el usuario como docente)
+  cursosDocenteModel Curso[]  @relation(name: "docentes_cursos", fields: [cursosDocente], references: [id]) // x
+  cursosDocente      String[] @db.ObjectId
+
+  // one-to-many (todas las rubricas creadas por el usuario)
+  rubricas Rubrica[] // x
+
+  // one-to-many (todos los grupos integrados por el usuario)
+  gruposModel Grupo[]  @relation(fields: [grupos], references: [id]) // x
+  grupos      String[] @db.ObjectId
+
+  // one-to-many (todas las calificaciones asociadas al usuario)
+  calificaciones Calificacion[] // x
+}
+
+model Curso {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  nombre        String
+  tema          String
+  sitioWeb      String
+  descripcion   String
+  emailContacto String
+
+  // many-to-many (todos los alumnos que participan en el curso)
+  participantesUser Usuario[] @relation(name: "alumnos_cursos", fields: [participantes], references: [id]) // x
+  participantes     String[]  @db.ObjectId
+
+  // one-to-many (todos los grupos del curso)
+  grupos Grupo[]
+
+  // many-to-many (todos los docentes del curso)
+  docentesModel Usuario[] @relation(name: "docentes_cursos", fields: [docentes], references: [id]) // x
+  docentes      String[]  @db.ObjectId
+
+  // many-to-many (todas las rubricas asociadas a los grupos en el curso)
+  rubricasGruposModel Rubrica[] @relation(name: "rubricasGrupos_curso", fields: [rubricasGrupos], references: [id]) // x
+  rubricasGrupos      String[]  @db.ObjectId
+
+  // many-to-many (todas las rubricas asociadas a los alumnos en el curso)
+  rubricasAlumnosModel Rubrica[] @relation(name: "rubricasAlumnos_curso", fields: [rubricasAlumnos], references: [id]) // x
+  rubricasAlumnos      String[]  @db.ObjectId
+
+  // one-to-many (todas las calificaciones asociadas al mural)
+  calificaciones Calificacion[] // x
+
+  // one-to-many (todos los murales del curso)
+  murales Mural[] // x
+}
+
+model Rubrica {
+  id        String     @id @default(auto()) @map("_id") @db.ObjectId
+  nombre    String
+  criterios Criterio[] // embebido
+  niveles   Nivel[] // embebido
+
+  // many-to-many (todos los cursos donde se asocie la rubrica a grupos)
+  gruposModel  Curso[]  @relation(name: "rubricasGrupos_curso", fields: [gruposCursos], references: [id]) // x
+  gruposCursos String[] @db.ObjectId
+
+  // many-to-many (todos los cursos donde se asocie la rubrica a alumnos)
+  alumnosModel  Curso[]  @relation(name: "rubricasAlumnos_curso", fields: [alumnosCursos], references: [id]) // x
+  alumnosCursos String[] @db.ObjectId
+
+  // many-to-one (el usuario que creo la rubrica)
+  usuarioModel Usuario @relation(fields: [usuarioId], references: [id]) // x
+  usuarioId    String  @db.ObjectId
+
+  // one-to-many (todas las calificaciones asociadas a la rubrica)
+  calificaciones Calificacion[] // x
+
+  // one-to-many (todos los murales asociados a la rubrica)
+  murales Mural[] // x
+}
+
+type Criterio {
+  nombre        String
+  descripciones String[]
+}
+
+type Nivel {
+  nombre  String
+  puntaje Int
+}
+
+model Grupo {
+  id     String @id @default(auto()) @map("_id") @db.ObjectId
+  numero Int
+
+  // many-to-one (curso al que pertenece el grupo)
+  curso   Curso  @relation(fields: [cursoId], references: [id]) // x
+  cursoId String @db.ObjectId
+
+  // many-to-many (todos los alumnos que participan en el grupo)
+  integrantesModel Usuario[] @relation(fields: [integrantes], references: [id]) // x
+  integrantes      String[]  @db.ObjectId
+
+  // one-to-many (todas las calificaciones asociadas al grupo)
+  calificaciones Calificacion[] // x
+}
+
+model Calificacion {
+  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  valores       Int[]
+  observaciones String
+
+  // many-to-one (rubrica asociada a la calificacion)
+  rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])
+  rubricaId    String  @db.ObjectId
+
+  // many-to-one (grupo asociado a la calificacion)
+  grupoModel Grupo  @relation(fields: [grupoId], references: [id])
+  grupoId    String @db.ObjectId
+
+  // many-to-one (usuario asociado a la calificacion)
+  usuarioModel Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId    String  @db.ObjectId
+
+  // many-to-one (curso asociado a la calificacion)
+  cursoModel Curso  @relation(fields: [cursoId], references: [id])
+  cursoId    String @db.ObjectId
+
+  // many-to-one (mural asociado a la calificacion)
+  muralModel Mural  @relation(fields: [muralId], references: [id])
+  muralId    String @db.ObjectId
+}
+
+model Mural {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  nombre      String
+  contenido   String
+  descripcion String
+
+  // many-to-one (rubrica asociado al mural)
+  rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])
+  rubricaId    String  @db.ObjectId
+
+  // many-to-one (curso al que pertenece el mural)
+  cursoModel Curso  @relation(fields: [cursoId], references: [id])
+  cursoId    String @db.ObjectId
+
+  // one-to-many (todas las calificaciones asociadas al mural)
+  calificaciones Calificacion[] // x
+}
