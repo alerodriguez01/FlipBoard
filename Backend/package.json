@@ -7,7 +7,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "nodemon --exec ts-node --esm src/index.ts",
-    "testprisma": "ts-node --esm src/prisma/test_database/testprisma.ts"
+    "testprisma": "ts-node --esm src/prisma/test_database/testprisma.ts",
+    "dev-docker": "nodemon --legacy-watch --exec ts-node --esm src/index.ts"
   },
   "repository": {
     "type": "git",
