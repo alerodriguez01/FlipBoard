@@ -17,12 +17,12 @@ npm install
 
 > Se usa Atlas porque: "the MongoDB database connector uses transactions to support nested writes. Transactions require a replica set deployment. The easiest way to deploy a replica set is with Atlas. It's free to get started."; es bastante rebuscado configurar un replica set local.
 
-3. Generar los tipos y métodos del modelo de datos definido en `src/prisma/schema.prisma`:
+3. Generar los tipos y métodos del modelo de datos definido en `database/prisma/schema.prisma`:
 
 > Este comando hay que ejecutarlo cada vez que se modifique el modelo de datos.
 
 ```bash
-npx prisma generate --schema=./src/prisma/schema.prisma
+npx prisma generate --schema=./database/prisma/schema.prisma
 ```
 
 4. Iniciar el servidor:
@@ -36,7 +36,7 @@ npm run dev
 Para probar conexión a la base de datos:
 
 ```bash
-npx prisma generate --schema=./src/prisma/test_database/schematest.prisma
+npx prisma generate --schema=./database/prisma/test_schema_database/schematest.prisma
 ```
 
 ```bash
