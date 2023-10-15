@@ -17,5 +17,5 @@ docker-compose up -d
 
 3. Cargar la base de datos en Mongo desde `./Backend`:
 ```bash
-npx prisma db push --schema=./src/prisma/schema.prisma
+npx prisma db push --schema=./database/prisma/schema.prisma
 ```
