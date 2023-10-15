@@ -53,6 +53,16 @@ services:
       # Montar el directorio Backend en el contenedor para asi poder modificar el codigo sin tener que reconstruir la imagen
       - ./../Backend:/app
 
+  nextjs:
+    container_name: frontend
+    build: ./../Frontend
+    ports:
+     - 3000:3000
+    networks:
+      - mynetwork
+    volumes:
+      - ./../Frontend:/app
+
 networks:
   mynetwork:
     driver: bridge
