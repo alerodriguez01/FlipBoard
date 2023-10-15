@@ -3,7 +3,13 @@ Contenedores requeridos para levantar el backend, frontend y la base de datos de
 
 > Fuente para usar prisma con docker: https://www.youtube.com/watch?v=mj5MxsEiHe8
 
+
 ## Inicialización
+
+Shortcut:
+```bash
+cd ../Backend && npm install && cd ../Frontend && npm install && cd ../docker && docker-compose up -d
+```
 
 1. Instalar las dependencias de cada proyecto (backend y frontend):
 ```bash
