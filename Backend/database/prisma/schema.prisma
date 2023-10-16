@@ -7,7 +7,11 @@ datasource db {
 }
 
 generator client {
-  provider = "prisma-client-js"
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-openssl-3.0.x"]
+  // Prisma Client could not locate the Query Engine for runtime "linux-musl-openssl-3.0.x".
+  // This happened because Prisma Client was generated for "windows", but the actual deployment required "linux-musl-openssl-3.0.x".
+  // Add "linux-musl-openssl-3.0.x" to `binaryTargets` in the "schema.prisma" file and run `prisma generate` after saving it:
 }
 
 // many-to-many relation mongo db
@@ -19,6 +23,7 @@ generator client {
 // MongoDB: Required fields are not a concept on a MongoDB database level.
 
 // la 'x' hace referencia a que ese campo no va a estar en la base de datos, solo se usa para hacer las relaciones
+// las listas son opcionales por defecto
 
 model Usuario {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
@@ -112,7 +117,7 @@ type Criterio {
 
 type Nivel {
   nombre  String
-  puntaje Int
+  puntaje Int?
 }
 
 model Grupo {
@@ -141,20 +146,20 @@ model Calificacion {
   rubricaId    String  @db.ObjectId
 
   // many-to-one (grupo asociado a la calificacion)
-  grupoModel Grupo  @relation(fields: [grupoId], references: [id])
-  grupoId    String @db.ObjectId
+  grupoModel Grupo?  @relation(fields: [grupoId], references: [id])
+  grupoId    String? @db.ObjectId
 
   // many-to-one (usuario asociado a la calificacion)
-  usuarioModel Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId    String  @db.ObjectId
+  usuarioModel Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioId    String?  @db.ObjectId
 
   // many-to-one (curso asociado a la calificacion)
   cursoModel Curso  @relation(fields: [cursoId], references: [id])
   cursoId    String @db.ObjectId
 
   // many-to-one (mural asociado a la calificacion)
-  muralModel Mural  @relation(fields: [muralId], references: [id])
-  muralId    String @db.ObjectId
+  muralModel Mural?  @relation(fields: [muralId], references: [id])
+  muralId    String? @db.ObjectId
 }
 
 model Mural {
@@ -164,8 +169,8 @@ model Mural {
   descripcion String
 
   // many-to-one (rubrica asociado al mural)
-  rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])
-  rubricaId    String  @db.ObjectId
+  rubricaModel Rubrica? @relation(fields: [rubricaId], references: [id])
+  rubricaId    String?  @db.ObjectId
 
   // many-to-one (curso al que pertenece el mural)
   cursoModel Curso  @relation(fields: [cursoId], references: [id])

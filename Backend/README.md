@@ -30,16 +30,3 @@ npx prisma generate --schema=./database/prisma/schema.prisma
 ```bash
 npm run dev
 ```
-
----
-
-Para probar conexión a la base de datos:
-
-```bash
-npx prisma generate --schema=./database/prisma/test_schema_database/schematest.prisma
-```
-
-```bash
-npm run testprisma
-```
-Deberia crear un `User` y un `Post` en la base de datos y mostrar en consola el usuario creado (con el `Post` embebido).
