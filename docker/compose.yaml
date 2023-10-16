@@ -44,7 +44,7 @@ services:
       - mongo-db
     environment:
       # se conecta por la red interna a mongo-db (mongo-db:27017)
-      DATABASE_URL: "mongodb://admin:root@mongo-db:27017/flipboard?authSource=admin"
+      DATABASE_URL: "mongodb://admin:root@mongo-db:27017/flipboard?authSource=admin&directConnection=true"
     ports:
       - 3100:3100
     networks:
