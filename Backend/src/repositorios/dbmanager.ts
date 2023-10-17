@@ -1,14 +1,19 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client'
 
-// Prisma Singleton
-// Prevents creating multiple clients
-const prismaClientSingleton = () => {
-  return new PrismaClient();
-}
-type PrismaClientSingleton = ReturnType<typeof prismaClientSingleton>;
+// Singleton Class para el cliente de prisma
+// Prevents using multiple instances of PrismaClient
+class PrismaSingleton {
+    private static instance: PrismaClient;
 
-const globalForPrisma = globalThis as unknown as {
-  prisma: PrismaClientSingleton | undefined
+    private constructor() { }
+
+    public static getInstance(): PrismaClient {
+        if (!PrismaSingleton.instance) {
+            PrismaSingleton.instance = new PrismaClient()
+        }
+
+        return PrismaSingleton.instance
+    }
 }
-const prisma = globalForPrisma.prisma ?? prismaClientSingleton();
-export default prisma;
+
+export default PrismaSingleton;
