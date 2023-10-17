@@ -179,3 +179,8 @@ model Mural {
   // one-to-many (todas las calificaciones asociadas al mural)
   calificaciones Calificacion[] // x
 }
+
+model Salt {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  salt  String
+}

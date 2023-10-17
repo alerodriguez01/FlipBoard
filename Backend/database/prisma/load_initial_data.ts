@@ -1,10 +1,11 @@
-import { PrismaClient } from '@prisma/client';
 import express from "express";
-
-const prisma = new PrismaClient();
+import PrismaSingleton from "../../src/repositorios/dbmanager.js";
+import bcryptjs from 'bcryptjs';
 
 // Router from express
 export const router = express.Router();
+
+const prisma = PrismaSingleton.getInstance();
 
 router.get("/", async (req, res) => {
   try {
@@ -16,13 +17,18 @@ router.get("/", async (req, res) => {
 });
 
 async function load_initial_data() {
+
+  // crear y guardar salt de ejemplo
+  const salt = await bcryptjs.genSalt();
+  await prisma.salt.create({data: {salt: salt}});
+
   // Crear usuarios de ejemplo
   const usuario1 = await prisma.usuario.create({
     data: {
       nombre: 'Juan',
       apellido: 'Pérez',
       correo: 'juan@example.com',
-      contrasena: 'secreta123',
+      contrasena: await bcryptjs.hash('secreta123',salt),
     },
   });
 
@@ -31,7 +37,7 @@ async function load_initial_data() {
       nombre: 'Maria',
       apellido: 'Gómez',
       correo: 'maria@example.com',
-      contrasena: 'clave123',
+      contrasena: await bcryptjs.hash('clave123',salt),
     },
   });
 
