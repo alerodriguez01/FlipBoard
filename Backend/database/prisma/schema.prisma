@@ -54,9 +54,9 @@ model Usuario {
 model Curso {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   nombre        String
-  tema          String
-  sitioWeb      String
-  descripcion   String
+  tema          String?
+  sitioWeb      String?
+  descripcion   String?
   emailContacto String
 
   // many-to-many (todos los alumnos que participan en el curso)
@@ -166,7 +166,7 @@ model Mural {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   nombre      String
   contenido   String
-  descripcion String
+  descripcion String?
 
   // many-to-one (rubrica asociado al mural)
   rubricaModel Rubrica? @relation(fields: [rubricaId], references: [id])
