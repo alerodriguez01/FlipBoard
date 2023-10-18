@@ -1,7 +1,7 @@
 import { Usuario } from '@prisma/client';
 import PrismaSingleton from './dbmanager.js';
 import bcryptjs from 'bcryptjs';
-import { NotFoundError } from '../excepciones/RepoErrors.js';
+import { NotFoundError } from '../../excepciones/RepoErrors.js';
 
 const prisma = PrismaSingleton.getInstance();
 

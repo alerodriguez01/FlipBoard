@@ -1,5 +1,5 @@
 import express from "express";
-import PrismaSingleton from "../../src/repositorios/dbmanager.js";
+import PrismaSingleton from "../../src/daos/prisma/dbmanager.js";
 import bcryptjs from 'bcryptjs';
 
 // Router from express
