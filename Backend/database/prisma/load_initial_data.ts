@@ -1,5 +1,5 @@
 import express from "express";
-import PrismaSingleton from "../../src/repositorios/dbmanager.js";
+import PrismaSingleton from "../../src/persistencia/prisma/dao/dbmanager.js";
 import bcryptjs from 'bcryptjs';
 
 // Router from express
@@ -70,7 +70,7 @@ async function load_initial_data() {
         // cuando hay que asociar una lista de objetos, se usa el nombre del campo con 'x' en el schema.prisma
         // https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#connect
         // si hay que asociar solo un id, se coloca el campoId: id
-        connect: [{ id: curso1.id }, { id: curso2.id }]
+        connect: [{ id: curso1.id }, { id: curso2.id }] // esto agregaría los cursos 1 y 2 al usuario 1 (NO REEMPLAZA)
       },
       cursosDocenteModel: {
         connect: [{ id: curso1.id }]
