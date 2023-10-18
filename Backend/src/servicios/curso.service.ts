@@ -1,25 +1,24 @@
-import { Curso } from "@prisma/client";
-import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { Curso, Mural, Rubrica } from "@prisma/client";
 import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
+import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 
+
+// esto no lo pude hacer andar
 export type CursoWithMuralesAndRubricaAsigned = Curso & {
-    murales: {
-        id: string;
-        nombre: string;
-        nombreRubricaAsignada: string;
+    murales: Mural & {
+        rubricaAsignada: Rubrica | null;
     }[];
-}
+};
 
 const muralRepository = MuralRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
 const cursoRepository = CursoRepository.getInstance();
 
 /*
-    Cargar curso con murales (id y nombre, y mural tiene que traer la rúbrica 
-    asignada -solo nombre de rúbrica asignada-)
+    Cargar curso con murales y opcionalmente la rúbrica asignada a cada mural
 */
-async function getCursoWithMuralesAndRubrica(idCurso: string): Promise<CursoWithMuralesAndRubricaAsigned | null> {
+async function getCursoWithMurales(idCurso: string, rubrica: boolean) { // : Promise<CursoWithMuralesAndRubricaAsigned | null> {
 
     const curso = await cursoRepository.getCursoById(idCurso);
 
@@ -27,22 +26,26 @@ async function getCursoWithMuralesAndRubrica(idCurso: string): Promise<CursoWith
 
     const murales = await muralRepository.getMuralesFromCurso(idCurso);
 
-    // Cuando se utiliza map con funciones asíncronas, se obtiene un array de promesas 
-    // pendientes. Para resolver esto, se usa Promise.all (espera a que todas las promesas 
-    // se resuelvan antes de devolver el resultado.)
-    const muralesWithRubricaName = await Promise.all(murales.map(async mural => {
+    // Si desea traer la rubrica asociada a cada mural
+    if (rubrica) {
+        // Cuando se utiliza map con funciones asíncronas, se obtiene un array de promesas 
+        // pendientes. Para resolver esto, se usa Promise.all (espera a que todas las promesas 
+        // se resuelvan antes de devolver el resultado.)
+        const muralesWithRubrica = await Promise.all(murales.map(async (mural: Mural) => {
 
-        const rubrica = mural.rubricaId ? await rubricaRepository.getRubricaById(mural.rubricaId) : null;
+            const rubrica = mural.rubricaId ? await rubricaRepository.getRubricaById(mural.rubricaId) : null;
 
-        return {
-            id: mural.id,
-            nombre: mural.nombre,
-            nombreRubricaAsignada: rubrica ? rubrica.nombre : "No asignada"
-        };
+            return {
+                ...mural,
+                rubricaAsignada: rubrica
+            };
 
-    }));
+        }));
 
-    return { ...curso, murales: muralesWithRubricaName };
+        return { ...curso, murales: muralesWithRubrica };
+    }
+
+    return { ...curso, murales };
 
 }
 
@@ -59,4 +62,4 @@ async function getCursoById(idCurso: string): Promise<Curso | null> {
 
 // demas metodos
 
-export default { getCursoWithMuralesAndRubrica, getCursoById };
+export default { getCursoWithMurales, getCursoById };
