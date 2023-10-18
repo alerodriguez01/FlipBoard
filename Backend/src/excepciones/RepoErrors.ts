@@ -1,6 +1,8 @@
-export default class SaltNotFoundError extends Error {
-  constructor () {
-    super('No se ha podido encontrar el Salt en la BDD');
-    this.name = 'SaltNotFoundError'
+class NotFoundError extends Error {
+  constructor (model: string) {
+    super(`No se ha podido encontrar '${model}' en la BDD`);
+    this.name = `${model}NotFoundError`;
   }
 }
+
+export { NotFoundError }
