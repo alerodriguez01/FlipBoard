@@ -1,5 +1,5 @@
-import CalificacionDataSource from "./datasource/calificacion.datasource.js";
-import { CalificacionPrismaDAO } from "../daos/prisma/calificacion.dao.js";
+import CalificacionDataSource from "../datasource/calificacion.datasource.js";
+import { CalificacionPrismaDAO } from "../prisma/dao/calificacion.dao.js";
 
 
 export class CalificacionRepository implements CalificacionDataSource {

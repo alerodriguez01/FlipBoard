@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import GrupoDataSource from "../../repositorios/datasource/grupo.datasource.js";
+import GrupoDataSource from "../../datasource/grupo.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
 
 export class GrupoPrismaDAO implements GrupoDataSource {

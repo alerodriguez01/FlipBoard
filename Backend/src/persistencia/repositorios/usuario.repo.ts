@@ -1,5 +1,5 @@
-import UsuarioDataSource from "./datasource/usuario.datasource.js";
-import { UsuarioPrismaDAO } from "../daos/prisma/usuario.dao.js";
+import UsuarioDataSource from "../datasource/usuario.datasource.js";
+import { UsuarioPrismaDAO } from "../prisma/dao/usuario.dao.js";
 import { Usuario } from "@prisma/client";
 
 

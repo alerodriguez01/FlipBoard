@@ -1,5 +1,5 @@
-import GrupoDataSource from "./datasource/grupo.datasource.js";
-import { GrupoPrismaDAO } from "../daos/prisma/grupo.dao.js";
+import GrupoDataSource from "../datasource/grupo.datasource.js";
+import { GrupoPrismaDAO } from "../prisma/dao/grupo.dao.js";
 
 
 export class GrupoRepository implements GrupoDataSource {

@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import CalificacionDataSource from "../../repositorios/datasource/calificacion.datasource.js";
+import CalificacionDataSource from "../../datasource/calificacion.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
 
 export class CalificacionPrismaDAO implements CalificacionDataSource {

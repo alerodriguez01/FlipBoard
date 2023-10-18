@@ -1,7 +1,7 @@
 import { Curso } from "@prisma/client";
-import { CursoRepository } from "../repositorios/curso.repo.js";
-import { MuralRepository } from "../repositorios/mural.repo.js";
-import { RubricaRepository } from "../repositorios/rubrica.repo.js";
+import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
+import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 
 export type CursoWithMuralesAndRubricaAsigned = Curso & {
     murales: {

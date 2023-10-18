@@ -1,6 +1,6 @@
 import { Rubrica, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
-import { RubricaDataSource } from "../../repositorios/datasource/rubrica.datasource.js";
+import { RubricaDataSource } from "../../datasource/rubrica.datasource.js";
 
 
 export class RubricaPrismaDAO implements RubricaDataSource {

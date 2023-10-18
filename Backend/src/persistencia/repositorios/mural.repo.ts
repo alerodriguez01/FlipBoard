@@ -1,5 +1,5 @@
-import { MuralPrismaDAO } from "../daos/prisma/mural.dao.js";
-import MuralDataSource from "./datasource/mural.datasource.js";
+import { MuralPrismaDAO } from "../prisma/dao/mural.dao.js";
+import MuralDataSource from "../datasource/mural.datasource.js";
 
 export class MuralRepository implements MuralDataSource {
 

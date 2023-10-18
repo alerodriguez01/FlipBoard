@@ -1,5 +1,5 @@
 import { Curso, PrismaClient } from "@prisma/client";
-import CursoDataSource from "../../repositorios/datasource/curso.datasource.js";
+import CursoDataSource from "../../datasource/curso.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
 
 export class CursoPrismaDAO implements CursoDataSource {

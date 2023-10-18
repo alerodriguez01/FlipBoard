@@ -1,5 +1,5 @@
-import { RubricaPrismaDAO } from "../daos/prisma/rubrica.dao.js";
-import { RubricaDataSource } from "./datasource/rubrica.datasource.js";
+import { RubricaPrismaDAO } from "../prisma/dao/rubrica.dao.js";
+import { RubricaDataSource } from "../datasource/rubrica.datasource.js";
 
 
 export class RubricaRepository implements RubricaDataSource {

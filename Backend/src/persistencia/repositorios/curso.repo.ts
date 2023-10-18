@@ -1,6 +1,6 @@
 import { Curso } from "@prisma/client";
-import CursoDataSource from "./datasource/curso.datasource.js";
-import { CursoPrismaDAO } from "../daos/prisma/curso.dao.js";
+import CursoDataSource from "../datasource/curso.datasource.js";
+import { CursoPrismaDAO } from "../prisma/dao/curso.dao.js";
 
 
 export class CursoRepository implements CursoDataSource {

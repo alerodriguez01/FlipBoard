@@ -1,6 +1,6 @@
 import { Mural, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
-import MuralDataSource from "../../repositorios/datasource/mural.datasource.js";
+import MuralDataSource from "../../datasource/mural.datasource.js";
 
 export class MuralPrismaDAO implements MuralDataSource {
 

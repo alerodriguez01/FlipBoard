@@ -1,8 +1,8 @@
 import { Usuario } from '@prisma/client';
 import bcryptjs from 'bcryptjs';
-import { NotFoundError } from '../../excepciones/RepoErrors.js';
+import { NotFoundError } from '../../../excepciones/RepoErrors.js';
 import { PrismaClient } from "@prisma/client";
-import UsuarioDataSource from "../../repositorios/datasource/usuario.datasource.js";
+import UsuarioDataSource from "../../datasource/usuario.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
 
 export class UsuarioPrismaDAO implements UsuarioDataSource {
