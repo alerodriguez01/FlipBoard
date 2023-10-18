@@ -1,9 +1,11 @@
 import { router as loadInitialData } from "../database/prisma/load_initial_data.js";
 import express from "express";
+import logger from "morgan";
 
 const app = express();
 
 app.use(express.json());
+app.use(logger('dev'))
 
 app.get("/", (req, res) => {
     res.status(200).send("Hola Mundo!");
