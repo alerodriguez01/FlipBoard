@@ -25,5 +25,19 @@ export class MuralRepository implements MuralDataSource {
         return await this.muralDAO.getMuralesFromCurso(idCurso);
     }
 
+    /*
+        Traer mural por id
+    */
+    async getMuralById(idMural: string) {
+        return await this.muralDAO.getMuralById(idMural);
+    }
+
+    /*
+        Traer mural por id junto a su rubrica asociada
+    */
+    async getMuralByIdWithRubrica(idMural: string) {
+        return await this.muralDAO.getMuralByIdWithRubrica(idMural);
+    }
+
     // demas metodos
 }

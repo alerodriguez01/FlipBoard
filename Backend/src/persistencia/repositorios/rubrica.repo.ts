@@ -20,7 +20,7 @@ export class RubricaRepository implements RubricaDataSource {
     }
 
     /*
-        Cargar murales de un curso
+        Obtener rubrica por id
     */
     async getRubricaById(id: string) {
         return await this.rubricaDAO.getRubricaById(id);

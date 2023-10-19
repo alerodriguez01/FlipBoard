@@ -35,6 +35,39 @@ export class MuralPrismaDAO implements MuralDataSource {
 
     }
 
+    /*
+        Traer mural por id
+    */
+    public async getMuralById(idMural: string) : Promise<Mural | null> {
+
+        const mural = await this.prisma.mural.findUnique({
+            where: {
+                id: idMural
+            }
+        })
+
+        return mural;
+
+    }
+
+    /*
+        Traer mural por id junto a su rubrica asociada
+    */
+    public async getMuralByIdWithRubrica(idMural: string) : Promise<Mural | null> {
+
+        const mural = await this.prisma.mural.findUnique({
+            where: {
+                id: idMural
+            },
+            include: {
+                rubricaModel: true
+            }
+        })
+
+        return mural;
+
+    }
+
     // demas metodos
 }
 
