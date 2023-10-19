@@ -182,5 +182,6 @@ model Mural {
 
 model Salt {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
+  usuarioId String @db.ObjectId
   salt  String
 }
