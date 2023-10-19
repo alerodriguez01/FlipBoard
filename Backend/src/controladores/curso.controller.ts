@@ -26,7 +26,20 @@ async function getCursoById(req: Request, res: Response) {
     return res.status(200).json(curso);
 }
 
-// demas metodos
+/*
+    Guardar curso
+*/
+async function saveCurso(req: Request, res: Response) {
+
+    const curso = req.body;
+
+    const cursoSaved = await service.saveCurso(curso);
+
+    return res.status(201).json(cursoSaved);
+
+}
+
+// demas metodos 
 
 
-export default { getCursoById };
+export default { getCursoById, saveCurso };

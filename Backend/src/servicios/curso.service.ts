@@ -60,6 +60,26 @@ async function getCursoById(idCurso: string): Promise<Curso | null> {
 
 }
 
+/*
+    Guardar curso
+*/
+export type CursoBody = {
+    nombre: string,
+    tema?: string,
+    sitioWeb?: string,
+    descripcion?: string,
+    emailContacto: string,
+    docentes: string[],
+}
+async function saveCurso(body: Curso) : Promise<Curso> {
+
+    
+
+    const cursoSaved = await cursoRepository.saveCurso(body);
+
+    return cursoSaved;
+}
+
 // demas metodos
 
-export default { getCursoWithMurales, getCursoById };
+export default { getCursoWithMurales, getCursoById, saveCurso };

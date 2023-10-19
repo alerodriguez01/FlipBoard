@@ -27,5 +27,12 @@ export class CursoRepository implements CursoDataSource {
         return await this.cursoDAO.getCursoById(idCurso);
     }
 
+    /*
+        Guardar curso
+    */
+    async saveCurso(curso: Curso): Promise<Curso> {
+        return await this.cursoDAO.saveCurso(curso);
+    }
+
     // demas metodos
 }

@@ -22,7 +22,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
 
 
     /*
-        Cargar murales de un curso
+        Obtener rubrica por id
     */
     async getRubricaById(id: string) : Promise<Rubrica | null> {
 
