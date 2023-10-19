@@ -3,18 +3,20 @@ import express from "express";
 import logger from "morgan";
 import cursoRouter from "./rutas/curso.route.js";
 import rubricaRouter from "./rutas/rubrica.route.js";
+import muralRouter from "./rutas/mural.route.js";
 
 const app = express();
 
 app.use(express.json());
 app.use(logger('dev'))
 
-app.get("/", (req, res) => {
-    res.status(200).send("Hola Mundo!");
+app.get("/api", (req, res) => {
+    res.status(200).send("<h1>Flipboard API!</h1>");
 });
 
 app.use("/api/cursos", cursoRouter);
 app.use("/api/rubricas", rubricaRouter);
+app.use("/api/murales", muralRouter);
 
 
 // Cargar datos iniciales en la base de datos
