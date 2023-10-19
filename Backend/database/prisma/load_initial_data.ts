@@ -19,8 +19,8 @@ router.get("/", async (req, res) => {
 async function load_initial_data() {
 
   // crear y guardar salt de ejemplo
-  const salt = await bcryptjs.genSalt();
-  await prisma.salt.create({data: {salt: salt}});
+  const salt1 = await bcryptjs.genSalt();
+  const salt2 = await bcryptjs.genSalt();
 
   // Crear usuarios de ejemplo
   const usuario1 = await prisma.usuario.create({
@@ -28,7 +28,7 @@ async function load_initial_data() {
       nombre: 'Juan',
       apellido: 'Pérez',
       correo: 'juan@example.com',
-      contrasena: await bcryptjs.hash('secreta123',salt),
+      contrasena: await bcryptjs.hash('secreta123',salt1),
     },
   });
 
@@ -37,8 +37,23 @@ async function load_initial_data() {
       nombre: 'Maria',
       apellido: 'Gómez',
       correo: 'maria@example.com',
-      contrasena: await bcryptjs.hash('clave123',salt),
+      contrasena: await bcryptjs.hash('clave123',salt2),
     },
+  });
+
+  //guardar salts
+  await prisma.salt.create({
+    data: {
+      salt: salt1,
+      usuarioId: usuario1.id
+    }
+  });
+
+  await prisma.salt.create({
+    data: {
+      salt: salt2,
+      usuarioId: usuario2.id
+    }
   });
 
   // Crear cursos de ejemplo

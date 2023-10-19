@@ -5,4 +5,10 @@ class NotFoundError extends Error {
   }
 }
 
-export { NotFoundError }
+class InvalidValueError extends Error {
+  constructor (model: string, attr: string){
+    super(`Valor invalido para el atributo ${attr} de ${model}`)
+    this.name = `${model}Invalid${attr}ValueError`
+  }
+}
+export { NotFoundError, InvalidValueError }
