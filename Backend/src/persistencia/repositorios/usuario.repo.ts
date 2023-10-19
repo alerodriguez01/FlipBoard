@@ -23,8 +23,15 @@ export class UsuarioRepository implements UsuarioDataSource {
     /*
         Crear usuario
     */
-    async createUser(user: Usuario) {
-        return await this.usuarioDAO.createUser(user);
+    async createUsuario(user: Usuario) {
+        return await this.usuarioDAO.createUsuario(user);
+    }
+
+    /*
+        Obtener usuario por id
+    */
+    async getUsuarioById(id: string) {
+        return await this.usuarioDAO.getUsuarioById(id);
     }
 
     // demas metodos

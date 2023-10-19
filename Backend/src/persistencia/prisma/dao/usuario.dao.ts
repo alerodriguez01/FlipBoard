@@ -23,7 +23,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   }
 
   // Crear usuario
-  async createUser(user: Usuario) : Promise<Usuario>{
+  async createUsuario(user: Usuario) : Promise<Usuario>{
 
     let newUser = {
       nombre: user.nombre,
@@ -43,6 +43,18 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     return userCreated;
 
   }
+
+  /*
+    Obtener usuario por id
+  */
+ async getUsuarioById(id: string): Promise<Usuario | null> {
+    const user = this.prisma.usuario.findUnique({
+      where: {
+        id
+    },
+    });
+    return user;
+ }
 
   // demas metodos
 }
