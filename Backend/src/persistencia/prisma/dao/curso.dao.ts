@@ -36,7 +36,7 @@ export class CursoPrismaDAO implements CursoDataSource {
     /*
         Guardar curso
     */
-    async saveCurso(curso: Curso): Promise<Curso> {
+    async createCurso(curso: Curso): Promise<Curso> {
         const cursoSaved = await this.prisma.curso.create({
             data: curso
         });

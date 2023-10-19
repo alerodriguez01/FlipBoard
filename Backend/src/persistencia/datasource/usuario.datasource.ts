@@ -1,6 +1,7 @@
 import { Usuario } from "@prisma/client";
 
 export default interface UsuarioDataSource {
-    createUser(user: Usuario): Promise<Usuario>;
+    createUsuario(user: Usuario): Promise<Usuario>;
+    getUsuarioById(id: string): Promise<Usuario | null>;
     // ir agregando métodos restantes 
 }

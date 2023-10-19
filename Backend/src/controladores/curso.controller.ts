@@ -1,6 +1,7 @@
 import { Curso } from "@prisma/client";
 import service from "../servicios/curso.service.js";
 import { Request, Response } from "express";
+import { NotFoundError } from "../excepciones/RepoErrors.js";
 
 
 /*
@@ -35,7 +36,7 @@ async function saveCurso(req: Request, res: Response) {
     const cursoBody = req.body;
 
     // Verifico que las claves obligatiorias esten
-    if(!cursoBody.nombre || !cursoBody.emailContacto) return res.status(400).json("Faltan datos obligatorios");
+    if(!cursoBody.nombre || !cursoBody.emailContacto || !cursoBody.docentes || cursoBody.docentes.length == 0) return res.status(400).json("Faltan datos obligatorios");
     
     const curso = {
         nombre: cursoBody.nombre,
@@ -46,9 +47,13 @@ async function saveCurso(req: Request, res: Response) {
         docentes: cursoBody.docentes // si no existe docentes, guarda undefined
     }
     
-    const cursoSaved = await service.saveCurso(curso as Curso);
+    try {
+        const cursoSaved = await service.createCurso(curso as Curso);
+        return res.status(201).json(cursoSaved);
+    } catch (error) {
+        if(error instanceof NotFoundError) return res.status(404).json(error.message); // No existe el docente
+    }
 
-    return res.status(201).json(cursoSaved);
 
 }
 

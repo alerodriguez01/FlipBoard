@@ -2,6 +2,8 @@ import { Curso, Mural, Rubrica } from "@prisma/client";
 import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
+import { NotFoundError } from "../excepciones/RepoErrors.js";
 
 
 // esto no lo pude hacer andar
@@ -14,6 +16,7 @@ export type CursoWithMuralesAndRubricaAsigned = Curso & {
 const muralRepository = MuralRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
 const cursoRepository = CursoRepository.getInstance();
+const usuarioRepository = UsuarioRepository.getInstance();
 
 /*
     Cargar curso con murales y opcionalmente la rúbrica asignada a cada mural
@@ -63,23 +66,18 @@ async function getCursoById(idCurso: string): Promise<Curso | null> {
 /*
     Guardar curso
 */
-export type CursoBody = {
-    nombre: string,
-    tema?: string,
-    sitioWeb?: string,
-    descripcion?: string,
-    emailContacto: string,
-    docentes: string[],
-}
-async function saveCurso(body: Curso) : Promise<Curso> {
+async function createCurso(body: Curso) : Promise<Curso> {
 
-    
+    // Verificar existencia de docentes
+    const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
 
-    const cursoSaved = await cursoRepository.saveCurso(body);
+    if(!docente) throw new NotFoundError("Docente");
+
+    const cursoSaved = await cursoRepository.createCurso(body);
 
     return cursoSaved;
 }
 
 // demas metodos
 
-export default { getCursoWithMurales, getCursoById, saveCurso };
+export default { getCursoWithMurales, getCursoById, createCurso };

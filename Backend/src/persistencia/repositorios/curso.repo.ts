@@ -30,8 +30,8 @@ export class CursoRepository implements CursoDataSource {
     /*
         Guardar curso
     */
-    async saveCurso(curso: Curso): Promise<Curso> {
-        return await this.cursoDAO.saveCurso(curso);
+    async createCurso(curso: Curso): Promise<Curso> {
+        return await this.cursoDAO.createCurso(curso);
     }
 
     // demas metodos
