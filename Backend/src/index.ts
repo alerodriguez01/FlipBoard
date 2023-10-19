@@ -4,6 +4,7 @@ import logger from "morgan";
 import cursoRouter from "./rutas/curso.route.js";
 import rubricaRouter from "./rutas/rubrica.route.js";
 import muralRouter from "./rutas/mural.route.js";
+import usuarioRouter from "./rutas/usuario.route.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.get("/api", (req, res) => {
 app.use("/api/cursos", cursoRouter);
 app.use("/api/rubricas", rubricaRouter);
 app.use("/api/murales", muralRouter);
+app.use("/api/usuarios", usuarioRouter);
 
 
 // Cargar datos iniciales en la base de datos
