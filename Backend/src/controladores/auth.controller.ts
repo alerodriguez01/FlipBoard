@@ -6,6 +6,8 @@ async function login(req: Request, res: Response) {
     
     const { correo, contrasena } = req.body;
 
+    if(!correo || !contrasena) return res.status(400).json('Datos incompletos');
+
     try {
         const usuario = await usuarioService.login(correo, contrasena);
         return res.status(200).json(usuario);
