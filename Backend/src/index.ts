@@ -6,11 +6,13 @@ import rubricaRouter from "./rutas/rubrica.route.js";
 import muralRouter from "./rutas/mural.route.js";
 import usuarioRouter from "./rutas/usuario.route.js";
 import authRouter from "./rutas/auth.route.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 
 app.use(express.json());
-app.use(logger('dev'))
+app.use(logger('dev'));
+app.use(cookieParser());
 
 app.get("/api", (req, res) => {
     res.status(200).send("<h1>Flipboard API!</h1>");

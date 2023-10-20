@@ -4,6 +4,8 @@ import validator from 'validator';
 import bcryptjs from 'bcryptjs';
 import { InvalidValueError } from "../excepciones/RepoErrors.js";
 import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
+import jwt from 'jsonwebtoken';
+import { TokenInvalido } from "../excepciones/TokenError.js";
 
 const usuarioRepository = UsuarioRepository.getInstance();
 const saltRepository = SaltRepository.getInstance();
@@ -67,7 +69,11 @@ async function createUsuario(user: Usuario) {
 /*
     login de usuario
 */
-async function login(correo: string, contrasena: string) {
+type UsuarioWithJWT = Usuario & {
+    token: string
+}
+
+async function login(correo: string, contrasena: string): Promise<UsuarioWithJWT> {
 
     // check if mail is valid
     if (!validator.default.isEmail(correo))
@@ -94,8 +100,43 @@ async function login(correo: string, contrasena: string) {
 
     if (usuario.contrasena !== hash) throw new InvalidValueError('Usuario', 'Correo o contrasena');
 
-    return usuario;
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const token = generateJWT(usuario);
+
+    return { ...usuario, token };
 
 }
 
-export default { getUsuarioById, createUsuario, login };
+
+// Funciones extras
+
+function generateJWT(usuario: Usuario): string {
+
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const payload = {
+        id: usuario.id,
+        nombre: usuario.nombre,
+        apellido: usuario.apellido,
+        correo: usuario.correo,
+        cursosAlumno: usuario.cursosAlumno,
+        cursosDocente: usuario.cursosDocente,
+    }
+
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY || "", { expiresIn: '48h' });
+
+    return token;
+}
+
+function verifyJWT(token: string): Usuario {
+
+    try {
+        const payload = jwt.verify(token, process.env.JWT_SECRET_KEY || "") as Usuario; // no contiene la contrasena hasheada
+        return payload;
+
+    } catch (error) {
+        throw new TokenInvalido();
+    }
+
+}
+
+export default { getUsuarioById, createUsuario, login, verifyJWT };

@@ -43,7 +43,7 @@ model Usuario {
   // one-to-many (todas las rubricas creadas por el usuario)
   rubricas Rubrica[] // x
 
-  // one-to-many (todos los grupos integrados por el usuario)
+  // many-to-many (todos los grupos integrados por el usuario)
   gruposModel Grupo[]  @relation(fields: [grupos], references: [id]) // x
   grupos      String[] @db.ObjectId
 

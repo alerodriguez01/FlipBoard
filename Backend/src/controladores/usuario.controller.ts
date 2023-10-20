@@ -4,7 +4,7 @@ import { Usuario } from "@prisma/client";
 import { InvalidValueError } from "../excepciones/RepoErrors.js";
 
 /*
-    Obtener usuario por id
+    Obtener usuario por id (opcionalmente con sus cursos)
 */
 async function getUsuarioById(req: Request, res: Response) {
 
