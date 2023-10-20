@@ -4,9 +4,9 @@ import validator from 'validator';
 import bcryptjs from 'bcryptjs';
 import { InvalidValueError } from "../excepciones/RepoErrors.js";
 import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
-import { UsuarioPrismaDAO } from "../persistencia/prisma/dao/usuario.dao.js";
 
 const usuarioRepository = UsuarioRepository.getInstance();
+const saltRepository = SaltRepository.getInstance();
 
 async function getUsuarioById(idUsuario: string) {
 
@@ -18,8 +18,10 @@ async function getUsuarioById(idUsuario: string) {
 
 async function createUsuario(user: Usuario) {
     
+    const usuario = await usuarioRepository.getUsuarioByCorreo(user.correo);
+
     // check if mail is valid + check uniqueness
-    if (!validator.default.isEmail(user.correo))
+    if (!validator.default.isEmail(user.correo) || usuario !== null)
         throw new InvalidValueError('Usuario', 'Correo');
 
     /**
@@ -33,13 +35,15 @@ async function createUsuario(user: Usuario) {
         throw new InvalidValueError('Usuario', 'Contrasenia');
 
     const salt = await bcryptjs.genSalt(15);
-    const newUser = await UsuarioPrismaDAO.getInstance().createUsuario({
+    const newUser = await usuarioRepository.createUsuario({
         ...user, 
         contrasena: await bcryptjs.hash(user.contrasena, salt)
     });
     
-    SaltRepository.getInstance().createSalt({id: "1", salt: salt, usuarioId: newUser.id})
-
+    // asincronico (esto es, una vez que se haya guardado el usuario, se inicia el guardado del salt, pero se continua con el return)
+    saltRepository.createSalt({id: "1", salt: salt, usuarioId: newUser.id})
+    
+    // retorno el usuario creado (aunque no haya terminado de guardar el salt)
     return newUser;
 }
 
