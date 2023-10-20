@@ -26,19 +26,8 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   // Crear usuario
   async createUsuario(user: Usuario): Promise<Usuario> {
 
-    let newUser = {
-      nombre: user.nombre,
-      apellido: user.apellido,
-      correo: user.correo,
-    }
-
-    const salt = await this.prisma.salt.findFirst();
-
-    if (!salt) throw new NotFoundError("Salt");
-    const pass = await bcryptjs.hash(user.contrasena, salt.salt);
-
     const userCreated = await this.prisma.usuario.create({
-      data: { ...newUser, contrasena: pass }
+      data: { ...user }
     });
 
     return userCreated;

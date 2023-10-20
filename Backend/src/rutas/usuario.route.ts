@@ -6,6 +6,7 @@ const router = Router();
 /*
     Obtener usuario por id
 */
-router.get("/:idUsuario", controller.getUsuarioById)
+router.get("/:idUsuario", controller.getUsuarioById);
+router.post("/", controller.createUsuario);
 
 export default router;
