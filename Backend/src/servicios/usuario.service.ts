@@ -13,15 +13,13 @@ async function getUsuarioById(idUsuario: string) {
     const usuario = await usuarioRepository.getUsuarioById(idUsuario);
 
     return usuario;
-    
+
 }
 
 async function createUsuario(user: Usuario) {
-    
-    const usuario = await usuarioRepository.getUsuarioByCorreo(user.correo);
 
-    // check if mail is valid + check uniqueness
-    if (!validator.default.isEmail(user.correo) || usuario !== null)
+    // check if mail is valid
+    if (!validator.default.isEmail(user.correo))
         throw new InvalidValueError('Usuario', 'Correo');
 
     /**
@@ -31,20 +29,25 @@ async function createUsuario(user: Usuario) {
      *  - 1 numero
      */
     const pwd = user.contrasena;
-    if (pwd.length<8 || pwd.toLowerCase() === pwd || !pwd.match(/\d/))
+    if (pwd.length < 8 || pwd.toLowerCase() === pwd || !pwd.match(/\d/))
         throw new InvalidValueError('Usuario', 'Contrasenia');
+
 
     const salt = await bcryptjs.genSalt(15);
     const newUser = await usuarioRepository.createUsuario({
-        ...user, 
+        ...user,
         contrasena: await bcryptjs.hash(user.contrasena, salt)
     });
+
+    // newUser == null: no se pudo crear. Error con algun tipo de dato (el correo ya existe, violacion unique - PrismaClientKnownRequestError -)
+    if(!newUser) throw new InvalidValueError('Usuario', 'Correo');
     
     // asincronico (esto es, una vez que se haya guardado el usuario, se inicia el guardado del salt, pero se continua con el return)
-    saltRepository.createSalt({id: "1", salt: salt, usuarioId: newUser.id})
-    
+    saltRepository.createSalt({ id: "1", salt: salt, usuarioId: newUser.id })
+
     // retorno el usuario creado (aunque no haya terminado de guardar el salt)
     return newUser;
+
 }
 
 export default { getUsuarioById, createUsuario };
