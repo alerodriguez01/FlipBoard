@@ -34,5 +34,12 @@ export class UsuarioRepository implements UsuarioDataSource {
         return await this.usuarioDAO.getUsuarioById(id);
     }
 
+    /*
+        Obtener usuario por correo
+    */
+    async getUsuarioByCorreo(correo: string) {
+        return await this.usuarioDAO.getUsuarioByCorreo(correo);
+    }
+
     // demas metodos
 }
