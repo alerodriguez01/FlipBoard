@@ -1,5 +1,6 @@
 import { RubricaPrismaDAO } from "../prisma/dao/rubrica.dao.js";
 import { RubricaDataSource } from "../datasource/rubrica.datasource.js";
+import { Rubrica } from "@prisma/client";
 
 
 export class RubricaRepository implements RubricaDataSource {
@@ -26,5 +27,11 @@ export class RubricaRepository implements RubricaDataSource {
         return await this.rubricaDAO.getRubricaById(id);
     }
 
+    /**
+     * Crear rubrica
+     */
+    async createRubrica(rubrica: Rubrica){
+        return await this.rubricaDAO.createRubrica(rubrica);
+    }
     // demas metodos
 }
