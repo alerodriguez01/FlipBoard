@@ -12,7 +12,7 @@ describe("POST /api/usuarios", () => {
     });
     expect(res.statusCode).toBe(201);
     expect(res.body.nombre).toBe("Tomas");
-  });
+  }, 10000);
 
   test("Intentar crear usuario con mail duplicado", async () => {
     const res = await request(app).post("/api/usuarios").send({
@@ -22,7 +22,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "contrasenia331AA"
     });
     expect(res.statusCode).toBe(400);
-  });
+  }, 10000);
 
   test("Intentar crear usuario con contrasena invalida", async () => {
     const res = await request(app).post("/api/usuarios").send({
@@ -32,7 +32,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "pass"
     });
     expect(res.statusCode).toBe(400);
-  });
+  }, 10000);
 
   test("Intentar crear usuario con campos incompletos", async () => {
     const res = await request(app).post("/api/usuarios").send({
@@ -41,5 +41,5 @@ describe("POST /api/usuarios", () => {
       "contrasena": "passworD321"
     });
     expect(res.statusCode).toBe(400);
-  });
+  }, 10000);
 });

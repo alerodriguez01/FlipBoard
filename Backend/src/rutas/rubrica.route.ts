@@ -7,5 +7,9 @@ const router = Router();
     Obtener rubrica por id
 */
 router.get("/:idRubrica", controller.getRubricaById);
+/**
+ * Crear rubrica
+ */
+router.post("/", controller.createRubrica);
 
 export default router;
