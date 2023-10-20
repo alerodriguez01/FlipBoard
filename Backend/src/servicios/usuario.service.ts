@@ -8,14 +8,24 @@ import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
 const usuarioRepository = UsuarioRepository.getInstance();
 const saltRepository = SaltRepository.getInstance();
 
-async function getUsuarioById(idUsuario: string) {
+/*
+    Obtener un usuario por id (opcionalmente con sus cursos)
+*/
+async function getUsuarioById(idUsuario: string, withCursos: boolean) {
+
+    if (withCursos) {
+        const usuario = await usuarioRepository.getUsuarioByIdWithCursos(idUsuario);
+        return usuario;
+    }
 
     const usuario = await usuarioRepository.getUsuarioById(idUsuario);
-
     return usuario;
 
 }
 
+/*
+    Crear un usuario
+*/
 async function createUsuario(user: Usuario) {
 
     // check if mail is valid
@@ -40,8 +50,8 @@ async function createUsuario(user: Usuario) {
     });
 
     // newUser == null: no se pudo crear. Error con algun tipo de dato (el correo ya existe, violacion unique - PrismaClientKnownRequestError -)
-    if(!newUser) throw new InvalidValueError('Usuario', 'Correo');
-    
+    if (!newUser) throw new InvalidValueError('Usuario', 'Correo');
+
     // asincronico (esto es, una vez que se haya guardado el usuario, se inicia el guardado del salt, pero se continua con el return)
     const userSalt = {
         salt: salt,
@@ -74,15 +84,15 @@ async function login(correo: string, contrasena: string) {
 
     const usuario = await usuarioRepository.getUsuarioByCorreo(correo);
 
-    if(!usuario) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+    if (!usuario) throw new InvalidValueError('Usuario', 'Correo o contrasena');
 
     const salt = await saltRepository.getSaltByUsuarioId(usuario.id);
 
-    if(!salt) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+    if (!salt) throw new InvalidValueError('Usuario', 'Correo o contrasena');
 
     const hash = await bcryptjs.hash(contrasena, salt.salt);
 
-    if(usuario.contrasena !== hash) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+    if (usuario.contrasena !== hash) throw new InvalidValueError('Usuario', 'Correo o contrasena');
 
     return usuario;
 

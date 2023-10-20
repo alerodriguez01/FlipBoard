@@ -81,5 +81,30 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     }
   }
 
+  /*
+    Obtener usuario por id con sus cursos
+  */
+  async getUsuarioByIdWithCursos(id: string): Promise<Usuario | null> {
+
+    try {
+      const user = await this.prisma.usuario.findUnique({
+        where: {
+          id
+        },
+        include: {
+          cursosAlumnoModel: true,
+          cursosDocenteModel: true
+        }
+      });
+
+      return user;
+
+    } catch (error) {
+      // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
+      // console.log(JSON.stringify(error))
+      return null;
+    }
+  }
+
   // demas metodos
 }

@@ -8,11 +8,14 @@ import { InvalidValueError } from "../excepciones/RepoErrors.js";
 */
 async function getUsuarioById(req: Request, res: Response) {
 
-    const usuario = await service.getUsuarioById(req.params.idUsuario);
+    const usuario = await service.getUsuarioById(req.params.idUsuario, req.query.cursos === 'true');
 
     res.status(200).json(usuario);
 }
 
+/*
+    Crear un usuario
+*/
 async function createUsuario(req: Request, res: Response) {
     
     const usuarioBody = req.body;
