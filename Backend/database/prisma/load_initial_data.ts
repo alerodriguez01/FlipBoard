@@ -220,3 +220,4 @@ async function load_initial_data() {
 }
 
 
+export default load_initial_data;
