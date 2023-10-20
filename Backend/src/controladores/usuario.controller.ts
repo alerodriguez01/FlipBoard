@@ -34,7 +34,7 @@ async function createUsuario(req: Request, res: Response) {
         const newUser = await service.createUsuario(user as Usuario);
         return res.status(201).json(newUser);
     } catch(err){
-        if(err instanceof InvalidValueError) return res.status(404).json(err.message);
+        if(err instanceof InvalidValueError) return res.status(400).json(err.message);
     }
 }
 
