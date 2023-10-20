@@ -19,7 +19,18 @@ export class SaltRepository implements SaltDataSource {
         return SaltRepository.INSTANCE;
     }
 
+    /*
+        Crea un salt para un usuario
+    */
     async createSalt(salt: Salt) {
       return await this.saltDAO.createSalt(salt);
     }
+    
+    /*
+        Obtiene el salt de un usuario
+    */
+    async getSaltByUsuarioId(userId: string) {
+      return await this.saltDAO.getSaltByUsuarioId(userId);
+    }
+
 }

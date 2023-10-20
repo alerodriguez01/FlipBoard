@@ -30,3 +30,28 @@ npx prisma generate --schema=./database/prisma/schema.prisma
 ```bash
 npm run dev
 ```
+
+---
+
+### Ejecutar proyecto con docker
+
+**Una vez levantado los contenedores** de la base de datos y el backend,
+
+1. Pushear el schema (para crear las colecciones e indices que contienen claves @unique)
+
+> Comando necesario si se borra la base de datos *flipboard*.
+    
+```bash
+docker exec api npx prisma db push --schema=./database/prisma/schema.prisma
+```
+
+2. Generar los tipos y métodos del modelo de datos definido en `database/prisma/schema.prisma`:
+
+> Este comando hay que ejecutarlo cada vez que se modifique el modelo de datos.
+
+Desde `./Backend`:
+
+```bash
+npx prisma generate --schema=./database/prisma/schema.prisma
+```
+

@@ -21,13 +21,21 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   }
 
   // Crear usuario
-  async createUsuario(user: Usuario): Promise<Usuario> {
+  async createUsuario(user: Usuario): Promise<Usuario | null> {
 
-    const userCreated = await this.prisma.usuario.create({
-      data: user
-    });
+    try {
+      const userCreated = await this.prisma.usuario.create({
+        data: user
+      });
+  
+      return userCreated;
+      
+    } catch (error) {
+      // Error con algun tipo de dato (el correo ya existe, violacion unique - PrismaClientKnownRequestError -)
+      // console.log(JSON.stringify(error))
+      return null;
+    }
 
-    return userCreated;
 
   }
 
@@ -62,6 +70,31 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         where: {
           correo
         },
+      });
+
+      return user;
+
+    } catch (error) {
+      // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
+      // console.log(JSON.stringify(error))
+      return null;
+    }
+  }
+
+  /*
+    Obtener usuario por id con sus cursos
+  */
+  async getUsuarioByIdWithCursos(id: string): Promise<Usuario | null> {
+
+    try {
+      const user = await this.prisma.usuario.findUnique({
+        where: {
+          id
+        },
+        include: {
+          cursosAlumnoModel: true,
+          cursosDocenteModel: true
+        }
       });
 
       return user;
