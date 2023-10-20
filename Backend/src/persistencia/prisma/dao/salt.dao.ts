@@ -20,10 +20,17 @@ export class SaltPrismaDAO implements SaltDataSource {
   }
 
   async createSalt(salt: Salt) {
-    return await this.prisma.salt.create({data:{
-      salt: salt.salt,
-      usuarioId: salt.usuarioId
-    }});
+    return await this.prisma.salt.create({
+      data: salt
+    });
+  }
+
+  async getSaltByUsuarioId(userId: string) {
+    return await this.prisma.salt.findUnique({
+      where: {
+        usuarioId: userId
+      }
+    });
   }
 
 }

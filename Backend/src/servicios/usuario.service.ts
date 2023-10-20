@@ -1,4 +1,4 @@
-import { Usuario } from "@prisma/client";
+import { Salt, Usuario } from "@prisma/client";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 import validator from 'validator';
 import bcryptjs from 'bcryptjs';
@@ -43,11 +43,49 @@ async function createUsuario(user: Usuario) {
     if(!newUser) throw new InvalidValueError('Usuario', 'Correo');
     
     // asincronico (esto es, una vez que se haya guardado el usuario, se inicia el guardado del salt, pero se continua con el return)
-    saltRepository.createSalt({ id: "1", salt: salt, usuarioId: newUser.id })
+    const userSalt = {
+        salt: salt,
+        usuarioId: newUser.id
+    } as Salt;
+    saltRepository.createSalt(userSalt)
 
     // retorno el usuario creado (aunque no haya terminado de guardar el salt)
     return newUser;
 
 }
 
-export default { getUsuarioById, createUsuario };
+/*
+    login de usuario
+*/
+async function login(correo: string, contrasena: string) {
+
+    // check if mail is valid
+    if (!validator.default.isEmail(correo))
+        throw new InvalidValueError('Usuario', 'Correo');
+
+    /**
+     * Criterios password:
+     *  - 8 caracteres minimo
+     *  - 1 mayuscula
+     *  - 1 numero
+     */
+    if (contrasena.length < 8 || contrasena.toLowerCase() === contrasena || !contrasena.match(/\d/))
+        throw new InvalidValueError('Usuario', 'Contrasenia');
+
+    const usuario = await usuarioRepository.getUsuarioByCorreo(correo);
+
+    if(!usuario) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+
+    const salt = await saltRepository.getSaltByUsuarioId(usuario.id);
+
+    if(!salt) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+
+    const hash = await bcryptjs.hash(contrasena, salt.salt);
+
+    if(usuario.contrasena !== hash) throw new InvalidValueError('Usuario', 'Correo o contrasena');
+
+    return usuario;
+
+}
+
+export default { getUsuarioById, createUsuario, login };

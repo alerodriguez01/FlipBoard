@@ -49,6 +49,10 @@ model Usuario {
 
   // one-to-many (todas las calificaciones asociadas al usuario)
   calificaciones Calificacion[] // x
+
+  // one-to-one (salt asociado al usuario para encriptar la contrasena)
+  // The relation field `salt` on Model `Usuario` cannot be required. It's not possible to enforce this constraint on the database level. Please change the field type from `Salt` to `Salt?` to fix this.
+  salt Salt? // x 
 }
 
 model Curso {
@@ -182,6 +186,7 @@ model Mural {
 
 model Salt {
   id    String @id @default(auto()) @map("_id") @db.ObjectId
-  usuarioId String @db.ObjectId
   salt  String
+  userModel Usuario @relation(fields: [usuarioId], references: [id])
+  usuarioId String @db.ObjectId @unique
 }
