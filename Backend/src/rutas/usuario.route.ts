@@ -52,7 +52,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             example:
- *               message: Valor invalido para el atributo Id de Usuario
+ *               message: No se ha podido encontrar 'Usuario' en la BDD
  */
 
 router.get("/:idUsuario", controller.getUsuarioById);

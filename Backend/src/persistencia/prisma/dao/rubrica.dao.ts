@@ -26,13 +26,20 @@ export class RubricaPrismaDAO implements RubricaDataSource {
     */
     async getRubricaById(id: string) : Promise<Rubrica | null> {
 
-        const rubrica = await this.prisma.rubrica.findUnique({
-            where: {
-                id: id
-            }
-        })
-
-        return rubrica;
+        try {
+            const rubrica = await this.prisma.rubrica.findUnique({
+                where: {
+                    id: id
+                }
+            })
+    
+            return rubrica;
+            
+        } catch (error) {
+            // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
+            // console.log(JSON.stringify(error))
+            return null;
+        }
     }
 
     /**

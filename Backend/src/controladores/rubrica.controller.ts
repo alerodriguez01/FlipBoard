@@ -8,9 +8,13 @@ import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 */
 async function getRubricaById (req: Request, res: Response) {
 
-    const rubrica = await service.getRubricaById(req.params.idRubrica);
-
-    res.status(200).json(rubrica);
+    try {
+        const rubrica = await service.getRubricaById(req.params.idRubrica);
+        res.status(200).json(rubrica);
+        
+    } catch (error) {
+        if(error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
 }
 
 /*

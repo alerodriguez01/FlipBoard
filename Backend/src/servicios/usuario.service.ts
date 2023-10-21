@@ -2,7 +2,7 @@ import { Salt, Usuario } from "@prisma/client";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 import validator from 'validator';
 import bcryptjs from 'bcryptjs';
-import { InvalidValueError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
 import jwt from 'jsonwebtoken';
 import { TokenInvalido } from "../excepciones/TokenError.js";
@@ -17,12 +17,12 @@ async function getUsuarioById(idUsuario: string, withCursos: boolean) {
 
     if (withCursos) {
         const usuario = await usuarioRepository.getUsuarioByIdWithCursos(idUsuario);
-        if(!usuario) throw new InvalidValueError('Usuario', 'Id')
+        if(!usuario) throw new NotFoundError('Usuario')
         return usuario;
     }
 
     const usuario = await usuarioRepository.getUsuarioById(idUsuario);
-    if(!usuario) throw new InvalidValueError('Usuario', 'Id')
+    if(!usuario) throw new NotFoundError('Usuario')
     return usuario;
 
 }
