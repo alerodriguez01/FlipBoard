@@ -17,10 +17,12 @@ async function getUsuarioById(idUsuario: string, withCursos: boolean) {
 
     if (withCursos) {
         const usuario = await usuarioRepository.getUsuarioByIdWithCursos(idUsuario);
+        if(!usuario) throw new InvalidValueError('Usuario', 'Id')
         return usuario;
     }
 
     const usuario = await usuarioRepository.getUsuarioById(idUsuario);
+    if(!usuario) throw new InvalidValueError('Usuario', 'Id')
     return usuario;
 
 }
@@ -112,7 +114,7 @@ async function login(correo: string, contrasena: string): Promise<UsuarioWithJWT
 
 function generateJWT(usuario: Usuario): string {
 
-    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    // Generar JWT (en el payload no guardo el hash de la contrasena)
     const payload = {
         id: usuario.id,
         nombre: usuario.nombre,
