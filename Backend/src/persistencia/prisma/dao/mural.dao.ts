@@ -23,15 +23,22 @@ export class MuralPrismaDAO implements MuralDataSource {
     /*
         Cargar murales de un curso
     */
-    public async getMuralesFromCurso(idCurso: string) : Promise<Mural[]> {
+    public async getMuralesFromCurso(idCurso: string) : Promise<Mural[] | null> {
 
-        const murales = await this.prisma.mural.findMany({
-            where: {
-                cursoId: idCurso
-            }
-        })
-
-        return murales;
+        try {
+            const murales = await this.prisma.mural.findMany({
+                where: {
+                    cursoId: idCurso
+                }
+            })
+    
+            return murales;
+            
+        } catch (error) {
+            // Error con algun tipo de dato 
+            // console.log(JSON.stringify(error))
+            return null;
+        }
 
     }
 
@@ -40,13 +47,20 @@ export class MuralPrismaDAO implements MuralDataSource {
     */
     public async getMuralById(idMural: string) : Promise<Mural | null> {
 
-        const mural = await this.prisma.mural.findUnique({
-            where: {
-                id: idMural
-            }
-        })
-
-        return mural;
+        try {
+            const mural = await this.prisma.mural.findUnique({
+                where: {
+                    id: idMural
+                }
+            })
+    
+            return mural;
+            
+        } catch (error) {
+            // Error con algun tipo de dato
+            // console.log(JSON.stringify(error))
+            return null;
+        }
 
     }
 
@@ -55,16 +69,23 @@ export class MuralPrismaDAO implements MuralDataSource {
     */
     public async getMuralByIdWithRubrica(idMural: string) : Promise<Mural | null> {
 
-        const mural = await this.prisma.mural.findUnique({
-            where: {
-                id: idMural
-            },
-            include: {
-                rubricaModel: true
-            }
-        })
-
-        return mural;
+        try {
+            const mural = await this.prisma.mural.findUnique({
+                where: {
+                    id: idMural
+                },
+                include: {
+                    rubricaModel: true
+                }
+            })
+    
+            return mural;
+            
+        } catch (error) {
+            // Error con algun tipo de dato 
+            // console.log(JSON.stringify(error))
+            return null;
+        }
 
     }
 

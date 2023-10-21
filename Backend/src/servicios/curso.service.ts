@@ -29,8 +29,8 @@ async function getCursoWithMurales(idCurso: string, rubrica: boolean) { // : Pro
 
     const murales = await muralRepository.getMuralesFromCurso(idCurso);
 
-    // Si desea traer la rubrica asociada a cada mural
-    if (rubrica) {
+    // Si desea traer la rubrica asociada a cada mural (y existen murales)
+    if (rubrica && murales) {
         // Cuando se utiliza map con funciones asíncronas, se obtiene un array de promesas 
         // pendientes. Para resolver esto, se usa Promise.all (espera a que todas las promesas 
         // se resuelvan antes de devolver el resultado.)
