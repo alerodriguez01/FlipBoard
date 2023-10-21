@@ -8,6 +8,46 @@ const router = Router();
  * components:
  *  schemas:
  *    Usuario:
+ *      type: object
+ *      required:
+ *        - nombre
+ *        - apellido
+ *        - correo
+ *        - contrasena
+ *      properties:
+ *        id:
+ *          type: string
+ *          description: El id del usuario
+ *        nombre:
+ *          type: string
+ *          description: El nombre del usuario
+ *        apellido:
+ *          type: string
+ *          description: El apellido del usuario
+ *        correo:
+ *          type: string
+ *          description: El correo del usuario
+ *        contrasena:
+ *          type: string
+ *          description: La contrasena del usuario
+ *        cursosAlumno:
+ *          type: list
+ *          description: Los cursos en los que el usuario es alumno
+ *        cursosDocente:
+ *          type: list
+ *          description: Los cursos en los que el usuario es docente
+ *        grupos:
+ *          type: list
+ *          description: Los grupos a los que pertenece el usuario
+ *      example:
+ *        id: 65332c7596d166519a96572f
+ *        nombre: Juan
+ *        apellido: Pérez
+ *        correo: juan@examplee.com
+ *        contrasena: $2a$15$XGG1OEh6HucNKLYOV/56b.5wY.Z6dQw.Ho4E1/Vgw5T87csmYpWLm
+ *        cursosAlumno: ["65326ed824fea7e06d01e20b", "65326ed824fea7e06d01e20c"]
+ *        cursosDocente: ["65326ed824fea7e06d01e20b"]
+ *        grupos: ["65326ed824fea7e06d01e20f", "65326ed824fea7e06d01e210"]
  */
 
 /**
@@ -38,15 +78,8 @@ const router = Router();
  *         description: Usuario encontrado
  *         content:
  *           application/json:
- *             example:
- *               id: 65332c7596d166519a96572f
- *               nombre: Juan
- *               apellido: Pérez
- *               correo: juan@examplee.com
- *               contrasena: $2a$15$XGG1OEh6HucNKLYOV/56b.5wY.Z6dQw.Ho4E1/Vgw5T87csmYpWLm
- *               cursosAlumno: ["65326ed824fea7e06d01e20b", "65326ed824fea7e06d01e20c"]
- *               cursosDocente: ["65326ed824fea7e06d01e20b"]
- *               grupos: ["65326ed824fea7e06d01e20f", "65326ed824fea7e06d01e210"]
+ *               schema:
+ *                 $ref: "#/components/schemas/Usuario"
  *       404:
  *         description: No se encontro el usuario
  *         content:
@@ -77,15 +110,8 @@ router.get("/:idUsuario", controller.getUsuarioById);
  *        description: Usuario creado exitosamente
  *        content:
  *          application/json:
- *            example:
- *              id: 65332c7596d166519a96572f
- *              nombre: Juan
- *              apellido: Perez
- *              correo: juanperez@gmail.com
- *              contrasena: $2a$15$XGG1OEh6HucNKLYOV/56b.5wY.Z6dQw.Ho4E1/Vgw5T87csmYpWLm
- *              cursosAlumno: []
- *              cursosDocente: []
- *              grupos: []
+ *            schema:
+ *              $ref: "#/components/schemas/Usuario"
  *      400:
  *        description: Faltan datos obligatorios o el correo ya existe
  *        content:

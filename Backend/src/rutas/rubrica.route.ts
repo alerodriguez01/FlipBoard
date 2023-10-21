@@ -8,6 +8,109 @@ const router = Router();
  * components:
  *  schemas:
  *    Rubrica:
+ *      type: object
+ *      required:
+ *        - nombre
+ *        - criterios
+ *        - niveles
+ *        - usuarioId
+ *      properties:
+ *        id:
+ *          type: string
+ *          description: El id de la rubrica
+ *        nombre:
+ *          type: string
+ *          description: El nombre de la rubrica
+ *        criterios:
+ *          type: array
+ *          description: Los criterios de la rubrica
+ *          items: 
+ *            $ref: '#/components/schemas/Criterio'
+ *        niveles:
+ *          type: array
+ *          description: Los niveles de la rubrica
+ *          items:
+ *            $ref: '#/components/schemas/Nivel'
+ *        gruposCursos:
+ *          type: list
+ *          description: Todos los cursos donde se asocie la rubrica a grupos
+ *        alumnosCursos:
+ *          type: list
+ *          description: Todos los cursos donde se asocie la rubrica a alumnos
+ *        usuarioId:
+ *          type: string
+ *          description: El id del usuario que creo la rubrica
+ *      example:
+ *        id: 65326ed824fea7e06d01e20d,
+ *        nombre: Rubrica de Matemáticas
+ *        gruposCursos: [ "65326ed824fea7e06d01e20b" ]
+ *        alumnosCursos: [ "65326ed824fea7e06d01e20b" ]
+ *        usuarioId: 65326ed824fea7e06d01e207
+ *        criterios: [
+ *            {
+ *              "nombre": "Precisión",
+ *              "descripciones": [
+ *                  "Muy preciso",
+ *                  "Preciso",
+ *                  "Poco preciso"
+ *              ]
+ *            },
+ *            {
+ *              "nombre": "Complejidad",
+ *              "descripciones": [
+ *                  "Muy complejo",
+ *                  "Complejo",
+ *                  "Poco complejo"
+ *              ]
+ *            }
+ *        ]
+ *        niveles: [
+ *            {
+ *              "nombre": "Nivel 1",
+ *              "puntaje": 1
+ *            },
+ *            {
+ *              "nombre": "Nivel 2",
+ *              "puntaje": 2
+ *            },
+ *            {
+ *              "nombre": "Nivel 3",
+ *              "puntaje": 3
+ *            }
+ *        ]
+ * 
+ * 
+ *    Criterio:
+ *      type: object 
+ *      properties:
+ *        nombre:
+ *          type: string
+ *          description: El nombre del criterio
+ *        descripciones:
+ *          type: list
+ *          description: Las descripciones del criterio
+ *      required:
+ *        - nombre
+ *        - descripciones
+ *      example:
+ *        nombre: Precisión
+ *        descripciones: [ "Muy preciso", "Preciso", "Poco preciso" ]
+ * 
+ *    Nivel:
+ *      type: object
+ *      properties:
+ *        nombre:
+ *          type: string
+ *          description: El nombre del nivel
+ *        puntaje:
+ *          type: number
+ *          description: El puntaje del nivel
+ *      required:
+ *        - nombre
+ *      example:
+ *        nombre: Nivel 1
+ *        puntaje: 1
+ * 
  */
 
 /**
@@ -30,44 +133,8 @@ const router = Router();
  *         description: Rubrica encontrada
  *         content:
  *           application/json:
- *             example:
- *               id: 65326ed824fea7e06d01e20d,
- *               nombre: Rubrica de Matemáticas
- *               gruposCursos: [ "65326ed824fea7e06d01e20b" ]
- *               alumnosCursos": [ "65326ed824fea7e06d01e20b" ]
- *               usuarioId: 65326ed824fea7e06d01e207
- *               criterios: [
- *                   {
- *                     "nombre": "Precisión",
- *                     "descripciones": [
- *                         "Muy preciso",
- *                         "Preciso",
- *                         "Poco preciso"
- *                     ]
- *                   },
- *                   {
- *                     "nombre": "Complejidad",
- *                     "descripciones": [
- *                         "Muy complejo",
- *                         "Complejo",
- *                         "Poco complejo"
- *                     ]
- *                   }
- *               ]
- *               niveles: [
- *                   {
- *                     "nombre": "Nivel 1",
- *                     "puntaje": 1
- *                   },
- *                   {
- *                     "nombre": "Nivel 2",
- *                     "puntaje": 2
- *                   },
- *                   {
- *                     "nombre": "Nivel 3",
- *                     "puntaje": 3
- *                   }
- *               ]
+ *             schema:
+ *               $ref: '#/components/schemas/Rubrica'
  *       404:
  *         description: No se encontro la rubrica
  *         content:
