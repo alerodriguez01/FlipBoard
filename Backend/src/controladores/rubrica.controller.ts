@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import service from "../servicios/rubrica.service.js";
 import { Rubrica } from "@prisma/client";
-import { InvalidValueError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 
 /*
     Obtener rubrica por id
@@ -37,6 +37,7 @@ async function createRubrica(req: Request, res: Response) {
         return res.status(201).json(newRubrica);
     } catch(err){
         if(err instanceof InvalidValueError) return res.status(400).json(err.message);
+        if(err instanceof NotFoundError) return res.status(404).json(err.message);
     }
 }
 

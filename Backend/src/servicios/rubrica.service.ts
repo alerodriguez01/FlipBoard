@@ -38,7 +38,7 @@ async function createRubrica(rubrica: Rubrica) {
         !rubrica.niveles.every(n => n.nombre.length <=50))
         throw new InvalidValueError('Rubrica', 'Criterios o Descripciones o Niveles');
 
-    const user = UsuarioRepository.getInstance().getUsuarioById(rubrica.usuarioId);
+    const user = await UsuarioRepository.getInstance().getUsuarioById(rubrica.usuarioId);
     if (!user) throw new NotFoundError('Usuario');
 
     return await RubricaRepository.getInstance().createRubrica(rubrica);

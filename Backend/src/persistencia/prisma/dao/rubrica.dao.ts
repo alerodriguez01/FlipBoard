@@ -39,9 +39,13 @@ export class RubricaPrismaDAO implements RubricaDataSource {
      * Crear rubrica
      */
     async createRubrica(rubrica: Rubrica) {
-        return await this.prisma.rubrica.create({
-            data: rubrica,
-        });
+        try{
+            return await this.prisma.rubrica.create({
+                data: rubrica,
+            });
+        } catch(err){
+            return null;
+        }
     }
     // demas metodos
 
