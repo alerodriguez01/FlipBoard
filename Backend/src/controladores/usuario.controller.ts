@@ -24,12 +24,11 @@ async function createUsuario(req: Request, res: Response) {
     
     const usuarioBody = req.body;
 
-    if(!usuarioBody.nombre || !usuarioBody.apellido || !usuarioBody.correo || !usuarioBody.contrasena)
+    if(!usuarioBody.nombre || !usuarioBody.correo || !usuarioBody.contrasena)
         return res.status(400).json("Faltan datos obligatorios")
     
     const user = {
         nombre: usuarioBody.nombre,
-        apellido: usuarioBody.apellido,
         correo: usuarioBody.correo,
         contrasena: usuarioBody.contrasena
     }

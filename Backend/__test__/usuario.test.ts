@@ -6,7 +6,6 @@ describe("POST /api/usuarios", () => {
   test("Crear nuevo usuario", async () => {
     const res = await request(app).post("/api/usuarios").send({
       "nombre": "Tomas",
-      "apellido": "Slab",
       "correo": "mimail@gmail.com",
       "contrasena": "passworD123"
     });
@@ -17,7 +16,6 @@ describe("POST /api/usuarios", () => {
   test("Intentar crear usuario con mail duplicado", async () => {
     const res = await request(app).post("/api/usuarios").send({
       "nombre": "Tomas",
-      "apellido": "Peiretti",
       "correo": "mimail@gmail.com",
       "contrasena": "contrasenia331AA"
     });
@@ -27,7 +25,6 @@ describe("POST /api/usuarios", () => {
   test("Intentar crear usuario con contrasena invalida", async () => {
     const res = await request(app).post("/api/usuarios").send({
       "nombre": "Tomas",
-      "apellido": "Peiretti",
       "correo": "mailunico1312@gmail.com",
       "contrasena": "pass"
     });
@@ -51,7 +48,6 @@ describe("GET /api/usuarios/:idUsuario", () => {
   beforeAll( async () => {
     user = await request(app).post('/api/usuarios').send({
       "nombre": "Juan",
-      "apellido": "Pepe",
       "correo": "testmail@gmail.com",
       "contrasena": "passworD123"
     });

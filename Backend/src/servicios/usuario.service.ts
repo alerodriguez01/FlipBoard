@@ -118,7 +118,6 @@ function generateJWT(usuario: Usuario): string {
     const payload = {
         id: usuario.id,
         nombre: usuario.nombre,
-        apellido: usuario.apellido,
         correo: usuario.correo,
         cursosAlumno: usuario.cursosAlumno,
         cursosDocente: usuario.cursosDocente,

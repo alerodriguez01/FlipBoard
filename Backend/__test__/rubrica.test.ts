@@ -9,7 +9,6 @@ describe("POST /api/rubricas", () => {
   beforeAll( async () => {
     user = await request(app).post('/api/usuarios').send({
       "nombre": "Tomas",
-      "apellido": "aaaaaaa",
       "correo": "tototototo@gmail.com",
       "contrasena": "passworD123"
     });

@@ -28,7 +28,6 @@ generator client {
 model Usuario {
   id         String @id @default(auto()) @map("_id") @db.ObjectId
   nombre     String
-  apellido   String
   correo     String @unique
   contrasena String
 
