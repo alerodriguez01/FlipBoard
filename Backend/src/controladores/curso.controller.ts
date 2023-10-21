@@ -1,7 +1,7 @@
 import { Curso } from "@prisma/client";
 import service from "../servicios/curso.service.js";
 import { Request, Response } from "express";
-import { NotFoundError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 
 
 /*
@@ -56,6 +56,7 @@ async function saveCurso(req: Request, res: Response) {
         return res.status(201).json(cursoSaved);
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json(error.message); // No existe el docente
+        if (error instanceof InvalidValueError) return res.status(400).json(error.message); // email invalido
     }
 
 
