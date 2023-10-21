@@ -10,7 +10,9 @@ const rubricaRepository = RubricaRepository.getInstance();
 */
 async function getRubricaById(rubricaId: string) {
 
-    return await rubricaRepository.getRubricaById(rubricaId);
+    const rubrica = await rubricaRepository.getRubricaById(rubricaId);
+    if (!rubrica) throw new NotFoundError('Rubrica');
+    return rubrica
 
 }
 

@@ -1,16 +1,20 @@
 import { Request, Response } from "express";
 import service from "../servicios/usuario.service.js";
 import { Usuario } from "@prisma/client";
-import { InvalidValueError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
 */
 async function getUsuarioById(req: Request, res: Response) {
 
-    const usuario = await service.getUsuarioById(req.params.idUsuario, req.query.cursos === 'true');
-
-    res.status(200).json(usuario);
+    try {
+        const usuario = await service.getUsuarioById(req.params.idUsuario, req.query.cursos === 'true');
+        res.status(200).json(usuario);
+        
+    } catch (error) {
+        if(error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
 }
 
 /*
