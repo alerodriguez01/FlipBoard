@@ -8,7 +8,6 @@ describe("POST /cursos", () => {
   beforeAll(async () => {
     user = await request(app).post('/api/usuarios').send({
       "nombre": "Pepe",
-      "apellido": "Pepe",
       "correo": "mmmmmmail@gmail.com",
       "contrasena": "123456678Aa"
     });

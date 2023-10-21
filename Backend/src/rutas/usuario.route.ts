@@ -11,7 +11,6 @@ const router = Router();
  *      type: object
  *      required:
  *        - nombre
- *        - apellido
  *        - correo
  *        - contrasena
  *      properties:
@@ -20,10 +19,7 @@ const router = Router();
  *          description: El id del usuario
  *        nombre:
  *          type: string
- *          description: El nombre del usuario
- *        apellido:
- *          type: string
- *          description: El apellido del usuario
+ *          description: El nombre y apellido del usuario
  *        correo:
  *          type: string
  *          description: El correo del usuario
@@ -42,7 +38,6 @@ const router = Router();
  *      example:
  *        id: 65332c7596d166519a96572f
  *        nombre: Juan
- *        apellido: Pérez
  *        correo: juan@examplee.com
  *        contrasena: $2a$15$XGG1OEh6HucNKLYOV/56b.5wY.Z6dQw.Ho4E1/Vgw5T87csmYpWLm
  *        cursosAlumno: ["65326ed824fea7e06d01e20b", "65326ed824fea7e06d01e20c"]
@@ -102,7 +97,6 @@ router.get("/:idUsuario", controller.getUsuarioById);
  *        application/json:
  *          example:
  *            nombre: Juan
- *            apellido: Perez
  *            correo: juanperez@gmail.com
  *            contrasena: Contra123456
  *    responses:
