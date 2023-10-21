@@ -25,7 +25,7 @@ async function getCursoWithMurales(idCurso: string, rubrica: boolean) { // : Pro
 
     const curso = await cursoRepository.getCursoById(idCurso);
 
-    if (!curso) return null;
+    if(!curso) throw new NotFoundError("Curso")
 
     const murales = await muralRepository.getMuralesFromCurso(idCurso);
 
@@ -58,7 +58,7 @@ async function getCursoWithMurales(idCurso: string, rubrica: boolean) { // : Pro
 async function getCursoById(idCurso: string): Promise<Curso | null> {
 
     const curso = await cursoRepository.getCursoById(idCurso);
-
+    if(!curso) throw new NotFoundError("Curso")
     return curso;
 
 }

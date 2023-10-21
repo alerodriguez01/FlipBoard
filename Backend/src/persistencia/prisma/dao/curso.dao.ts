@@ -23,14 +23,19 @@ export class CursoPrismaDAO implements CursoDataSource {
         Cargar curso por id
     */
     async getCursoById(idCurso: string): Promise<Curso | null> {
-
-        const curso = await this.prisma.curso.findUnique({
-            where: {
-                id: idCurso
-            }
-        });
-
-        return curso
+        try {
+            const curso = await this.prisma.curso.findUnique({
+                where: {
+                    id: idCurso
+                }
+            });
+    
+            return curso
+            
+        } catch (error) {
+            // Hubo algun error (id por ejemplo no existe o malformada)
+            return null;
+        }
     }
 
     /*

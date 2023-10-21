@@ -28,6 +28,10 @@ const router = Router();
  *         cursoId:
  *           type: string
  *           description: El id del curso asociado al mural
+ *       required:
+ *         - nombre
+ *         - contenido
+ *         - cursoId
  *       example:
  *         id: 65326ed824fea7e06d01e211,
  *         nombre: Mural de Matemáticas,
