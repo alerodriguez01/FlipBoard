@@ -3,7 +3,8 @@ import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
-import { NotFoundError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
+import validator from "validator";
 
 
 // esto no lo pude hacer andar
@@ -72,6 +73,10 @@ async function createCurso(body: Curso) : Promise<Curso> {
     const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
 
     if(!docente) throw new NotFoundError("Docente");
+
+    // check if mail is valid
+    if (!validator.default.isEmail(body.emailContacto))
+        throw new InvalidValueError('Curso', 'EmailContacto');
 
     const cursoSaved = await cursoRepository.createCurso(body);
 
