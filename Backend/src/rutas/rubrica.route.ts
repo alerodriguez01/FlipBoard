@@ -115,7 +115,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/rubricas/{idRubrica}:
+ * /api/usuarios/rubricas/{idRubrica}:
  *   get:
  *     summary: Obtener una rubrica por id
  *     tags: [Rubrica]
@@ -142,11 +142,11 @@ const router = Router();
  *             example:
  *              message: No se ha podido encontrar 'Rubrica' en la BDD
  */
-router.get("/:idRubrica", controller.getRubricaById);
+router.get("/usuarios/rubricas/:idRubrica", controller.getRubricaById);
 
 /**
  * @swagger
- * /api/rubricas:
+ * /api/usuarios/rubricas:
  *   post:
  *     summary: Crear una rubrica
  *     tags: [Rubrica]
@@ -217,6 +217,6 @@ router.get("/:idRubrica", controller.getRubricaById);
  *                 value:
  *                   message: No se ha podido encontrar 'Usuario' en la BDD
  */
-router.post("/", controller.createRubrica);
+router.post("/usuarios/rubricas", controller.createRubrica);
 
 export default router;

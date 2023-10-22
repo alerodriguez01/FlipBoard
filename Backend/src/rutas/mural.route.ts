@@ -44,7 +44,7 @@ const router = Router();
 
 /**
  * @swagger
- * /api/murales/{idMural}:
+ * /api/cursos/murales/{idMural}:
  *   get:
  *    summary: Obtener un mural por id
  *    tags: [Mural]
@@ -79,6 +79,6 @@ const router = Router();
  *            example:
  *              message: No se ha podido encontrar 'Mural' en la BDD
  */
-router.get("/:idMural", controller.getMuralById);
+router.get("/cursos/murales/:idMural", controller.getMuralById);
 
 export default router;
