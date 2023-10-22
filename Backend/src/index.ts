@@ -37,10 +37,10 @@ app.get("/api", (req, res) => {
     res.status(200).send("<h1>Flipboard API!</h1>");
 });
 
-app.use("/api/cursos", cursoRouter);
-app.use("/api/rubricas", rubricaRouter);
-app.use("/api/murales", muralRouter);
-app.use("/api/usuarios", usuarioRouter);
+app.use("/api", cursoRouter);
+app.use("/api", rubricaRouter);
+app.use("/api", muralRouter);
+app.use("/api", usuarioRouter);
 app.use("/api/auth", authRouter)
 
 

@@ -11,20 +11,22 @@ async function getCursoById(req: Request, res: Response) {
 
     const idCurso = req.params.idCurso;
     try {
+        const curso = await service.getCursoById(idCurso);
+        return res.status(200).json(curso);
+
+    } catch (error) {
+        if (error instanceof NotFoundError) return res.status(404).json(error.message); // No existe el curso
+    }
+}
+
+async function getCursoByIdWithMurales(req: Request, res: Response) {
+
+    const idCurso = req.params.idCurso;
+    try {
         /*
             Cargar curso con murales con/sin rúbrica asignada
         */
-        if (req.query.murales === 'true' && req.query.rubrica === 'true') {
-
-            const curso = await service.getCursoWithMurales(idCurso, true);
-            return res.status(200).json(curso);
-
-        } else if (req.query.murales === 'true') {
-            const curso = await service.getCursoWithMurales(idCurso, false);
-            return res.status(200).json(curso);
-        }
-
-        const curso = await service.getCursoById(idCurso);
+        const curso = await service.getCursoWithMurales(idCurso, req.query.rubrica === 'true');
         return res.status(200).json(curso);
 
     } catch (error) {
@@ -65,4 +67,4 @@ async function saveCurso(req: Request, res: Response) {
 // demas metodos 
 
 
-export default { getCursoById, saveCurso };
+export default { getCursoById, saveCurso, getCursoByIdWithMurales };
