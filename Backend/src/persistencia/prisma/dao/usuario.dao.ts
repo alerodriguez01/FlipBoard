@@ -27,9 +27,9 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       const userCreated = await this.prisma.usuario.create({
         data: user
       });
-  
+
       return userCreated;
-      
+
     } catch (error) {
       // Error con algun tipo de dato (el correo ya existe, violacion unique - PrismaClientKnownRequestError -)
       // console.log(JSON.stringify(error))
@@ -110,31 +110,34 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     Obtener usuarios de un curso por nombre
     Retorna null si no existe el curso, o si ha ocurrido algun error
   */
-  async getUsuariosFromCursoByNombre(idCurso: string, nombre: string) {
-    try{
+  async getUsuariosFromCursoByNombre(idCurso: string, nombreUser: string) {
+    
+    try {
       return await this.prisma.usuario.findMany({
         where: {
-          AND:[
-            {nombre: {contains: nombre}},
-            {OR: [
-              {cursosAlumno: {contains: idCurso}},
-              {cursosDocente: {contains: idCurso}},
-            ]}
+          AND: [
+            { nombre: { contains: nombreUser } },
+            {
+              OR: [
+                { cursosAlumno: { has: idCurso } },
+                { cursosDocente: { has: idCurso } },
+              ]
+            }
           ]
         },
       });
     }
-    catch(error){
+    catch (error) {
       return null;
     }
   }
 
-/*
-  Obtener usuarios de un curso por nombre paginado
-*/
-async getUsuariosFromCursoByNombrePaginated(idCurso: string, nombre: string, limit: number, offset: number) {
+  /*
+    Obtener usuarios de un curso por nombre paginado
+  */
+  async getUsuariosFromCursoByNombrePaginated(idCurso: string, nombre: string, limit: number, offset: number) {
     return null;
-}
+  }
 
   // demas metodos
 }

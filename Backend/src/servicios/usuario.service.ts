@@ -144,19 +144,16 @@ function verifyJWT(token: string): Usuario {
  * 
  */
 async function getParticipantes(idCurso: string, nombre: string, limit: number, offset: number){
-
-    nombre = nombre ?? "";
     
     //paginado
     if(!!limit || !!offset){
-        const users = await UsuarioRepository.getInstance()
-            .getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
+        const users = await usuarioRepository.getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
         
         if(!users) throw new NotFoundError("Curso");
         return users;
     }
-
-    const users = await UsuarioRepository.getInstance().getUsuariosFromCursoByNombre(idCurso, nombre);
+    
+    const users = await usuarioRepository.getUsuariosFromCursoByNombre(idCurso, nombre);
     if(!users) throw new NotFoundError("Curso");
     return users;
 }
