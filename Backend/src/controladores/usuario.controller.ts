@@ -41,4 +41,28 @@ async function createUsuario(req: Request, res: Response) {
     }
 }
 
-export default { getUsuarioById, createUsuario };
+/*
+    Buscar participantes de un curso
+*/
+async function getParticipantes(req: Request, res: Response){
+
+    // offset is number && limit not number -> default limit
+    // offset is number && limit is number-> ok
+    // offset not number && limit is number -> offset=0
+    let limit = !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
+    let offset = !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
+    
+    
+
+
+    try {
+        const users = await service.getParticipantes(req.params.idCurso,
+            req.params.nombre, limit, offset);
+        res.status(200).json(users);
+    } catch (error) {
+        if(error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
+
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes };
