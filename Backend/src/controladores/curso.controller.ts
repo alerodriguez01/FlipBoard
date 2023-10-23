@@ -19,21 +19,6 @@ async function getCursoById(req: Request, res: Response) {
     }
 }
 
-async function getCursoByIdWithMurales(req: Request, res: Response) {
-
-    const idCurso = req.params.idCurso;
-    try {
-        /*
-            Cargar curso con murales con/sin rúbrica asignada
-        */
-        const curso = await service.getCursoWithMurales(idCurso, req.query.rubrica === 'true');
-        return res.status(200).json(curso);
-
-    } catch (error) {
-        if (error instanceof NotFoundError) return res.status(404).json(error.message); // No existe el curso
-    }
-}
-
 /*
     Guardar curso
 */
@@ -67,4 +52,4 @@ async function saveCurso(req: Request, res: Response) {
 // demas metodos 
 
 
-export default { getCursoById, saveCurso, getCursoByIdWithMurales };
+export default { getCursoById, saveCurso };

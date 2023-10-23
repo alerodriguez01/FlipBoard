@@ -90,65 +90,6 @@ router.get("/cursos/:idCurso", controller.getCursoById);
 
 /**
  * @swagger
- * /api/cursos/{idCurso}/murales:
- *   get:
- *     summary: Obtener los murales de un curso  
- *     tags: [Curso]
- *     parameters:
- *       - name: idCurso
- *         in: path
- *         required: true
- *         description: El id del curso
- *         schema:
- *           type: string
- *         example:
- *           653460ae39e91bc002bf42f5
- *       - name: rubrica
- *         in: query
- *         required: false
- *         description: Indica si se quieren obtener la rubrica de cada mural
- *         schema:
- *           type: boolean
- *         example:
- *           true
- *     responses:
- *       200:
- *         description: Curso encontrado
- *         content:
- *           application/json:
- *               example:
- *                 id: 653460ae39e91bc002bf42f5
- *                 nombre: Curso de Matemáticas
- *                 tema: Matemáticas Avanzadas
- *                 sitioWeb: https://matematicas.com
- *                 descripcion: Un curso de matemáticas avanzadas
- *                 emailContacto: contacto@matematicas.com
- *                 participantes:
- *                   - 653460ae39e91bc002bf42f1
- *                 docentes:
- *                   - 653460ae39e91bc002bf42f1
- *                 rubricasGrupos:
- *                   - 653460ae39e91bc002bf42f7
- *                 rubricasAlumnos:
- *                   - 653460ae39e91bc002bf42f7
- *                 murales:
- *                   - id: 653460ae39e91bc002bf42fb
- *                     nombre: Mural de Matemáticas
- *                     contenido: Contenido del mural de matemáticas
- *                     descripcion: Mural de matemáticas para el curso
- *                     rubricaId: 653460ae39e91bc002bf42f7
- *                     cursoId: 653460ae39e91bc002bf42f5                              
- *       404:
- *         description: No se encontro el curso
- *         content:
- *           application/json:
- *             example:
- *               message: No se ha podido encontrar 'Curso' en la BDD
- */
-router.get("/cursos/:idCurso/murales", controller.getCursoByIdWithMurales);
-
-/**
- * @swagger
  * /api/cursos:
  *   post:
  *    summary: Crear un nuevo curso

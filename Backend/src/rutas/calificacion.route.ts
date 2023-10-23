@@ -49,4 +49,16 @@ const router = Router();
  */
 
 
+// TODO - ID11 - Cargar calificaciones del curso (cursoId) que pertenecen al usuario (usuarioId), junto a la rúbrica (completa, todos los campos). Tiene que ser paginado.
+router.get("/:idCurso/calificaciones/alumnos/:idUsuario")
+
+// TODO - ID14 - Crear calificacion
+router.post("/calificaciones/alumnos/:idUsuario")
+
+// TODO - ID14 - Crear calificacion
+router.get("/:idCurso/calificaciones/grupos/:idGrupo")
+
+// TODO - ID20 - Traer todas las calificaciones del curso (cursoId) que tengan asociada una rúbrica (rúbricaId). Tiene que ser paginado (aunque quizá no sea necesario, porque solo hay que traer la calificación). 
+router.get("/:idCurso/calificaciones")
+
 export default router;

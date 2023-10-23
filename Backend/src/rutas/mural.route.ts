@@ -79,6 +79,57 @@ const router = Router();
  *            example:
  *              message: No se ha podido encontrar 'Mural' en la BDD
  */
-router.get("/cursos/murales/:idMural", controller.getMuralById);
+router.get("/murales/:idMural", controller.getMuralById);
+
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/murales:
+ *   get:
+ *     summary: Obtener los murales de un curso  
+ *     tags: [Mural]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           653460ae39e91bc002bf42f5
+ *       - name: rubrica
+ *         in: query
+ *         required: false
+ *         description: Indica si se quieren obtener la rubrica de cada mural
+ *         schema:
+ *           type: boolean
+ *         example:
+ *           true
+ *     responses:
+ *       200:
+ *         description: Curso encontrado
+ *         content:
+ *           application/json:
+ *               example:
+ *                 murales:
+ *                   - id: 653460ae39e91bc002bf42fb
+ *                     nombre: Mural de Matemáticas
+ *                     contenido: Contenido del mural de matemáticas
+ *                     descripcion: Mural de matemáticas para el curso
+ *                     rubricaId: 653460ae39e91bc002bf42f7
+ *                     cursoId: 653460ae39e91bc002bf42f5                              
+ *       404:
+ *         description: No se encontro el curso
+ *         content:
+ *           application/json:
+ *             example:
+ *               message: No se ha podido encontrar 'Curso' en la BDD
+ */
+router.get("/:idCurso/murales", controller.getMuralesFromCurso);
+
+// TODO - ID18 - Asignar rúbrica a un mural (actualizar el mural con el valor de rúbricaId)
+router.put("/murales/:idMural")
+
+// TODO - ID21 - Crear mural
+router.post("/murales")
 
 export default router;

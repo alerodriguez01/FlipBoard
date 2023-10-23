@@ -1,7 +1,8 @@
 import { Router } from "express";
 import controller from "../controladores/rubrica.controller.js";
 
-const router = Router();
+const routerUsuario = Router(); // Router para rutas "/usuarios/rubricas"
+const routerCurso = Router(); // Router para rutas "/cursos/rubricas"
 
 /**
  * @swagger
@@ -113,6 +114,8 @@ const router = Router();
  * 
  */
 
+// ------------ Rutas correspondientes a /usuarios ------------
+
 /**
  * @swagger
  * /api/usuarios/rubricas/{idRubrica}:
@@ -142,7 +145,7 @@ const router = Router();
  *             example:
  *              message: No se ha podido encontrar 'Rubrica' en la BDD
  */
-router.get("/usuarios/rubricas/:idRubrica", controller.getRubricaById);
+routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
 
 /**
  * @swagger
@@ -217,6 +220,24 @@ router.get("/usuarios/rubricas/:idRubrica", controller.getRubricaById);
  *                 value:
  *                   message: No se ha podido encontrar 'Usuario' en la BDD
  */
-router.post("/usuarios/rubricas", controller.createRubrica);
+routerUsuario.post("/rubricas", controller.createRubrica);
 
-export default router;
+// TODO - ID16 - Traer rúbricas de un usuario (por usuarioId)
+routerUsuario.get("/:idUsuario/rubricas/")
+
+// ------------ Rutas correspondientes a /cursos ------------
+
+// TODO - ID12 - Cargar curso con lista rubricasAlumnos (traer cada rúbrica con todos los campos).
+routerCurso.get("/:idCurso/rubricas/alumnos")
+
+// TODO - ID13 - Cargar curso con lista rubricasGrupos (traer cada rúbrica con todos los campos).
+routerCurso.get("/:idCurso/rubricas/grupos")
+
+// TODO - ID19 - Asignar rúbrica a todos los participantes (alumnos) del curso: en rúbrica, hay que agregar el cursoId a la lista de alumnosCursos
+routerCurso.put("/:idCurso/rubricas/alumnos")
+
+// TODO - ID20 - Asignar rúbrica a todos los grupos del curso: en rúbrica, hay que agregar el cursoId a la lista de gruposCursos
+routerCurso.put("/:idCurso/rubricas/grupos")
+
+
+export { routerUsuario, routerCurso };
