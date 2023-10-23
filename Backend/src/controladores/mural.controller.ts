@@ -21,4 +21,17 @@ async function getMuralById(req: Request, res: Response) {
 
 }
 
-export default { getMuralById };
+async function getMuralesFromCurso(req: Request, res: Response) {
+
+    const idCurso = req.params.idCurso;
+    const traerRubrica = req.query.rubrica === "true";
+    
+    try {
+        const murales = await service.getMuralesFromCurso(idCurso, traerRubrica);
+        return res.status(200).json(murales);
+    } catch (error) {
+        if(error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+}
+
+export default { getMuralById, getMuralesFromCurso };

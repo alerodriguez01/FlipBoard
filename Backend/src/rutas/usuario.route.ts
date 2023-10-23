@@ -82,8 +82,7 @@ const router = Router();
  *             example:
  *               message: No se ha podido encontrar 'Usuario' en la BDD
  */
-
-router.get("/:idUsuario", controller.getUsuarioById);
+router.get("/usuarios/:idUsuario", controller.getUsuarioById);
 
 /**
  * @swagger
@@ -118,6 +117,6 @@ router.get("/:idUsuario", controller.getUsuarioById);
  *                value:
  *                  message: Valor invalido para el atributo Correo de Usuario
  */
-router.post("/", controller.createUsuario);
+router.post("/usuarios", controller.createUsuario);
 
 export default router;
