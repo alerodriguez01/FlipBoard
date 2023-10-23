@@ -140,4 +140,25 @@ function verifyJWT(token: string): Usuario {
 
 }
 
-export default { getUsuarioById, createUsuario, login, verifyJWT };
+/**
+ * 
+ */
+async function getParticipantes(idCurso: string, nombre: string, limit: number, offset: number){
+
+    nombre = nombre ?? "";
+    
+    //paginado
+    if(!!limit || !!offset){
+        const users = await UsuarioRepository.getInstance()
+            .getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
+        
+        if(!users) throw new NotFoundError("Curso");
+        return users;
+    }
+
+    const users = await UsuarioRepository.getInstance().getUsuariosFromCursoByNombre(idCurso, nombre);
+    if(!users) throw new NotFoundError("Curso");
+    return users;
+}
+
+export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes };
