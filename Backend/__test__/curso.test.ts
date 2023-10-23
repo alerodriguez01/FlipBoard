@@ -2,7 +2,7 @@ import request, { Response } from 'supertest';
 
 const app = 'http://localhost:3100';
 
-describe("POST /cursos", () => {
+describe("POST /api/cursos", () => {
   
   let user: Response;
   beforeAll(async () => {
