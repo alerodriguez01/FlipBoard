@@ -3,17 +3,18 @@ import request from 'supertest';
 
 const app = 'http://localhost:3100';
 
+let user: Response;
+
+beforeAll( async () => {
+  user = await request(app).post('/api/usuarios').send({
+    "nombre": "Tomas",
+    "correo": "tototototo@gmail.com",
+    "contrasena": "passworD123"
+  });
+}, 15000);
+
 describe("POST /api/usuarios/rubricas", () => {
-  let user: Response;
-
-  beforeAll( async () => {
-    user = await request(app).post('/api/usuarios').send({
-      "nombre": "Tomas",
-      "correo": "tototototo@gmail.com",
-      "contrasena": "passworD123"
-    });
-  }, 15000);
-
+  
   test("Crear nueva rubrica", async () => {
     
     const rubrica = await request(app).post('/api/usuarios/rubricas').send({
@@ -119,4 +120,47 @@ describe("POST /api/usuarios/rubricas", () => {
     });
     expect(rubrica.statusCode).toBe(400);
   }, 15000);
+});
+
+describe("GET /usuarios/rubricas/:idRubrica", () => {
+  let rubric: Response;
+
+  beforeAll(async () => {
+    rubric = await request(app).post('/api/usuarios/rubricas').send({
+      nombre:"Rubrica 1",
+      criterios:[
+        {nombre: "c1",
+         descripciones: ["dddd", "ddd2", "d3"]},
+         {nombre: "c2",
+         descripciones: ["d4", "d5ddd", "d6dddd"]},
+      ],
+      niveles:[
+        {nombre: "n1aaaaa"},
+        {nombre: "n2bbbbb"},
+        {nombre: "n3ccccc"},
+      ],
+      usuarioId: user.body.id
+    });
+  });
+
+  test("Obtener rubrica valida", async () => {
+    const res = await request(app).get('/api/usuarios/rubricas/'+rubric.body.id);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toStrictEqual(rubric.body);
+  }, 15000);
+
+  test("Intentar obtener una rubrica inexistente", async () => {
+    const fakeid = "333333333333333333333333";
+    const res = await request(app).get('/api/usuarios/rubricas/'+fakeid);
+
+    expect(res.statusCode).toBe(404);
+  }, 15000);
+
+  test("Intentar obtener una rubrica con id invalido", async () => {
+    const res = await request(app).get('/api/usuarios/rubricas/'+'idInvalido');
+
+    expect(res.statusCode).toBe(404);
+  }, 15000);
+
 });
