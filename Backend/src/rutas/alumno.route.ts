@@ -26,6 +26,22 @@ const router = Router();
  *          type: string
  *        example:
  *          Juan
+ *      - name: limit
+ *        in: query
+ *        required: false
+ *        description: Limite de alumnos a obtener
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
+ *      - name: offset
+ *        in: query
+ *        required: false
+ *        description: Numero de alumnos a saltar
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
  *    responses:
  *      200:
  *        description: Participantes encontrados
