@@ -25,7 +25,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
     try {
       const userCreated = await this.prisma.usuario.create({
-        data: user
+        data: {...user, nombre: user.nombre.toLowerCase() }
       });
 
       return userCreated;
@@ -116,7 +116,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       return await this.prisma.usuario.findMany({
         where: {
           AND: [
-            { nombre: { contains: nombreUser } },
+            { nombre: { contains: nombreUser.toLowerCase() } },
             {
               OR: [
                 { cursosAlumno: { has: idCurso } },
@@ -141,7 +141,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       skip: offset,
       where: {
         AND: [
-          { nombre: { contains: nombreUser } },
+          { nombre: { contains: nombreUser.toLowerCase() } },
           {
             OR: [
               { cursosAlumno: { has: idCurso } },
