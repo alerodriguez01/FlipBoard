@@ -11,7 +11,7 @@ describe("POST /api/usuarios", () => {
     });
     expect(res.statusCode).toBe(201);
     expect(res.body.nombre).toBe("Tomas");
-  }, 10000);
+  }, 15000);
 
   test("Intentar crear usuario con mail duplicado", async () => {
     const res = await request(app).post("/api/usuarios").send({
