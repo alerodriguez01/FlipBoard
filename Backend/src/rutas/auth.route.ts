@@ -49,6 +49,12 @@ const router = Router();
  *          application/json:
  *            example:
  *              message: Datos incompletos
+ *      401:
+ *        description: Token invalido o expirado 
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Token expirado o no valido
  *      404:
  *        description: Error de correo sin formato o inexistente o contrasena incorrecta
  *        content:
