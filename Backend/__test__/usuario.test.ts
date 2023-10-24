@@ -10,7 +10,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "passworD123"
     });
     expect(res.statusCode).toBe(201);
-    expect(res.body.nombre).toBe("Tomas");
+    expect(res.body.nombre).toBe("tomas");
   }, 15000);
 
   test("Intentar crear usuario con mail duplicado", async () => {
