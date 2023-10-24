@@ -80,7 +80,37 @@ const router = Router();
  */
 router.get("/:idCurso/alumnos", controller.getParticipantes);
 
-// TODO - ID26 - Añadir participante a un curso
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/alumnos:
+ *   put:
+ *    summary: Agregar participante a un curso
+ *    tags: [Usuario]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          65326ed824fea7e06d01e211
+ *    responses:
+ *      204:
+ *        description: Participante agregado al curso
+ *      404:
+ *        description: No se encontro el curso o el usuario
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Curso o Usuario' en la BDD
+ *      400:
+ *        description: Id de usuario ausente
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Faltan datos obligatorios
+ */
 router.put("/:idCurso/alumnos", controller.addParticipante);
 
 export default router;
