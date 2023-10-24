@@ -81,6 +81,6 @@ const router = Router();
 router.get("/:idCurso/alumnos", controller.getParticipantes);
 
 // TODO - ID26 - Añadir participante a un curso
-router.put("/:idCurso/alumnos")
+router.put("/:idCurso/alumnos", controller.addParticipante);
 
 export default router;
