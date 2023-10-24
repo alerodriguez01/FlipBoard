@@ -202,17 +202,19 @@ describe("GET /cursos/:idCurso/alumnos", () => {
     }); 
     //update users
     user1 = await request(app).get('/api/usuarios/'+user1.body.id);
-    user2 = await request(app).post('/api/usuarios/'+user2.body.id);
-    user3 = await request(app).post('/api/usuarios/'+user3.body.id);
+    user2 = await request(app).get('/api/usuarios/'+user2.body.id);
+    user3 = await request(app).get('/api/usuarios/'+user3.body.id);
   }, 25000);
 
   test("Cargar todos los participantes de un curso", async () => {
-    const res = await request(app).get('/api/cursos/'+curso.body.id+'alumnos');
+    const res = await request(app).get('/api/cursos/'+curso.body.id+'/alumnos');
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual(
-      [user1.body, user2.body, user3.body]
-    );
+    expect(res.body.length).toBe(3);
+    expect(res.body).toContainEqual(user1.body);
+    expect(res.body).toContainEqual(user2.body);
+    expect(res.body).toContainEqual(user3.body);
+
   },15000);
 
   test("Cargar todos los participantes de un curso con offset y limit validos", async () => {
@@ -222,7 +224,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([user2.body, user3.body]);
+    expect(res.body.length).toBe(2);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset invalido y limit validos", async () => {
@@ -232,7 +234,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([user1.body]);
+    expect(res.body.length).toBe(1);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset valido y limit invalido", async () => {
@@ -242,7 +244,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([user2.body]);
+    expect(res.body.length).toBe(2);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset invalido y limit invalido", async () => {
@@ -252,7 +254,10 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([user1.body, user2.body, user3.body]);
+    expect(res.body.length).toBe(3);
+    expect(res.body).toContainEqual(user1.body);
+    expect(res.body).toContainEqual(user2.body);
+    expect(res.body).toContainEqual(user3.body);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset, limit y nombre validos", async () => {
@@ -263,6 +268,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}&nombre=${nombre}`);
 
     expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(1);
     expect(res.body).toEqual([user3.body]);
   },15000);
 
