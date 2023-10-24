@@ -64,4 +64,19 @@ async function getParticipantes(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes };
+async function addParticipante(req: Request, res: Response) {
+
+    const userBody = req.body;
+
+    if(!userBody.id) return res.status(400).json("Faltan datos obligatorios");
+
+    try{
+        await service.addParticipanteToCurso(req.params.idCurso, userBody.id);
+        return res.status(204).send();
+    } catch (error){
+        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
+
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante };

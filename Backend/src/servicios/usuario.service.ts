@@ -6,9 +6,11 @@ import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
 import jwt from 'jsonwebtoken';
 import { TokenInvalido } from "../excepciones/TokenError.js";
+import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 
 const usuarioRepository = UsuarioRepository.getInstance();
 const saltRepository = SaltRepository.getInstance();
+const cursoRepository = CursoRepository.getInstance();
 
 /*
     Obtener un usuario por id (opcionalmente con sus cursos)
@@ -158,4 +160,15 @@ async function getParticipantes(idCurso: string, nombre: string, limit: number, 
     return users;
 }
 
-export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes };
+/**
+ * Agregar participante a un curso. Retorna void.
+ */
+async function addParticipanteToCurso(idCurso: string, idUser: string){
+    
+    const curso = await cursoRepository.addUsuario(idCurso, idUser);
+    
+    if(!curso) throw new NotFoundError("Curso o User");
+
+}
+
+export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso };
