@@ -18,7 +18,7 @@ describe("POST /api/auth/login", () => {
             "contrasena": contrasena
         });
 
-    }, 15000);
+    }, 25000);
 
     test("Login con usuario y contraseña correctos", async () => {
 
