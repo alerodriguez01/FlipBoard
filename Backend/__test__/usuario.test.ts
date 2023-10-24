@@ -5,7 +5,7 @@ const app = 'http://localhost:3100';
 describe("POST /api/usuarios", () => {
   test("Crear nuevo usuario", async () => {
     const res = await request(app).post("/api/usuarios").send({
-      "nombre": "Tomas",
+      "nombre": "tomas",
       "correo": "mimail@gmail.com",
       "contrasena": "passworD123"
     });
