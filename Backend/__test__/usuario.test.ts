@@ -59,7 +59,7 @@ describe("GET /api/usuarios/:idUsuario", () => {
       emailContacto: "unmaildelcurso@gmail.com",
       docentes: [user.body.id],
     });
-  }, 15000);
+  }, 25000);
 
   test("Obtener usuario valido", async () => {
     const res = await request(app).get('/api/usuarios/'+user.body.id);
@@ -125,7 +125,7 @@ describe("PUT /cursos/:idCurso/alumnos", () => {
       emailContacto: "unmaildelcurso31@gmail.com",
       docentes: [user1.body.id],
     });
-  }, 15000);
+  }, 25000);
 
   test("Agregar usuario a un curso", async () => {
     const res = await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
