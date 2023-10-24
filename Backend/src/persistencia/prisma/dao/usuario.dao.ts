@@ -135,8 +135,30 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   /*
     Obtener usuarios de un curso por nombre paginado
   */
-  async getUsuariosFromCursoByNombrePaginated(idCurso: string, nombre: string, limit: number, offset: number) {
-    return null;
+  async getUsuariosFromCursoByNombrePaginated(idCurso: string, nombreUser: string, limit: number, offset: number) {
+
+    let query = {
+      skip: offset,
+      where: {
+        AND: [
+          { nombre: { contains: nombreUser } },
+          {
+            OR: [
+              { cursosAlumno: { has: idCurso } },
+              { cursosDocente: { has: idCurso } },
+            ]
+          }
+        ]
+      },
+    }
+
+    try {
+      if (limit === 0) return await this.prisma.usuario.findMany(query);
+      else return await this.prisma.usuario.findMany({...query, take: limit});
+    }
+    catch (error) {
+      return null;
+    }
   }
 
   // demas metodos
