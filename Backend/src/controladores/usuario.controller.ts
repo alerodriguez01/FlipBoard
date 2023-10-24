@@ -49,8 +49,8 @@ async function getParticipantes(req: Request, res: Response) {
     // offset is number && limit not number -> default limit
     // offset is number && limit is number-> ok
     // offset not number && limit is number -> offset=0
-    const limit = req.query.limit ? parseInt(req.query.limit.toString()) : 0 // !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
-    const offset = req.query.offset ? parseInt(req.query.offset.toString()) : 0// !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
+    const limit = req.query.limit ? parseInt(req.query.limit as string) || 0 : 0  // !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
+    const offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0 // !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
 
     const nombre = req.query.nombre ? req.query.nombre.toString() : '';
 
