@@ -167,3 +167,129 @@ describe("PUT /cursos/:idCurso/alumnos", () => {
     expect(res.statusCode).toBe(400);
   }, 15000);
 });
+
+describe("GET /cursos/:idCurso/alumnos", () => {
+  let curso: Response;
+  let user1: Response;
+  let user2: Response;
+  let user3: Response;
+  beforeAll(async () => {
+    user1 = await request(app).post('/api/usuarios').send({
+      "nombre": "tomas",
+      "correo": "tomastomas@gmail.com",
+      "contrasena": "passworD123"
+    });
+    user2 = await request(app).post('/api/usuarios').send({
+      "nombre": "pepito",
+      "correo": "pppppepito@gmail.com",
+      "contrasena": "passworD123"
+    });
+    user3 = await request(app).post('/api/usuarios').send({
+      "nombre": "john",
+      "correo": "johncena@gmail.com",
+      "contrasena": "passworD123"
+    });
+    curso = await request(app).post('/api/cursos').send({
+      nombre: "cursata",
+      emailContacto: "cursotomas@gmail.com",
+      docentes: [user1.body.id],
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: user2.body.id
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: user3.body.id
+    }); 
+    //update users
+    user1 = await request(app).get('/api/usuarios/'+user1.body.id);
+    user2 = await request(app).post('/api/usuarios/'+user2.body.id);
+    user3 = await request(app).post('/api/usuarios/'+user3.body.id);
+  }, 25000);
+
+  test("Cargar todos los participantes de un curso", async () => {
+    const res = await request(app).get('/api/cursos/'+curso.body.id+'alumnos');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual(
+      [user1.body, user2.body, user3.body]
+    );
+  },15000);
+
+  test("Cargar todos los participantes de un curso con offset y limit validos", async () => {
+    const offset = 1;
+    const limit = 3;
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([user2.body, user3.body]);
+  },15000);
+
+  test("Cargar todos los participantes de un curso con offset invalido y limit validos", async () => {
+    const offset = -1;
+    const limit = 1;
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([user1.body]);
+  },15000);
+
+  test("Cargar todos los participantes de un curso con offset valido y limit invalido", async () => {
+    const offset = 1;
+    const limit = -1;
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([user2.body]);
+  },15000);
+
+  test("Cargar todos los participantes de un curso con offset invalido y limit invalido", async () => {
+    const offset = "invalido";
+    const limit = "noEsValido";
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([user1.body, user2.body, user3.body]);
+  },15000);
+
+  test("Cargar todos los participantes de un curso con offset, limit y nombre validos", async () => {
+    const offset = 0;
+    const limit = 5;
+    const nombre = user3.body.nombre;
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}&nombre=${nombre}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([user3.body]);
+  },15000);
+
+  test("Cargar todos los participantes de un curso con nombre invalido", async () => {
+    const nombre = 1;
+    const res = await request(app).get(
+      '/api/cursos/'+curso.body.id+`/alumnos?nombre=${nombre}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  },15000);
+
+  test("Intentar Cargar todos los participantes de un curso inexistente", async () => {
+    const res = await request(app).get(
+      '/api/cursos/'+"333333333333333333333333"+'/alumnos');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  },15000);
+
+  test("Intentar cargar todos los participantes de un curso inexistente paginado", async () => {
+    const res = await request(app).get(
+      '/api/cursos/'+"333333333333333333333333"+'/alumnos?offset=1&limit=3');
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual([]);
+  },15000);
+
+
+});
