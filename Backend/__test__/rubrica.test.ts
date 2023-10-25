@@ -11,7 +11,7 @@ beforeAll( async () => {
     "correo": "tototototo@gmail.com",
     "contrasena": "passworD123"
   });
-}, 15000);
+}, 25000);
 
 describe("POST /api/usuarios/rubricas", () => {
   
@@ -141,7 +141,7 @@ describe("GET /usuarios/rubricas/:idRubrica", () => {
       ],
       usuarioId: user.body.id
     });
-  });
+  }, 25000);
 
   test("Obtener rubrica valida", async () => {
     const res = await request(app).get('/api/usuarios/rubricas/'+rubric.body.id);

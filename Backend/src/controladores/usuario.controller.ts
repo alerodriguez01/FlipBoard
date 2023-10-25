@@ -49,9 +49,12 @@ async function getParticipantes(req: Request, res: Response) {
     // offset is number && limit not number -> default limit
     // offset is number && limit is number-> ok
     // offset not number && limit is number -> offset=0
-    const limit = req.query.limit ? parseInt(req.query.limit.toString()) : 0 // !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
-    const offset = req.query.offset ? parseInt(req.query.offset.toString()) : 0// !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
+    let limit = req.query.limit ? parseInt(req.query.limit as string) || 0 : 0  // !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
+    let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0 // !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
 
+    if(limit < 0) limit = 0;
+    if(offset < 0) offset = 0;
+    
     const nombre = req.query.nombre ? req.query.nombre.toString() : '';
 
 
@@ -64,4 +67,19 @@ async function getParticipantes(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes };
+async function addParticipante(req: Request, res: Response) {
+
+    const userBody = req.body;
+
+    if(!userBody.id) return res.status(400).json("Faltan datos obligatorios");
+
+    try{
+        await service.addParticipanteToCurso(req.params.idCurso, userBody.id);
+        return res.status(204).send();
+    } catch (error){
+        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
+
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante };

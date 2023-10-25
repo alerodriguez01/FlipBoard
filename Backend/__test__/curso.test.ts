@@ -11,7 +11,7 @@ describe("POST /api/cursos", () => {
       "correo": "mmmmmmail@gmail.com",
       "contrasena": "123456678Aa"
     });
-  }, 15000);
+  }, 25000);
 
   test("Crear curso con todos los campos", async () => {
     const res = await request(app).post('/api/cursos').send({

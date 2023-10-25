@@ -40,5 +40,13 @@ export class CursoRepository implements CursoDataSource {
     async getCursos(): Promise<Curso[]> {
         return await this.cursoDAO.getCursos();
     }
+  
+    /*
+        Agregar participante
+    */
+    async addUsuario(idCurso: string, idUser: string) {
+        return await this.cursoDAO.addUsuario(idCurso, idUser);
+    }
+
     // demas metodos
 }

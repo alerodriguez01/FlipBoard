@@ -61,5 +61,28 @@ export class CursoPrismaDAO implements CursoDataSource {
         const cursos = await this.prisma.curso.findMany();
         return cursos;
     }
+  
+  /*
+        agregar usuario a curso
+    */
+    async addUsuario(idCurso: string, idUser: string) {
+        try{
+            const curso = await this.prisma.curso.update({
+                where: {
+                    id: idCurso,
+                },
+                data: {
+                    participantesUser: {
+                        connect: {id: idUser}
+                    }
+                }
+            });
+            return curso;
+        } catch(err){
+            //no existe el curso o el usuario, o error de prisma
+            return null;
+        }
+    }
+
     // demas metodos
 }
