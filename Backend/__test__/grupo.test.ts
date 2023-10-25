@@ -1,22 +1,38 @@
 import { Curso, Usuario } from '@prisma/client';
-import exp from 'constants';
 import request from 'supertest';
 
 const app = 'http://localhost:3100';
 
 describe("GET /api/cursos/:idCurso/grupos", () => {
 
-    // Busco un curso que exista
     let curso: Curso;
-    let integrante: Usuario
+    let integrante: Usuario;
     beforeAll(async () => {
-        const res = await request(app).get('/api/cursos');
-        curso = res.body[0];
 
-        // Busco un integrante del curso por id
-        const integranteRes = await request(app).get(`/api/usuarios/${curso.participantes[0]}`)
-        integrante = integranteRes.body;
-    });
+        const duenioCurso = await request(app).post('/api/usuarios').send({
+            "nombre": "Tomas Peiretti",
+            "correo": "tomaspeirettiiiii@gmail.com",
+            "contrasena": "123456678Aa"
+        });
+        const res = await request(app).post('/api/cursos').send({
+            nombre: "el curso de tomas",
+            tema: "gimnasio",
+            sitioWeb: "tomastometi.com",
+            descripcion: "describo descripcion",
+            emailContacto: "tomaspeirettiiiii@gmail.com",
+            docentes: [duenioCurso.body.id],
+        })
+        curso = res.body;
+
+        let int = await request(app).post('/api/usuarios').send({
+            "nombre": "Senor Integrante",
+            "correo": "integrante@gmail.com",
+            "contrasena": "123456678Aa"
+        });
+        await request(app).put('/api/cursos/'+curso.id+'/alumnos');
+        int = await request(app).get(`/api/usuarios/${int.body.id}`);
+        integrante = int.body;
+    }, 25000);
 
     test("1. Obtener todos los grupos de un curso", async () => {
 
@@ -26,14 +42,14 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.body).toBeInstanceOf(Array);
         expect(res.body.length).toBeGreaterThan(0);
         expect(res.body[0].cursoId).toBe(curso.id);
-    })
+    }, 15000);
 
     test("2. Obtener todos los grupos de un curso inexistente", async () => {
 
         const res = await request(app).get(`/api/cursos/${curso.id}123/grupos`);
 
         expect(res.status).toBe(404);
-    })
+    }, 15000);
 
     test("3. Obtener todos los grupos de un curso con un integrante: ?integrante=", async () => {
 
@@ -47,7 +63,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
         expect(res.body[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
-    })
+    }, 15000);
 
     test("4. Obtener todos los grupos de un curso con un integrante: ?integrante= y limit correcto", async () => {
 
@@ -64,7 +80,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
         expect(res.body[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
-    })
+    }, 15000);
 
     test("5. Obtener todos los grupos de un curso con un integrante: ?integrante= y offset correcto", async () => {
 
@@ -76,7 +92,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.status).toBe(200);
         expect(res.body).toBeInstanceOf(Array);
 
-    })
+    },15000);
 
     test("6. Obtener todos los grupos de un curso con un integrante: ?integrante= , offset y limit correctos", async () => {
 
@@ -94,7 +110,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
         expect(res.body[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
-    })
+    }, 15000);
 
     test("7. Obtener todos los grupos de un curso con ?integrante= invalido y limite valido", async () => {
 
@@ -109,7 +125,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.body.length).toBeLessThanOrEqual(limit);
         expect(res.body[0].cursoId).toBe(curso.id);
 
-    })
+    }, 15000);
 
     test("8. Obtener todos los grupos de un curso con limite negativo", async () => {
 
@@ -123,7 +139,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.body.length).toBeGreaterThan(0);
         expect(res.body[0].cursoId).toBe(curso.id);
 
-    })
+    },15000);
 
     test("8. Obtener todos los grupos de un curso con limite con letra", async () => {
 
@@ -137,6 +153,6 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.body.length).toBeGreaterThan(0);
         expect(res.body[0].cursoId).toBe(curso.id);
 
-    })
+    },15000);
 
-})
+});
