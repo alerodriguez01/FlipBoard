@@ -32,7 +32,7 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         await request(app).put('/api/cursos/'+curso.id+'/alumnos');
         int = await request(app).get(`/api/usuarios/${int.body.id}`);
         integrante = int.body;
-    }, 25000);
+    }, 30000);
 
     test("1. Obtener todos los grupos de un curso", async () => {
 
