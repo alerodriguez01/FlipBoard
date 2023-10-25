@@ -153,6 +153,15 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
  *   post:
  *     summary: Crear una rubrica
  *     tags: [Rubrica]
+ *     parameters:
+ *       - name: idRubrica
+ *         in: path
+ *         required: true
+ *         description: El id de la rubrica a obtener
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20d
  *     requestBody:
  *       required: true
  *       content:
@@ -172,7 +181,6 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
  *               {nombre: "n2"},
  *               {nombre: "n3"},
  *             ]
- *             usuarioId: 65326ed824fea7e06d01e207
  *     responses:
  *       201: 
  *         description: Rubrica creada exitosamente
@@ -207,7 +215,6 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
  *               nombre: Mi rubrica 123
  *               gruposCursos: []
  *               alumnosCursos: []
- *               usuarioId: 65326ed824fea7e06d01e207
  *       400:
  *         description: Faltan datos obligatorios o el correo ya existe
  *         content:
@@ -220,7 +227,7 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
  *                 value:
  *                   message: No se ha podido encontrar 'Usuario' en la BDD
  */
-routerUsuario.post("/rubricas", controller.createRubrica);
+routerUsuario.post("/:idUsuario/rubricas", controller.createRubrica);
 
 // TODO - ID16 - Traer rúbricas de un usuario (por usuarioId)
 routerUsuario.get("/:idUsuario/rubricas/", controller.getAllRubricasByUserId);

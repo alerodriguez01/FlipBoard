@@ -26,14 +26,12 @@ async function createRubrica(req: Request, res: Response) {
 
     if (!body.nombre || !body.criterios || body.criterios.length<1 || !body.niveles || body.niveles.length<1)
         return res.status(400).json("Rubrica invalida");
-    if(!body.usuarioId)
-        return res.status(400).json("Faltan datos para la creacion.");
     
     const rubrica = {
         nombre: body.nombre,
         criterios: body.criterios,
         niveles: body.niveles,
-        usuarioId: body.usuarioId,
+        usuarioId: req.params.idUsuario,
     };
 
     try{
