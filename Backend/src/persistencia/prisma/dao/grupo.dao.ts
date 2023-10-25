@@ -63,10 +63,12 @@ export class GrupoPrismaDAO implements GrupoDataSource {
 
                 const newGrupo = await this.prisma.grupo.create({
                     data: {
-                        ...grupo,
                         numero: nroGrupo,
                         integrantesModel: {
                             connect: integrantesObj
+                        },
+                        curso:{
+                            connect: {id: grupo.cursoId}
                         }
                     }
                 });
