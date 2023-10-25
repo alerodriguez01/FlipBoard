@@ -16,7 +16,7 @@ async function getCursoById(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
-        if (error instanceof InvalidValueError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
     }
 }
 

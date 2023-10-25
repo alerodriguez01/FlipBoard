@@ -71,12 +71,12 @@ const router = Router();
  *                cursosDocente: []
  *                grupos:
  *                  - "653460ae39e91bc002bf42f9"
- *      404:
+ *      400:
  *        description: Valor invalido para idCurso
  *        content:
  *          application/json:
  *            example:
- *              error: Valor invalido para el atributo idCurso de Usuario
+ *              error: Valor invalido para el atributo idCurso de Usuario 
  */
 router.get("/:idCurso/alumnos", controller.getParticipantes);
 
