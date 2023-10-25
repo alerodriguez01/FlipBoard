@@ -1,4 +1,4 @@
-import { Curso, Usuario } from '@prisma/client';
+import { Curso, Grupo, Usuario } from '@prisma/client';
 import request from 'supertest';
 
 const app = 'http://localhost:3100';
@@ -91,7 +91,23 @@ describe("POST /cursos/:idCurso/grupos", () => {
     }, 15000);
 });
 
-describe.skip("GET /api/cursos/:idCurso/grupos", () => {
+describe("GET /api/cursos/:idCurso/grupos", () => {
+
+    let grupo1: Grupo;
+    let grupo2: Grupo;
+
+    beforeAll(async () => {
+        const g1 = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, integrante2.id],
+        });
+        const g2 = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, integrante2.id],
+        });
+
+        grupo1 = g1.body;
+        grupo2 = g2.body;
+
+    },30000);
 
     test("1. Obtener todos los grupos de un curso", async () => {
 
@@ -99,15 +115,16 @@ describe.skip("GET /api/cursos/:idCurso/grupos", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toBeInstanceOf(Array);
-        expect(res.body.length).toBeGreaterThan(0);
+        expect(res.body.length).toBeGreaterThanOrEqual(2);
         expect(res.body[0].cursoId).toBe(curso.id);
+        expect(res.body[1].cursoId).toBe(curso.id);
     }, 15000);
 
-    test("2. Obtener todos los grupos de un curso inexistente", async () => {
+    test("2. Obtener todos los grupos de un curso con id invalido", async () => {
 
         const res = await request(app).get(`/api/cursos/${curso.id}123/grupos`);
 
-        expect(res.status).toBe(404);
+        expect(res.status).toBe(400);
     }, 15000);
 
     test("3. Obtener todos los grupos de un curso con un integrante: ?integrante=", async () => {
@@ -117,10 +134,12 @@ describe.skip("GET /api/cursos/:idCurso/grupos", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toBeInstanceOf(Array);
-        expect(res.body.length).toBeGreaterThan(0);
+        expect(res.body.length).toBeGreaterThanOrEqual(2);
         expect(res.body[0].cursoId).toBe(curso.id);
+        expect(res.body[1].cursoId).toBe(curso.id);
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
         expect(res.body[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
     }, 15000);
 
@@ -136,8 +155,10 @@ describe.skip("GET /api/cursos/:idCurso/grupos", () => {
         expect(res.body.length).toBeGreaterThan(0);
         expect(res.body.length).toBeLessThanOrEqual(limit);
         expect(res.body[0].cursoId).toBe(curso.id);
+        expect(res.body[1].cursoId).toBe(curso.id);
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
         expect(res.body[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
     }, 15000);
 
@@ -150,6 +171,7 @@ describe.skip("GET /api/cursos/:idCurso/grupos", () => {
 
         expect(res.status).toBe(200);
         expect(res.body).toBeInstanceOf(Array);
+        expect(res.body).toHaveLength(0);
 
     },15000);
 
