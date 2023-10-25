@@ -16,6 +16,9 @@ async function createGrupo(grupo: Grupo){
     if(grupo.integrantes.length < 2)
         throw new InvalidValueError("Grupo","NroIntegrantes");
 
+    if(new Set(grupo.integrantes).size !== grupo.integrantes.length)
+        throw new InvalidValueError("Grupo", "Integrantes");
+
     return await grupoRepository.createGrupo(grupo);
 }
 

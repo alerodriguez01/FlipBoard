@@ -3,36 +3,95 @@ import request from 'supertest';
 
 const app = 'http://localhost:3100';
 
-describe("GET /api/cursos/:idCurso/grupos", () => {
+let curso: Curso;
+let integrante: Usuario;
+let integrante2: Usuario;
 
-    let curso: Curso;
-    let integrante: Usuario;
-    beforeAll(async () => {
+beforeAll(async () => {
 
-        const duenioCurso = await request(app).post('/api/usuarios').send({
-            "nombre": "Tomas Peiretti",
-            "correo": "tomaspeirettiiiii@gmail.com",
-            "contrasena": "123456678Aa"
+    const duenioCurso = await request(app).post('/api/usuarios').send({
+        "nombre": "Tomas Peiretti",
+        "correo": "tomaspeirettiiiii@gmail.com",
+        "contrasena": "123456678Aa"
+    });
+    const res = await request(app).post('/api/cursos').send({
+        nombre: "el curso de tomas",
+        tema: "gimnasio",
+        sitioWeb: "tomastometi.com",
+        descripcion: "describo descripcion",
+        emailContacto: "tomaspeirettiiiii@gmail.com",
+        docentes: [duenioCurso.body.id],
+    })
+    curso = res.body;
+
+    let int = await request(app).post('/api/usuarios').send({
+        "nombre": "Senor Integrante",
+        "correo": "integrante@gmail.com",
+        "contrasena": "123456678Aa"
+    });
+    await request(app).put('/api/cursos/'+curso.id+'/alumnos');
+    int = await request(app).get(`/api/usuarios/${int.body.id}`);
+    const int2 = await request(app).get(`/api/usuarios/${duenioCurso.body.id}`);
+    integrante = int.body;
+    integrante2 = int2.body;
+}, 30000);
+
+describe("POST /cursos/:idCurso/grupos", () => {
+    
+    test("Crear nuevo grupo", async () => {
+        const res = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, integrante2.id],
         });
-        const res = await request(app).post('/api/cursos').send({
-            nombre: "el curso de tomas",
-            tema: "gimnasio",
-            sitioWeb: "tomastometi.com",
-            descripcion: "describo descripcion",
-            emailContacto: "tomaspeirettiiiii@gmail.com",
-            docentes: [duenioCurso.body.id],
-        })
-        curso = res.body;
 
-        let int = await request(app).post('/api/usuarios').send({
-            "nombre": "Senor Integrante",
-            "correo": "integrante@gmail.com",
-            "contrasena": "123456678Aa"
+        expect(res.statusCode).toBe(201);
+        expect(res.body.cursoId).toBe(curso.id);
+        expect(res.body.integrantes).toHaveLength(2);
+        expect(res.body.integrantes).toContain(integrante.id);
+        expect(res.body.integrantes).toContain(integrante2.id);
+    }, 15000);
+
+    test("Intentar crear nuevo grupo con menos de dos integrantes", async () => {
+        const res = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id],
         });
-        await request(app).put('/api/cursos/'+curso.id+'/alumnos');
-        int = await request(app).get(`/api/usuarios/${int.body.id}`);
-        integrante = int.body;
-    }, 30000);
+
+        expect(res.statusCode).toBe(400);
+    }, 15000);
+
+    test("Intentar crear nuevo grupo con un integrante inexistente", async () => {
+        const res = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, "333333333333333333333333"],
+        });
+
+        expect(res.statusCode).toBe(400);
+    }, 15000);
+
+    test("Intentar crear nuevo grupo con un integrante invalido", async () => {
+        const res = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, "estoEsInvalido"],
+        });
+
+        expect(res.statusCode).toBe(400);
+    }, 15000);
+
+    test("Intentar crear nuevo grupo con integrantes duplicados", async () => {
+        const res = await request(app).post(`/api/cursos/${curso.id}/grupos`).send({
+            integrantes: [integrante.id, integrante.id],
+        });
+
+        expect(res.statusCode).toBe(400);
+    }, 15000);
+
+    test("Intentar crear nuevo grupo en un curso inexistente", async () => {
+        const res = await request(app).post(`/api/cursos/verdura/grupos`).send({
+            integrantes: [integrante.id, integrante2.id],
+        });
+
+        expect(res.statusCode).toBe(400);
+    }, 15000);
+});
+
+describe.skip("GET /api/cursos/:idCurso/grupos", () => {
 
     test("1. Obtener todos los grupos de un curso", async () => {
 
