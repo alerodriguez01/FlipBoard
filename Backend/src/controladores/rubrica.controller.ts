@@ -45,4 +45,20 @@ async function createRubrica(req: Request, res: Response) {
     }
 }
 
-export default { getRubricaById, createRubrica };
+/*
+    Cargar todas las rubricas de un usuario
+*/
+async function getAllRubricasByUserId(req: Request, res: Response) {
+    
+    const userId = req.params.idUsuario;
+
+    try{
+        const rubricas = await service.getAllRubricasByUserId(userId);
+        return res.status(200).json(rubricas);
+    } catch(err){
+        if (err instanceof NotFoundError) return res.status(404).json(err.message);
+    }
+
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId};

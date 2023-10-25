@@ -33,5 +33,12 @@ export class RubricaRepository implements RubricaDataSource {
     async createRubrica(rubrica: Rubrica){
         return await this.rubricaDAO.createRubrica(rubrica);
     }
+
+    /**
+     * Cargar todas las rubricas del usuario idUsuario
+     */
+    async getAllRubricasByUserId(userId: string) {
+        return await this.rubricaDAO.getAllRubricasByUserId(userId);
+    }
     // demas metodos
 }

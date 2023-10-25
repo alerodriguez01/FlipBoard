@@ -47,4 +47,8 @@ async function createRubrica(rubrica: Rubrica) {
 
 }
 
-export default { getRubricaById, createRubrica };
+async function getAllRubricasByUserId(userId: string) {
+    return await rubricaRepository.getAllRubricasByUserId(userId);
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId };

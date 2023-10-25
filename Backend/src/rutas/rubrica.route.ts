@@ -223,7 +223,7 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
 routerUsuario.post("/rubricas", controller.createRubrica);
 
 // TODO - ID16 - Traer rúbricas de un usuario (por usuarioId)
-routerUsuario.get("/:idUsuario/rubricas/")
+routerUsuario.get("/:idUsuario/rubricas/", controller.getAllRubricasByUserId);
 
 // ------------ Rutas correspondientes a /cursos ------------
 
