@@ -55,6 +55,14 @@ export class CursoPrismaDAO implements CursoDataSource {
     }
 
     /*
+        Obtener todos los cursos
+    */
+    async getCursos(): Promise<Curso[]> {
+        const cursos = await this.prisma.curso.findMany();
+        return cursos;
+    }
+  
+  /*
         agregar usuario a curso
     */
     async addUsuario(idCurso: string, idUser: string) {

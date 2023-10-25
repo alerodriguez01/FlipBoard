@@ -1,3 +1,4 @@
+import { Grupo } from "@prisma/client";
 import GrupoDataSource from "../datasource/grupo.datasource.js";
 import { GrupoPrismaDAO } from "../prisma/dao/grupo.dao.js";
 
@@ -5,10 +6,10 @@ import { GrupoPrismaDAO } from "../prisma/dao/grupo.dao.js";
 export class GrupoRepository implements GrupoDataSource {
 
     private static INSTANCE: GrupoRepository;
-    private calificacionDAO: GrupoDataSource;
+    private grupoDao: GrupoDataSource;
 
     private constructor() {
-        this.calificacionDAO = GrupoPrismaDAO.getInstance();
+        this.grupoDao = GrupoPrismaDAO.getInstance();
      }
 
     public static getInstance(): GrupoRepository {
@@ -20,4 +21,8 @@ export class GrupoRepository implements GrupoDataSource {
     }
 
     // metodos
+    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number): Promise<Grupo[] | null> {
+        return await this.grupoDao.getGruposFromCurso(idCurso, integrante, limit, offset);
+    }
+
 }

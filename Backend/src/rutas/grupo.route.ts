@@ -1,5 +1,6 @@
 import exp from "constants";
 import { Router } from "express";
+import grupoController from "../controladores/grupo.controller.js";
 
 const router = Router();
 
@@ -33,11 +34,87 @@ const router = Router();
  *         cursoId: 65326ed824fea7e06d01e20b
  */
 
-// TODO - ID8 - Cargar curso con grupos, y cada uno tiene que tener los integrantes (se necesita de cada integrante id, nombre, apellido y correo). Tiene que ser paginado.
-// TODO - ID9 - Traer grupo por numero (buscador de grupos)
-// TODO - ID10 - Traer grupos por nombre o apellido de integrante.
-// (misma ruta todos)
-router.get("/:idCurso/grupos")
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/grupos:
+ *   get:
+ *    summary: Obtener grupos de un curso
+ *    tags: [Grupo]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          65326ed824fea7e06d01e211
+ *      - name: integrante
+ *        in: query
+ *        required: false
+ *        description: Nombre y/o apellido de algun integrante del grupo a buscar
+ *        schema:
+ *          type: string
+ *        example:
+ *          Juan
+ *      - name: limit
+ *        in: query
+ *        required: false
+ *        description: Limite de grupos a obtener
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
+ *      - name: offset
+ *        in: query
+ *        required: false
+ *        description: Numero de grupos a saltar
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
+ *    responses:
+ *      200:
+ *        description: Grupo/s encontrado/s
+ *        content:
+ *          application/json:
+ *            example:
+ *              - id: "653732252ce4b9810daa0d3a"
+ *                numero: 1
+ *                cursoId: "653732252ce4b9810daa0d36"
+ *                integrantes:
+ *                  - "653732252ce4b9810daa0d32"
+ *                  - "653732252ce4b9810daa0d33"
+ *                integrantesModel:
+ *                  - id: "653732252ce4b9810daa0d32"
+ *                    nombre: "juan"
+ *                    correo: "juan@example.com"
+ *                    contrasena: "$2a$10$SB353BlP/0rX1Y1gFEdy/e5y98KXnvbd5CHwP4o3Eyl2O5foSbXhy"
+ *                    cursosAlumno:
+ *                      - "653732252ce4b9810daa0d36"
+ *                      - "653732252ce4b9810daa0d37"
+ *                    cursosDocente:
+ *                      - "653732252ce4b9810daa0d36"
+ *                    grupos:
+ *                      - "653732252ce4b9810daa0d3a"
+ *                      - "653732252ce4b9810daa0d3b"
+ *                  - id: "653732252ce4b9810daa0d33"
+ *                    nombre: "maria"
+ *                    correo: "maria@example.com"
+ *                    contrasena: "$2a$10$QFpHVFcchnQfaS7s/sqXm.lO/hfKcf3mfqmUm9O0GehCyFxp7YJ9S"
+ *                    cursosAlumno:
+ *                      - "653732252ce4b9810daa0d37"
+ *                    cursosDocente: []
+ *                    grupos:
+ *                      - "653732252ce4b9810daa0d3a"
+ *      404:
+ *        description: No se encontro el curso
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Curso' en la BDD
+ */
+router.get("/:idCurso/grupos", grupoController.getGruposFromCurso)
 
 // TODO - ID15 - Crear grupo
 router.post("/:idCurso/grupos")

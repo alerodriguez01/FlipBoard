@@ -49,7 +49,15 @@ async function saveCurso(req: Request, res: Response) {
 
 }
 
+/*
+    Obtener todos los cursos
+*/
+async function getCursos(req: Request, res: Response) {
+    const cursos = await service.getCursos();
+    return res.status(200).json(cursos);
+}
+
 // demas metodos 
 
 
-export default { getCursoById, saveCurso };
+export default { getCursoById, saveCurso, getCursos };
