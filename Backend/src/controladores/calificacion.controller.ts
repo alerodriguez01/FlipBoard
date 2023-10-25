@@ -29,7 +29,7 @@ async function getCalificacionesFromUser(req: Request, res: Response) {
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(404).json({ error: error.message });
+        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
     
 }

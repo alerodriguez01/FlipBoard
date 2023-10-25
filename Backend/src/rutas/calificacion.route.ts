@@ -104,12 +104,18 @@ const router = Router();
  *           application/json:
  *               schema:
  *                 $ref: '#/components/schemas/Calificacion'
- *       404:
- *         description: Valor invalido para idCurso o idUsuario
+ *       400:
+ *         description: El parametro idCurso es invalido
  *         content:
  *           application/json:
  *             example:
- *               error: Valor invalido para el atributo idCurso o idUsuario de Calificacion
+ *               error: Valor invalido para el atributo idCurso de Calificacion
+ *       404:
+ *         description: La rubrica no fue encontrada
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Calificacion' en la BDD
  */
 router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.getCalificacionesFromUser)
 

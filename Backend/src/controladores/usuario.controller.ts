@@ -14,7 +14,7 @@ async function getUsuarioById(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
-        if (error instanceof InvalidValueError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
     }
 }
 
@@ -63,7 +63,7 @@ async function getParticipantes(req: Request, res: Response) {
         const users = await service.getParticipantes(req.params.idCurso, nombre, limit, offset);
         res.status(200).json(users);
     } catch (error) {
-        if (error instanceof InvalidValueError) res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
 
 }

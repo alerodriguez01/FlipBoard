@@ -17,7 +17,7 @@ async function getMuralById(req: Request, res: Response) {
         return res.status(200).json(mural);
     } catch (error) {
         if(error instanceof NotFoundError) return res.status(404).json({ error: error.message });
-        if(error instanceof InvalidValueError) res.status(404).json({ error: error.message });
+        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
 
 }
@@ -31,7 +31,7 @@ async function getMuralesFromCurso(req: Request, res: Response) {
         const murales = await service.getMuralesFromCurso(idCurso, traerRubrica);
         return res.status(200).json(murales);
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(404).json({ error: error.message });
+        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
 }
 

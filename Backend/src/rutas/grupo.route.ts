@@ -107,7 +107,7 @@ const router = Router();
  *                    cursosDocente: []
  *                    grupos:
  *                      - "653732252ce4b9810daa0d3a"
- *      404:
+ *      400:
  *        description: Valor invalido para idCurso
  *        content:
  *          application/json:

@@ -138,17 +138,18 @@ const routerCurso = Router(); // Router para rutas "/cursos/rubricas"
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/Rubrica'
- *       404:
- *         description: No se encontro el rubrica o es invalido el idRubrica
+ *       400:
+ *         description: El parametro idRubrica es invalido
  *         content:
  *           application/json:
- *             examples:
- *               rubricaNoEncontrado:
- *                 value:
- *                   error: No se ha podido encontrar 'Rubrica' en la BDD
- *               idRubricaInvalido:
- *                 value:
- *                   error: Valor invalido para el atributo idRubrica de Rubrica
+ *             example:
+ *               error: Valor invalido para el atributo idRubrica de Rubrica
+ *       404:
+ *         description: La rubrica no fue encontrada
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Mural' en la BDD
  */
 routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
 
