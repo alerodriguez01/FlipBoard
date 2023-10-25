@@ -20,4 +20,7 @@ export class CalificacionRepository implements CalificacionDataSource {
     }
 
     // metodos
+    public async getCalificacionesFromUser(idCurso: string, idUsuario: string, rubrica: boolean, limit: number, offset: number) {
+        return await this.calificacionDAO.getCalificacionesFromUser(idCurso, idUsuario, rubrica, limit, offset);
+    }
 }
