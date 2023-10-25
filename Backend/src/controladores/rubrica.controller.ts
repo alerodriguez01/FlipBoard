@@ -27,14 +27,12 @@ async function createRubrica(req: Request, res: Response) {
 
     if (!body.nombre || !body.criterios || body.criterios.length<1 || !body.niveles || body.niveles.length<1)
         return res.status(400).json("Rubrica invalida");
-    if(!body.usuarioId)
-        return res.status(400).json("Faltan datos para la creacion.");
     
     const rubrica = {
         nombre: body.nombre,
         criterios: body.criterios,
         niveles: body.niveles,
-        usuarioId: body.usuarioId,
+        usuarioId: req.params.idUsuario,
     };
 
     try{
@@ -46,4 +44,20 @@ async function createRubrica(req: Request, res: Response) {
     }
 }
 
-export default { getRubricaById, createRubrica };
+/*
+    Cargar todas las rubricas de un usuario
+*/
+async function getAllRubricasByUserId(req: Request, res: Response) {
+    
+    const userId = req.params.idUsuario;
+
+    try{
+        const rubricas = await service.getAllRubricasByUserId(userId);
+        return res.status(200).json(rubricas);
+    } catch(err){
+        if (err instanceof NotFoundError) return res.status(404).json(err.message);
+    }
+
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId};
