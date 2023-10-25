@@ -67,7 +67,7 @@ model Curso {
   participantes     String[]  @db.ObjectId
 
   // one-to-many (todos los grupos del curso)
-  grupos Grupo[]
+  grupos Grupo[] // x
 
   // many-to-many (todos los docentes del curso)
   docentesModel Usuario[] @relation(name: "docentes_cursos", fields: [docentes], references: [id]) // x

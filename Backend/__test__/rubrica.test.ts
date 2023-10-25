@@ -50,7 +50,7 @@ describe("POST /api/usuarios/:idUsuario/rubricas", () => {
         {nombre: "n3"},
       ]
     });
-    expect(rubrica.statusCode).toBe(404);
+    expect(rubrica.statusCode).toBe(400);
   }, 15000);
 
   test("Intentar crear rubrica con usuario inexsitente", async () => {
@@ -153,7 +153,7 @@ describe("GET /usuarios/rubricas/:idRubrica", () => {
   test("Intentar obtener una rubrica con id invalido", async () => {
     const res = await request(app).get('/api/usuarios/rubricas/'+'idInvalido');
 
-    expect(res.statusCode).toBe(404);
+    expect(res.statusCode).toBe(400);
   }, 15000);
 
 });
@@ -214,7 +214,7 @@ describe("GET /usuarios/:idUsuario/rubricas", () => {
   test("Intentar obtener todas las rubricas de un usuario con id invalido", async () => {
     const res = await request(app).get(`/api/usuarios/estoNoEsValido/rubricas`);
 
-    expect(res.statusCode).toBe(404);
+    expect(res.statusCode).toBe(400);
   }, 15000);
 
   

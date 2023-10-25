@@ -25,4 +25,7 @@ export class GrupoRepository implements GrupoDataSource {
         return await this.grupoDao.getGruposFromCurso(idCurso, integrante, limit, offset);
     }
 
+    public async createGrupo(grupo: Grupo) {
+        return await this.grupoDao.createGrupo(grupo);
+    }
 }

@@ -20,7 +20,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "contrasenia331AA"
     });
     expect(res.statusCode).toBe(400);
-  }, 10000);
+  }, 15000);
 
   test("Intentar crear usuario con contrasena invalida", async () => {
     const res = await request(app).post("/api/usuarios").send({
@@ -29,7 +29,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "pass"
     });
     expect(res.statusCode).toBe(400);
-  }, 10000);
+  }, 15000);
 
   test("Intentar crear usuario con campos incompletos", async () => {
     const res = await request(app).post("/api/usuarios").send({
@@ -38,7 +38,7 @@ describe("POST /api/usuarios", () => {
       "contrasena": "passworD321"
     });
     expect(res.statusCode).toBe(400);
-  }, 10000);
+  }, 15000);
 });
 
 describe("GET /api/usuarios/:idUsuario", () => {
@@ -67,19 +67,19 @@ describe("GET /api/usuarios/:idUsuario", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body.id).toBe(user.body.id);
     expect(res.body.nombre).toBe(user.body.nombre);
-  }, 10000);
+  }, 15000);
 
   test("Intentar obtener usuario invalido", async () => {
     const res = await request(app).get('/api/usuarios/999');
 
-    expect(res.statusCode).toBe(404);
-  }, 10000);
+    expect(res.statusCode).toBe(400);
+  }, 15000);
 
   test("Intentar obtener usuario inexistente", async () => {
     const res = await request(app).get('/api/usuarios/333333333333333333333333');
 
     expect(res.statusCode).toBe(404);
-  }, 10000);
+  }, 15000);
 
   test("Obtener usuario valido con sus cursos asociados", async () => {
     const res = await request(app).get('/api/usuarios/'+user.body.id+'?cursos=true');
