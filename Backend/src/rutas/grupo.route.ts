@@ -117,6 +117,6 @@ const router = Router();
 router.get("/:idCurso/grupos", grupoController.getGruposFromCurso)
 
 // TODO - ID15 - Crear grupo
-router.post("/:idCurso/grupos")
+router.post("/:idCurso/grupos", grupoController.createGrupo);
 
 export default router;

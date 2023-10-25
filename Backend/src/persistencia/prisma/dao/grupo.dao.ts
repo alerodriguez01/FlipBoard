@@ -42,4 +42,41 @@ export class GrupoPrismaDAO implements GrupoDataSource {
             throw new InvalidValueError("Grupo", "idCurso"); // el id no tiene los 12 bytes
         }
     }
+
+    public async createGrupo(grupo: Grupo){
+
+        // to ensure uniqueness, use transaction
+        try{
+            return await this.prisma.$transaction( async (tx) =>{
+            
+                const ultimoNro = await this.prisma.grupo.findFirst({
+                    where: {cursoId: grupo.cursoId},
+                    select: {numero: true},
+                    orderBy: {numero:'desc'}
+                });
+                let nroGrupo = 1;
+    
+                if(!!ultimoNro) 
+                    nroGrupo = ultimoNro.numero + 1;
+                
+                const integrantesObj = grupo.integrantes.map((id: string) => ({id}));
+
+                const newGrupo = await this.prisma.grupo.create({
+                    data: {
+                        ...grupo,
+                        numero: nroGrupo,
+                        integrantesModel: {
+                            connect: integrantesObj
+                        }
+                    }
+                });
+    
+                return newGrupo;
+            });
+        }
+        catch(err){
+            throw new InvalidValueError("Grupo", "idCurso or participantes"); // el id no tiene los 12 bytes
+        }
+        
+    }
 }
