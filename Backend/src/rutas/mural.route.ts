@@ -73,11 +73,16 @@ const router = Router();
  *            schema:
  *              $ref: '#/components/schemas/Mural'
  *      404:
- *        description: No se encontro el mural
+ *        description: No se encontro el mural o es invalido el idMural
  *        content:
  *          application/json:
- *            example:
- *              message: No se ha podido encontrar 'Mural' en la BDD
+ *            examples:
+ *              muralNoEncontrado:
+ *                value:
+ *                  error: No se ha podido encontrar 'Mural' en la BDD
+ *              idMuralInvalido:
+ *                value:
+ *                  error: Valor invalido para el atributo idMural de Mural
  */
 router.get("/murales/:idMural", controller.getMuralById);
 
@@ -106,7 +111,7 @@ router.get("/murales/:idMural", controller.getMuralById);
  *           true
  *     responses:
  *       200:
- *         description: Curso encontrado
+ *         description: Murales encontrados
  *         content:
  *           application/json:
  *               example:
@@ -118,11 +123,11 @@ router.get("/murales/:idMural", controller.getMuralById);
  *                     rubricaId: 653460ae39e91bc002bf42f7
  *                     cursoId: 653460ae39e91bc002bf42f5                              
  *       404:
- *         description: No se encontro el curso
+ *         description: Valor invalido para idCurso
  *         content:
  *           application/json:
  *             example:
- *               message: No se ha podido encontrar 'Curso' en la BDD
+ *               error: Valor invalido para el atributo idCurso de Mural
  */
 router.get("/:idCurso/murales", controller.getMuralesFromCurso);
 

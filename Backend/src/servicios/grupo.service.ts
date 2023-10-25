@@ -5,11 +5,7 @@ const grupoRepository = GrupoRepository.getInstance();
 
 async function getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number) {
 
-
     const grupos = await grupoRepository.getGruposFromCurso(idCurso, integrante, limit, offset);
-
-    if(!grupos) throw new NotFoundError("Curso")
-
     return grupos
 
 }

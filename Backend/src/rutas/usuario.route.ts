@@ -76,11 +76,16 @@ const router = Router();
  *               schema:
  *                 $ref: "#/components/schemas/Usuario"
  *       404:
- *         description: No se encontro el usuario
+ *         description: No se encontro el usuario o es invalido el idUsuario
  *         content:
  *           application/json:
- *             example:
- *               message: No se ha podido encontrar 'Usuario' en la BDD
+ *             examples:
+ *               usuarioNoEncontrado:
+ *                 value:
+ *                   error: No se ha podido encontrar 'Usuario' en la BDD
+ *               idUsuarioInvalido:
+ *                 value:
+ *                   error: Valor invalido para el atributo idUsuario de Usuario
  */
 router.get("/usuarios/:idUsuario", controller.getUsuarioById);
 

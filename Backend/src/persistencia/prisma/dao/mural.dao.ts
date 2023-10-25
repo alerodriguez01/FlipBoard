@@ -1,6 +1,7 @@
 import { Mural, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import MuralDataSource from "../../datasource/mural.datasource.js";
+import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
 
 export class MuralPrismaDAO implements MuralDataSource {
 
@@ -23,7 +24,7 @@ export class MuralPrismaDAO implements MuralDataSource {
     /*
         Cargar murales de un curso
     */
-    public async getMuralesFromCurso(idCurso: string) : Promise<Mural[] | null> {
+    public async getMuralesFromCurso(idCurso: string) : Promise<Mural[]> {
 
         try {
             const murales = await this.prisma.mural.findMany({
@@ -35,9 +36,7 @@ export class MuralPrismaDAO implements MuralDataSource {
             return murales;
             
         } catch (error) {
-            // Error con algun tipo de dato 
-            // console.log(JSON.stringify(error))
-            return null;
+            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
 
     }
@@ -57,9 +56,7 @@ export class MuralPrismaDAO implements MuralDataSource {
             return mural;
             
         } catch (error) {
-            // Error con algun tipo de dato
-            // console.log(JSON.stringify(error))
-            return null;
+            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
 
     }
@@ -82,9 +79,7 @@ export class MuralPrismaDAO implements MuralDataSource {
             return mural;
             
         } catch (error) {
-            // Error con algun tipo de dato 
-            // console.log(JSON.stringify(error))
-            return null;
+            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
 
     }

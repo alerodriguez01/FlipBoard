@@ -1,6 +1,7 @@
 import { Rubrica, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import { RubricaDataSource } from "../../datasource/rubrica.datasource.js";
+import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
 
 
 export class RubricaPrismaDAO implements RubricaDataSource {
@@ -36,9 +37,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
             return rubrica;
             
         } catch (error) {
-            // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
-            // console.log(JSON.stringify(error))
-            return null;
+            throw new InvalidValueError("Rubrica", "idRubrica"); // el id no tiene los 12 bytes
         }
     }
 

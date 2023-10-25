@@ -22,9 +22,8 @@ async function getMuralById(idMural: string, rubrica: boolean): Promise<Mural | 
 async function getMuralesFromCurso(idCurso: string, rubrica: boolean): Promise<Mural[]> {
     
     const murales = await muralRepository.getMuralesFromCurso(idCurso);
-    if (!murales) throw new NotFoundError('Curso');
 
-    if(rubrica) {
+    if(rubrica && murales.length > 0) {
         // Cuando se utiliza map con funciones asíncronas, se obtiene un array de promesas 
         // pendientes. Para resolver esto, se usa Promise.all (espera a que todas las promesas 
         // se resuelvan antes de devolver el resultado.)

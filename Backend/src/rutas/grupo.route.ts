@@ -108,11 +108,11 @@ const router = Router();
  *                    grupos:
  *                      - "653732252ce4b9810daa0d3a"
  *      404:
- *        description: No se encontro el curso
+ *        description: Valor invalido para idCurso
  *        content:
  *          application/json:
  *            example:
- *              message: No se ha podido encontrar 'Curso' en la BDD
+ *              error: Valor invalido para el atributo idCurso de Grupo
  */
 router.get("/:idCurso/grupos", grupoController.getGruposFromCurso)
 

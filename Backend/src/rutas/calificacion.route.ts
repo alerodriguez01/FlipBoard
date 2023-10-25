@@ -109,7 +109,7 @@ const router = Router();
  *         content:
  *           application/json:
  *             example:
- *               message: Valor invalido para el atributo idCurso o idUsuario de Calificacion
+ *               error: Valor invalido para el atributo idCurso o idUsuario de Calificacion
  */
 router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.getCalificacionesFromUser)
 
