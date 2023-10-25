@@ -116,7 +116,40 @@ const router = Router();
  */
 router.get("/:idCurso/grupos", grupoController.getGruposFromCurso)
 
-// TODO - ID15 - Crear grupo
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/grupos:
+ *   post:
+ *    summary: Crear grupo en un curso
+ *    tags: [Grupo]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          65326ed824fea7e06d01e211
+ *    responses:
+ *      201:
+ *        description: Grupo creado
+ *        content:
+ *          application/json:
+ *            example:
+ *              - id: "653999341a3b96d2024fc3f7"
+ *                numero: 1
+ *                cursoId: "6539977a733c7431679c3be4"
+ *                integrantes:
+ *                  - "65399776733c7431679c3be0"
+ *                  - "6539977a733c7431679c3be2"
+ *      400:
+ *        description: Valor invalido para idCurso o id de integrante, o cantidad de integrantes invalida
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo NroIntegrantes de Grupo
+ */
 router.post("/:idCurso/grupos", grupoController.createGrupo);
 
 export default router;
