@@ -54,5 +54,12 @@ export class CursoPrismaDAO implements CursoDataSource {
         return cursoSaved;
     }
 
+    /*
+        Obtener todos los cursos
+    */
+    async getCursos(): Promise<Curso[]> {
+        const cursos = await this.prisma.curso.findMany();
+        return cursos;
+    }
     // demas metodos
 }

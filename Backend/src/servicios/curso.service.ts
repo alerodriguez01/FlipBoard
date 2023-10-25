@@ -39,6 +39,14 @@ async function createCurso(body: Curso) : Promise<Curso> {
     return cursoSaved;
 }
 
+/*
+    Obtener todos los cursos
+*/
+async function getCursos() {
+    const cursos = await cursoRepository.getCursos();
+    return cursos;
+}
+
 // demas metodos
 
-export default { getCursoById, createCurso };
+export default { getCursoById, createCurso, getCursos };

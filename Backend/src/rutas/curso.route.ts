@@ -136,4 +136,48 @@ router.get("/cursos/:idCurso", controller.getCursoById);
  */
 router.post("/cursos", controller.saveCurso);
 
+/**
+ * @swagger
+ * /api/cursos:
+ *   get:
+ *     summary: Obtener todos los cursos  
+ *     tags: [Curso]
+ *     responses:
+ *       200:
+ *         description: Cursos encontrados
+ *         content:
+ *           application/json:
+ *               example:
+ *                 - id: "653732252ce4b9810daa0d36"
+ *                   nombre: "Curso de Matemáticas"
+ *                   tema: "Matemáticas Avanzadas"
+ *                   sitioWeb: "https://matematicas.com"
+ *                   descripcion: "Un curso de matemáticas avanzadas"
+ *                   emailContacto: "contacto@matematicas.com"
+ *                   participantes:
+ *                     - "653732252ce4b9810daa0d32"
+ *                   docentes:
+ *                     - "653732252ce4b9810daa0d32"
+ *                   rubricasGrupos:
+ *                     - "653732252ce4b9810daa0d38"
+ *                   rubricasAlumnos:
+ *                     - "653732252ce4b9810daa0d38"
+ *                 - id: "653732252ce4b9810daa0d37"
+ *                   nombre: "Curso de Historia"
+ *                   tema: "Historia del Mundo"
+ *                   sitioWeb: "https://historia.com"
+ *                   descripcion: "Un curso de historia global"
+ *                   emailContacto: "contacto@historia.com"
+ *                   participantes:
+ *                     - "653732252ce4b9810daa0d32"
+ *                     - "653732252ce4b9810daa0d33"
+ *                   docentes: []
+ *                   rubricasGrupos:
+ *                     - "653732252ce4b9810daa0d39"
+ *                   rubricasAlumnos:
+ *                     - "653732252ce4b9810daa0d39"
+ */
+router.get("/cursos", controller.getCursos);
+
+
 export default router;

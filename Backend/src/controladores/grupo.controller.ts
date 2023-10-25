@@ -12,11 +12,14 @@ async function getGruposFromCurso(req: Request, res: Response) {
     const integrante = req.query.integrante ? req.query.integrante as string : "";
 
     //            si existe         
-    const limit = req.query.limit ? 
+    let limit = req.query.limit ? 
                                   parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
                                   : 0; // si no existe, lo seteo en 0
 
-    const offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
+    let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
+
+    if(limit < 0) limit = 0;
+    if(offset < 0) offset = 0;
 
     try {
         const grupos = await service.getGruposFromCurso(idCurso, integrante, limit, offset);
