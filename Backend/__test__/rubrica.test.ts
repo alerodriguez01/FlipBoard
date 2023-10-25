@@ -164,3 +164,67 @@ describe("GET /usuarios/rubricas/:idRubrica", () => {
   }, 15000);
 
 });
+
+describe("GET /usuarios/:idUsuario/rubricas", () => {
+
+  let usuario: Response;
+  let r1: Response;
+  let r2: Response;
+
+  beforeAll( async () => {
+    usuario = await request(app).post('/api/usuarios').send({
+      "nombre": "Esteban Quito",
+      "correo": "estebanquito@gmail.com",
+      "contrasena": "contraseniAA11"
+    });
+    r1 = await request(app).post('/api/usuarios/rubricas').send({
+      nombre:"Rubrica esteban 1",
+      criterios:[
+        {nombre: "c1",
+         descripciones: ["d1", "d2"]},
+      ],
+      niveles:[
+        {nombre: "n1"},
+        {nombre: "n2"},
+      ],
+      usuarioId: usuario.body.id
+    });
+    r2 = await request(app).post('/api/usuarios/rubricas').send({
+      nombre:"Rubrica esteban 2",
+      criterios:[
+        {nombre: "mi lindo criterio",
+         descripciones: ["d1", "desc"]},
+      ],
+      niveles:[
+        {nombre: "n1"},
+        {nombre: "nivel2"},
+      ],
+      usuarioId: usuario.body.id
+    });
+
+  },25000);
+
+  test("Obtener todas las rubricas de un usuario existente", async () => {
+    const res = await request(app).get(`/api/usuarios/${usuario.body.id}/rubricas`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body).toContainEqual(r1.body);
+    expect(res.body).toContainEqual(r2.body);
+  }, 15000);
+
+  test("Intentar obtener todas las rubricas de un usuario inexistente", async () => {
+    const res = await request(app).get(`/api/usuarios/333333333333333333333333/rubricas`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(0);
+  }, 15000);
+
+  test("Intentar obtener todas las rubricas de un usuario con id invalido", async () => {
+    const res = await request(app).get(`/api/usuarios/estoNoEsValido/rubricas`);
+
+    expect(res.statusCode).toBe(404);
+  }, 15000);
+
+  
+});
