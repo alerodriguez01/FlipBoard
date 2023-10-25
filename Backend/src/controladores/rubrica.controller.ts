@@ -6,14 +6,14 @@ import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 /*
     Obtener rubrica por id
 */
-async function getRubricaById (req: Request, res: Response) {
+async function getRubricaById(req: Request, res: Response) {
 
     try {
         const rubrica = await service.getRubricaById(req.params.idRubrica);
         res.status(200).json(rubrica);
-        
+
     } catch (error) {
-        if(error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
     }
 }
@@ -22,12 +22,12 @@ async function getRubricaById (req: Request, res: Response) {
     Crear rubrica
 */
 async function createRubrica(req: Request, res: Response) {
-    
+
     const body = req.body;
 
-    if (!body.nombre || !body.criterios || body.criterios.length<1 || !body.niveles || body.niveles.length<1)
-        return res.status(400).json("Rubrica invalida");
-    
+    if (!body.nombre || !body.criterios || body.criterios.length < 1 || !body.niveles || body.niveles.length < 1)
+        return res.status(400).json({ error: "Rubrica invalida" });
+
     const rubrica = {
         nombre: body.nombre,
         criterios: body.criterios,
@@ -35,12 +35,13 @@ async function createRubrica(req: Request, res: Response) {
         usuarioId: req.params.idUsuario,
     };
 
-    try{
+    try {
         const newRubrica = await service.createRubrica(rubrica as Rubrica);
         return res.status(201).json(newRubrica);
-    } catch(err){
-        if(err instanceof InvalidValueError) return res.status(400).json(err.message);
-        if(err instanceof NotFoundError) return res.status(404).json(err.message);
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idUsuario invalido o rubrica invalida
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el usuario
     }
 }
 
@@ -48,16 +49,16 @@ async function createRubrica(req: Request, res: Response) {
     Cargar todas las rubricas de un usuario
 */
 async function getAllRubricasByUserId(req: Request, res: Response) {
-    
+
     const userId = req.params.idUsuario;
 
-    try{
+    try {
         const rubricas = await service.getAllRubricasByUserId(userId);
         return res.status(200).json(rubricas);
-    } catch(err){
-        if (err instanceof NotFoundError) return res.status(404).json(err.message);
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
     }
 
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId};
+export default { getRubricaById, createRubrica, getAllRubricasByUserId };
