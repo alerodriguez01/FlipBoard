@@ -65,7 +65,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
                 }
             });
         } catch (err) {
-            return null;
+            throw new InvalidValueError("Rubrica", "idUsuario"); // el id no tiene los 12 bytes
         }
     }
     // demas metodos

@@ -49,11 +49,8 @@ async function createRubrica(rubrica: Rubrica) {
 
 async function getAllRubricasByUserId(userId: string) {
 
-    const rub = await rubricaRepository.getAllRubricasByUserId(userId);
-
-    if (!rub) throw new NotFoundError("Usuario");
-
-    return rub;
+    const rubricas = await rubricaRepository.getAllRubricasByUserId(userId);
+    return rubricas;
 }
 
 export default { getRubricaById, createRubrica, getAllRubricasByUserId };

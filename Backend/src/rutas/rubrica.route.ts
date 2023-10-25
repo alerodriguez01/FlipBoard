@@ -155,15 +155,15 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
 
 /**
  * @swagger
- * /api/usuarios/rubricas:
+ * /api/usuarios/{idUsuario}/rubricas:
  *   post:
  *     summary: Crear una rubrica
  *     tags: [Rubrica]
  *     parameters:
- *       - name: idRubrica
+ *       - name: idUsuario
  *         in: path
  *         required: true
- *         description: El id de la rubrica a obtener
+ *         description: El id del usuario que crea la rubrica
  *         schema:
  *           type: string
  *         example:
@@ -222,20 +222,73 @@ routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
  *               gruposCursos: []
  *               alumnosCursos: []
  *       400:
- *         description: Faltan datos obligatorios o el correo ya existe
+ *         description: El idUsuario es invalido, faltan datos obligatorios o los datos de la rubrica son invalidos
  *         content:
  *           application/json:
- *             examples:
- *               faltanDatos:
- *                 value:
- *                   message: Rubrica invalida
- *               usuarioAsociadoIncorrecto:
- *                 value:
- *                   message: No se ha podido encontrar 'Usuario' en la BDD
+ *             example:
+ *               error: Rubrica invalida
+ *       404:
+ *         description: No se ha podido encontrar el usuario
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Usuario' en la BDD
  */
 routerUsuario.post("/:idUsuario/rubricas", controller.createRubrica);
 
-// TODO - ID16 - Traer rúbricas de un usuario (por usuarioId)
+/**
+ * @swagger
+ * /api/usuarios/{idUsuario}/rubricas:
+ *   get:
+ *    summary: Obtener todas las rubricas de un usuario
+ *    tags: [Rubrica]
+ *    parameters:
+ *      - name: idUsuario
+ *        in: path
+ *        required: true
+ *        description: El id del usuario
+ *        schema:
+ *          type: string
+ *        example: 
+ *          65326ed824fea7e06d01e211
+ *    responses:
+ *      200:
+ *        description: Rubricas encontradas
+ *        content:
+ *          application/json:
+ *            example:
+ *              - criterios:
+ *                  - nombre: Precisión
+ *                    descripciones:
+ *                      - Muy preciso
+ *                      - Preciso
+ *                      - Poco preciso
+ *                  - nombre: Complejidad
+ *                    descripciones:
+ *                      - Muy complejo
+ *                      - Complejo
+ *                      - Poco complejo
+ *                niveles:
+ *                  - nombre: Nivel 1
+ *                    puntaje: 1
+ *                  - nombre: Nivel 2
+ *                    puntaje: 2
+ *                  - nombre: Nivel 3
+ *                    puntaje: 3
+ *                id: 653968d5642003e96a382248
+ *                nombre: Rubrica de Matemáticas
+ *                gruposCursos:
+ *                  - 653968d5642003e96a382246
+ *                alumnosCursos:
+ *                  - 653968d5642003e96a382246
+ *                usuarioId: 653968d5642003e96a382242
+ *      400:
+ *        description: El parametro idUsuario es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo idUsuario de Usuario
+ */
 routerUsuario.get("/:idUsuario/rubricas/", controller.getAllRubricasByUserId);
 
 // ------------ Rutas correspondientes a /cursos ------------
