@@ -139,11 +139,16 @@ const routerCurso = Router(); // Router para rutas "/cursos/rubricas"
  *             schema:
  *               $ref: '#/components/schemas/Rubrica'
  *       404:
- *         description: No se encontro la rubrica
+ *         description: No se encontro el rubrica o es invalido el idRubrica
  *         content:
  *           application/json:
- *             example:
- *              message: No se ha podido encontrar 'Rubrica' en la BDD
+ *             examples:
+ *               rubricaNoEncontrado:
+ *                 value:
+ *                   error: No se ha podido encontrar 'Rubrica' en la BDD
+ *               idRubricaInvalido:
+ *                 value:
+ *                   error: Valor invalido para el atributo idRubrica de Rubrica
  */
 routerUsuario.get("/rubricas/:idRubrica", controller.getRubricaById);
 

@@ -1,4 +1,5 @@
 import { Router } from "express";
+import calificacionController from "../controladores/calificacion.controller.js";
 
 const router = Router();
 
@@ -40,7 +41,7 @@ const router = Router();
  *          description: El mural asociado a la calificacion
  *      example:
  *        id: 65326ed824fea7e06d01e213
- *        valores: [3, 4]
+ *        valores: [3, 1]
  *        observaciones: Buen trabajo
  *        rubricaId: 65326ed824fea7e06d01e20d
  *        usuarioId: 65326ed824fea7e06d01e207
@@ -49,8 +50,68 @@ const router = Router();
  */
 
 
-// TODO - ID11 - Cargar calificaciones del curso (cursoId) que pertenecen al usuario (usuarioId), junto a la rúbrica (completa, todos los campos). Tiene que ser paginado.
-router.get("/:idCurso/calificaciones/alumnos/:idUsuario")
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/calificaciones/alumnos/{idAlumno}:
+ *   get:
+ *     summary: Obtener las calificaciones de un alumno
+ *     tags: [Calificacion]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: idAlumno
+ *         in: path
+ *         required: true
+ *         description: El id del usuario
+ *         schema:
+ *           type: string
+ *         example:
+ *           65436ed824fea7e06d04ghd
+ *       - name: rubrica
+ *         in: query
+ *         required: false
+ *         description: Indica si se debe incluir la rubrica en cada calificacion
+ *         schema:
+ *           type: boolean
+ *         example:
+ *           true
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         description: Limite de calificaciones a obtener
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *       - name: offset
+ *         in: query
+ *         required: false
+ *         description: Numero de calificaciones a saltar
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *     responses:
+ *       200:
+ *         description: Calificaciones del alumno encontradas (incluye rubrica)
+ *         content:
+ *           application/json:
+ *               schema:
+ *                 $ref: '#/components/schemas/Calificacion'
+ *       404:
+ *         description: Valor invalido para idCurso o idUsuario
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Valor invalido para el atributo idCurso o idUsuario de Calificacion
+ */
+router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.getCalificacionesFromUser)
 
 // TODO - ID14 - Crear calificacion
 router.post("/calificaciones/alumnos/:idUsuario")

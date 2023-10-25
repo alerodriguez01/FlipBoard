@@ -1,6 +1,7 @@
 import { Curso, PrismaClient } from "@prisma/client";
 import CursoDataSource from "../../datasource/curso.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
+import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
 
 export class CursoPrismaDAO implements CursoDataSource {
 
@@ -33,8 +34,7 @@ export class CursoPrismaDAO implements CursoDataSource {
             return curso
             
         } catch (error) {
-            // Hubo algun error (id por ejemplo no existe o malformada)
-            return null;
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
     }
 

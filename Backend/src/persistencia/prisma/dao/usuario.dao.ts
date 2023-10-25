@@ -2,6 +2,7 @@ import { Curso, Usuario } from '@prisma/client';
 import { PrismaClient } from "@prisma/client";
 import UsuarioDataSource from "../../datasource/usuario.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
+import { InvalidValueError } from '../../../excepciones/RepoErrors.js';
 
 export class UsuarioPrismaDAO implements UsuarioDataSource {
 
@@ -25,7 +26,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
     try {
       const userCreated = await this.prisma.usuario.create({
-        data: {...user, nombre: user.nombre.toLowerCase() }
+        data: { ...user, nombre: user.nombre.toLowerCase() }
       });
 
       return userCreated;
@@ -54,9 +55,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       return user;
 
     } catch (error) {
-      // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
-      // console.log(JSON.stringify(error))
-      return null;
+      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
     }
   }
 
@@ -100,9 +99,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       return user;
 
     } catch (error) {
-      // Error con algun tipo de dato (el id no esta completo por ejemplo - PrismaClientKnownRequestError -)
-      // console.log(JSON.stringify(error))
-      return null;
+      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
     }
   }
 
@@ -111,7 +108,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     Retorna null si no existe el curso, o si ha ocurrido algun error
   */
   async getUsuariosFromCursoByNombre(idCurso: string, nombreUser: string) {
-    
+
     try {
       return await this.prisma.usuario.findMany({
         where: {
@@ -128,7 +125,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       });
     }
     catch (error) {
-      return null;
+      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
     }
   }
 
@@ -154,10 +151,10 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
     try {
       if (limit === 0) return await this.prisma.usuario.findMany(query);
-      else return await this.prisma.usuario.findMany({...query, take: limit});
+      else return await this.prisma.usuario.findMany({ ...query, take: limit });
     }
     catch (error) {
-      return null;
+      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
     }
   }
 

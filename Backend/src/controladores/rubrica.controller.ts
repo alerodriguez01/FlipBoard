@@ -13,7 +13,8 @@ async function getRubricaById (req: Request, res: Response) {
         res.status(200).json(rubrica);
         
     } catch (error) {
-        if(error instanceof NotFoundError) return res.status(404).json(error.message);
+        if(error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(404).json({ error: error.message });
     }
 }
 

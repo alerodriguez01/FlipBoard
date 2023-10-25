@@ -1,6 +1,7 @@
 import { Grupo, PrismaClient } from "@prisma/client";
 import GrupoDataSource from "../../datasource/grupo.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
+import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
 
 export class GrupoPrismaDAO implements GrupoDataSource {
 
@@ -38,8 +39,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
             else return await this.prisma.grupo.findMany({ ...query, take: limit })
 
         } catch (error) {
-            // error tal como que no se haya encontrado el curso
-            return null;
+            throw new InvalidValueError("Grupo", "idCurso"); // el id no tiene los 12 bytes
         }
     }
 }

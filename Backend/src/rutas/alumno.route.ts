@@ -72,11 +72,11 @@ const router = Router();
  *                grupos:
  *                  - "653460ae39e91bc002bf42f9"
  *      404:
- *        description: No se encontro el curso
+ *        description: Valor invalido para idCurso
  *        content:
  *          application/json:
  *            example:
- *              message: No se ha podido encontrar 'Curso' en la BDD
+ *              error: Valor invalido para el atributo idCurso de Usuario
  */
 router.get("/:idCurso/alumnos", controller.getParticipantes);
 

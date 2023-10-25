@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import service from "../servicios/grupo.service.js";
-import { NotFoundError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 
 /*
     Obtener grupos de un curso idCurso
@@ -26,7 +26,7 @@ async function getGruposFromCurso(req: Request, res: Response) {
         res.status(200).json(grupos);
 
     } catch (error) {
-        if (error instanceof NotFoundError) res.status(404).json({ error: error.message });
+        if(error instanceof InvalidValueError) res.status(404).json({ error: error.message });
     }
 
 }

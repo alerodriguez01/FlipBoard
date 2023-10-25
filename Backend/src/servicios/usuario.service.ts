@@ -150,13 +150,10 @@ async function getParticipantes(idCurso: string, nombre: string, limit: number, 
     //paginado
     if(!!limit || !!offset){
         const users = await usuarioRepository.getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
-        
-        if(!users) throw new NotFoundError("Curso");
         return users;
     }
     
     const users = await usuarioRepository.getUsuariosFromCursoByNombre(idCurso, nombre);
-    if(!users) throw new NotFoundError("Curso");
     return users;
 }
 

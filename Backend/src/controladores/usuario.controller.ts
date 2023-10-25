@@ -13,7 +13,8 @@ async function getUsuarioById(req: Request, res: Response) {
         res.status(200).json(usuario);
 
     } catch (error) {
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(404).json({ error: error.message });
     }
 }
 
@@ -52,9 +53,9 @@ async function getParticipantes(req: Request, res: Response) {
     let limit = req.query.limit ? parseInt(req.query.limit as string) || 0 : 0  // !isNaN(parseInt(req.params.limit)) ? parseInt(req.params.limit) : 0;
     let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0 // !isNaN(parseInt(req.params.offset)) ? parseInt(req.params.offset) : 0;
 
-    if(limit < 0) limit = 0;
-    if(offset < 0) offset = 0;
-    
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
+
     const nombre = req.query.nombre ? req.query.nombre.toString() : '';
 
 
@@ -62,7 +63,7 @@ async function getParticipantes(req: Request, res: Response) {
         const users = await service.getParticipantes(req.params.idCurso, nombre, limit, offset);
         res.status(200).json(users);
     } catch (error) {
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof InvalidValueError) res.status(404).json({ error: error.message });
     }
 
 }
@@ -71,12 +72,12 @@ async function addParticipante(req: Request, res: Response) {
 
     const userBody = req.body;
 
-    if(!userBody.id) return res.status(400).json("Faltan datos obligatorios");
+    if (!userBody.id) return res.status(400).json("Faltan datos obligatorios");
 
-    try{
+    try {
         await service.addParticipanteToCurso(req.params.idCurso, userBody.id);
         return res.status(204).send();
-    } catch (error){
+    } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json(error.message);
     }
 

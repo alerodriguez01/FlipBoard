@@ -80,11 +80,16 @@ const router = Router();
  *               schema:
  *                 $ref: "#/components/schemas/Curso"
  *       404:
- *         description: No se encontro el curso
+ *         description: No se encontro el curso o es invalido el idCurso
  *         content:
  *           application/json:
- *             example:
- *               message: No se ha podido encontrar 'Curso' en la BDD
+ *             examples:
+ *               cursoNoEncontrado:
+ *                 value:
+ *                   error: No se ha podido encontrar 'Curso' en la BDD
+ *               idCursoInvalido:
+ *                 value:
+ *                   error: Valor invalido para el atributo idCurso de Curso
  */
 router.get("/cursos/:idCurso", controller.getCursoById);
 
