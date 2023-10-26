@@ -293,8 +293,66 @@ routerUsuario.get("/:idUsuario/rubricas/", controller.getAllRubricasByUserId);
 
 // ------------ Rutas correspondientes a /cursos ------------
 
-// TODO - ID12 - Cargar curso con lista rubricasAlumnos (traer cada rúbrica con todos los campos).
-routerCurso.get("/:idCurso/rubricas/alumnos")
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/rubricas/alumnos:
+ *   get:
+ *    summary: Obtener todas las rubricas del curso asociadas a alumnos
+ *    tags: [Rubrica]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          653968d5642003e96a382246
+ *    responses:
+ *      200:
+ *        description: Rubricas encontradas
+ *        content:
+ *          application/json:
+ *            example:
+ *              - criterios:
+ *                  - nombre: Precisión
+ *                    descripciones:
+ *                      - Muy preciso
+ *                      - Preciso
+ *                      - Poco preciso
+ *                  - nombre: Complejidad
+ *                    descripciones:
+ *                      - Muy complejo
+ *                      - Complejo
+ *                      - Poco complejo
+ *                niveles:
+ *                  - nombre: Nivel 1
+ *                    puntaje: 1
+ *                  - nombre: Nivel 2
+ *                    puntaje: 2
+ *                  - nombre: Nivel 3
+ *                    puntaje: 3
+ *                id: 653968d5642003e96a382248
+ *                nombre: Rubrica de Matemáticas
+ *                gruposCursos:
+ *                  - 653968d5642003e96a382246
+ *                alumnosCursos:
+ *                  - 653968d5642003e96a382246
+ *                usuarioId: 653968d5642003e96a382242
+ *      400:
+ *        description: El parametro idCurso es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo idCurso de Curso
+ *      404:
+ *        description: No se ha podido encontrar el curso
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No se ha podido encontrar 'Curso' en la BDD
+ */
+routerCurso.get("/:idCurso/rubricas/alumnos", controller.getRubricasAlumnosFromCurso);
 
 // TODO - ID13 - Cargar curso con lista rubricasGrupos (traer cada rúbrica con todos los campos).
 routerCurso.get("/:idCurso/rubricas/grupos")

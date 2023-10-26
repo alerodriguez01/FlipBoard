@@ -2,8 +2,10 @@ import { Rubrica } from "@prisma/client";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
+import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 
 const rubricaRepository = RubricaRepository.getInstance();
+const cursoRepository = CursoRepository.getInstance();
 
 /*
     Obtener rubrica por id
@@ -21,7 +23,7 @@ async function getRubricaById(rubricaId: string) {
  */
 
 async function createRubrica(rubrica: Rubrica) {
-    
+
     /*
         Condiciones CU-R2:
             nombreRubrica: no especifica
@@ -32,12 +34,12 @@ async function createRubrica(rubrica: Rubrica) {
             descripciones: no especifica
             puntajes: no especifica
      */
-    if (rubrica.criterios.length>20 || rubrica.niveles.length > 20)
+    if (rubrica.criterios.length > 20 || rubrica.niveles.length > 20)
         throw new InvalidValueError('Rubrica', 'Criterios o Niveles');
-    
+
     // la primera cond chequea que cantDescripciones == cantNiveles
-    if (!rubrica.criterios.every(c => c.nombre.length<=50 && c.descripciones.length === rubrica.niveles.length) ||
-        !rubrica.niveles.every(n => n.nombre.length <=50))
+    if (!rubrica.criterios.every(c => c.nombre.length <= 50 && c.descripciones.length === rubrica.niveles.length) ||
+        !rubrica.niveles.every(n => n.nombre.length <= 50))
         throw new InvalidValueError('Rubrica', 'Criterios o Descripciones o Niveles');
 
     const user = await UsuarioRepository.getInstance().getUsuarioById(rubrica.usuarioId);
@@ -53,4 +55,14 @@ async function getAllRubricasByUserId(userId: string) {
     return rubricas;
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId };
+/*
+    Obtener las rubricas asociadas a los alumnos de un curso
+*/
+async function getRubricasAlumnosFromCurso(idCurso: string) : Promise<Rubrica[]> {
+    
+        const curso = await cursoRepository.getCursoByIdWithRubricaAlumnos(idCurso);
+        if (!curso) throw new NotFoundError('Curso');
+        return curso.rubricasAlumnosModel;
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso };
