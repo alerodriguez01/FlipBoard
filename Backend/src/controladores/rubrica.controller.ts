@@ -81,4 +81,23 @@ async function getRubricasAlumnosFromCurso(req: Request, res: Response){
 
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso };
+/*
+    Obtener las rubricas asociadas a los grupos de un curso
+*/
+async function getRubricasGruposFromCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+
+    try {
+        const rubricas = await service.getRubricasGruposFromCurso(cursoId);
+        return res.status(200).json(rubricas);
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso
+
+    }
+
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso, getRubricasGruposFromCurso };

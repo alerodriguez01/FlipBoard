@@ -65,4 +65,14 @@ async function getRubricasAlumnosFromCurso(idCurso: string) : Promise<Rubrica[]>
         return curso.rubricasAlumnosModel;
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso };
+/*
+    Obtener las rubricas asociadas a los grupos de un curso
+*/
+async function getRubricasGruposFromCurso(idCurso: string) : Promise<Rubrica[]> {
+    
+    const curso = await cursoRepository.getCursoByIdWithRubricaGrupos(idCurso);
+    if (!curso) throw new NotFoundError('Curso');
+    return curso.rubricasGruposModel;
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso, getRubricasGruposFromCurso };

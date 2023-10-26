@@ -55,5 +55,12 @@ export class CursoRepository implements CursoDataSource {
         return await this.cursoDAO.getCursoByIdWithRubricaAlumnos(idCurso);
     }
 
+    /**
+    * Cargar todas las rubricas de los alumnos del curso idCurso
+    */
+        async getCursoByIdWithRubricaGrupos(idCurso: string) {
+            return await this.cursoDAO.getCursoByIdWithRubricaGrupos(idCurso);
+        }
+
     // demas metodos
 }

@@ -102,5 +102,23 @@ export class CursoPrismaDAO implements CursoDataSource {
 
     }
 
+    /**
+     * Cargar todas las rubricas de los alumnos del curso
+     */
+        async getCursoByIdWithRubricaGrupos(idCurso: string) {
+
+            try {
+                return await this.prisma.curso.findUnique({
+                    where: {
+                        id: idCurso
+                    },
+                    include: { rubricasGruposModel: true }
+                });
+            } catch (err) {
+                throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+            }
+    
+        }
+
     // demas metodos
 }
