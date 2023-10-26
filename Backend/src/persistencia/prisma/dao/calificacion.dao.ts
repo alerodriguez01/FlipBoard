@@ -92,7 +92,6 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     }
 
     if(idRubrica) query.where.AND.push({ rubricaId: idRubrica })
-    console.log(query.where.AND)
 
     try {
         if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
