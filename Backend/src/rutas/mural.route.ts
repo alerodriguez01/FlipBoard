@@ -33,11 +33,11 @@ const router = Router();
  *         - contenido
  *         - cursoId
  *       example:
- *         id: 65326ed824fea7e06d01e211,
- *         nombre: Mural de Matemáticas,
- *         contenido: Contenido del mural de matemáticas,
- *         descripcion: Mural de matemáticas para el curso,
- *         rubricaId: 65326ed824fea7e06d01e20d,
+ *         id: 65326ed824fea7e06d01e211
+ *         nombre: Mural de Matemáticas
+ *         contenido: Contenido del mural de matemáticas
+ *         descripcion: Mural de matemáticas para el curso
+ *         rubricaId: 65326ed824fea7e06d01e20d
  *         cursoId: 65326ed824fea7e06d01e20b
  */
 
@@ -171,7 +171,74 @@ router.get("/:idCurso/murales", controller.getMuralesFromCurso);
  */
 router.put("/murales/:idMural", controller.asociateRubricaToMural);
 
-// TODO - ID21 - Crear mural
-router.post("/murales")
+/**
+ * @swagger
+ * /api/cursos/murales:
+ *   post:
+ *    summary: Crear un nuevo mural
+ *    tags: [Mural]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            properties:
+ *              nombre:
+ *                type: string
+ *                description: El nombre del mural
+ *              descripcion:
+ *                type: string
+ *                description: La descripcion del mural
+ *              contenido:
+ *                type: string
+ *                description: El contenido del mural
+ *              idRubrica:
+ *                type: string
+ *                description: El id de la rubrica asociada al mural
+ *              idCurso:
+ *                type: string
+ *                description: El id del curso asociado al mural
+ *              idDocente:
+ *                type: string
+ *                description: El id del docente que crea el mural
+ *            required:
+ *              - nombre
+ *              - contenido
+ *              - idCurso
+ *              - idDocente
+ *            example:
+ *              nombre: Mural de Matemáticas
+ *              contenido: Contenido del mural de matemáticas
+ *              descripcion: Mural de matemáticas para el curso
+ *              idRubrica: 65326ed824fea7e06d01e20d
+ *              idCurso: 65326ed824fea7e06d01e20b
+ *              idDocente: 65326ed824fea7e06d01e20c
+ *    responses:
+ *      201: 
+ *        description: Mural creado exitosamente
+ *        content:
+ *          application/json:
+ *            example:
+ *            - id: 653460ae39e91bc002bf42fb
+ *              nombre: Mural de Matemáticas
+ *              contenido: Contenido del mural de matemáticas
+ *              descripcion: Mural de matemáticas para el curso
+ *              rubricaId: 653460ae39e91bc002bf42f7
+ *              cursoId: 653460ae39e91bc002bf42f5  
+ *      400:
+ *        description: Faltan datos obligatorios
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Faltan datos obligatorios
+ *      404:
+ *        description: No se encontro el curso o la rubrica
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Cusro o Rubrica' en la BDD
+ */
+router.post("/murales", controller.createMural);
 
 export default router;
