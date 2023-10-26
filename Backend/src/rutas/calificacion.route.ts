@@ -150,7 +150,6 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *            type: object
  *            required:
  *              - valores
- *              - observaciones
  *              - idRubrica
  *              - idDocente
  *            properties:
@@ -234,7 +233,6 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *            type: object
  *            required:
  *              - valores
- *              - observaciones
  *              - idRubrica
  *              - idDocente
  *            properties:
