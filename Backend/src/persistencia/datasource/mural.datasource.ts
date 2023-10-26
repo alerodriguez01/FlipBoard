@@ -5,5 +5,6 @@ export default interface MuralDataSource {
     getMuralById(idMural: string): Promise<Mural | null>,
     getMuralByIdWithRubrica(idMural: string): Promise<Mural | null>
     asociateRubricaToMural(idMural: string, idRubrica: string): Promise<Mural>
+    createMural(mural: Mural): Promise<Mural>
     // ir agregando métodos restantes
 }

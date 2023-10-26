@@ -25,7 +25,7 @@ export class MuralPrismaDAO implements MuralDataSource {
     /*
         Cargar murales de un curso
     */
-    public async getMuralesFromCurso(idCurso: string) : Promise<Mural[]> {
+    public async getMuralesFromCurso(idCurso: string): Promise<Mural[]> {
 
         try {
             const murales = await this.prisma.mural.findMany({
@@ -33,9 +33,9 @@ export class MuralPrismaDAO implements MuralDataSource {
                     cursoId: idCurso
                 }
             })
-    
+
             return murales;
-            
+
         } catch (error) {
             throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
@@ -45,7 +45,7 @@ export class MuralPrismaDAO implements MuralDataSource {
     /*
         Traer mural por id
     */
-    public async getMuralById(idMural: string) : Promise<Mural | null> {
+    public async getMuralById(idMural: string): Promise<Mural | null> {
 
         try {
             const mural = await this.prisma.mural.findUnique({
@@ -53,9 +53,9 @@ export class MuralPrismaDAO implements MuralDataSource {
                     id: idMural
                 }
             })
-    
+
             return mural;
-            
+
         } catch (error) {
             throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
@@ -65,7 +65,7 @@ export class MuralPrismaDAO implements MuralDataSource {
     /*
         Traer mural por id junto a su rubrica asociada
     */
-    public async getMuralByIdWithRubrica(idMural: string) : Promise<Mural | null> {
+    public async getMuralByIdWithRubrica(idMural: string): Promise<Mural | null> {
 
         try {
             const mural = await this.prisma.mural.findUnique({
@@ -76,9 +76,9 @@ export class MuralPrismaDAO implements MuralDataSource {
                     rubricaModel: true
                 }
             })
-    
+
             return mural;
-            
+
         } catch (error) {
             throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
         }
@@ -99,7 +99,7 @@ export class MuralPrismaDAO implements MuralDataSource {
                     rubricaModel: { connect: { id: idRubrica } }
                 }
             })
-            
+
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Mural", "idRubrica o idMural"); // el idRubrica o idMural no tiene los 12 bytes
             throw new NotFoundError("Rubrica o Mural"); // no se encontro la rubrica o curso
@@ -107,7 +107,32 @@ export class MuralPrismaDAO implements MuralDataSource {
 
     }
 
-    // demas metodos
+    /*
+        Crear un nuevo mural
+    */
+    public async createMural(mural: Mural) {
+
+        let query: any = {
+            data: {
+                nombre: mural.nombre,
+                descripcion: mural.descripcion,
+                contenido: mural.contenido,
+                cursoModel: { connect: { id: mural.cursoId } },
+            }
+        }
+
+        if(mural.rubricaId) query.data.rubricaModel = { connect: { id: mural.rubricaId } }
+
+        try {
+            return await this.prisma.mural.create(query)
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Curso o Rubrica", "id"); // el id no tiene los 12 bytes
+            throw new NotFoundError("Curso o Rubrica"); // no se encontro alguna de las entidades
+        }
+
+    }
+
 }
 
 

@@ -46,5 +46,10 @@ export class MuralRepository implements MuralDataSource {
         return await this.muralDAO.asociateRubricaToMural(idMural, idRubrica);
     }
 
-    // demas metodos
+    /*
+        Crear un nuevo mural
+    */
+    async createMural(mural: any) {
+        return await this.muralDAO.createMural(mural);
+    }
 }

@@ -1,10 +1,12 @@
 import { Mural } from "@prisma/client";
 import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
-import { NotFoundError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
+import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 
 const muralRepository = MuralRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
+const usuarioRepository = UsuarioRepository.getInstance();
 
 async function getMuralById(idMural: string, rubrica: boolean): Promise<Mural | null> {
 
@@ -54,4 +56,18 @@ async function asociateRubricaToMural(idMural: string, idRubrica: string) {
 
 }
 
-export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural };
+/*
+    Crear un nuevo mural
+*/
+async function createMural(mural: Mural, idDocente: string) {
+    
+    const docente = await usuarioRepository.getUsuarioById(idDocente);
+    if(!docente) throw new NotFoundError('Docente');
+
+    // Verificar que quien lo crea, sea el docente del curso
+    if(!docente.cursosDocente.includes(mural.cursoId)) throw new NotFoundError('Docente en Curso');
+
+    return await muralRepository.createMural(mural);
+}
+
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural };
