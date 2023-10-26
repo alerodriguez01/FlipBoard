@@ -28,6 +28,9 @@ async function createCalificacion(calificacion: Calificacion) {
     const curso = await cursoRepository.getCursoById(calificacion.cursoId);
     if(!curso)
         throw new NotFoundError("Curso");
+
+    if(calificacion.docenteId.length !== 24)
+        throw new InvalidValueError("Calificacion","docenteId");
     
     // Verificar que quien califica sea docente en el curso
     if(!curso.docentes.includes(calificacion.docenteId))
