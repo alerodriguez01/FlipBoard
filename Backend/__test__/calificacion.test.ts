@@ -203,7 +203,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
 
     }, 15000);
 
-    /*
+    
     test("Intentar crear una calificacion con idDocente invalido", async () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2,2],
@@ -214,7 +214,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       expect(res.statusCode).toBe(400); // se recibe 404 (no se encontro Docente en Curso) porque no se valida el idDocente, sino que se busca directamente si esta dentro de los cursos
 
     }, 15000);
-
+    
     test("Intentar crear una calificacion con idDocente inexistente", async () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2,2],
@@ -222,10 +222,10 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
         idDocente: "333333333333333333333333"
       });
 
-      expect(res.statusCode).toBe(400); // se recibe 404 (no se encontro Docente en Curso) porque no se valida el idDocente, sino que se busca directamente si esta dentro de los cursos
+      expect(res.statusCode).toBe(404); // se recibe 404 (no se encontro Docente en Curso) porque no se valida el idDocente, sino que se busca directamente si esta dentro de los cursos
 
     }, 15000);
-    */
+    
 
   });
 
