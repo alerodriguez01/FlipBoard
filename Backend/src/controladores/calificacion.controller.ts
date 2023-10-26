@@ -42,11 +42,12 @@ async function createCalificacion(req: Request, res: Response) {
 
     const idUsuario = req.params.idUsuario;
     const idGrupo = req.params.idGrupo;
+    const idCurso = req.params.idCurso;
 
-    const { valores, observaciones, idCurso, idRubrica, idMural } = req.body;
+    const { valores, observaciones, idRubrica, idMural } = req.body;
 
     // Datos obligatorios
-    if(!valores || !observaciones || !idCurso || !idRubrica) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if(!valores || !idRubrica) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     // valores debe ser un array de numeros
     if(!Array.isArray(valores) || valores.some((valor: any) => typeof valor !== 'number')) return res.status(400).json({ error: "Valores debe ser un array de numeros. Ejemplo: valores: [1, 3]" });

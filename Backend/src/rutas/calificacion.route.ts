@@ -121,11 +121,19 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
 
 /**
  * @swagger
- * /api/cursos/calificaciones/alumnos/{idAlumno}:
+ * /api/cursos/{idCurso}/calificaciones/alumnos/{idAlumno}:
  *   post:
  *    summary: Crear una nueva calificacion para un alumno
  *    tags: [Calificacion]
  *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso asociado
+ *        schema:
+ *          type: string
+ *        example:
+ *          15397634490a7145b4444404
  *      - name: idAlumno
  *        in: path
  *        required: true
@@ -144,7 +152,6 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              - valores
  *              - observaciones
  *              - idRubrica
- *              - idCurso
  *            properties:
  *              valores:
  *                type: list
@@ -155,9 +162,6 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              idRubrica:
  *                type: string
  *                description: La rubrica asociada a la calificacion
- *              idCurso:
- *                type: string
- *                description: El curso asociado a la calificacion
  *              idMural:
  *                type: string
  *                description: El mural asociado a la calificacion
@@ -193,15 +197,23 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *            example:
  *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
  */
-router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createCalificacion)
+router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.createCalificacion)
 
 /**
  * @swagger
- * /api/cursos/calificaciones/grupos/{idGrupo}:
+ * /api/cursos/{idCurso}/calificaciones/grupos/{idGrupo}:
  *   post:
  *    summary: Crear una nueva calificacion para un grupo
  *    tags: [Calificacion]
  *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso asociado
+ *        schema:
+ *          type: string
+ *        example:
+ *          65397655550a7145b838780d
  *      - name: idGrupo
  *        in: path
  *        required: true
@@ -220,7 +232,6 @@ router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createC
  *              - valores
  *              - observaciones
  *              - idRubrica
- *              - idCurso
  *            properties:
  *              valores:
  *                type: list
@@ -231,9 +242,6 @@ router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createC
  *              idRubrica:
  *                type: string
  *                description: La rubrica asociada a la calificacion
- *              idCurso:
- *                type: string
- *                description: El curso asociado a la calificacion
  *              idMural:
  *                type: string
  *                description: El mural asociado a la calificacion
@@ -269,7 +277,7 @@ router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createC
  *            example:
  *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
  */
-router.post("/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
+router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
 
 
 /**
