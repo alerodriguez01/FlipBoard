@@ -9,10 +9,10 @@ const prisma = PrismaSingleton.getInstance();
 
 router.get("/", async (req, res) => {
   try {
-      await load_initial_data();
-      res.status(200).send("Datos cargados");
+    await load_initial_data();
+    res.status(200).send("Datos cargados");
   } catch (error) {
-      res.status(400).send(`Error al cargar datos: ${error}`);
+    res.status(400).send(`Error al cargar datos: ${error}`);
   }
 });
 
@@ -25,9 +25,9 @@ async function load_initial_data() {
   // Crear usuarios de ejemplo
   const usuario1 = await prisma.usuario.create({
     data: {
-      nombre: 'Juan'.toLowerCase(),      
+      nombre: 'Juan'.toLowerCase(),
       correo: 'juan@example.com',
-      contrasena: await bcryptjs.hash('secreta123',salt1),
+      contrasena: await bcryptjs.hash('secreta123', salt1),
     },
   });
 
@@ -35,7 +35,7 @@ async function load_initial_data() {
     data: {
       nombre: 'Maria'.toLowerCase(),
       correo: 'maria@example.com',
-      contrasena: await bcryptjs.hash('clave123',salt2),
+      contrasena: await bcryptjs.hash('clave123', salt2),
     },
   });
 
@@ -43,14 +43,14 @@ async function load_initial_data() {
   await prisma.salt.create({
     data: {
       salt: salt1,
-      usuarioId: usuario1.id
+      userModel: { connect: { id: usuario1.id } }
     }
   });
 
   await prisma.salt.create({
     data: {
       salt: salt2,
-      usuarioId: usuario2.id
+      userModel: { connect: { id: usuario2.id } }
     }
   });
 
@@ -80,9 +80,8 @@ async function load_initial_data() {
     where: { id: usuario1.id },
     data: {
       cursosAlumnoModel: {
-        // cuando hay que asociar una lista de objetos, se usa el nombre del campo con 'x' en el schema.prisma
+        // cuando hay que asociar un atributo que se correspone con otra relacion, se usa el nombre del campo con 'x' en el schema.prisma
         // https://www.prisma.io/docs/reference/api-reference/prisma-client-reference#connect
-        // si hay que asociar solo un id, se coloca el campoId: id
         connect: [{ id: curso1.id }, { id: curso2.id }] // esto agregaría los cursos 1 y 2 al usuario 1 (NO REEMPLAZA)
       },
       cursosDocenteModel: {
@@ -119,7 +118,7 @@ async function load_initial_data() {
       alumnosModel: {
         connect: [{ id: curso1.id }]
       },
-      usuarioId: usuario1.id,
+      usuarioModel: { connect: { id: usuario1.id } }
     },
   });
 
@@ -142,7 +141,7 @@ async function load_initial_data() {
       alumnosModel: {
         connect: [{ id: curso2.id }]
       },
-      usuarioId: usuario2.id,
+      usuarioModel: { connect: { id: usuario2.id } }
     },
   });
 
@@ -178,8 +177,8 @@ async function load_initial_data() {
       nombre: 'Mural de Matemáticas',
       contenido: 'Contenido del mural de matemáticas',
       descripcion: 'Mural de matemáticas para el curso',
-      rubricaId: rubrica1.id,
-      cursoId: curso1.id,
+      rubricaModel: { connect: { id: rubrica1.id, } },
+      cursoModel: { connect: { id: curso1.id, } },
     },
   });
 
@@ -188,8 +187,8 @@ async function load_initial_data() {
       nombre: 'Mural de Historia',
       contenido: 'Contenido del mural de historia',
       descripcion: 'Mural de historia para el curso',
-      rubricaId: rubrica2.id,
-      cursoId: curso2.id,
+      rubricaModel: { connect: { id: rubrica2.id, } },
+      cursoModel: { connect: { id: curso2.id, } },
     },
   });
 
@@ -198,10 +197,10 @@ async function load_initial_data() {
     data: {
       valores: [3, 4],
       observaciones: 'Buen trabajo',
-      rubricaId: rubrica1.id,
-      usuarioId: usuario1.id,
-      cursoId: curso1.id,
-      muralId: mural1.id
+      rubricaModel: { connect: { id: rubrica1.id, } },
+      usuarioModel: { connect: { id: usuario1.id } },
+      cursoModel: { connect: { id: curso1.id, } },
+      muralModel: { connect: { id: mural1.id } }
     },
   });
 
@@ -209,10 +208,10 @@ async function load_initial_data() {
     data: {
       valores: [3, 4],
       observaciones: 'Puede mejorar',
-      rubricaId: rubrica2.id,
-      grupoId: grupo2.id,
-      cursoId: curso2.id,
-      muralId: mural2.id
+      rubricaModel: { connect: { id: rubrica2.id, } },
+      usuarioModel: { connect: { id: usuario2.id } },
+      cursoModel: { connect: { id: curso2.id, } },
+      muralModel: { connect: { id: mural2.id } }
     },
   });
 }
