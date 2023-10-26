@@ -142,7 +142,7 @@ model Grupo {
 model Calificacion {
   id            String @id @default(auto()) @map("_id") @db.ObjectId
   valores       Int[]
-  observaciones String
+  observaciones String?
 
   // many-to-one (rubrica asociada a la calificacion)
   rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])
