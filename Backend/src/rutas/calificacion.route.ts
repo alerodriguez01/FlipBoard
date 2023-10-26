@@ -119,13 +119,160 @@ const router = Router();
  */
 router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.getCalificacionesFromUser)
 
-// TODO - ID14 - Crear calificacion
-router.post("/calificaciones/alumnos/:idUsuario")
+/**
+ * @swagger
+ * /api/cursos/calificaciones/alumnos/{idAlumno}:
+ *   post:
+ *    summary: Crear una nueva calificacion para un alumno
+ *    tags: [Calificacion]
+ *    parameters:
+ *      - name: idAlumno
+ *        in: path
+ *        required: true
+ *        description: El id del alumno a calificar
+ *        schema:
+ *          type: string
+ *        example:
+ *          65397634490a7145b8387804
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - valores
+ *              - observaciones
+ *              - idRubrica
+ *              - idCurso
+ *            properties:
+ *              valores:
+ *                type: list
+ *                description: Los valores de la calificacion
+ *              observaciones:
+ *                type: string
+ *                description: Las observaciones de la calificacion
+ *              idRubrica:
+ *                type: string
+ *                description: La rubrica asociada a la calificacion
+ *              idCurso:
+ *                type: string
+ *                description: El curso asociado a la calificacion
+ *              idMural:
+ *                type: string
+ *                description: El mural asociado a la calificacion
+ *            example:
+ *              valores: [3, 1]
+ *              observaciones: Buen trabajo
+ *              idRubrica: 65397634490a7145b838780a
+ *              idCurso: 65397634490a7145b8387808
+ *              idMural: 65397634490a7145b838780e
+ *    responses:
+ *      201: 
+ *        description: Calificacion creada exitosamente
+ *        content:
+ *          application/json:
+ *            example:
+ *              id: 653a6a5b356a77c448313fea
+ *              valores: [3, 1]
+ *              observaciones: Buen trabajo
+ *              rubricaId: 65397634490a7145b838780a
+ *              usuarioId: 65326ed824fea7e06d01e207
+ *              cursoId: 65397634490a7145b8387808
+ *              muralId: 65397634490a7145b838780e
+ *      400:
+ *        description: Faltan datos obligatorios o alguno de los id's o datos es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Valor invalido para el atributo id de Curso, Rubrica, Usuario o Mural
+ *      404:
+ *        description: No se encontraron algunas de las entidades provistas por el id
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
+ */
+router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createCalificacion)
 
-// TODO - ID14 - Crear calificacion
-router.get("/:idCurso/calificaciones/grupos/:idGrupo")
+/**
+ * @swagger
+ * /api/cursos/calificaciones/grupos/{idGrupo}:
+ *   post:
+ *    summary: Crear una nueva calificacion para un grupo
+ *    tags: [Calificacion]
+ *    parameters:
+ *      - name: idGrupo
+ *        in: path
+ *        required: true
+ *        description: El id del grupo a calificar
+ *        schema:
+ *          type: string
+ *        example:
+ *          65397634490a7145b838780c
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - valores
+ *              - observaciones
+ *              - idRubrica
+ *              - idCurso
+ *            properties:
+ *              valores:
+ *                type: list
+ *                description: Los valores de la calificacion
+ *              observaciones:
+ *                type: string
+ *                description: Las observaciones de la calificacion
+ *              idRubrica:
+ *                type: string
+ *                description: La rubrica asociada a la calificacion
+ *              idCurso:
+ *                type: string
+ *                description: El curso asociado a la calificacion
+ *              idMural:
+ *                type: string
+ *                description: El mural asociado a la calificacion
+ *            example:
+ *              valores: [3, 1]
+ *              observaciones: Buen trabajo
+ *              idRubrica: 65397634490a7145b838780a
+ *              idCurso: 65397634490a7145b8387808
+ *              idMural: 65397634490a7145b838780e
+ *    responses:
+ *      201: 
+ *        description: Calificacion creada exitosamente
+ *        content:
+ *          application/json:
+ *            example:
+ *              id: 653a6a5b356a77c448313fea
+ *              valores: [3, 1]
+ *              observaciones: Buen trabajo
+ *              rubricaId: 65397634490a7145b838780a
+ *              grupoId: 65397634490a7145b838780c
+ *              cursoId: 65397634490a7145b8387808
+ *              muralId: 65397634490a7145b838780e
+ *      400:
+ *        description: Faltan datos obligatorios o alguno de los id's o datos es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Valor invalido para el atributo id de Curso, Rubrica, Usuario, Grupo o Mural
+ *      404:
+ *        description: No se encontraron algunas de las entidades provistas por el id
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
+ */
+router.post("/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
 
-// TODO - ID20 - Traer todas las calificaciones del curso (cursoId) que tengan asociada una rúbrica (rúbricaId). Tiene que ser paginado (aunque quizá no sea necesario, porque solo hay que traer la calificación). 
+
+// TODO - ID25 - Traer todas las calificaciones del curso (cursoId) que tengan asociada una rúbrica (rúbricaId). Tiene que ser paginado (aunque quizá no sea necesario, porque solo hay que traer la calificación). 
 router.get("/:idCurso/calificaciones")
 
 export default router;

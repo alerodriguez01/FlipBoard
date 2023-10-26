@@ -1,8 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+import { Calificacion, PrismaClient } from "@prisma/client";
 import CalificacionDataSource from "../../datasource/calificacion.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
-import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 
 export class CalificacionPrismaDAO implements CalificacionDataSource {
 
@@ -47,6 +47,34 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             //     }
             // }
             throw new InvalidValueError("Calificacion", "idCurso o idUsuario");
+        }
+    }
+
+    /*
+        Crear calificacion
+    */
+    public async createCalificacion(calificacion: Calificacion) {
+
+        let query: any = {
+            data: {
+                valores: calificacion.valores,
+                observaciones: calificacion.observaciones,
+                rubricaModel: { connect: { id: calificacion.rubricaId } },
+                cursoModel: { connect: { id: calificacion.cursoId } },
+            }
+        }
+
+        if (calificacion.muralId) query.data.muralModel = { connect: { id: calificacion.muralId } }
+        if (calificacion.usuarioId) query.data.usuarioModel = { connect: { id: calificacion.usuarioId } }
+        if (calificacion.grupoId) query.data.grupoModel = { connect: { id: calificacion.grupoId } }
+        
+        try {
+            const rubrica = await this.prisma.calificacion.create(query)
+            return rubrica;
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Curso, Rubrica, Usuario, Grupo o Mural", "id"); // el id no tiene los 12 bytes
+            throw new NotFoundError("Curso, Rubrica, Usuario, Grupo o Mural"); // no se encontro alguna de las entidades
         }
     }
 }
