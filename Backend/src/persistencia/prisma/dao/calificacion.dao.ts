@@ -61,6 +61,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
                 observaciones: calificacion.observaciones,
                 rubricaModel: { connect: { id: calificacion.rubricaId } },
                 cursoModel: { connect: { id: calificacion.cursoId } },
+                docenteModel: { connect: { id: calificacion.docenteId } }
             }
         }
 

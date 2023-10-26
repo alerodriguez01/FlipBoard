@@ -43,23 +43,23 @@ export class GrupoPrismaDAO implements GrupoDataSource {
         }
     }
 
-    public async createGrupo(grupo: Grupo){
+    public async createGrupo(grupo: Grupo) {
 
         // to ensure uniqueness, use transaction
-        try{
-            return await this.prisma.$transaction( async (tx) =>{
-            
+        try {
+            return await this.prisma.$transaction(async (tx) => {
+
                 const ultimoNro = await this.prisma.grupo.findFirst({
-                    where: {cursoId: grupo.cursoId},
-                    select: {numero: true},
-                    orderBy: {numero:'desc'}
+                    where: { cursoId: grupo.cursoId },
+                    select: { numero: true },
+                    orderBy: { numero: 'desc' }
                 });
                 let nroGrupo = 1;
-    
-                if(!!ultimoNro) 
+
+                if (!!ultimoNro)
                     nroGrupo = ultimoNro.numero + 1;
-                
-                const integrantesObj = grupo.integrantes.map((id: string) => ({id}));
+
+                const integrantesObj = grupo.integrantes.map((id: string) => ({ id }));
 
                 const newGrupo = await this.prisma.grupo.create({
                     data: {
@@ -67,18 +67,31 @@ export class GrupoPrismaDAO implements GrupoDataSource {
                         integrantesModel: {
                             connect: integrantesObj
                         },
-                        curso:{
-                            connect: {id: grupo.cursoId}
+                        curso: {
+                            connect: { id: grupo.cursoId }
                         }
                     }
                 });
-    
+
                 return newGrupo;
             });
         }
-        catch(err){
+        catch (err) {
             throw new InvalidValueError("Grupo", "idCurso or participantes"); // el id no tiene los 12 bytes
         }
-        
+
+    }
+
+    public async getGrupoById(id: string): Promise<Grupo | null> {
+
+        try {
+            return await this.prisma.grupo.findUnique({
+                where: { id: id },
+                include: { integrantesModel: true }
+            });
+            
+        } catch (error) {
+            throw new InvalidValueError("Grupo", "id"); // el id no tiene los 12 bytes
+        }
     }
 }

@@ -28,4 +28,8 @@ export class GrupoRepository implements GrupoDataSource {
     public async createGrupo(grupo: Grupo) {
         return await this.grupoDao.createGrupo(grupo);
     }
+
+    public async getGrupoById(id: string): Promise<Grupo | null> {
+        return await this.grupoDao.getGrupoById(id);
+    }
 }

@@ -21,6 +21,7 @@ async function load_initial_data() {
   // crear y guardar salt de ejemplo
   const salt1 = await bcryptjs.genSalt();
   const salt2 = await bcryptjs.genSalt();
+  const salt3 = await bcryptjs.genSalt();
 
   // Crear usuarios de ejemplo
   const usuario1 = await prisma.usuario.create({
@@ -39,6 +40,14 @@ async function load_initial_data() {
     },
   });
 
+  const usuario3 = await prisma.usuario.create({
+    data: {
+      nombre: 'Pablo'.toLowerCase(),
+      correo: 'pablo@example.com',
+      contrasena: await bcryptjs.hash('clave123456', salt3),
+    },
+  });
+
   //guardar salts
   await prisma.salt.create({
     data: {
@@ -51,6 +60,13 @@ async function load_initial_data() {
     data: {
       salt: salt2,
       userModel: { connect: { id: usuario2.id } }
+    }
+  });
+
+  await prisma.salt.create({
+    data: {
+      salt: salt3,
+      userModel: { connect: { id: usuario3.id } }
     }
   });
 
@@ -75,6 +91,16 @@ async function load_initial_data() {
     },
   });
 
+  const curso3 = await prisma.curso.create({
+    data: {
+      nombre: 'Curso de Filosofia',
+      tema: 'Un poco de filosofia',
+      sitioWeb: 'https://filosofia.com',
+      descripcion: 'Un curso de filosofia',
+      emailContacto: 'contacto@filosofia.com',
+    },
+  });
+
   // Asociar usuarios a cursos
   await prisma.usuario.update({
     where: { id: usuario1.id },
@@ -85,7 +111,7 @@ async function load_initial_data() {
         connect: [{ id: curso1.id }, { id: curso2.id }] // esto agregaría los cursos 1 y 2 al usuario 1 (NO REEMPLAZA)
       },
       cursosDocenteModel: {
-        connect: [{ id: curso1.id }]
+        connect: [{ id: curso3.id }]
       },
     },
   });
@@ -94,7 +120,22 @@ async function load_initial_data() {
     where: { id: usuario2.id },
     data: {
       cursosAlumnoModel: {
+        connect: [{ id: curso1.id }, { id: curso3.id }]
+      },
+      cursosDocenteModel: {
         connect: [{ id: curso2.id }]
+      },
+    },
+  });
+
+  await prisma.usuario.update({
+    where: { id: usuario3.id },
+    data: {
+      cursosAlumnoModel: {
+        connect: [{ id: curso2.id }, { id: curso3.id }]
+      },
+      cursosDocenteModel: {
+        connect: [{ id: curso1.id }]
       },
     },
   });
@@ -165,7 +206,7 @@ async function load_initial_data() {
         connect: { id: curso2.id },
       },
       integrantesModel: {
-        connect: [{ id: usuario1.id }],
+        connect: [{ id: usuario1.id }, { id: usuario3.id }],
       },
     },
   });
@@ -200,7 +241,8 @@ async function load_initial_data() {
       rubricaModel: { connect: { id: rubrica1.id, } },
       usuarioModel: { connect: { id: usuario1.id } },
       cursoModel: { connect: { id: curso1.id, } },
-      muralModel: { connect: { id: mural1.id } }
+      muralModel: { connect: { id: mural1.id } },
+      docenteModel: { connect: { id: usuario3.id } }
     },
   });
 
@@ -211,7 +253,8 @@ async function load_initial_data() {
       rubricaModel: { connect: { id: rubrica2.id, } },
       usuarioModel: { connect: { id: usuario2.id } },
       cursoModel: { connect: { id: curso2.id, } },
-      muralModel: { connect: { id: mural2.id } }
+      muralModel: { connect: { id: mural2.id } },
+      docenteModel: { connect: { id: usuario2.id } }
     },
   });
 }
