@@ -26,7 +26,7 @@ async function createCalificacion(calificacion: Calificacion) {
     if (!rubrica) throw new NotFoundError("Rubrica");
 
     if ( calificacion.valores.length !== rubrica.criterios.length ||
-         calificacion.valores.some((valor: number) => valor < 0 || valor > rubrica.niveles.length) ) throw new InvalidValueError("Calificacion", "valores");
+         calificacion.valores.some((valor: number) => valor < 0 || valor >= rubrica.niveles.length) ) throw new InvalidValueError("Calificacion", "valores");
 
 
     const newCalificacion = await califcacionRepository.createCalificacion(calificacion);
