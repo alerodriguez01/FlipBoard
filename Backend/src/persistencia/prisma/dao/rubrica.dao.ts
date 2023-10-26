@@ -1,7 +1,8 @@
 import { Rubrica, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import { RubricaDataSource } from "../../datasource/rubrica.datasource.js";
-import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 
 export class RubricaPrismaDAO implements RubricaDataSource {
@@ -68,6 +69,28 @@ export class RubricaPrismaDAO implements RubricaDataSource {
             throw new InvalidValueError("Rubrica", "idUsuario"); // el id no tiene los 12 bytes
         }
     }
+
+    /*
+        Asociar rubrica a los alumnos de un curso
+    */
+    async asociateRubricaAlumnosToCurso(idCurso: string, idRubrica: string) {
+
+        try {
+            const rubrica = await this.prisma.rubrica.update({
+                where: { id: idRubrica },
+                data: {
+                    alumnosModel: { connect: { id: idCurso } }
+                }
+            })
+            return rubrica;
+            
+        } catch (error) {
+            if(error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Curso", "idRubrica o idCurso"); // el idRubrica o idCurso no tiene los 12 bytes
+            throw new NotFoundError("Rubrica o Curso"); // no se encontro la rubrica o curso
+        }
+
+    }
+
     // demas metodos
 
 }

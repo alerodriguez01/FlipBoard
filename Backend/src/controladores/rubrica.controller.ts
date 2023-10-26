@@ -100,4 +100,26 @@ async function getRubricasGruposFromCurso(req: Request, res: Response){
 
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso, getRubricasGruposFromCurso };
+/*
+    Asociar una rubrica a todos los alumnos en un curso
+*/
+async function asociateRubricaAlumnosToCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+    const idRubrica = req.body.idRubrica;
+
+    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+
+    try {
+        await service.asociateRubricaAlumnosToCurso(cursoId, idRubrica);
+        return res.status(204).send();
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idRubrica invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso o la rubrica
+
+    }
+
+}
+
+export default { getRubricaById, createRubrica, getAllRubricasByUserId, getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso };
