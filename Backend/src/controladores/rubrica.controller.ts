@@ -55,10 +55,97 @@ async function getAllRubricasByUserId(req: Request, res: Response) {
     try {
         const rubricas = await service.getAllRubricasByUserId(userId);
         return res.status(200).json(rubricas);
+
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
     }
 
 }
 
-export default { getRubricaById, createRubrica, getAllRubricasByUserId };
+/*
+    Obtener las rubricas asociadas a los alumnos de un curso
+*/
+async function getRubricasAlumnosFromCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+
+    try {
+        const rubricas = await service.getRubricasAlumnosFromCurso(cursoId);
+        return res.status(200).json(rubricas);
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso
+
+    }
+
+}
+
+/*
+    Obtener las rubricas asociadas a los grupos de un curso
+*/
+async function getRubricasGruposFromCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+
+    try {
+        const rubricas = await service.getRubricasGruposFromCurso(cursoId);
+        return res.status(200).json(rubricas);
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso
+
+    }
+
+}
+
+/*
+    Asociar una rubrica a todos los alumnos en un curso
+*/
+async function asociateRubricaAlumnosToCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+    const idRubrica = req.body.idRubrica;
+
+    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+
+    try {
+        await service.asociateRubricaAlumnosToCurso(cursoId, idRubrica);
+        return res.status(204).send();
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idRubrica invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso o la rubrica
+
+    }
+
+}
+
+/*
+    Asociar una rubrica a todos los grupos en un curso
+*/
+async function asociateRubricaGruposToCurso(req: Request, res: Response){
+
+    const cursoId = req.params.idCurso;
+    const idRubrica = req.body.idRubrica;
+
+    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+
+    try {
+        await service.asociateRubricaGruposToCurso(cursoId, idRubrica);
+        return res.status(204).send();
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idRubrica invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso o la rubrica
+
+    }
+
+}
+
+export default { 
+    getRubricaById, createRubrica, getAllRubricasByUserId, 
+    getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso, 
+    asociateRubricaGruposToCurso 
+};

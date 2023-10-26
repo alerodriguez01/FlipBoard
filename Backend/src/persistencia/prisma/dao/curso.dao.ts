@@ -30,9 +30,9 @@ export class CursoPrismaDAO implements CursoDataSource {
                     id: idCurso
                 }
             });
-    
+
             return curso
-            
+
         } catch (error) {
             throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
@@ -46,7 +46,7 @@ export class CursoPrismaDAO implements CursoDataSource {
             data: {
                 ...curso,
                 docentesModel: {
-                    connect: [{id: curso.docentes[0]}]
+                    connect: [{ id: curso.docentes[0] }]
                 }
             }
         });
@@ -61,28 +61,64 @@ export class CursoPrismaDAO implements CursoDataSource {
         const cursos = await this.prisma.curso.findMany();
         return cursos;
     }
-  
-  /*
-        agregar usuario a curso
-    */
+
+    /*
+          agregar usuario a curso
+      */
     async addUsuario(idCurso: string, idUser: string) {
-        try{
+        try {
             const curso = await this.prisma.curso.update({
                 where: {
                     id: idCurso,
                 },
                 data: {
                     participantesUser: {
-                        connect: {id: idUser}
+                        connect: { id: idUser }
                     }
                 }
             });
             return curso;
-        } catch(err){
+        } catch (err) {
             //no existe el curso o el usuario, o error de prisma
             return null;
         }
     }
+
+    /**
+     * Cargar todas las rubricas de los alumnos del curso
+     */
+    async getCursoByIdWithRubricaAlumnos(idCurso: string) {
+
+        try {
+            return await this.prisma.curso.findUnique({
+                where: {
+                    id: idCurso
+                },
+                include: { rubricasAlumnosModel: true }
+            });
+        } catch (err) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+        }
+
+    }
+
+    /**
+     * Cargar todas las rubricas de los alumnos del curso
+     */
+        async getCursoByIdWithRubricaGrupos(idCurso: string) {
+
+            try {
+                return await this.prisma.curso.findUnique({
+                    where: {
+                        id: idCurso
+                    },
+                    include: { rubricasGruposModel: true }
+                });
+            } catch (err) {
+                throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+            }
+    
+        }
 
     // demas metodos
 }

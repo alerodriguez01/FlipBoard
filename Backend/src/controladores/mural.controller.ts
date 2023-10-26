@@ -35,4 +35,26 @@ async function getMuralesFromCurso(req: Request, res: Response) {
     }
 }
 
-export default { getMuralById, getMuralesFromCurso };
+/*
+    Asociar una rubrica al mural
+*/
+async function asociateRubricaToMural(req: Request, res: Response){
+
+    const idMural = req.params.idMural;
+    const idRubrica = req.body.idRubrica;
+
+    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+
+    try {
+        await service.asociateRubricaToMural(idMural, idRubrica);
+        return res.status(204).send();
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
+
+    }
+
+}
+
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural };

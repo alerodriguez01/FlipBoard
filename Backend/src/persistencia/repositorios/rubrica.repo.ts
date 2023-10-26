@@ -40,5 +40,20 @@ export class RubricaRepository implements RubricaDataSource {
     async getAllRubricasByUserId(userId: string) {
         return await this.rubricaDAO.getAllRubricasByUserId(userId);
     }
+
+    /**
+     * Asociar rubrica a los alumnos de un curso
+     */
+    async asociateRubricaAlumnosToCurso(idCurso: string, idRubrica: string) {
+        return await this.rubricaDAO.asociateRubricaAlumnosToCurso(idCurso, idRubrica);
+    }
+
+    /**
+     * Asociar rubrica a los grupos de un curso
+     */
+        async asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) {
+            return await this.rubricaDAO.asociateRubricaGruposToCurso(idCurso, idRubrica);
+        }
+
     // demas metodos
 }

@@ -10,7 +10,7 @@ export class CursoRepository implements CursoDataSource {
 
     private constructor() {
         this.cursoDAO = CursoPrismaDAO.getInstance();
-     }
+    }
 
     public static getInstance(): CursoRepository {
         if (!CursoRepository.INSTANCE) {
@@ -23,7 +23,7 @@ export class CursoRepository implements CursoDataSource {
     /*
         Cargar curso por id
     */
-    async getCursoById(idCurso: string) : Promise<Curso | null> {
+    async getCursoById(idCurso: string): Promise<Curso | null> {
         return await this.cursoDAO.getCursoById(idCurso);
     }
 
@@ -40,13 +40,27 @@ export class CursoRepository implements CursoDataSource {
     async getCursos(): Promise<Curso[]> {
         return await this.cursoDAO.getCursos();
     }
-  
+
     /*
         Agregar participante
     */
     async addUsuario(idCurso: string, idUser: string) {
         return await this.cursoDAO.addUsuario(idCurso, idUser);
     }
+
+    /**
+    * Cargar todas las rubricas de los alumnos del curso idCurso
+    */
+    async getCursoByIdWithRubricaAlumnos(idCurso: string) {
+        return await this.cursoDAO.getCursoByIdWithRubricaAlumnos(idCurso);
+    }
+
+    /**
+    * Cargar todas las rubricas de los alumnos del curso idCurso
+    */
+        async getCursoByIdWithRubricaGrupos(idCurso: string) {
+            return await this.cursoDAO.getCursoByIdWithRubricaGrupos(idCurso);
+        }
 
     // demas metodos
 }
