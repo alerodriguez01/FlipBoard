@@ -77,4 +77,30 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             throw new NotFoundError("Curso, Rubrica, Usuario, Grupo o Mural"); // no se encontro alguna de las entidades
         }
     }
+
+    /*
+        Obtener calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
+    */
+   public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string) {
+
+    let query: any = {
+        skip: offset,
+        where: {
+            AND: [{ cursoId: idCurso, } ]
+        },
+        // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
+    }
+
+    if(idRubrica) query.where.AND.push({ rubricaId: idRubrica })
+    console.log(query.where.AND)
+
+    try {
+        if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
+        return await this.prisma.calificacion.findMany(query)
+
+    } catch (error) {
+        throw new InvalidValueError("Calificacion", "idCurso o idRubrica");
+    }
+
+   }
 }

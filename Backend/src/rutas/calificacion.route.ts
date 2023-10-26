@@ -272,7 +272,78 @@ router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createC
 router.post("/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
 
 
-// TODO - ID25 - Traer todas las calificaciones del curso (cursoId) que tengan asociada una rúbrica (rúbricaId). Tiene que ser paginado (aunque quizá no sea necesario, porque solo hay que traer la calificación). 
-router.get("/:idCurso/calificaciones")
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/calificaciones:
+ *   get:
+ *     summary: Obtener las calificaciones del curso
+ *     tags: [Calificacion]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387808
+ *       - name: rubrica
+ *         in: query
+ *         required: false
+ *         description: El id de la rubrica asociado a las calificaciones
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b838780a
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         description: Limite de calificaciones a obtener
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *       - name: offset
+ *         in: query
+ *         required: false
+ *         description: Numero de calificaciones a saltar
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *     responses:
+ *       200:
+ *         description: Calificaciones del curso encontradas
+ *         content:
+ *           application/json:
+ *               example:
+ *                 - id: "65397634490a7145b8387810"
+ *                   valores:
+ *                     - 3
+ *                     - 4
+ *                   observaciones: "Buen trabajo"
+ *                   rubricaId: "65397634490a7145b838780a"
+ *                   grupoId: null
+ *                   usuarioId: "65397634490a7145b8387804"
+ *                   cursoId: "65397634490a7145b8387808"
+ *                   muralId: "65397634490a7145b838780e"
+ *                 - id: "653a6a5b356a77c448313fea"
+ *                   valores:
+ *                     - 2
+ *                     - 1
+ *                   observaciones: "EXCELENTE!!!"
+ *                   rubricaId: "65397634490a7145b838780a"
+ *                   grupoId: null
+ *                   usuarioId: "65397634490a7145b8387804"
+ *                   cursoId: "65397634490a7145b8387808"
+ *                   muralId: "65397634490a7145b838780e"
+ *       400:
+ *         description: El parametro idCurso (o idRubrica en query param) es invalido
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Valor invalido para el atributo idCurso o idRubrica de Calificacion
+ */
+router.get("/:idCurso/calificaciones", calificacionController.getCalificacionesFromCurso)
 
 export default router;

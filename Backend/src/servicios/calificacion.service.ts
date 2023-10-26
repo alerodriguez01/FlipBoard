@@ -34,4 +34,14 @@ async function createCalificacion(calificacion: Calificacion) {
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion };
+/*
+    Obtener las calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
+*/
+async function getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string) {
+
+    const calificaciones = await califcacionRepository.getCalificacionesFromCurso(idCurso, limit, offset, idRubrica);
+    return calificaciones;
+
+}
+
+export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso };

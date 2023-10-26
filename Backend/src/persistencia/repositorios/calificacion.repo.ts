@@ -27,4 +27,8 @@ export class CalificacionRepository implements CalificacionDataSource {
     public async createCalificacion(calificacion: any) {
         return await this.calificacionDAO.createCalificacion(calificacion);
     }
+
+    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string) {
+        return await this.calificacionDAO.getCalificacionesFromCurso(idCurso, limit, offset, idRubrica);
+    }
 }
