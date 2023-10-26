@@ -193,7 +193,7 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *            example:
  *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
  */
-router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createCalificacion)
+router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController.createCalificacion)
 
 /**
  * @swagger
@@ -269,7 +269,7 @@ router.post("/calificaciones/alumnos/:idUsuario", calificacionController.createC
  *            example:
  *              message: No se ha podido encontrar 'Curso, Rubrica, Usuario, Grupo o Mural' en la BDD
  */
-router.post("/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
+router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.createCalificacion)
 
 
 /**
