@@ -241,7 +241,8 @@ async function load_initial_data() {
       rubricaModel: { connect: { id: rubrica1.id, } },
       usuarioModel: { connect: { id: usuario1.id } },
       cursoModel: { connect: { id: curso1.id, } },
-      muralModel: { connect: { id: mural1.id } }
+      muralModel: { connect: { id: mural1.id } },
+      docenteModel: { connect: { id: usuario3.id } }
     },
   });
 
@@ -252,7 +253,8 @@ async function load_initial_data() {
       rubricaModel: { connect: { id: rubrica2.id, } },
       usuarioModel: { connect: { id: usuario2.id } },
       cursoModel: { connect: { id: curso2.id, } },
-      muralModel: { connect: { id: mural2.id } }
+      muralModel: { connect: { id: mural2.id } },
+      docenteModel: { connect: { id: usuario2.id } }
     },
   });
 }

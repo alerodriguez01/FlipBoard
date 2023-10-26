@@ -57,14 +57,15 @@ async function createCalificacion(req: Request, res: Response) {
         observaciones: observaciones ?? null,
         rubricaId: idRubrica,
         cursoId: idCurso,
-        muralId: idMural ?? null
+        muralId: idMural ?? null,
+        docenteId: idDocente
     }
 
     if(idUsuario) calificacion.usuarioId = idUsuario;
     if(idGrupo) calificacion.grupoId = idGrupo;
 
     try {
-        const newCalificacion = await service.createCalificacion(calificacion as Calificacion, idDocente);
+        const newCalificacion = await service.createCalificacion(calificacion as Calificacion);
         return res.status(201).json(newCalificacion);
 
     } catch (error) {

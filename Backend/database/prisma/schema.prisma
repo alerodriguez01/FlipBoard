@@ -47,7 +47,10 @@ model Usuario {
   grupos      String[] @db.ObjectId
 
   // one-to-many (todas las calificaciones asociadas al usuario)
-  calificaciones Calificacion[] // x
+  calificacionesAlumno Calificacion[] @relation(name: "calificacion_alumno") // x
+
+  // one-to-many (todas las calificaciones realizadas por el usuario -como docente-)
+  calificacionesDocente Calificacion[] @relation(name: "calificacion_docente") // x
 
   // one-to-one (salt asociado al usuario para encriptar la contrasena)
   // The relation field `salt` on Model `Usuario` cannot be required. It's not possible to enforce this constraint on the database level. Please change the field type from `Salt` to `Salt?` to fix this.
@@ -153,8 +156,12 @@ model Calificacion {
   grupoId    String? @db.ObjectId
 
   // many-to-one (usuario asociado a la calificacion)
-  usuarioModel Usuario? @relation(fields: [usuarioId], references: [id])
+  usuarioModel Usuario? @relation(name: "calificacion_alumno", fields: [usuarioId], references: [id])
   usuarioId    String?  @db.ObjectId
+
+  // many-to-one (docente que realizo la calificacion)
+  docenteModel Usuario @relation(name: "calificacion_docente", fields: [docenteId], references: [id])
+  docenteId    String  @db.ObjectId
 
   // many-to-one (curso asociado a la calificacion)
   cursoModel Curso  @relation(fields: [cursoId], references: [id])

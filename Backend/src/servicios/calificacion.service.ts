@@ -23,14 +23,14 @@ async function getCalificacionesFromUser(idCurso: string, idUsuario: string, rub
 /*
     Crear calificacion
 */
-async function createCalificacion(calificacion: Calificacion, idDocente: string) {
+async function createCalificacion(calificacion: Calificacion) {
     
     const curso = await cursoRepository.getCursoById(calificacion.cursoId);
     if(!curso)
         throw new NotFoundError("Curso");
     
     // Verificar que quien califica sea docente en el curso
-    if(!curso.docentes.includes(idDocente))
+    if(!curso.docentes.includes(calificacion.docenteId))
         throw new NotFoundError("Docente en Curso");
 
     // Si se califica a un usuario, verificar que el usuario pertenezca al curso
