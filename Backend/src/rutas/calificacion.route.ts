@@ -133,7 +133,7 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *        schema:
  *          type: string
  *        example:
- *          15397634490a7145b4444404
+ *          65397634490a7145b8387808
  *      - name: idAlumno
  *        in: path
  *        required: true
@@ -152,6 +152,7 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              - valores
  *              - observaciones
  *              - idRubrica
+ *              - idDocente
  *            properties:
  *              valores:
  *                type: list
@@ -165,12 +166,15 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              idMural:
  *                type: string
  *                description: El mural asociado a la calificacion
+ *              idDocente:
+ *                type: string
+ *                description: El docente que califica
  *            example:
  *              valores: [3, 1]
  *              observaciones: Buen trabajo
  *              idRubrica: 65397634490a7145b838780a
- *              idCurso: 65397634490a7145b8387808
  *              idMural: 65397634490a7145b838780e
+ *              idDocente: 65397634490a7145b8387804
  *    responses:
  *      201: 
  *        description: Calificacion creada exitosamente
@@ -213,7 +217,7 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *        schema:
  *          type: string
  *        example:
- *          65397655550a7145b838780d
+ *          65397634490a7145b8387808
  *      - name: idGrupo
  *        in: path
  *        required: true
@@ -232,6 +236,7 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *              - valores
  *              - observaciones
  *              - idRubrica
+ *              - idDocente
  *            properties:
  *              valores:
  *                type: list
@@ -245,12 +250,15 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *              idMural:
  *                type: string
  *                description: El mural asociado a la calificacion
+ *              idDocente:
+ *                type: string
+ *                description: El docente que califica
  *            example:
  *              valores: [3, 1]
  *              observaciones: Buen trabajo
  *              idRubrica: 65397634490a7145b838780a
- *              idCurso: 65397634490a7145b8387808
  *              idMural: 65397634490a7145b838780e
+ *              idDocente: 65397634490a7145b8387804
  *    responses:
  *      201: 
  *        description: Calificacion creada exitosamente

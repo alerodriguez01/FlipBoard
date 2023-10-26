@@ -4,10 +4,14 @@ import { CalificacionRepository } from "../persistencia/repositorios/calificacio
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { GrupoRepository } from "../persistencia/repositorios/grupo.repo.js";
+import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 
 const califcacionRepository = CalificacionRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
 const cursoRepository = CursoRepository.getInstance();
+const grupoRepository = GrupoRepository.getInstance();
+const muralRepository = MuralRepository.getInstance();
 
 async function getCalificacionesFromUser(idCurso: string, idUsuario: string, rubrica: boolean, limit: number, offset: number) {
 
@@ -19,16 +23,39 @@ async function getCalificacionesFromUser(idCurso: string, idUsuario: string, rub
 /*
     Crear calificacion
 */
-async function createCalificacion(calificacion: Calificacion) {
-
-    // Verificar que el usuario pertenezca al curso
+async function createCalificacion(calificacion: Calificacion, idDocente: string) {
     
     const curso = await cursoRepository.getCursoById(calificacion.cursoId);
     if(!curso)
         throw new NotFoundError("Curso");
+    
+    // Verificar que quien califica sea docente en el curso
+    if(!curso.docentes.includes(idDocente))
+        throw new NotFoundError("Docente en Curso");
 
+    // Si se califica a un usuario, verificar que el usuario pertenezca al curso
     if(calificacion.usuarioId && !curso.participantes.includes(calificacion.usuarioId))
-        throw new NotFoundError("Usuario");
+        throw new NotFoundError("Usuario en Curso");
+
+    // Si se califica a un grupo, verificar que el grupo pertenezca al curso
+    if(calificacion.grupoId){
+        const grupo = await grupoRepository.getGrupoById(calificacion.grupoId);
+        if(!grupo || grupo.cursoId !== calificacion.cursoId)
+            throw new NotFoundError("Grupo en Curso");
+    }
+
+    // Si la calificacion tiene asociado un mural
+    if(calificacion.muralId){
+        const mural = await muralRepository.getMuralById(calificacion.muralId);
+
+        // Verificar que el mural pertenezca al curso
+        if(!mural || mural.cursoId !== calificacion.cursoId)
+            throw new NotFoundError("Mural en Curso");
+
+        // Verificar si la rubrica asociada al mural coincide con la rubrica de la calificacion
+        if(mural.rubricaId !== calificacion.rubricaId)
+            throw new InvalidValueError("Mural", "rubricaId");
+    }
     
     // Verificacion adicional para chequear que
     // - la dimension de valores se corresponda con la cantidad de criterios de la rubrica

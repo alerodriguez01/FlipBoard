@@ -44,7 +44,7 @@ async function createCalificacion(req: Request, res: Response) {
     const idGrupo = req.params.idGrupo;
     const idCurso = req.params.idCurso;
 
-    const { valores, observaciones, idRubrica, idMural } = req.body;
+    const { valores, observaciones, idRubrica, idMural, idDocente } = req.body;
 
     // Datos obligatorios
     if(!valores || !idRubrica) return res.status(400).json({ error: "Faltan datos obligatorios" });
@@ -64,7 +64,7 @@ async function createCalificacion(req: Request, res: Response) {
     if(idGrupo) calificacion.grupoId = idGrupo;
 
     try {
-        const newCalificacion = await service.createCalificacion(calificacion as Calificacion);
+        const newCalificacion = await service.createCalificacion(calificacion as Calificacion, idDocente);
         return res.status(201).json(newCalificacion);
 
     } catch (error) {
