@@ -454,8 +454,44 @@ routerCurso.get("/:idCurso/rubricas/grupos", controller.getRubricasGruposFromCur
  */
 routerCurso.put("/:idCurso/rubricas/alumnos", controller.asociateRubricaAlumnosToCurso)
 
-// TODO - ID20 - Asignar rúbrica a todos los grupos del curso: en rúbrica, hay que agregar el cursoId a la lista de gruposCursos
-routerCurso.put("/:idCurso/rubricas/grupos")
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/rubricas/grupos:
+ *   put:
+ *    summary: Asociar una rubrica a todos los grupos del curso
+ *    tags: [Rubrica]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          653968d5642003e96a382246
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            idRubrica: 653968d5642003e96a382248
+ *    responses:
+ *      204:
+ *        description: Rubrica asociada exitosamente
+ *      400:
+ *        description: El parametro idCurso o idRubrica es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo idRubrica o idCurso de Rubrica o Curso
+ *      404:
+ *        description: No se ha podido encontrar el curso o la rubrica
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No se ha podido encontrar 'Rubrica o Curso' en la BDD
+ */
+routerCurso.put("/:idCurso/rubricas/grupos", controller.asociateRubricaGruposToCurso)
 
 
 export { routerUsuario, routerCurso };

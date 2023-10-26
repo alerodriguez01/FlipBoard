@@ -26,7 +26,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
     /*
         Obtener rubrica por id
     */
-    async getRubricaById(id: string) : Promise<Rubrica | null> {
+    async getRubricaById(id: string): Promise<Rubrica | null> {
 
         try {
             const rubrica = await this.prisma.rubrica.findUnique({
@@ -34,9 +34,9 @@ export class RubricaPrismaDAO implements RubricaDataSource {
                     id: id
                 }
             })
-    
+
             return rubrica;
-            
+
         } catch (error) {
             throw new InvalidValueError("Rubrica", "idRubrica"); // el id no tiene los 12 bytes
         }
@@ -46,11 +46,11 @@ export class RubricaPrismaDAO implements RubricaDataSource {
      * Crear rubrica
      */
     async createRubrica(rubrica: Rubrica) {
-        try{
+        try {
             return await this.prisma.rubrica.create({
                 data: rubrica,
             });
-        } catch(err){
+        } catch (err) {
             return null;
         }
     }
@@ -83,9 +83,30 @@ export class RubricaPrismaDAO implements RubricaDataSource {
                 }
             })
             return rubrica;
-            
+
         } catch (error) {
-            if(error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Curso", "idRubrica o idCurso"); // el idRubrica o idCurso no tiene los 12 bytes
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Curso", "idRubrica o idCurso"); // el idRubrica o idCurso no tiene los 12 bytes
+            throw new NotFoundError("Rubrica o Curso"); // no se encontro la rubrica o curso
+        }
+
+    }
+
+/*
+    Asociar rubrica a los grupos de un curso
+*/
+    async asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) {
+
+        try {
+            const rubrica = await this.prisma.rubrica.update({
+                where: { id: idRubrica },
+                data: {
+                    gruposModel: { connect: { id: idCurso } }
+                }
+            })
+            return rubrica;
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Curso", "idRubrica o idCurso"); // el idRubrica o idCurso no tiene los 12 bytes
             throw new NotFoundError("Rubrica o Curso"); // no se encontro la rubrica o curso
         }
 

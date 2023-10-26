@@ -5,5 +5,6 @@ export interface RubricaDataSource {
     createRubrica(rubrica: Rubrica) : Promise<Rubrica | null>,
     getAllRubricasByUserId(userId: string) : Promise<Rubrica[] | null>,
     asociateRubricaAlumnosToCurso(idCurso: string, idRubrica: string) : Promise<Rubrica>,
+    asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) : Promise<Rubrica>,
     // ir agregando métodos restantes
 }
