@@ -45,4 +45,13 @@ async function getMuralesFromCurso(idCurso: string, rubrica: boolean): Promise<M
     return murales;
 }
 
-export default { getMuralById, getMuralesFromCurso };
+/*
+    Asociar una rubrica al mural
+*/
+async function asociateRubricaToMural(idMural: string, idRubrica: string) {
+
+    return await muralRepository.asociateRubricaToMural(idMural, idRubrica);
+
+}
+
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural };

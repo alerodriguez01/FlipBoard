@@ -1,7 +1,8 @@
 import { Mural, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import MuralDataSource from "../../datasource/mural.datasource.js";
-import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export class MuralPrismaDAO implements MuralDataSource {
 
@@ -80,6 +81,28 @@ export class MuralPrismaDAO implements MuralDataSource {
             
         } catch (error) {
             throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
+        }
+
+    }
+
+    /*
+        Asociar una rubrica al mural
+    */
+    public async asociateRubricaToMural(idMural: string, idRubrica: string) {
+
+        try {
+            return await this.prisma.mural.update({
+                where: {
+                    id: idMural
+                },
+                data: {
+                    rubricaModel: { connect: { id: idRubrica } }
+                }
+            })
+            
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Rubrica o Mural", "idRubrica o idMural"); // el idRubrica o idMural no tiene los 12 bytes
+            throw new NotFoundError("Rubrica o Mural"); // no se encontro la rubrica o curso
         }
 
     }

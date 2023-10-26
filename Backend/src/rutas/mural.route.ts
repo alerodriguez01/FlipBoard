@@ -132,8 +132,44 @@ router.get("/murales/:idMural", controller.getMuralById);
  */
 router.get("/:idCurso/murales", controller.getMuralesFromCurso);
 
-// TODO - ID18 - Asignar rúbrica a un mural (actualizar el mural con el valor de rúbricaId)
-router.put("/murales/:idMural")
+/**
+ * @swagger
+ * /api/cursos/murales/{idMural}:
+ *   put:
+ *    summary: Asociar una rubrica al mural
+ *    tags: [Mural]
+ *    parameters:
+ *      - name: idMural
+ *        in: path
+ *        required: true
+ *        description: El id del mural
+ *        schema:
+ *          type: string
+ *        example: 
+ *          653968d5642003e96a382246
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            idRubrica: 653968d5642003e96a382248
+ *    responses:
+ *      204:
+ *        description: Rubrica asociada exitosamente
+ *      400:
+ *        description: El parametro idMural o idRubrica es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo idRubrica o idMural de Rubrica o Mural
+ *      404:
+ *        description: No se ha podido encontrar el mural o la rubrica
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No se ha podido encontrar 'Rubrica o Mural' en la BDD
+ */
+router.put("/murales/:idMural", controller.asociateRubricaToMural);
 
 // TODO - ID21 - Crear mural
 router.post("/murales")
