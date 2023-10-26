@@ -63,6 +63,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
         valores: [0, 1],
         observaciones: "bueN trabajo",
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(201);
@@ -77,6 +78,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [0, 2],
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(201);
@@ -96,6 +98,19 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${user.body.id}`).send({
         valores: [2, 2],
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
+      });
+
+      expect(res.statusCode).toBe(404);
+
+    }, 20000);
+
+    test("Intentar crear una calificacion sin ser un docente del curso", async () => {
+     
+      const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
+        valores: [0, 0],
+        idRubrica: rubrica.body.id,
+        idDocente: alumno1.body.id
       });
 
       expect(res.statusCode).toBe(404);
@@ -106,6 +121,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2],
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(400);
@@ -116,6 +132,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2,2,2,2,2],
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(400);
@@ -126,6 +143,7 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2,3],
         idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(400);
@@ -134,7 +152,8 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
 
     test("Intentar crear una calificacion sin rubrica asociada", async () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
-        valores: [2, 2]
+        valores: [2, 2],
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(400);
@@ -144,7 +163,8 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
     test("Intentar crear una calificacion con rubrica inexistente", async () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2, 2],
-        idRubrica: "333333333333333333333333"
+        idRubrica: "333333333333333333333333",
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(404);
@@ -154,7 +174,8 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
     test("Intentar crear una calificacion con rubrica invalida", async () => {
       const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2, 2],
-        idRubrica: "noValido"
+        idRubrica: "noValido",
+        idDocente: docente.body.id
       });
 
       expect(res.statusCode).toBe(400);
@@ -164,7 +185,40 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
     test("Intentar crear una calificacion en un curso invalido", async () => {
       const res = await request(app).post(`/api/cursos/verdura/calificaciones/alumnos/${alumno2.body.id}`).send({
         valores: [2, 2],
-        idRubrica: rubrica.body.id
+        idRubrica: rubrica.body.id,
+        idDocente: docente.body.id
+      });
+
+      expect(res.statusCode).toBe(400);
+
+    }, 15000);
+
+    test("Intentar crear una calificacion sin idDocente", async () => {
+      const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
+        valores: [2,2],
+        idRubrica: rubrica.body.id,
+      });
+
+      expect(res.statusCode).toBe(400);
+
+    }, 15000);
+
+    test("Intentar crear una calificacion con idDocente invalido", async () => {
+      const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
+        valores: [2,2],
+        idRubrica: rubrica.body.id,
+        idDocente: "Invalid"
+      });
+
+      expect(res.statusCode).toBe(400);
+
+    }, 15000);
+
+    test("Intentar crear una calificacion con idDocente inexistente", async () => {
+      const res = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
+        valores: [2,2],
+        idRubrica: rubrica.body.id,
+        idDocente: "333333333333333333333333"
       });
 
       expect(res.statusCode).toBe(400);
