@@ -373,3 +373,259 @@ describe("POST /cursos/:idCurso/calificaciones", () => {
   });
 
 });
+
+describe("GET /cursos/:idCurso/calificaciones", () => {
+  let alumno1: Response;
+  let alumno2: Response;
+  let docente: Response;
+  let curso: Response;
+  let grupo: Response;
+  let rubrica1: Response;
+  let rubrica2: Response;
+  let calif1: Response;
+  let calif2: Response;
+  let calif3: Response;
+  
+  beforeAll(async () => {
+    alumno1 = await request(app).post("/api/usuarios").send({
+      "nombre": "alumnooo1",
+      "correo": "alumnooo1@gmail.com",
+      "contrasena": "passworD123"
+    });
+    alumno2 = await request(app).post("/api/usuarios").send({
+      "nombre": "alumnooo2",
+      "correo": "alumnooo2@gmail.com",
+      "contrasena": "passworD123"
+    });
+    docente = await request(app).post("/api/usuarios").send({
+      "nombre": "el docenteeee",
+      "correo": "docenteeee@gmail.com",
+      "contrasena": "passworD123"
+    });
+    rubrica1 = await request(app).post(`/api/usuarios/${docente.body.id}/rubricas`).send({
+      nombre:"La rubrica del docenteeeee",
+      criterios:[
+        {nombre: "c1",
+         descripciones: ["d1", "d2", "d3"]},
+         {nombre: "c2",
+         descripciones: ["d4", "d5", "d6"]},
+      ],
+      niveles:[
+        {nombre: "n1"},
+        {nombre: "n2"},
+        {nombre: "n3"},
+      ]
+    });
+    rubrica2 = await request(app).post(`/api/usuarios/${docente.body.id}/rubricas`).send({
+      nombre:"La otra rubrica del docenteeeee",
+      criterios:[
+        {nombre: "c1",
+         descripciones: ["d1", "d2", "d3"]},
+      ],
+      niveles:[
+        {nombre: "n1"},
+        {nombre: "n2"},
+        {nombre: "n3"},
+      ]
+    });
+    curso = await request(app).post('/api/cursos').send({
+      nombre: "otro curso jeje",
+      emailContacto: "contacto@gmail.com",
+      docentes: [docente.body.id],
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: alumno1.body.id,
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: alumno2.body.id,
+    });
+    grupo = await request(app).post(`/api/cursos/${curso.body.id}/grupos`).send({
+      integrantes: [alumno1.body.id, alumno2.body.id],
+    });
+    calif1 = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}`).send({
+      valores: [0, 1],
+      observaciones: "bueN trabajo",
+      idRubrica: rubrica1.body.id,
+      idDocente: docente.body.id
+    });
+    calif2 = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno2.body.id}`).send({
+      valores: [2, 2],
+      idRubrica: rubrica1.body.id,
+      idDocente: docente.body.id
+    });
+    calif3 = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/grupos/${grupo.body.id}`).send({
+      valores: [1],
+      idRubrica: rubrica2.body.id,
+      idDocente: docente.body.id
+    });
+  }, 35000);
+
+  test("Cargar todas las calificaciones de un curso", async () => {
+    const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones`);
+    
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(3);
+    expect(res.body).toContainEqual(calif1.body);
+    expect(res.body).toContainEqual(calif2.body);
+    expect(res.body).toContainEqual(calif3.body);
+
+  }, 15000);
+
+  test("Intentar cargar todas las calificaciones de un curso inexistente", async () => {
+    const res = await request(app).get(`/api/cursos/333333333333333333333333/calificaciones`);
+
+    expect(res.statusCode).toBe(200); 
+    expect(res.body).toHaveLength(0);   
+  }, 15000);
+
+  test("Intentar cargar todas las calificaciones de un curso invalido", async () => {
+    const res = await request(app).get(`/api/cursos/1234/calificaciones`);
+
+    expect(res.statusCode).toBe(400);    
+  }, 15000);
+
+  test("Cargar todas las calificaciones de un curso de rubrica especifica", async () => {
+    const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body).toContainEqual(calif1.body);
+    expect(res.body).toContainEqual(calif2.body);
+
+  }, 15000);
+
+  test("Intentar cargar todas las calificaciones de un curso de rubrica inexistente", async () => {
+    const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=333333333333333333333333`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toHaveLength(0);
+  }, 15000);
+
+  test("Intentar cargar todas las calificaciones de un curso de rubrica invalida", async () => {
+    const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=invalid`);
+
+    expect(res.statusCode).toBe(400);
+  }, 15000);
+
+  test("Cargar todas las calificaciones de un curso de rubrica especifica paginado", async () => {
+    const limit = 1;
+    const offset = 0;
+    const res = await request(app)
+        .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(1);
+  }, 15000);
+
+  test("Cargar todas las calificaciones de un curso de rubrica especifica paginado con offset invalido", async () => {
+    const limit = 10;
+    const offset = "a";
+    const res = await request(app)
+        .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(2);
+    expect(res.body).toContainEqual(calif1.body);
+    expect(res.body).toContainEqual(calif2.body);
+  }, 15000);
+
+  test("Cargar todas las calificaciones de un curso de rubrica especifica paginado con limit invalido", async () => {
+    const limit = "invalid";
+    const offset = 1
+    const res = await request(app)
+        .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
+
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBe(1);
+  }, 15000);
+
+  describe("GET /cursos/:idCurso/calificaciones/alumnos/:idUsuario", () => {
+    let calif4: Response;
+
+    beforeAll(async () => {
+      calif4 = await request(app).post(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}`).send({
+        valores: [1],
+        idRubrica: rubrica2.body.id,
+        idDocente: docente.body.id
+      });
+    }, 15000);
+
+    test("Cargar todas las calificaciones que le pertenecen a un alumno sin rubricas", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(3); // calif1, calif3 (grupo) y calif4
+      expect(res.body).toContainEqual(calif1.body);
+      expect(res.body).toContainEqual(calif4.body);
+      expect(res.body).toContainEqual(calif3.body);
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones que le pertenecen a un alumno inexistente", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/333333333333333333333333`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    }, 15000);
+
+    test("Cargar todas las calificaciones que le pertenecen a un alumno con rubricas", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?rubrica=true`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(3); // calif1, calif3 (grupo) y calif4
+      expect(res.body).toContainEqual({...calif1.body, rubricaModel: rubrica1.body});
+      expect(res.body).toContainEqual({...calif4.body, rubricaModel: rubrica2.body});
+      expect(res.body).toContainEqual({...calif3.body, rubricaModel: rubrica2.body});
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones que le pertenecen a un alumno invalido", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/123?rubrica=true`);
+
+      expect(res.statusCode).toBe(400);
+    }, 15000);
+
+    test("Cargar todas las calificaciones que le pertenecen a un alumno sin rubricas paginado", async () => {
+      const limit = 1;
+      const offset = 1;
+      const res = await request(app)
+          .get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?offset=${offset}&limit=${limit}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0].rubricaModel).toBeFalsy();
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones que le pertenecen a un alumno de un curso inexistente", async () => {
+      const limit = 1;
+      const offset = 1;
+      const res = await request(app)
+          .get(`/api/cursos/333333333333333333333333/calificaciones/alumnos/${alumno1.body.id}?offset=${offset}&limit=${limit}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    }, 15000);
+
+    test("Cargar todas las calificaciones que le pertenecen a un alumno con rubricas paginado", async () => {
+      const limit = 5;
+      const offset = 2;
+      const res = await request(app)
+          .get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?rubrica=true&offset=${offset}&limit=${limit}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body[0]).toHaveProperty("rubricaModel");
+      expect(res.body[0].rubricaModel).toBeTruthy();
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones que le pertenecen a un alumno con rubricas paginado de un curso inexistente", async () => {
+      const limit = 5;
+      const offset = 2;
+      const res = await request(app)
+          .get(`/api/cursos/333333333333333333333333/calificaciones/alumnos/${alumno1.body.id}?rubrica=true&offset=${offset}&limit=${limit}`);
+
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toEqual([]);
+    }, 15000);
+    
+  });
+
+});

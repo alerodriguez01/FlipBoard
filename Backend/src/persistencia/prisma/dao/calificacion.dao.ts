@@ -27,7 +27,12 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         let query = {
             skip: offset,
             where: {
-                AND: [{ cursoId: idCurso, }, { usuarioId: idUsuario }]
+                AND: [{ cursoId: idCurso, },
+                        { OR: [ { usuarioId: idUsuario },
+                            {grupoModel: { integrantes: {has: idUsuario }}}
+                            ]
+                        }
+                    ]
             },
             include: {
                 rubricaModel: rubrica
