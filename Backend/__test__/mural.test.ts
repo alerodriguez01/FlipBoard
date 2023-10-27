@@ -209,7 +209,91 @@ describe('POST /api/cursos/murales', () => {
 
         expect(res.status).toBe(404);
 
+    }, 15000);    
+    
+})
+
+describe("GET /api/cursos/murales/:idMural", () => {
+
+    let mural: Response;
+
+    beforeAll(async () => {
+
+        // Crear un mural
+        mural = await request(app).post(`/api/cursos/${curso.body.id}/murales`).send({
+            nombre: "Mural de Historia",
+            contenido: "Contenido del mural de Historia",
+            descripcion: "Mural de historia para el curso",
+            idRubrica: rubrica.body.id,
+            idDocente: docente.body.id,
+        })
+
     }, 15000);
 
+    test('Obtener un mural valido', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/${mural.body.id}`).send();
+
+        expect(res.status).toBe(200);
+        expect(res.body.cursoId).toBe(curso.body.id);
+        expect(res.body.rubricaId).toBe(rubrica.body.id);
+
+    }, 15000);
+
+    test('Obtener un mural valido con su rubrica valido', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/${mural.body.id}?rubrica=true`).send();
+
+        expect(res.status).toBe(200);
+        expect(res.body.cursoId).toBe(curso.body.id);
+        expect(res.body.rubricaModel.id).toBe(rubrica.body.id);
+
+    }, 15000);
+
+    test('Obtener un mural valido con su rubrica invalido', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/${mural.body.id}?rubrica=false`).send();
+
+        expect(res.status).toBe(200);
+        expect(res.body.cursoId).toBe(curso.body.id);
+        expect(res.body.rubricaModel).toBeFalsy();
+
+    }, 15000);
+
+    test('Obtener un mural valido con su rubrica con un valor no boolean', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/${mural.body.id}?rubrica=HOLA`).send();
+
+        expect(res.status).toBe(200);
+        expect(res.body.cursoId).toBe(curso.body.id);
+        expect(res.body.rubricaModel).toBeFalsy();
+
+    }, 15000);
+
+    test('Obtener un mural valido con su rubrica como parametro mal pasada', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/${mural.body.id}?rubriccca=HOLA`).send();
+
+        expect(res.status).toBe(200);
+        expect(res.body.cursoId).toBe(curso.body.id);
+        expect(res.body.rubricaModel).toBeFalsy();
+
+    }, 15000);
+
+    test('Obtener un mural inexistente', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/333333333333333333333333`).send();
+
+        expect(res.status).toBe(404);
+
+    }, 15000);
+
+    test('Obtener un mural invalido', async () => {
+
+        const res = await request(app).get(`/api/cursos/murales/33`).send();
+
+        expect(res.status).toBe(400);
+
+    }, 15000);
 
 })
