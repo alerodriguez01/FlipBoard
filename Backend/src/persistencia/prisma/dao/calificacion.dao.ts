@@ -27,12 +27,12 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         let query = {
             skip: offset,
             where: {
-                AND: [{ cursoId: idCurso, },
-                        { OR: [ { usuarioId: idUsuario },
-                            {grupoModel: { integrantes: {has: idUsuario }}}
+                AND: [ { cursoId: idCurso, },
+                       { OR: [ { usuarioId: idUsuario },
+                               { grupoModel: { integrantes: { has: idUsuario } } }
                             ]
-                        }
-                    ]
+                       }
+                ]
             },
             include: {
                 rubricaModel: rubrica
@@ -73,7 +73,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         if (calificacion.muralId) query.data.muralModel = { connect: { id: calificacion.muralId } }
         if (calificacion.usuarioId) query.data.usuarioModel = { connect: { id: calificacion.usuarioId } }
         if (calificacion.grupoId) query.data.grupoModel = { connect: { id: calificacion.grupoId } }
-        
+
         try {
             const rubrica = await this.prisma.calificacion.create(query)
             return rubrica;
@@ -87,25 +87,25 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     /*
         Obtener calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
     */
-   public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string) {
+    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string) {
 
-    let query: any = {
-        skip: offset,
-        where: {
-            AND: [{ cursoId: idCurso, } ]
-        },
-        // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
+        let query: any = {
+            skip: offset,
+            where: {
+                AND: [{ cursoId: idCurso, }]
+            },
+            // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
+        }
+
+        if (idRubrica) query.where.AND.push({ rubricaId: idRubrica })
+
+        try {
+            if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
+            return await this.prisma.calificacion.findMany(query)
+
+        } catch (error) {
+            throw new InvalidValueError("Calificacion", "idCurso o idRubrica");
+        }
+
     }
-
-    if(idRubrica) query.where.AND.push({ rubricaId: idRubrica })
-
-    try {
-        if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
-        return await this.prisma.calificacion.findMany(query)
-
-    } catch (error) {
-        throw new InvalidValueError("Calificacion", "idCurso o idRubrica");
-    }
-
-   }
 }

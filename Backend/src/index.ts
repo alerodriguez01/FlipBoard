@@ -13,6 +13,7 @@ import calificacionRouter from "./rutas/calificacion.route.js";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
+import cors from "cors";
 
 const app = express();
 
@@ -20,6 +21,9 @@ const app = express();
 app.use(express.json());
 app.use(logger('dev'));
 app.use(cookieParser());
+app.use(cors({ // https://expressjs.com/en/resources/middleware/cors.html
+    "origin": "*", 
+}))
 
 // Swagger documentacion
 const swaggerOptions = {
