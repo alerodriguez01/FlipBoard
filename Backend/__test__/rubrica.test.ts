@@ -329,7 +329,7 @@ describe("PUT /cursos/:idCurso/rubricas", () => {
     }, 15000);
   });
 
-  describe("PUT /cursos/:idCurso/rubricas/alumnos", () => {
+  describe("PUT /cursos/:idCurso/rubricas/grupos", () => {
     let grupo1: Response;
     let grupo2: Response;
 
@@ -385,6 +385,137 @@ describe("PUT /cursos/:idCurso/rubricas", () => {
         idRubrica: rubrica.body.id
       });
 
+      expect(res.statusCode).toBe(400);
+    }, 15000);
+  });
+
+});
+
+
+describe("GET /cursos/:idCurso/rubricas", () => {
+
+  let docente: Response;
+  let curso: Response;
+  let rubrica: Response;
+  let alumno1: Response;
+  let alumno2: Response;
+  let alumno3: Response;
+
+  beforeAll(async () => {
+    docente = await request(app).post('/api/usuarios').send({
+      "nombre": "don docente2",
+      "correo": "dondocente2@gmail.com",
+      "contrasena": "passworD123"
+    });
+    alumno1 = await request(app).post("/api/usuarios").send({
+      "nombre": "don alumno12",
+      "correo": "donalumno1@gmail.com",
+      "contrasena": "passworD123"
+    });
+    alumno2 = await request(app).post("/api/usuarios").send({
+      "nombre": "don alumno22",
+      "correo": "donalumno2@gmail.com",
+      "contrasena": "passworD123"
+    });
+    alumno3 = await request(app).post("/api/usuarios").send({
+      "nombre": "don alumno32",
+      "correo": "donalumno3@gmail.com",
+      "contrasena": "passworD123"
+    });
+    rubrica = await request(app).post(`/api/usuarios/${docente.body.id}/rubricas`).send({
+      nombre:"La rubrica del docenteeeee2",
+      criterios:[
+        {nombre: "c1",
+         descripciones: ["d1", "d2", "d3"]},
+         {nombre: "c2",
+         descripciones: ["d4", "d5", "d6"]},
+      ],
+      niveles:[
+        {nombre: "n1"},
+        {nombre: "n2"},
+        {nombre: "n3"},
+      ]
+    });
+    curso = await request(app).post('/api/cursos').send({
+      nombre: "el curso de don docente2",
+      emailContacto: "contacto2@gmail.com",
+      docentes: [docente.body.id],
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: alumno1.body.id,
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: alumno2.body.id,
+    });
+    await request(app).put('/api/cursos/'+curso.body.id+'/alumnos').send({
+      id: alumno3.body.id,
+    });
+    await request(app).put(`/api/cursos/${curso.body.id}/rubricas/alumnos`).send({
+      idRubrica: rubrica.body.id
+    });
+  }, 30000);
+
+  describe("GET /cursos/:idCurso/rubricas/alumnos", () => {
+
+    test("Cargar curso con todas las rubricas que han sido asociadas a alumnos", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/rubricas/alumnos`);
+      
+      const rubricaActualizada = await request(app).get(`/api/usuarios/rubricas/${rubrica.body.id}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body).toContainEqual(rubricaActualizada.body);
+    }, 15000);
+
+    test("Intentar cargar curso inexistente con todas las rubricas que han sido asociadas a alumnos", async () => {
+      const res = await request(app).get(`/api/cursos/333333333333333333333333/rubricas/alumnos`);
+            
+      expect(res.statusCode).toBe(404);
+    }, 15000);
+
+    test("Intentar cargar curso invalido con todas las rubricas que han sido asociadas a alumnos", async () => {
+      const res = await request(app).get(`/api/cursos/estoNoEsvalido/rubricas/alumnos`);
+            
+      expect(res.statusCode).toBe(400);
+    }, 15000);
+
+  });
+
+  describe("GET /cursos/:idCurso/rubricas/grupos", () => {
+    let grupo1: Response;
+    let grupo2: Response;
+
+    beforeAll(async () => {
+      grupo1 = await request(app).post(`/api/cursos/${curso.body.id}/grupos`).send({
+        integrantes: [alumno1.body.id, alumno2.body.id],
+      });
+      grupo2 = await request(app).post(`/api/cursos/${curso.body.id}/grupos`).send({
+        integrantes: [alumno2.body.id, alumno3.body.id],
+      });
+      await request(app).put(`/api/cursos/${curso.body.id}/rubricas/grupos`).send({
+        idRubrica: rubrica.body.id
+      });
+    }, 15000);
+
+    test("Cargar curso con todas las rubricas que han sido asociadas a grupos", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/rubricas/grupos`);
+      
+      const rubricaActualizada = await request(app).get(`/api/usuarios/rubricas/${rubrica.body.id}`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body).toHaveLength(1);
+      expect(res.body).toContainEqual(rubricaActualizada.body);
+    }, 15000);
+
+    test("Intentar cargar curso inexistente con todas las rubricas que han sido asociadas a grupos", async () => {
+      const res = await request(app).get(`/api/cursos/333333333333333333333333/rubricas/grupos`);
+            
+      expect(res.statusCode).toBe(404);
+    }, 15000);
+
+    test("Intentar cargar curso invalido con todas las rubricas que han sido asociadas a grupos", async () => {
+      const res = await request(app).get(`/api/cursos/estoNoEsvalido/rubricas/grupos`);
+            
       expect(res.statusCode).toBe(400);
     }, 15000);
   });
