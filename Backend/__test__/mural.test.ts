@@ -460,3 +460,92 @@ describe("GET /cursos/:idCurso/murales", () => {
     }, 15000);
 
 })
+
+describe("PUT /api/cursos/murales/:idMural", () => {
+
+    let mural1: Response;
+
+    beforeAll(async () => {
+
+        // Crear un mural sin rubrica
+        mural1 = await request(app).post(`/api/cursos/${curso.body.id}/murales`).send({
+            nombre: "Mural de Historia",
+            contenido: "Contenido del mural de Historia",
+            descripcion: "Mural de historia para el curso",
+            idDocente: docente.body.id,
+        })
+
+    }, 15000);
+
+    test('Asociar una rubrica a un mural', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/${mural1.body.id}`).send({
+            idRubrica: rubrica.body.id,
+        })
+
+        expect(res.status).toBe(204);
+
+    }, 15000);
+
+    test('Asociar una rubrica a un mural inexistente', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/333333333333333333333333`).send({
+            idRubrica: rubrica.body.id,
+        })
+
+        expect(res.status).toBe(404);
+
+    }, 15000);
+
+    test('Asociar una rubrica inexistente a un mural', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/${mural1.body.id}`).send({
+            idRubrica: "333333333333333333333333",
+        })
+
+        expect(res.status).toBe(404);
+
+    }, 15000);
+
+
+    test('Asociar una rubrica a un mural invalido', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/33`).send({
+            idRubrica: rubrica.body.id,
+        })
+
+        expect(res.status).toBe(400);
+
+    }, 15000);
+
+    test('Asociar una rubrica invalido a un mural', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/${mural1.body.id}`).send({
+            idRubrica: "33",
+        })
+
+        expect(res.status).toBe(400);
+
+    }, 15000);
+
+    test('Asociar una rubrica a un mural con idRubrica no pasado', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/${mural1.body.id}`).send({
+        })
+
+        expect(res.status).toBe(400);
+
+    }, 15000);
+
+    test('Asociar una rubrica a un mural con idRubrica no pasado', async () => {
+
+        const res = await request(app).put(`/api/cursos/murales/${mural1.body.id}`).send({
+            idRubricaAAA: rubrica.body.id,
+        })
+
+        expect(res.status).toBe(400);
+
+    }, 15000);
+
+
+})
