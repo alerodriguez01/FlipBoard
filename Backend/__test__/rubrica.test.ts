@@ -296,39 +296,38 @@ describe("PUT /cursos/:idCurso/rubricas", () => {
       expect(rubricaActualizada.body.alumnosCursos).toContain(curso.body.id);
     }, 15000);
 
-  }); 
+    test("Intentar asignar rubrica inexistente a todos los participantes de un curso", async () => {
+      const res = await request(app).put(`/api/cursos/${curso.body.id}/rubricas/alumnos`).send({
+        idRubrica: "333333333333333333333333"
+      });
 
-  test("Intentar asignar rubrica inexistente a todos los participantes de un curso", async () => {
-    const res = await request(app).put(`/api/cursos/${curso.body.id}/rubricas/alumnos`).send({
-      idRubrica: "333333333333333333333333"
-    });
+      expect(res.statusCode).toBe(404);
+    }, 15000);
 
-    expect(res.statusCode).toBe(404);
-  }, 15000);
+    test("Intentar asignar rubrica invalida a todos los participantes de un curso", async () => {
+      const res = await request(app).put(`/api/cursos/${curso.body.id}/rubricas/alumnos`).send({
+        idRubrica: "invalido"
+      });
 
-  test("Intentar asignar rubrica invalida a todos los participantes de un curso", async () => {
-    const res = await request(app).put(`/api/cursos/${curso.body.id}/rubricas/alumnos`).send({
-      idRubrica: "invalido"
-    });
+      expect(res.statusCode).toBe(400);
+    }, 15000);
 
-    expect(res.statusCode).toBe(400);
-  }, 15000);
+    test("Intentar asignar rubrica a todos los participantes de un curso inexistente", async () => {
+      const res = await request(app).put(`/api/cursos/333333333333333333333333/rubricas/alumnos`).send({
+        idRubrica: rubrica.body.id
+      });
 
-  test("Intentar asignar rubrica a todos los participantes de un curso inexistente", async () => {
-    const res = await request(app).put(`/api/cursos/333333333333333333333333/rubricas/alumnos`).send({
-      idRubrica: rubrica.body.id
-    });
+      expect(res.statusCode).toBe(404);
+    }, 15000);
 
-    expect(res.statusCode).toBe(404);
-  }, 15000);
+    test("Intentar asignar rubrica a todos los participantes de un curso invalido", async () => {
+      const res = await request(app).put(`/api/cursos/invalidoooo/rubricas/alumnos`).send({
+        idRubrica: rubrica.body.id
+      });
 
-  test("Intentar asignar rubrica a todos los participantes de un curso invalido", async () => {
-    const res = await request(app).put(`/api/cursos/invalidoooo/rubricas/alumnos`).send({
-      idRubrica: rubrica.body.id
-    });
-
-    expect(res.statusCode).toBe(400);
-  }, 15000);
+      expect(res.statusCode).toBe(400);
+    }, 15000);
+  });
 
   describe("PUT /cursos/:idCurso/rubricas/alumnos", () => {
     let grupo1: Response;
