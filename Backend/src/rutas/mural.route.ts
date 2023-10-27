@@ -173,10 +173,19 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
 
 /**
  * @swagger
- * /api/cursos/murales:
+ * /api/cursos/{idCurso}/murales:
  *   post:
  *    summary: Crear un nuevo mural
  *    tags: [Mural]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *        example: 
+ *          65326ed824fea7e06d01e20b
  *    requestBody:
  *      required: true
  *      content:
@@ -196,23 +205,18 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  *              idRubrica:
  *                type: string
  *                description: El id de la rubrica asociada al mural
- *              idCurso:
- *                type: string
- *                description: El id del curso asociado al mural
  *              idDocente:
  *                type: string
  *                description: El id del docente que crea el mural
  *            required:
  *              - nombre
  *              - contenido
- *              - idCurso
  *              - idDocente
  *            example:
  *              nombre: Mural de Matemáticas
  *              contenido: Contenido del mural de matemáticas
  *              descripcion: Mural de matemáticas para el curso
  *              idRubrica: 65326ed824fea7e06d01e20d
- *              idCurso: 65326ed824fea7e06d01e20b
  *              idDocente: 65326ed824fea7e06d01e20c
  *    responses:
  *      201: 
@@ -239,6 +243,6 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  *            example:
  *              message: No se ha podido encontrar 'Cusro o Rubrica' en la BDD
  */
-router.post("/murales", controller.createMural);
+router.post("/:idCurso/murales", controller.createMural);
 
 export default router;
