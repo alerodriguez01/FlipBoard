@@ -5,6 +5,7 @@ WORKDIR /app
 
 COPY package*.json ./
 COPY tsconfig.json ./
+COPY nodemon.json ./
 COPY src ./src
 
 RUN npm install

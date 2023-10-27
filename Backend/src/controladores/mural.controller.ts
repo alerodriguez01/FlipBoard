@@ -62,9 +62,10 @@ async function asociateRubricaToMural(req: Request, res: Response) {
 */
 async function createMural(req: Request, res: Response) {
 
-    const { nombre, contenido, descripcion, idRubrica, idCurso, idDocente } = req.body;
+    const idCurso = req.params.idCurso;
+    const { nombre, contenido, descripcion, idRubrica, idDocente } = req.body;
 
-    if (!nombre || !contenido || !idCurso || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if (!nombre || !contenido || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     const mural = {
         nombre,
