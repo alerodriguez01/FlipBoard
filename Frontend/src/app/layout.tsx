@@ -9,14 +9,10 @@ export const metadata: Metadata = {
   description: 'Plataforma de aprendizaje basada en aula invertida',
 }
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="es">
-      <body className={inter.className}>{children}</body>
+        <body className={inter.className}>{children}</body>
     </html>
   )
 }
