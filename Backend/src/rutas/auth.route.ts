@@ -100,7 +100,7 @@ router.post('/logout', controller.logout)
  *              idUsuario: 65326ed824fea7e06d01e20b
  *    responses:
  *      204: 
- *        description: Usuario cerro sesion exitosamente
+ *        description: Se ha enviado el mail exitosamente
  *      400:
  *        description: El parametro idUsuario es invalido
  *        content:
