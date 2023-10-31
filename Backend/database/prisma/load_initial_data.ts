@@ -28,7 +28,7 @@ async function load_initial_data() {
     data: {
       nombre: 'Juan'.toLowerCase(),
       correo: 'juan@example.com',
-      contrasena: await bcryptjs.hash('secreta123', salt1),
+      contrasena: await bcryptjs.hash('Contra123456', salt1),
     },
   });
 
@@ -36,7 +36,7 @@ async function load_initial_data() {
     data: {
       nombre: 'Maria'.toLowerCase(),
       correo: 'maria@example.com',
-      contrasena: await bcryptjs.hash('clave123', salt2),
+      contrasena: await bcryptjs.hash('Contra123456', salt2),
     },
   });
 
@@ -44,7 +44,7 @@ async function load_initial_data() {
     data: {
       nombre: 'Pablo'.toLowerCase(),
       correo: 'pablo@example.com',
-      contrasena: await bcryptjs.hash('clave123456', salt3),
+      contrasena: await bcryptjs.hash('Contra123456', salt3),
     },
   });
 
