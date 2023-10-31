@@ -143,6 +143,10 @@ function verifyJWT(token: string): Usuario {
 
 }
 
+function generateResetJWT(usuario: Usuario): string {
+    return jwt.sign({id: usuario.id}, process.env.JWT_SECRET_KEY || "", {expiresIn: '15m'});
+}
+
 /**
  * 
  */
@@ -169,4 +173,4 @@ async function addParticipanteToCurso(idCurso: string, idUser: string){
 
 }
 
-export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso };
+export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT };

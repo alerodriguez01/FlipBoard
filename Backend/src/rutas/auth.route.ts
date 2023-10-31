@@ -86,5 +86,34 @@ router.post('/login', controller.login)
  */
 router.post('/logout', controller.logout)
 
+/**
+ * @swagger
+ * /api/auth/reset-password:
+ *   post:
+ *    summary: Enviar mail para reestablecer contraseña
+ *    tags: [Auth]
+ *    requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            example:
+ *              idUsuario: 65326ed824fea7e06d01e20b
+ *    responses:
+ *      204: 
+ *        description: Usuario cerro sesion exitosamente
+ *      400:
+ *        description: El parametro idUsuario es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo idUsuario de Usuario
+ *      404:
+ *        description: El usuario no fue encontrado
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No se ha podido encontrar 'Usuario' en la BDD
+ */
+router.post('/reset-password', controller.resetPassword);
 
 export default router;

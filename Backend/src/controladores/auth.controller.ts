@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import usuarioService from "../servicios/usuario.service.js";
-import { InvalidValueError } from "../excepciones/RepoErrors.js";
+import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
+import nodemailer from 'nodemailer';
 
 async function login(req: Request, res: Response) {
     
@@ -43,4 +44,47 @@ async function logout(req: Request, res: Response) {
     return res.status(204).send();
 }
 
-export default { login, logout };
+async function resetPassword(req: Request, res: Response) {
+
+    const userId = req.body.idUsuario;
+
+    if (!userId) return res.status(400).json('Datos incompletos');
+
+    try {
+        const user = await usuarioService.getUsuarioById(userId, false);
+        const token = usuarioService.generateResetJWT(user);
+
+        console.log(process.env);
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.MAIL_USERNAME,
+                clientId: process.env.OAUTH_CLIENTID,
+                clientSecret: process.env.OAUTH_CLIENT_SECRET,
+                refreshToken: process.env.OAUTH_REFRESH_TOKEN
+            }
+        });
+        
+        //TODO: set URL con TOKEN
+        let mail = {
+            from: process.env.MAIL_USERNAME,
+            to: user.correo,
+            subject: 'FlipBoard: Reestablecer contraseña',
+            text: 'Haga click en el siguiente link para reestablecer su contraseña: '+token
+        }
+
+        transporter.sendMail(mail, (error, body) => {
+            if(error) return res.status(400).json({error: error.message});
+            return res.status(204).send();
+        });
+
+
+    } catch (error) {
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+    }
+    
+}
+
+export default { login, logout, resetPassword};
