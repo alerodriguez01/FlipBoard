@@ -3,3 +3,7 @@ function agregarParticipanteACurso(idCurso: string){
 }
 
 // TODO: Agregar demas rutas
+
+export default {
+    agregarParticipanteACurso,
+}
