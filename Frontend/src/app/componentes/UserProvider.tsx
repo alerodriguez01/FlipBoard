@@ -1,4 +1,8 @@
 "use client"
+/*
+    Doc de referencia: 
+    - https://www.youtube.com/watch?v=I7dwJxGuGYQ&t=1s&ab_channel=ByteGrad
+*/
 import { Usuario } from "@/lib/types"
 import { createContext, useContext, useState } from "react"
 
