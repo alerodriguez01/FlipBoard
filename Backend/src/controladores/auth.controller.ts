@@ -54,7 +54,6 @@ async function resetPassword(req: Request, res: Response) {
         const user = await usuarioService.getUsuarioById(userId, false);
         const token = usuarioService.generateResetJWT(user);
 
-        console.log(process.env);
         let transporter = nodemailer.createTransport({
             service: 'gmail',
             auth: {
@@ -66,12 +65,11 @@ async function resetPassword(req: Request, res: Response) {
             }
         });
         
-        //TODO: set URL con TOKEN
         let mail = {
             from: process.env.MAIL_USERNAME,
             to: user.correo,
             subject: 'FlipBoard: Reestablecer contraseña',
-            text: 'Haga click en el siguiente link para reestablecer su contraseña: '+token
+            text: `Haga click en el siguiente link para reestablecer su contraseña: ${process.env.FRONTEND_URL}/restore-password/${token}/${user.id}`
         }
 
         transporter.sendMail(mail, (error, body) => {
