@@ -22,7 +22,8 @@ app.use(express.json());
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(cors({ // https://expressjs.com/en/resources/middleware/cors.html
-    "origin": "*", 
+    origin: /.*localhost.*/, // origin que contenga localhost
+    credentials: true, // para que se puedan setear las cookies en el browser del cliente
 }))
 
 // Swagger documentacion
@@ -48,26 +49,26 @@ app.get("/api", (req, res) => {
 // Rutas de cursos
 app.use("/api", cursoRouter);
 
-    // Ruta de murales
-    app.use("/api/cursos", muralRouter);
+// Ruta de murales
+app.use("/api/cursos", muralRouter);
 
-    // Rutas de alumnos
-    app.use("/api/cursos", alumnoRouter);
+// Rutas de alumnos
+app.use("/api/cursos", alumnoRouter);
 
-    // Rutas de grupos
-    app.use("/api/cursos", grupoRouter);
+// Rutas de grupos
+app.use("/api/cursos", grupoRouter);
 
-    // Rutas de rubricas
-    app.use("/api/cursos", rubricaRouterCurso);
+// Rutas de rubricas
+app.use("/api/cursos", rubricaRouterCurso);
 
-    // Rutas de calificaciones
-    app.use("/api/cursos", calificacionRouter);
+// Rutas de calificaciones
+app.use("/api/cursos", calificacionRouter);
 
 // Rutas de usuarios
 app.use("/api", usuarioRouter);
 
-    // Rutas de rubricas
-    app.use("/api/usuarios", rubricaRouterUsuario)
+// Rutas de rubricas
+app.use("/api/usuarios", rubricaRouterUsuario)
 
 // Rutas de autenticacion
 app.use("/api/auth", authRouter)
