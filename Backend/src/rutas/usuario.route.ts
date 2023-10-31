@@ -125,4 +125,6 @@ router.get("/usuarios/:idUsuario", controller.getUsuarioById);
  */
 router.post("/usuarios", controller.createUsuario);
 
+router.put("/usuarios/:idUsuario/password", controller.updateUsuarioPassword);
+
 export default router;

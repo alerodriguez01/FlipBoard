@@ -173,4 +173,30 @@ async function addParticipanteToCurso(idCurso: string, idUser: string){
 
 }
 
-export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT };
+async function updateUsuarioPassword(idUser: string, password: string, token: string) {
+
+    //check if token is valid
+    const user = verifyJWT(token);
+    if(user.id !== idUser)
+        throw new InvalidValueError("Usuario","idUsuario o Token");
+
+    /**
+     * Criterios password:
+     *  - 8 caracteres minimo
+     *  - 1 mayuscula
+     *  - 1 numero
+     */
+    if (password.length < 8 || password.toLowerCase() === password || !password.match(/\d/))
+        throw new InvalidValueError('Usuario', 'Contrasenia');
+
+    //hash password
+    const salt = await saltRepository.getSaltByUsuarioId(idUser);
+    if(!salt) throw new NotFoundError("Salt");
+
+    const hash = await bcryptjs.hash(password, salt.salt);
+
+    return await usuarioRepository.updateUsuarioPassword(idUser, hash);
+}
+
+export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
+                    updateUsuarioPassword };
