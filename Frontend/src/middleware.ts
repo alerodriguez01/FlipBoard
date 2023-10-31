@@ -6,9 +6,9 @@ export default async function middleware(req: NextRequest, res: NextResponse) {
 
     const isLoggedIn = req.cookies.get("token") ? true : false;
 
-    if (isLoggedIn && req.nextUrl.pathname === "/") return NextResponse.redirect(new URL('/cursos', req.url));
+    // if (isLoggedIn && req.nextUrl.pathname === "/") return NextResponse.redirect(new URL('/cursos', req.url));
     
-    if (!isLoggedIn && req.nextUrl.pathname !== "/") return NextResponse.redirect(new URL("/", req.url));
+    // if (!isLoggedIn && req.nextUrl.pathname !== "/") return NextResponse.redirect(new URL("/", req.url));
 
 };
 
