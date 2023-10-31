@@ -123,6 +123,7 @@ function generateJWT(usuario: Usuario): string {
         correo: usuario.correo,
         cursosAlumno: usuario.cursosAlumno,
         cursosDocente: usuario.cursosDocente,
+        grupos: usuario.grupos
     }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY || "", { expiresIn: '48h' });

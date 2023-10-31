@@ -37,4 +37,10 @@ async function login(req: Request, res: Response) {
 
 }
 
-export default { login };
+async function logout(req: Request, res: Response) {
+    // Elimino el JWT de la cookie
+    res.clearCookie('token');
+    return res.status(204).send();
+}
+
+export default { login, logout };

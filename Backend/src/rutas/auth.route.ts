@@ -65,4 +65,26 @@ const router = Router();
  */
 router.post('/login', controller.login)
 
+/**
+ * @swagger
+ * /api/auth/logout:
+ *   post:
+ *    summary: Cerrar sesion
+ *    tags: [Auth]
+ *    parameters:
+ *      - name: token
+ *        in: cookie
+ *        required: false
+ *        description: JWT del usuario si ya inicio sesion
+ *        schema:
+ *          type: string
+ *        example:
+ *          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9
+ *    responses:
+ *      204: 
+ *        description: Usuario cerro sesion exitosamente
+ */
+router.post('/logout', controller.logout)
+
+
 export default router;
