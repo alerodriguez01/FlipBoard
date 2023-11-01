@@ -8,7 +8,7 @@ export default function Home() {
       <aside className="hidden sm:flex justify-center flex-[2]">
         <Image src="/bienvenido.png" alt="Bienvenido a FlipBoard" width={500} height={500} />
       </aside>
-      <main className="flex-[1] p-5 md:p-20 flex justify-center items-center">
+      <main className="flex-[1] px-8 md:px-10 flex justify-center lg:items-center overflow-y-auto overflow-x-hidden h-full">
         <Login />
       </main>
     </div>
