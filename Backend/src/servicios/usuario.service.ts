@@ -199,6 +199,11 @@ async function updateUsuarioPassword(idUser: string, password: string, token: st
 }
 
 async function getUsuarioByCorreo(correo: string) {
+
+    // check if mail is valid
+    if (!validator.default.isEmail(correo))
+        throw new InvalidValueError('Usuario', 'Correo');
+
     const user = await usuarioRepository.getUsuarioByCorreo(correo);
     if (!user) throw new NotFoundError("Usuario");
     return user;

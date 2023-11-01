@@ -97,16 +97,16 @@ router.post('/logout', controller.logout)
  *        content:
  *          application/json:
  *            example:
- *              idUsuario: 65326ed824fea7e06d01e20b
+ *              correo: juan@example.com
  *    responses:
  *      204: 
  *        description: Se ha enviado el mail exitosamente
  *      400:
- *        description: El parametro idUsuario es invalido
+ *        description: El parametro correo es invalido
  *        content:
  *          application/json:
  *            example:
- *              error: Valor invalido para el atributo idUsuario de Usuario
+ *              error: Valor invalido para el atributo correo de Usuario
  *      404:
  *        description: El usuario no fue encontrado
  *        content:
