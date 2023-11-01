@@ -1,7 +1,8 @@
 import '@/app/globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
-import UserProvider from '@/app/componentes/UserProvider'
+import UserProvider from '@/app/componentes/providers/UserProvider'
+import NextUIProvider from '@/app/componentes/providers/NextUIProvider'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -15,7 +16,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body className={inter.className}>
         <UserProvider>
+          <NextUIProvider>
           {children}
+          </NextUIProvider>
         </UserProvider>
       </body>
     </html>

@@ -5,7 +5,12 @@ import { z } from "zod"
 import Link from "next/link"
 import { useUser } from "@/app/componentes/providers/UserProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
+import { Button, Input } from "@nextui-org/react";
+import { EyeFilledIcon } from "@/app/componentes/ui/EyeFilledIcon"
+import { EyeSlashFilledIcon } from "@/app/componentes/ui/EyeSlashFilledIcon";
+import { Spinner } from "@/app/componentes/ui/Spinner";
+import ResetPassword from "./ResetPassword"
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -14,7 +19,8 @@ const userSchema = z.object({
         .min(8, "La contraseña debe tener al menos 8 caracteres.")
         .regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula."),
 })
-type UserSignIn = z.infer<typeof userSchema> // tipo inferido a partir del schema
+// tipo inferido a partir del schema
+type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
 
 const SignIn = () => {
@@ -37,6 +43,7 @@ const SignIn = () => {
         resolver: zodResolver(userSchema)
     })
 
+
     const onSubmit = async (data: UserSignIn) => {
 
         try {
@@ -50,60 +57,82 @@ const SignIn = () => {
             })
 
             if (!res.ok) {
-                setError("contrasena", { message: "El correo y/o la contraseña son incorrectos." })
+                setError("erroresExternos", { message: "El correo y/o la contraseña son incorrectos." })
                 return
             }
 
             const userLogged = await res.json()
             setUsuario(userLogged)
+            router.push("/cursos") // redirecciono a la pagina de cursos
             // reset()
             return
 
         } catch (error) {
-            setError("contrasena", { message: "Hubo un problema. Por favor, intente nuevamente." })
+            // Por ejemplo, el backend esta caido
+            setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." })
             return
         }
 
     }
 
-    // Al terminar de enviar el formulario, si el usuario esta logueado, lo redirijo a la pagina de cursos
-    useEffect(() => {
-        if (usuario && !isSubmitting)
-            router.push("/cursos")
-    }, [isSubmitting])
+    const [resetPassword, setResetPassword] = useState(false); // hook para renderizar solo el correo al resetear la contraseña
+    const [isVisible, setIsVisible] = useState(false); // hook para mostrar/ocultar la contraseña
+
+    if (resetPassword) return (
+        // le paso el hook para que pueda volver a renderizar el formulario de login cuando termine de resetear la contraseña
+        <ResetPassword renderResetPassword={setResetPassword}/> 
+    )
 
     return (
-        <form className="flex flex-col gap-3 max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
-            <label className="flex flex-col gap-1">
-                <p className="text-sm">Correo electrónico</p>
-                <input
-                    type="email"
-                    placeholder="flipboard@example.com"
-                    className="p-2 border-2 border-gray-200 rounded-md"
-                    {...register("correo")}
-                />
-            </label>
-            {errors.correo &&
-                <p className="text-red-500 text-sm">{`${errors.correo.message}`}</p>
+        <form action="" className="flex flex-col gap-3 w-full max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
+
+            <Input
+                variant="bordered"
+                type="email"
+                label="Correo electrónico"
+                placeholder="flipboard@example.com"
+                isRequired
+                isInvalid={!!errors.correo} // !! -> convierte a booleano la existencia del error en la valdadacion del input
+                errorMessage={errors.correo?.message} // se isInvalid es true, se muestra el mensaje de error
+                {...register("correo")}
+            />
+
+            <Input
+                variant="bordered"
+                label="Contraseña"
+                placeholder="********"
+                isRequired
+                isInvalid={!!errors.contrasena}
+                errorMessage={errors.contrasena?.message}
+                {...register("contrasena")}
+                endContent={
+                    <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                        {isVisible ? (
+                            <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        ) : (
+                            <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                        )}
+                    </button>
+                }
+                type={isVisible ? "text" : "password"}
+            />
+
+            <input type="text" className="hidden" {...register("erroresExternos")} />
+            {errors.erroresExternos &&
+                <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>
             }
-            <label className="flex flex-col gap-1">
-                <p className="text-sm">Contraseña</p>
-                <input
-                    type="password"
-                    className="p-2 border-2 border-gray-200 rounded-md"
-                    {...register("contrasena")}
-                />
-            </label>
-            {errors.contrasena &&
-                <p className="text-red-500 text-sm">{`${errors.contrasena.message}`}</p>
-            }
-            <Link href="#" className="text-blue-500 text-sm">¿Olvidaste tu contraseña?</Link> { /* TODO */}
-            <button
-                className="p-2 bg-blue-500 text-white rounded-md disabled:bg-gray-200 disabled:text-bold disabled:text-black disabled:cursor-not-allowed"
-                disabled={isSubmitting}
+
+            <button type="button" className="text-blue-500 text-sm" onClick={() => setResetPassword(true)}>¿Olvidaste tu contraseña?</button>
+
+            <Button
+                className="p-2 bg-blue-500 text-white rounded-md  disabled:cursor-not-allowed"
+                isLoading={isSubmitting}
+                type="submit"
+                spinner={Spinner}
             >
                 Iniciar sesión
-            </button>
+            </Button>
+
         </form>
     )
 }
