@@ -30,7 +30,7 @@ export default async function middleware(req: NextRequest, res: NextResponse) {
 const matcherMiddleware = (ruta: string) => {
 
     // Rutas a excluir
-    const excludedRoutes = ["/_next/static", "/_next/image", "/favicon.ico"];
+    const excludedRoutes = ["/_next/static", "/_next/image", "/favicon.ico", "/reset-password"];
 
     // Verifica si la ruta termina en .png o .svg o si la ruta coincide con las rutas excluidas
     return ruta.endsWith(".png") || ruta.endsWith(".svg") || excludedRoutes.some(route => ruta.startsWith(route))

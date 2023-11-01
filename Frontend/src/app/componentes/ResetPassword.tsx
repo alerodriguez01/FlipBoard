@@ -37,7 +37,7 @@ const ResetPassword = ({ renderResetPassword }: { renderResetPassword: Dispatch<
 
         try {
             const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/auth/reset-password', {
-                body: JSON.stringify(correo),
+                body: JSON.stringify({correo}),
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -95,9 +95,7 @@ const ResetPassword = ({ renderResetPassword }: { renderResetPassword: Dispatch<
 
             </form>
 
-            {correoSent &&
-                <button type="button" className="text-blue-500 text-sm" onClick={() => renderResetPassword(false)}>Volver</button>
-            }
+            <button type="button" className="text-blue-500 text-sm" onClick={() => renderResetPassword(false)}>Volver</button>
         </>
     )
 }
