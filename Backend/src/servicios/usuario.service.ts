@@ -19,12 +19,12 @@ async function getUsuarioById(idUsuario: string, withCursos: boolean) {
 
     if (withCursos) {
         const usuario = await usuarioRepository.getUsuarioByIdWithCursos(idUsuario);
-        if(!usuario) throw new NotFoundError('Usuario')
+        if (!usuario) throw new NotFoundError('Usuario')
         return usuario;
     }
 
     const usuario = await usuarioRepository.getUsuarioById(idUsuario);
-    if(!usuario) throw new NotFoundError('Usuario')
+    if (!usuario) throw new NotFoundError('Usuario')
     return usuario;
 
 }
@@ -144,20 +144,20 @@ function verifyJWT(token: string): Usuario {
 }
 
 function generateResetJWT(usuario: Usuario): string {
-    return jwt.sign({id: usuario.id}, process.env.JWT_SECRET_KEY || "", {expiresIn: '15m'});
+    return jwt.sign({ id: usuario.id }, process.env.JWT_SECRET_KEY || "", { expiresIn: '15m' });
 }
 
 /**
  * 
  */
-async function getParticipantes(idCurso: string, nombre: string, limit: number, offset: number){
-    
+async function getParticipantes(idCurso: string, nombre: string, limit: number, offset: number) {
+
     //paginado
-    if(!!limit || !!offset){
+    if (!!limit || !!offset) {
         const users = await usuarioRepository.getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
         return users;
     }
-    
+
     const users = await usuarioRepository.getUsuariosFromCursoByNombre(idCurso, nombre);
     return users;
 }
@@ -165,11 +165,11 @@ async function getParticipantes(idCurso: string, nombre: string, limit: number, 
 /**
  * Agregar participante a un curso. Retorna void.
  */
-async function addParticipanteToCurso(idCurso: string, idUser: string){
-    
+async function addParticipanteToCurso(idCurso: string, idUser: string) {
+
     const curso = await cursoRepository.addUsuario(idCurso, idUser);
-    
-    if(!curso) throw new NotFoundError("Curso o User");
+
+    if (!curso) throw new NotFoundError("Curso o User");
 
 }
 
@@ -177,8 +177,8 @@ async function updateUsuarioPassword(idUser: string, password: string, token: st
 
     //check if token is valid
     const user = verifyJWT(token);
-    if(user.id !== idUser)
-        throw new InvalidValueError("Usuario","idUsuario o Token");
+    if (user.id !== idUser)
+        throw new InvalidValueError("Usuario", "idUsuario o Token");
 
     /**
      * Criterios password:
@@ -191,12 +191,20 @@ async function updateUsuarioPassword(idUser: string, password: string, token: st
 
     //hash password
     const salt = await saltRepository.getSaltByUsuarioId(idUser);
-    if(!salt) throw new NotFoundError("Salt");
+    if (!salt) throw new NotFoundError("Salt");
 
     const hash = await bcryptjs.hash(password, salt.salt);
 
     return await usuarioRepository.updateUsuarioPassword(idUser, hash);
 }
 
-export default { getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-                    updateUsuarioPassword };
+async function getUsuarioByCorreo(correo: string) {
+    const user = await usuarioRepository.getUsuarioByCorreo(correo);
+    if (!user) throw new NotFoundError("Usuario");
+    return user;
+}
+
+export default {
+    getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
+    updateUsuarioPassword, getUsuarioByCorreo
+};
