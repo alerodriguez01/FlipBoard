@@ -62,5 +62,9 @@ export class UsuarioRepository implements UsuarioDataSource {
         return await this.usuarioDAO.getUsuariosFromCursoByNombrePaginated(idCurso, nombre, limit, offset);
     }
 
+    async updateUsuarioPassword(idUsuario: string, password: string) {
+        return await this.usuarioDAO.updateUsuarioPassword(idUsuario, password);
+    }
+
     // demas metodos
 }

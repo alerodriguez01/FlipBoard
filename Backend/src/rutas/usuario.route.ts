@@ -125,4 +125,49 @@ router.get("/usuarios/:idUsuario", controller.getUsuarioById);
  */
 router.post("/usuarios", controller.createUsuario);
 
+/**
+ * @swagger
+ * /api/usuarios/{idUsuario}/password:
+ *   put:
+ *    summary: Cambiar la contraseña de un usuario
+ *    tags: [Usuario]
+ *    parameters:
+ *      - name: idUsuario
+ *        in: path
+ *        required: true
+ *        description: el id del usuario
+ *        schema:
+ *          type: string
+ *          example:
+ *            65397634490a7145b8387808
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1NDE0OTcxMGRjOWU3YjlhZWFiNzk0NSIsImlhdCI6MTY5ODc5MTMxOSwiZXhwIjoxNjk4NzkyMjE5fQ.GbYurUUWyDB1I0GMIPRrDLqNRw0Xy5ILbeFdLu4_9ns
+ *            contrasena: NuevaPassword321
+ *    responses:
+ *      200: 
+ *        description: Contraseña actualizada exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Usuario"
+ *      400:
+ *        description: Faltan datos obligatorios, la contraseña es invalida, el idUsuario es invalido o el token es invalido
+ *        content:
+ *          application/json:
+ *            examples:
+ *              faltanDatos:
+ *                value:
+ *                  message: Faltan datos obligatorios
+ *              contrasenaInvalida:
+ *                value:
+ *                  message: Valor invalido para el atributo Contrasenia de Usuario
+ *      404:
+ *        description: Usuario o Salt no encontrado
+ */
+router.put("/usuarios/:idUsuario/password", controller.updateUsuarioPassword);
+
 export default router;

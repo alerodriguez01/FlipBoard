@@ -158,5 +158,16 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     }
   }
 
+  async updateUsuarioPassword(idUsuario: string, password: string) {
+      try {
+        return await this.prisma.usuario.update({
+          where: {id: idUsuario},
+          data: {contrasena: password}
+        });
+      } catch (error) {
+        throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
+      }
+  }
+
   // demas metodos
 }

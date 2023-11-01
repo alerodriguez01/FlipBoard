@@ -83,4 +83,22 @@ async function addParticipante(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante };
+async function updateUsuarioPassword(req: Request, res: Response) {
+
+    const token = req.body.token;
+    const newPass = req.body.contrasena;
+
+    if(!token || !newPass)
+        return res.status(400).json("Faltan datos obligatorios");
+
+        try {
+            let userUpdated = await service.updateUsuarioPassword(req.params.idUsuario, newPass, token);
+            return res.status(200).json(userUpdated);
+        } catch (error) {
+            if (error instanceof InvalidValueError) return res.status(400).json(error.message);
+            if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        }
+
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword };

@@ -7,5 +7,6 @@ export default interface UsuarioDataSource {
     getUsuarioByIdWithCursos(id: string): Promise<Usuario | null>;
     getUsuariosFromCursoByNombre(idCurso: string, nombre: string): Promise<Usuario[] | null>;
     getUsuariosFromCursoByNombrePaginated(idCurso: string, nombre: string, limit: number, offset: number): Promise<Usuario[] | null>;
+    updateUsuarioPassword(idUsuario: string, password: string): Promise<Usuario | null>;
     // ir agregando métodos restantes 
 }
