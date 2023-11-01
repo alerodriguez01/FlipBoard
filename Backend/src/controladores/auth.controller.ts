@@ -46,12 +46,12 @@ async function logout(req: Request, res: Response) {
 
 async function resetPassword(req: Request, res: Response) {
 
-    const userId = req.body.idUsuario;
+    const correo = req.body.correo;
 
-    if (!userId) return res.status(400).json('Datos incompletos');
+    if (!correo) return res.status(400).json('Datos incompletos');
 
     try {
-        const user = await usuarioService.getUsuarioById(userId, false);
+        const user = await usuarioService.getUsuarioByCorreo(correo);
         const token = usuarioService.generateResetJWT(user);
 
         let transporter = nodemailer.createTransport({
@@ -69,7 +69,7 @@ async function resetPassword(req: Request, res: Response) {
             from: process.env.MAIL_USERNAME,
             to: user.correo,
             subject: 'FlipBoard: Reestablecer contraseña',
-            text: `Haga click en el siguiente link para reestablecer su contraseña: ${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}`
+            html: `<p>Haga click <a href="http://${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}">aquí</a> para reestablecer su contraseña.</p>`
         }
 
         transporter.sendMail(mail, (error, body) => {
