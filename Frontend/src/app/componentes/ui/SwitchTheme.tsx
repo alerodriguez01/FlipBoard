@@ -12,7 +12,7 @@ const SwitchTheme = () => {
 
     return (
         <Switch
-            defaultSelected
+            defaultSelected={currentTheme === "light"}
             size="lg"
             color="primary"
             thumbIcon={({ isSelected, className }) =>
@@ -22,10 +22,8 @@ const SwitchTheme = () => {
                     <MoonIcon className={className} />
                 )
             }
-            onClick={() => theme == "dark" ? setTheme('light') : setTheme("dark")}
-        >
-            {currentTheme === "dark" ? "Modo oscuro" : "Modo claro"}
-        </Switch>
+            onClick={() => currentTheme === "dark" ? setTheme('light') : setTheme("dark")}
+        />
     );
 
 }
