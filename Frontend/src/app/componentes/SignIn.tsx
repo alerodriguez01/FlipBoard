@@ -7,8 +7,8 @@ import { useUser } from "@/app/componentes/providers/UserProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { Button, Input } from "@nextui-org/react";
-import { EyeFilledIcon } from "@/app/componentes/ui/EyeFilledIcon"
-import { EyeSlashFilledIcon } from "@/app/componentes/ui/EyeSlashFilledIcon";
+import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
+import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import ResetPassword from "./ResetPassword"
 

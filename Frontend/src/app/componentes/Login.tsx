@@ -11,7 +11,7 @@ export default function Login() {
   const [registro, setRegistro] = useState(false)
 
   return (
-    <section className="flex flex-col items-center gap-3 p-8 border-2 shadow-md rounded h-fit my-5">
+    <section className="flex flex-col items-center gap-3 p-8 border-2 shadow-md dark:shadow-slate-400 dark:border-slate-400 rounded h-fit my-5">
       <Image src="/flipboard-icon.png" alt="FlipBoard" width={100} height={100} />
       <h1 className="text-xl">¡Bienvenido!</h1>
       <p className=" text-base text-center">{registro ? "Regístrate" : "Inicia sesión"} para continuar en la plataforma</p>
