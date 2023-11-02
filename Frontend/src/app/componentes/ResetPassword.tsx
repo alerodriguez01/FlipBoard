@@ -70,6 +70,7 @@ const ResetPassword = ({ renderResetPassword }: { renderResetPassword: Dispatch<
                     isInvalid={!!errors.correo} // !! -> convierte a booleano la existencia del error en la valdadacion del input
                     errorMessage={errors.correo?.message} // se isInvalid es true, se muestra el mensaje de error
                     {...register("correo")}
+                    disabled={correoSent}
                 />
 
                 <input type="text" className="hidden" {...register("erroresExternos")} />
