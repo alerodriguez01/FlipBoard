@@ -63,26 +63,46 @@ const Navbar = () => {
         <div className="flex flex-col mt-3 gap-1">
           <Link href="/cursos" className={pathname === '/cursos' ? "border-l-4 border-gray-600" : ""}>
             <Button
-              className="dark w-full flex justify-start"
+              className="dark w-full flex justify-start rounded-none"
               variant="light"
             >
               Mis cursos
             </Button>
           </Link>
+          {pathname.startsWith('/cursos/') && // esto significa que estoy dentro de un curso
+            <div className="flex flex-col ml-5">
+              <Link href="/cursos/murales" className={pathname === '/cursos/murales' ? "border-l-4 border-gray-600" : ""}>
+                <Button
+                  className="dark w-full flex justify-start rounded-none"
+                  variant="light"
+                >
+                  Ver murales
+                </Button>
+              </Link>
+              <Link href="/cursos/participantes" className={pathname === '/cursos/participantes' ? "border-l-4 border-gray-600" : ""}>
+                <Button
+                  className="dark w-full flex justify-start rounded-none"
+                  variant="light"
+                >
+                  Ver participantes
+                </Button>
+              </Link>
+              <Link href="/cursos/calificaciones" className={pathname === '/cursos/calificaciones' ? "border-l-4 border-gray-600" : ""}>
+                <Button
+                  className="dark w-full flex justify-start rounded-none"
+                  variant="light"
+                >
+                  Ver calificaciones
+                </Button>
+              </Link>
+            </div>
+          }
           <Link href="/rubricas" className={pathname === '/rubricas' ? "border-l-4 border-gray-600" : ""}>
             <Button
-              className="dark w-full flex justify-start"
+              className="dark w-full flex justify-start rounded-none"
               variant="light"
             >
               Mis rúbricas
-            </Button>
-          </Link>
-          <Link href="/participantes" className={pathname === '/participantes' ? "border-l-4 border-gray-600" : ""}>
-            <Button
-              className="dark w-full flex justify-start"
-              variant="light"
-            >
-              Ver participantes
             </Button>
           </Link>
         </div>
@@ -91,7 +111,7 @@ const Navbar = () => {
 
       <div className="border-l-1 border-gray-600 w-full">
         <Button
-          className="dark w-full flex justify-start"
+          className="dark w-full flex justify-start rounded-none"
           onClick={handleCerrarSesion}
           variant="light"
         >

@@ -1,4 +1,4 @@
-export default function Participantes() {
+export default function Participantes({ params }: { params: { idCurso: string } }) {
     return (
         <section className="flex flex-1 justify-center items-center p-24">
             <h1>FlipBoard Ver Participantes (grupos y alumnos)</h1>
