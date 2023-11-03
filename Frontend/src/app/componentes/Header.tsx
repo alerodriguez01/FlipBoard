@@ -2,7 +2,7 @@ import ButtonTheme from "@/app/componentes/ui/SwitchTheme"
 
 const Header = () => {
     return (
-        <header className="text-center border-[2px] p-10">
+        <header className="flex justify-between items-center bg-gray-200 dark:bg-gray-900 p-10 shadow-md shadow-slate-300 dark:shadow-slate-950">
             <h1>FlipBoard header</h1>
             <ButtonTheme />
         </header>
