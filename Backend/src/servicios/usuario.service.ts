@@ -178,7 +178,7 @@ async function updateUsuarioPassword(idUser: string, password: string, token: st
     //check if token is valid
     const user = verifyJWT(token);
     if (user.id !== idUser)
-        throw new InvalidValueError("Usuario", "idUsuario o Token");
+        throw new TokenInvalido();
 
     /**
      * Criterios password:
