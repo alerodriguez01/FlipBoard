@@ -13,6 +13,7 @@ const Navbar = () => {
 
   const router = useRouter()
   const pathname = usePathname()
+  const cursoId = pathname.split("/")[2] // si estoy en una ruta que no tiene cursoId, esto va a ser undefined
 
   const handleCerrarSesion = async () => {
 
@@ -50,7 +51,7 @@ const Navbar = () => {
           <h2 className="font-medium text-center">
             {(nombreUser)}
           </h2>
-          {pathname === '/murales' ?
+          {pathname.endsWith('/murales') ?
             <p className="text-gray-400">
               Estudiante
             </p>
@@ -71,7 +72,7 @@ const Navbar = () => {
           </Link>
           {pathname.startsWith('/cursos/') && // esto significa que estoy dentro de un curso
             <div className="flex flex-col ml-5">
-              <Link href="/cursos/1/murales" className={pathname.endsWith('/murales') ? "border-l-4 border-gray-600" : ""}>
+              <Link href={`/cursos/${cursoId}/murales`} className={pathname.endsWith('/murales') ? "border-l-4 border-gray-600" : ""}>
                 <Button
                   className="dark w-full flex justify-start rounded-none"
                   variant="light"
@@ -79,7 +80,7 @@ const Navbar = () => {
                   Ver murales
                 </Button>
               </Link>
-              <Link href="/cursos/1/participantes" className={pathname.endsWith('/participantes') ? "border-l-4 border-gray-600" : ""}>
+              <Link href={`/cursos/${cursoId}/participantes`} className={pathname.endsWith('/participantes') ? "border-l-4 border-gray-600" : ""}>
                 <Button
                   className="dark w-full flex justify-start rounded-none"
                   variant="light"
@@ -87,7 +88,7 @@ const Navbar = () => {
                   Ver participantes
                 </Button>
               </Link>
-              <Link href="/cursos/1/calificaciones" className={pathname.endsWith('/calificaciones') ? "border-l-4 border-gray-600" : ""}>
+              <Link href={`/cursos/${cursoId}/calificaciones`} className={pathname.endsWith('/calificaciones') ? "border-l-4 border-gray-600" : ""}>
                 <Button
                   className="dark w-full flex justify-start rounded-none"
                   variant="light"
