@@ -5,8 +5,8 @@ export default function Home() {
 
   return (
     <div className="flex h-[100dvh] md:h-screen items-center">
-      <aside className="hidden sm:flex justify-center flex-[2]">
-        <Image src="/bienvenido.png" alt="Bienvenido a FlipBoard" width={500} height={500} />
+      <aside className="hidden sm:flex justify-center flex-[2] h-full bg-white">
+        <Image src="/bienvenido.png" alt="Bienvenido a FlipBoard" width={500} height={500} className="object-contain"/>
       </aside>
       <main className="flex-[1] px-8 md:px-10 flex justify-center lg:items-center overflow-y-auto overflow-x-hidden h-full">
         <Login />
