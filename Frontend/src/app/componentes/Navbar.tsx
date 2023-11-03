@@ -1,31 +1,34 @@
 "use client"
 
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { Button, Divider } from "@nextui-org/react";
-import { useUser } from "./providers/UserProvider";
-import { usePathname } from 'next/navigation'
+import { redirect, usePathname } from 'next/navigation'
+import { signOut, useSession } from "next-auth/react";
+import { Spinner as SpinnerNextUI } from "@nextui-org/react";
+
 
 const Navbar = () => {
 
-  const { usuario, setUsuario } = useUser()
-  const nombreUser = usuario?.nombre.split(" ").flatMap((word: string) => word[0].toUpperCase() + word.slice(1)).join(" ")
+  const { data: session, status } = useSession(); // https://next-auth.js.org/getting-started/client#usesession
 
-  const router = useRouter()
+  const nombreUser = session?.user.nombre.split(" ").flatMap((word: string) => word[0].toUpperCase() + word.slice(1)).join(" ")
+
   const pathname = usePathname()
+  const cursoId = pathname.split("/")[2] // si estoy en una ruta que no tiene cursoId, esto va a ser undefined
+
+  const isDocente = session?.user.cursosDocente.includes(cursoId)
 
   const handleCerrarSesion = async () => {
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      })
-
-      if (res.ok) router.push("/")
+      //https://next-auth.js.org/getting-started/client#signout
+      signOut({
+        redirect: true,
+        callbackUrl: "/"
+      }) // esto hace que se borre la cookie de sesion y se redirija a la pagina de logout
 
     } catch (error) {
-      console.log(error)
+      console.log("Error en navbar al cerrar sesion: ", error)
     }
   }
 
@@ -40,50 +43,64 @@ const Navbar = () => {
           </h1>
           <Divider orientation="horizontal" className="bg-gray-600 mb-8" />
 
-          {/* Imagen con iniciales del usuario*/}
-          <div className="flex items-center justify-center min-w-[80px] min-h-[80px] rounded-full border-2 bg-gray-800 shadow-md shadow-gray-600 mb-1">
-            <p className="text-2xl">
-              {(nombreUser?.split(" ").flatMap((word: string) => word[0]))}
-            </p>
-          </div>
+          {
+            status === "loading" ?
+              <SpinnerNextUI color="default" className="my-8" />
+              :
+              <>
+                {/* Imagen con iniciales del usuario*/}
+                <div className="flex items-center justify-center min-w-[80px] min-h-[80px] rounded-full border-2 bg-gray-800 shadow-md shadow-gray-600 mb-1">
+                  <p className="text-2xl">
+                    {(nombreUser?.split(" ").flatMap((word: string) => word[0]))}
+                  </p>
+                </div>
 
-          <h2 className="font-medium text-center">
-            {(nombreUser)}
-          </h2>
-          {pathname === '/murales' ?
-            <p className="text-gray-400">
-              Estudiante
-            </p>
-            :
-            <br />
+                <h2 className="font-medium text-center">
+                  {(nombreUser)}
+                </h2>
+                {pathname.startsWith('/cursos/') ?
+                  <p className="text-gray-400">
+                    {isDocente ? "Docente" : "Estudiante"}
+                  </p>
+                  :
+                  <br />
+                }
+              </>
           }
+
           <Divider orientation="horizontal" className="bg-gray-600 " />
         </article>
 
         <div className="flex flex-col mt-3 gap-1">
-          <Link href="/cursos" className={pathname === '/cursos' ? "border-l-4 border-gray-600" : ""}>
-            <Button
-              className="dark w-full flex justify-start"
-              variant="light"
-            >
-              Mis cursos
-            </Button>
+          <Link href="/cursos"
+            className={`${pathname === '/cursos' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+          >
+            Mis cursos
           </Link>
-          <Link href="/rubricas" className={pathname === '/rubricas' ? "border-l-4 border-gray-600" : ""}>
-            <Button
-              className="dark w-full flex justify-start"
-              variant="light"
-            >
-              Mis rúbricas
-            </Button>
-          </Link>
-          <Link href="/participantes" className={pathname === '/participantes' ? "border-l-4 border-gray-600" : ""}>
-            <Button
-              className="dark w-full flex justify-start"
-              variant="light"
-            >
-              Ver participantes
-            </Button>
+          {pathname.startsWith('/cursos/') && // esto significa que estoy dentro de un curso
+            <div className="flex flex-col ml-5">
+              <Link
+                href={`/cursos/${cursoId}/murales`}
+                className={`${pathname.endsWith('/murales') ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+              >
+                Ver murales
+              </Link>
+              <Link href={`/cursos/${cursoId}/participantes`}
+                className={`${pathname.endsWith('/participantes') ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+              >
+                Ver participantes
+              </Link>
+              <Link href={`/cursos/${cursoId}/calificaciones`}
+                className={`${pathname.endsWith('/calificaciones') ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+              >
+                Ver calificaciones
+              </Link>
+            </div>
+          }
+          <Link href="/rubricas"
+            className={`${pathname === '/rubricas' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+          >
+            Mis rúbricas
           </Link>
         </div>
 
@@ -91,7 +108,7 @@ const Navbar = () => {
 
       <div className="border-l-1 border-gray-600 w-full">
         <Button
-          className="dark w-full flex justify-start"
+          className="dark w-full flex justify-start rounded-none"
           onClick={handleCerrarSesion}
           variant="light"
         >

@@ -3,13 +3,13 @@ import { useForm } from "react-hook-form"
 import { useRouter } from "next/navigation"
 import { z } from "zod"
 import Link from "next/link"
-import { useUser } from "@/app/componentes/providers/UserProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useEffect, useState } from "react"
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
+import { signIn } from "next-auth/react"
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -25,8 +25,6 @@ type UserSignUp = z.infer<typeof userSchema> & { erroresExternos?: string } // l
 
 
 const SignIn = () => {
-
-    const { usuario, setUsuario } = useUser() // hook personalizado para manejar el usuario logueado
 
     const router = useRouter()
 
@@ -53,7 +51,8 @@ const SignIn = () => {
         }
 
         try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/usuarios', {
+            // Crea usuario
+            const resCreate = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/usuarios', {
                 body: JSON.stringify(body),
                 headers: {
                     'Content-Type': 'application/json'
@@ -61,24 +60,24 @@ const SignIn = () => {
                 method: 'POST'
             })
 
-            if (!res.ok) {
+            if (!resCreate.ok) {
                 setError("erroresExternos", { message: "El correo ya existe." })
                 return
             }
 
-            const resLogIn = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/auth/login', {
-                body: JSON.stringify(data),
-                credentials: 'include', // para que el browser guarde la cookie del JWT
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST'
-            })
-            const userCreated = await resLogIn.json()
+            // https://next-auth.js.org/getting-started/client#signin
+            const resLogIn = await signIn("credentials", {
+                correo: data.correo,
+                contrasena: data.contrasena,
+                redirect: false, // https://next-auth.js.org/getting-started/client#using-the-redirect-false-option
+                callbackUrl: "/cursos"
+            });
 
-            setUsuario(userCreated)
-            router.push("/cursos") // redirecciono a la pagina de cursos
-            // reset()
+            if (resLogIn?.error)
+                router.push("/")
+
+            if (resLogIn?.ok)
+                router.push("/cursos")
             return
 
         } catch (error) {
@@ -88,6 +87,7 @@ const SignIn = () => {
         }
 
     }
+
 
     const [isVisible, setIsVisible] = useState(false);
 
@@ -160,7 +160,7 @@ const SignIn = () => {
             >
                 Registrarse
             </Button>
-            
+
         </form>
     )
 }

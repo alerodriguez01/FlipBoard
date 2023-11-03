@@ -1,14 +1,43 @@
+import { withAuth } from "next-auth/middleware"
+// https://next-auth.js.org/configuration/nextjs#middleware
+export default withAuth(
+    {
+        // Matches the pages config in `[...nextauth]`
+        pages: {
+            signIn: '/',
+            signOut: '/',
+        },
+    })
+
+export const config = {
+        /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * And ends with:
+     * - .svg (svg files)
+     * - .png (png files)
+     */
+    matcher: ["/((?!_next/static|_next/image|favicon.ico|.*(?<!svg)$|.*(?<!png)$).*)"]
+
+};
+    
+// export const config = { matcher: ["/((?!_next/static|_next/image|favicon.ico|.*(?<!svg)$|.*(?<!png)$).*)"]}
+
+// ---------- legacy code -------------
+/*
 import { NextRequest, NextResponse } from 'next/server';
 
 export default async function middleware(req: NextRequest, res: NextResponse) {
 
     // Si la ruta coincide con las rutas excluidas, pasa a la siguiente ruta
-    if(matcherMiddleware(req.nextUrl.pathname)) return NextResponse.next() 
+    if(matcherMiddleware(req.nextUrl.pathname)) return NextResponse.next()
 
     console.log("¡Hola desde el middleware! Ruta que se está visitando: " + req.nextUrl.pathname);
 
     const existeCookie = req.cookies.get("token") ? true : false;
-    
+
     let isLoggedIn = false;
 
     if(existeCookie){
@@ -23,7 +52,7 @@ export default async function middleware(req: NextRequest, res: NextResponse) {
             // console.log(user)
 
             if(usuario.ok) isLoggedIn = true;
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -35,16 +64,6 @@ export default async function middleware(req: NextRequest, res: NextResponse) {
 
 };
 
-// export const config = {
-//         /*
-//      * Match all request paths except for the ones starting with:
-//      * - _next/static (static files)
-//      * - _next/image (image optimization files)
-//      * - favicon.ico (favicon file)
-//      */
-//     matcher: ['/((?!_next/static|_next/image|favicon.ico).*)']
-
-// };
 
 const matcherMiddleware = (ruta: string) => {
 
@@ -54,3 +73,5 @@ const matcherMiddleware = (ruta: string) => {
     // Verifica si la ruta termina en .png o .svg o si la ruta coincide con las rutas excluidas
     return ruta.endsWith(".png") || ruta.endsWith(".svg") || excludedRoutes.some(route => ruta.startsWith(route))
 }
+
+*/
