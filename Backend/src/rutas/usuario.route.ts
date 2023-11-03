@@ -155,7 +155,7 @@ router.post("/usuarios", controller.createUsuario);
  *            schema:
  *              $ref: "#/components/schemas/Usuario"
  *      400:
- *        description: Faltan datos obligatorios, la contraseña es invalida, el idUsuario es invalido o el token es invalido
+ *        description: Faltan datos obligatorios, la contraseña es invalida o el idUsuario es invalido
  *        content:
  *          application/json:
  *            examples:
@@ -165,6 +165,8 @@ router.post("/usuarios", controller.createUsuario);
  *              contrasenaInvalida:
  *                value:
  *                  message: Valor invalido para el atributo Contrasenia de Usuario
+ *      401:
+ *        description: Token invalido
  *      404:
  *        description: Usuario o Salt no encontrado
  */
