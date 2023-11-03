@@ -1,16 +1,16 @@
 "use client"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { z } from "zod"
-import Link from "next/link"
-import { useUser } from "@/app/componentes/providers/UserProvider"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import ResetPassword from "./ResetPassword"
+import { signIn, useSession } from "next-auth/react"
+import { Spinner as SpinnerNextUI } from "@nextui-org/react";
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -25,9 +25,8 @@ type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // l
 
 const SignIn = () => {
 
-    const { usuario, setUsuario } = useUser() // hook personalizado para manejar el usuario logueado
-
     const router = useRouter()
+    const { data: session, status } = useSession()
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -43,45 +42,39 @@ const SignIn = () => {
         resolver: zodResolver(userSchema)
     })
 
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl") || "/cursos"
 
     const onSubmit = async (data: UserSignIn) => {
 
-        try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/auth/login', {
-                body: JSON.stringify(data),
-                credentials: 'include', // para que el browser guarde la cookie del JWT
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                method: 'POST'
-            })
+        // https://next-auth.js.org/getting-started/client#signin
+        const res = await signIn("credentials", {
+            correo: data.correo,
+            contrasena: data.contrasena,
+            redirect: false, // https://next-auth.js.org/getting-started/client#using-the-redirect-false-option
+            callbackUrl: callbackUrl
+        });
 
-            if (!res.ok) {
-                setError("erroresExternos", { message: "El correo y/o la contraseña son incorrectos." })
-                return
-            }
+        if (res?.error === "CredentialsSignin")
+            setError("erroresExternos", { message: "El correo o la contraseña son incorrectos." })
 
-            const userLogged = await res.json()
-            setUsuario(userLogged)
-            router.push("/cursos") // redirecciono a la pagina de cursos
-            // reset()
-            return
-
-        } catch (error) {
-            // Por ejemplo, el backend esta caido
-            setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." })
-            return
-        }
+        if (res?.ok)
+            router.push(callbackUrl)
 
     }
+
 
     const [resetPassword, setResetPassword] = useState(false); // hook para renderizar solo el correo al resetear la contraseña
     const [isVisible, setIsVisible] = useState(false); // hook para mostrar/ocultar la contraseña
 
     if (resetPassword) return (
         // le paso el hook para que pueda volver a renderizar el formulario de login cuando termine de resetear la contraseña
-        <ResetPassword renderResetPassword={setResetPassword}/> 
+        <ResetPassword renderResetPassword={setResetPassword} />
     )
+
+    if (session) router.push(callbackUrl)
+    if (status === 'loading' || status === 'authenticated')
+        return <SpinnerNextUI />
 
     return (
         <form action="" className="flex flex-col gap-3 w-full max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
