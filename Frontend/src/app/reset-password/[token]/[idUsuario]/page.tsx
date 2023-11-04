@@ -89,7 +89,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                     <Image src="/flipboard-icon.png" alt="FlipBoard" width={100} height={100} />
                     <h1 className="text-xl">Reestablecer contraseña</h1>
                     {!passwordHasChanged ?
-                        (<div className="flex flex-col items-center">
+                        <>
                             <p className=" text-base text-center max-w-xs">Complete los siguientes campos para cambiar su contraseña</p>
                             <form action="" className="flex flex-col gap-3 w-full max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
                                 <Input
@@ -102,7 +102,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                     errorMessage={errors.contrasenaNueva?.message}
                                     {...register("contrasenaNueva")}
                                     endContent={
-                                        <button className="focus:outline-none" type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+                                        <button className="focus:outline-none" type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)} tabIndex={99}>
                                             {isPasswordVisible ? (
                                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                                             ) : (
@@ -121,7 +121,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                     errorMessage={errors.contrasenaRepetida?.message} // se isInvalid es true, se muestra el mensaje de error
                                     {...register("contrasenaRepetida")}
                                     endContent={
-                                        <button className="focus:outline-none" type="button" onClick={() => setIsRepetidaVisible(!isRepetidaVisible)}>
+                                        <button className="focus:outline-none" type="button" onClick={() => setIsRepetidaVisible(!isRepetidaVisible)} tabIndex={99}>
                                             {isRepetidaVisible ? (
                                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                                             ) : (
@@ -137,7 +137,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                 }
 
                                 <Button
-                                    className="my-6 bg-blue-500 text-white rounded-md  disabled:cursor-not-allowed"
+                                    className="my-3 bg-blue-500 text-white rounded-md  disabled:cursor-not-allowed"
                                     isLoading={isSubmitting}
                                     type="submit"
                                     spinner={Spinner}
@@ -146,13 +146,15 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                 </Button>
 
                             </form>
-                        </div>) :
-                        (<div className="flex flex-col items-center">
+                        </>
+                        :
+                        <>
                             <p className="text-green-500 text-sm">Su contraseña ha sido cambiada exitosamente.</p>
-                            <Link className="my-6 text-blue-500 px-3 py-1" href="/">
+                            <Link className="my-6 text-blue-500 px-3 py-1" href="/" replace>
                                 Regresar a iniciar sesión
                             </Link>
-                        </div>)}
+                        </>
+                    }
                 </section>
             </main>
         </div>

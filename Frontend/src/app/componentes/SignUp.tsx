@@ -16,7 +16,7 @@ const userSchema = z.object({
     correo: z.string().email("El correo electrónico es invalido."),
     contrasena: z.string()
         .min(8, "La contraseña debe tener al menos 8 caracteres.")
-        .regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula."),
+        .regex(/^(?=.*[A-Z])(?=.*\d).+/, "La contraseña debe tener al menos una mayúscula y un número."),
     nombre: z.string().min(1, "Campo obligatorio."),
     apellido: z.string().min(1, "Campo obligatorio."),
 })

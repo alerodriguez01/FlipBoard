@@ -19,7 +19,7 @@ export const config = {
      * - .svg (svg files)
      * - .png (png files)
      */
-    matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\.svg$|.*\.png$).*)"]
+    matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\.svg$|.*\.png$|reset-password).*)"]
 
 };
     
