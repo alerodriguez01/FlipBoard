@@ -102,7 +102,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                     errorMessage={errors.contrasenaNueva?.message}
                                     {...register("contrasenaNueva")}
                                     endContent={
-                                        <button className="focus:outline-none" type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)}>
+                                        <button className="focus:outline-none" type="button" onClick={() => setIsPasswordVisible(!isPasswordVisible)} tabIndex={99}>
                                             {isPasswordVisible ? (
                                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                                             ) : (
@@ -121,7 +121,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                                     errorMessage={errors.contrasenaRepetida?.message} // se isInvalid es true, se muestra el mensaje de error
                                     {...register("contrasenaRepetida")}
                                     endContent={
-                                        <button className="focus:outline-none" type="button" onClick={() => setIsRepetidaVisible(!isRepetidaVisible)}>
+                                        <button className="focus:outline-none" type="button" onClick={() => setIsRepetidaVisible(!isRepetidaVisible)} tabIndex={99}>
                                             {isRepetidaVisible ? (
                                                 <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                                             ) : (

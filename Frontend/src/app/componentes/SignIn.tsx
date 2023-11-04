@@ -16,8 +16,8 @@ import { Spinner as SpinnerNextUI } from "@nextui-org/react";
 const userSchema = z.object({
     correo: z.string().email("El correo electrónico es invalido."),
     contrasena: z.string()
-        .min(8, "La contraseña debe tener al menos 8 caracteres.")
-        .regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula."),
+        //.min(8, "La contraseña debe tener al menos 8 caracteres.")
+        //.regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula."),
 })
 // tipo inferido a partir del schema
 type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
@@ -99,7 +99,7 @@ const SignIn = () => {
                 errorMessage={errors.contrasena?.message}
                 {...register("contrasena")}
                 endContent={
-                    <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)}>
+                    <button className="focus:outline-none" type="button" onClick={() => setIsVisible(!isVisible)} tabIndex={99}>
                         {isVisible ? (
                             <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
                         ) : (
