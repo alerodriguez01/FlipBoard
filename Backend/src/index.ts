@@ -23,7 +23,7 @@ app.use(express.json());
 app.use(logger('dev'));
 app.use(cookieParser());
 app.use(cors({ // https://expressjs.com/en/resources/middleware/cors.html
-    origin: /.*localhost.*/, // origin que contenga localhost
+    origin: /.*/, // cualquier origin
     credentials: true, // para que se puedan setear las cookies en el browser del cliente
 }))
 
