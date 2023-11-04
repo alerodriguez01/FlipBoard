@@ -16,8 +16,6 @@ import Link from "next/link"
 const userSchema = z.object({
     correo: z.string().email("El correo electrónico es invalido."),
     contrasena: z.string()
-        //.min(8, "La contraseña debe tener al menos 8 caracteres.")
-        //.regex(/[A-Z]/, "La contraseña debe tener al menos una mayúscula."),
 })
 // tipo inferido a partir del schema
 type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
@@ -26,7 +24,6 @@ type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // l
 const SignIn = () => {
 
     const router = useRouter()
-    // const { data: session, status } = useSession()
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -66,13 +63,10 @@ const SignIn = () => {
 
     const [isVisible, setIsVisible] = useState(false); // hook para mostrar/ocultar la contraseña
 
-    if (searchParams.get('resetpass')) return (
-        <ResetPassword />
-    )
-
-    // if (session) router.push(callbackUrl)
-    // if (status === 'loading' || status === 'authenticated')
-    //     return <SpinnerNextUI />
+    if (searchParams.get('resetpass'))
+        return (
+            <ResetPassword />
+        )
 
     return (
         <form action="" className="flex flex-col gap-3 w-full max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
