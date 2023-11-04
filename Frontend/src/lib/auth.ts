@@ -15,20 +15,13 @@ async function login(correo: string, contrasena: string) {
             method: 'POST'
         })
 
-        if (!res.ok) {
-            //setError("erroresExternos", { message: "El correo y/o la contraseña son incorrectos." })
-            return null
-        }
-
+        if (!res.ok) return null
+        
         const userLogged = await res.json()
-        //setUsuario(userLogged)
-        //router.push("/cursos") // redirecciono a la pagina de cursos
-        // reset()
         return userLogged
 
     } catch (error) {
         // Por ejemplo, el backend esta caido
-        //setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." })
         return null
     }
     

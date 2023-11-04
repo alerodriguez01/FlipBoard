@@ -38,7 +38,7 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
 
                 try {
                     const user = await login(credentials.correo, credentials.contrasena);
-                    return user; // se guarda en la cookie de session
+                    return user; // luego se llama a jwt() con este user
 
                 } catch (e) {
                     console.error("Error en authorize(): ", e);
@@ -54,10 +54,24 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
 
         // https://next-auth.js.org/configuration/callbacks#jwt-callback
         /*
-            token: el payload del JWT a crear y a almacenar en el lado del servidor (rutas creadas por next-auth)
+            token: el PAYLOAD del JWT a crear
             user: el usuario que se logueo (el que devolvio el authorize())
          */
-        // Called whenever a JSON Web Token is created (i.e. at sign in)
+        // Called whenever a JSON Web Token is created (i.e. at sign in) or whenever a session is accessed in the client.
+        // SIEMPRE que se ejecute, crea un nuevo JWT, con su fecha de expiracion actualizada
+        /*
+            Caso A: 
+              1. El usuario inicia sesión. 
+              2. Se llama a authorize(), retorna el user
+              3. Se llama a jwt() con el user y un token vacio -> { name: undefined, email: undefined, picture: undefined, sub: '654276330c842ac6e1eeb1f4' }
+              4. Se setean y retornan los datos del user en el payload (token) -> { sub: '654276330c842ac6e1eeb1f4', id: '...', nombre: '...', correo: '...', cursosAlumno: [], ... }
+              5. Se guarda en la cookie del navegador, encriptado mediante JWE usando la clave secreta pasada como variable de entorno
+            Caso B:
+              1. El usuario ya esta logueado y se llama a useSession() o getSession() o se llama al middleware
+              2. Se llama a jwt() solamente con el token decodificado que viene en la cookie del navegador (next-auth.session-token)
+              3. Crear un nuevo JWT con los datos del token anterior, pero con la fecha de expiracion actualizada
+              4. Se guarda en la cookie del navegador, encriptado mediante JWE
+         */
         async jwt({ token, user, account, profile }) {
 
             if (user) {
@@ -67,21 +81,17 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
                 token.cursosAlumno = user.cursosAlumno;
                 token.cursosDocente = user.cursosDocente;
                 token.grupos = user.grupos;
-                // token.accessToken = user.token; // el JWT devuelto por el backend
             }
 
             return token;
         },
 
         // https://next-auth.js.org/configuration/callbacks#session-callback
-        // Called whenever a session is checked.
+        // Called whenever a session is checked (getSession(), useSession())
         /*
-            session: la session (que tmb es un jwt) que se va a guardar en la cookie del navegador (next-auth.session-token)
+            session: la session que va a retornarse cuando se llame a getSession() o useSession()
             token: el payload del JWT creado en jwt()
          */
-        // Cada vez que se verifica la sesion (llamando a useSession() por ejemplo, o con el middleware),
-        // se llama a esta funcion. Busca el token (jwt) guardado en el lado del servidor (rutas creadas por next-auth)
-        // y crea la session (que se guarda en la cookie del navegador)
         async session({ session, token }) {
             session.user = {
                 id: token.id ?? "",
@@ -91,7 +101,6 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
                 cursosDocente: token.cursosDocente ?? [],
                 grupos: token.grupos ?? [],
             };
-            // session.accessToken = token.accessToken ?? "";
             return session; // The return type will match the one returned in `useSession()`
         },
     },
@@ -137,7 +146,6 @@ declare module "next-auth" {
             cursosDocente: string[],
             grupos: string[],
         },
-        // accessToken: string,
     }
 }
 declare module "next-auth/jwt" {
@@ -149,6 +157,5 @@ declare module "next-auth/jwt" {
         cursosAlumno: string[],
         cursosDocente: string[],
         grupos: string[],
-        // accessToken?: string
     }
 }
