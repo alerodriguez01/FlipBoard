@@ -4,6 +4,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { Button, Input } from "@nextui-org/react";
 import { Spinner } from "@/app/componentes/ui/Spinner";
+import Link from "next/link";
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -13,7 +14,7 @@ const userSchema = z.object({
 type UserResetPassword = z.infer<typeof userSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
 
-const ResetPassword = ({ renderResetPassword }: { renderResetPassword: Dispatch<SetStateAction<boolean>> }) => {
+const ResetPassword = () => {
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -96,7 +97,7 @@ const ResetPassword = ({ renderResetPassword }: { renderResetPassword: Dispatch<
 
             </form>
 
-            <button type="button" className="text-blue-500 text-sm" onClick={() => renderResetPassword(false)}>Volver</button>
+            <Link type="button" className="text-blue-500 text-sm" href='/'>Volver</Link>
         </>
     )
 }
