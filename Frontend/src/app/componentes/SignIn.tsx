@@ -9,8 +9,8 @@ import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import ResetPassword from "./ResetPassword"
-import { signIn, useSession } from "next-auth/react"
-import { Spinner as SpinnerNextUI } from "@nextui-org/react";
+import { signIn } from "next-auth/react"
+import Link from "next/link"
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -26,7 +26,7 @@ type UserSignIn = z.infer<typeof userSchema> & { erroresExternos?: string } // l
 const SignIn = () => {
 
     const router = useRouter()
-    const { data: session, status } = useSession()
+    // const { data: session, status } = useSession()
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -64,17 +64,15 @@ const SignIn = () => {
     }
 
 
-    const [resetPassword, setResetPassword] = useState(false); // hook para renderizar solo el correo al resetear la contraseña
     const [isVisible, setIsVisible] = useState(false); // hook para mostrar/ocultar la contraseña
 
-    if (resetPassword) return (
-        // le paso el hook para que pueda volver a renderizar el formulario de login cuando termine de resetear la contraseña
-        <ResetPassword renderResetPassword={setResetPassword} />
+    if (searchParams.get('resetpass')) return (
+        <ResetPassword />
     )
 
-    if (session) router.push(callbackUrl)
-    if (status === 'loading' || status === 'authenticated')
-        return <SpinnerNextUI />
+    // if (session) router.push(callbackUrl)
+    // if (status === 'loading' || status === 'authenticated')
+    //     return <SpinnerNextUI />
 
     return (
         <form action="" className="flex flex-col gap-3 w-full max-w-[250px]" onSubmit={handleSubmit(onSubmit)}>
@@ -115,7 +113,7 @@ const SignIn = () => {
                 <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>
             }
 
-            <button type="button" className="text-blue-500 text-sm" onClick={() => setResetPassword(true)}>¿Olvidaste tu contraseña?</button>
+            <Link type="button" className="text-blue-500 text-sm text-center" href='/?resetpass=true'>¿Olvidaste tu contraseña?</Link>
 
             <Button
                 className="p-2 bg-blue-500 text-white rounded-md  disabled:cursor-not-allowed"

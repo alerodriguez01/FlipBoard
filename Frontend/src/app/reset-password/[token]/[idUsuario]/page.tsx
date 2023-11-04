@@ -150,7 +150,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                         :
                         <>
                             <p className="text-green-500 text-sm">Su contraseña ha sido cambiada exitosamente.</p>
-                            <Link className="my-6 text-blue-500 px-3 py-1" href="/" replace>
+                            <Link className="my-3 text-blue-500 px-3 py-1" href="/" replace>
                                 Regresar a iniciar sesión
                             </Link>
                         </>
