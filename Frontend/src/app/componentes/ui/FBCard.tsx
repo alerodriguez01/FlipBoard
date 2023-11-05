@@ -15,6 +15,11 @@ type FBProps = {
   editable?: boolean
 }
 
+const colors = [
+  "bg-slate-200",
+  "bg-slate-400", "bg-slate-600",
+];
+
 const FBCard = (props: FBProps) => {
   return (
     <Card isPressable className="shadow-xl w-[400px] h-[200px]">
@@ -41,7 +46,7 @@ const FBCard = (props: FBProps) => {
           </Dropdown>
           }
       </CardHeader>
-      <CardBody className={`bg-slate-${props.color}`}/>
+      <CardBody className={colors.at(props.color)}/>
     </Card>
   );
 };

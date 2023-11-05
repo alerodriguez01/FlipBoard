@@ -20,8 +20,8 @@ export default function Cursos() {
     <section className=" bg-gray-300 flex flex-1 p-24 gap-5">
       {
         status === 'loading' || isLoading ? <Spinner color="default" className="my-8" /> :
-        data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} color={400} editable/>).concat(
-          data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} color={400}/>)
+        data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} color={Math.floor(Math.random()*3)} editable/>).concat(
+          data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} color={Math.floor(Math.random()*3)}/>)
         )
       }
     </section>
