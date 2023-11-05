@@ -1,15 +1,29 @@
+'use client';
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
+import endpoints from "@/lib/endpoints";
+import { Curso } from "@/lib/types";
+import { Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+import useSWR from 'swr';
 
 export default function Cursos() {
+
+  const {data: session, status} = useSession();
+  const {data, error, isLoading} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url).then(res => res.json()));
+
+  if(error) return (<h1>{error.message}</h1>);
+
   return (
-    <section className="flex flex-1 justify-center items-center p-24 gap-5">
-      <CursoCard title="UN TITULO MUY LARGO PARA VER QUE PASAAAAAA" color={500} editable/>
-      <CursoCard title="Este curso no es mio por eso no aparece el botoncito" color={500}/>
-      <Link href="/cursos/1/murales" className="p-24 border">FlipBoard Curso 1</Link>
-      <Link href="/cursos/2/murales" className="p-24 border">FlipBoard Curso 2</Link>
-      <Link href="/cursos/3/murales" className="p-24 border">FlipBoard Curso 3</Link>
-      <Link href="/cursos/4/murales" className="p-24 border">FlipBoard Curso 4</Link>
+
+    <section className=" bg-gray-300 flex flex-1 p-24 gap-5">
+      {
+        status === 'loading' || isLoading ? <Spinner color="default" className="my-8" /> :
+        data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} color={400} editable/>).concat(
+          data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} color={400}/>)
+        )
+      }
     </section>
   )
 }
