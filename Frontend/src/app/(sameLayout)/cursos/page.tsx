@@ -21,8 +21,8 @@ export default function Cursos() {
     :
     <section className=" bg-gray-300 flex flex-1 p-24 gap-5">
       {
-        data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} color={Math.floor(Math.random()*3)} editable/>).concat(
-          data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} color={Math.floor(Math.random()*3)}/>)
+        data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={Math.floor(Math.random()*3)} editable/>).concat(
+          data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={Math.floor(Math.random()*3)}/>)
         )
       }
     </section>
