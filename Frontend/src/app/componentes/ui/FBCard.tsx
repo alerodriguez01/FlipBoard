@@ -17,7 +17,7 @@ type FBProps = {
 
 const FBCard = (props: FBProps) => {
   return (
-    <Card isPressable className="shadow-md w-[400px] h-[200px]">
+    <Card isPressable className="shadow-xl w-[400px] h-[200px]">
       <CardHeader className="flex justify-between min-h-[120px]">
           <h2 className="text-justify self-start max-w-[220px]">{props.title}</h2>
           {props.children}
