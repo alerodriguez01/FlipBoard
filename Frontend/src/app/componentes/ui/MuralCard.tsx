@@ -16,14 +16,22 @@ const MuralCard = (props: CardProps) => {
 
   const router = useRouter();
 
+  const onDelete = () => {
+    alert("TODO: eliminar mural");
+  };
+  const onAsignarRubrica = () => {
+    alert("TODO: asignar rúbrica")
+  };
+
   return (
     <FBCard 
         title={props.title}
         editable={props.editable}
-        dropDownItems={[
-          {key: "asignar", label: "Asignar rúbrica", onAction: () => alert("TODO: asignar rúbrica")},
-          {key: "delete", label: "Eliminar mural", onAction: () => alert("TODO: eliminar mural")}, 
-          ]}
+        dropDownItems={
+          props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :
+          [{key: "asignar", label: "Asignar rúbrica", onAction: onAsignarRubrica },
+          {key: "delete", label: "Eliminar mural", onAction: onDelete},]
+        }
         color={props.color}
         onPress={() => router.push(`/cursos/murales/${props.muralId}`)}>
           <div title={`Rúbrica asignada: ${props.rubrica ?? "No se ha asignado rúbrica"}`} className="place-self-center">
