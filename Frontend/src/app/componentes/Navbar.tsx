@@ -33,7 +33,7 @@ const Navbar = () => {
   }
 
   return (
-    <aside className="flex flex-col items-start justify-between p-6 bg-[#181e25] text-white dark:bg-[#0c0f11] shadow-lg shadow-slate-300 dark:shadow-slate-900 max-w-[15%]">
+    <aside className="flex flex-col items-start justify-between p-6 bg-[#181e25] text-white dark:bg-[#0c0f11] shadow-lg shadow-slate-300 dark:shadow-slate-900 max-w-[15%] h-screen">
 
       <section className="flex flex-col w-full gap-3">
 

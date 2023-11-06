@@ -15,7 +15,7 @@ const SwitchTheme = () => {
             isIconOnly
             onClick={() => currentTheme === "dark" ? setTheme('light') : setTheme("dark")}
             variant="flat"
-            className="rounded-full"
+            className="rounded-full bg-[#c9c9c99c] dark:bg-gray-800"
         >
             {currentTheme === "dark" ? <SunIcon /> : <MoonIcon />}
         </Button>
