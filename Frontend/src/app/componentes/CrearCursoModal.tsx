@@ -117,7 +117,7 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
                   {errors.erroresExternos &&
                       <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
 
-                  <ModalFooter className="flex flex-row justify-around">
+                  <ModalFooter className="flex flex-row justify-between">
                     <p className="text-red-600 place-self-center">* Campos obligatorios</p>
                     <Button className="bg-[#181e25] text-white"
                      isLoading={isSubmitting}
