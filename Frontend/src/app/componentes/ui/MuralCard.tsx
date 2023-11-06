@@ -4,6 +4,7 @@ import { FBCard } from "./FBCard";
 import { useRouter } from "next/navigation";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { Button, Tooltip } from "@nextui-org/react";
+import { useTheme } from "next-themes";
 
 type CardProps = {
   title: string,
@@ -16,6 +17,9 @@ type CardProps = {
 const MuralCard = (props: CardProps) => {
 
   const router = useRouter();
+
+  const {theme} = useTheme()
+  const currentTheme = theme === "dark" ? "dark" : "light"
 
   const onDelete = () => {
     alert("TODO: eliminar mural");
@@ -47,7 +51,7 @@ const MuralCard = (props: CardProps) => {
                 
             }>
             <Button isIconOnly disableAnimation className="bg-transparent rounded-full">
-                <RubricaIcon toggle={!!props.rubrica}/>
+                <RubricaIcon toggle={!!props.rubrica} theme={currentTheme}/>
             </Button>
         </Tooltip>
         </FBCard>

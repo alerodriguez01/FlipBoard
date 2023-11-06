@@ -35,7 +35,6 @@ const Header = () => {
                         <div className="flex items-center">
                             <h1 className="text-xl font-semibold">{curso?.nombre}</h1>
                             {
-                                (!!curso?.tema || !!curso?.descripcion || !!curso?.sitioweb) &&
                                 <Tooltip
                                     showArrow={false}
                                     placement="right"
@@ -46,7 +45,7 @@ const Header = () => {
                                             <ul>
                                                 {curso?.tema && <li>Tema: {curso?.tema}</li>}
                                                 {curso?.descripcion && <li>Descripción: {curso?.descripcion}</li>}
-                                                {curso.emailContacto && <li className="text-sm">Contacto: <a className="text-blue-600 italic" href={"mailto:" + curso?.emailContacto}>{curso?.emailContacto}</a></li>}
+                                                {curso?.emailContacto && <li className="text-sm">Contacto: <a className="text-blue-600 italic" href={"mailto:" + curso?.emailContacto}>{curso?.emailContacto}</a></li>}
                                                 {curso?.sitioweb && <li>Sitio web: <a href={curso?.sitioweb} className="text-blue-600 italic">{curso?.sitioweb}</a></li>}
                                             </ul>
                                         </article>
