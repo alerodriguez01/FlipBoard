@@ -43,7 +43,7 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any}) => {
                 </ModalBody>
                 <ModalFooter className="flex flex-row justify-around">
                   <p className="text-red-600 place-self-center">* Campos obligatorios</p>
-                  <Button className="light:bg-[#181e25] light:text-white">Crear curso</Button>
+                  <Button className="bg-[#181e25] text-white">Crear curso</Button>
                 </ModalFooter>
               </>
             )}
