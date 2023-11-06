@@ -18,10 +18,10 @@ export default function Cursos() {
 
   if(error) return (<h1>{error.message}</h1>);
 
+  if(status === 'loading' || isLoading)
+    return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+
   return (
-    status === 'loading' || isLoading ?
-      <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
-    :
     <section className="flex flex-wrap overflow-auto items-center gap-6 p-8">
       {
         !data.cursosDocenteModel && !data.cursosAlumnoModel ? <h3>No hay cursos</h3> :
@@ -44,5 +44,5 @@ export default function Cursos() {
       {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id}/>)}
       
     </section>
-  )
+  );
 }
