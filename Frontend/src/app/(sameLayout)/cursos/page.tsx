@@ -6,8 +6,6 @@ import endpoints from "@/lib/endpoints";
 import { Curso } from "@/lib/types";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import useSWR from 'swr';
 
 export default function Cursos() {
@@ -43,7 +41,7 @@ export default function Cursos() {
         size="lg"
         onPress={onOpen}> Crear nuevo curso </Button>
       
-      <CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange}/>
+      {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} idDocente={session.user.id}/>)}
       
     </section>
   )
