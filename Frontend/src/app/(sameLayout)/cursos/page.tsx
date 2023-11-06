@@ -1,8 +1,9 @@
 'use client';
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
 import { Curso } from "@/lib/types";
-import { Spinner } from "@nextui-org/react";
+import { Button, Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -32,6 +33,9 @@ export default function Cursos() {
           </>
         </>
       }
+      <Button className="bg-[#181e25] text-white fixed bottom-10 right-10" startContent={<PlusIcon color="#FFFFFF"/>} size="lg">
+        Crear nuevo curso
+      </Button>
     </section>
   )
 }
