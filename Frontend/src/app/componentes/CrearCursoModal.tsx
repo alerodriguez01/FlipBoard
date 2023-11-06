@@ -18,7 +18,7 @@ const cursoSchema = z.object({
 type CursoForm = z.infer<typeof cursoSchema> & { erroresExternos?: string };
 
 
-const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: string}) => {
+const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: string, onCrearCurso: Function}) => {
 
     const {
       register,
@@ -55,6 +55,7 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
           return;
       }
 
+      props.onCrearCurso();
       onClose();
 
     } catch (err) {

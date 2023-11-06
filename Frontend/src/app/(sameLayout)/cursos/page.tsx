@@ -11,7 +11,7 @@ import useSWR from 'swr';
 export default function Cursos() {
 
   const {data: session, status} = useSession();
-  const {data, error, isLoading} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url).then(res => res.json()));
+  const {data, error, isLoading, mutate} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
   // para crear curso
   const {isOpen, onOpen, onOpenChange} = useDisclosure();
@@ -41,7 +41,7 @@ export default function Cursos() {
         size="lg"
         onPress={onOpen}> Crear nuevo curso </Button>
       
-      {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} idDocente={session.user.id}/>)}
+      {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id}/>)}
       
     </section>
   )
