@@ -10,6 +10,7 @@ import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import { signIn } from "next-auth/react"
+import endpoints from "@/lib/endpoints"
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -52,7 +53,7 @@ const SignIn = () => {
 
         try {
             // Crea usuario
-            const resCreate = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/usuarios', {
+            const resCreate = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.createUser(), {
                 body: JSON.stringify(body),
                 headers: {
                     'Content-Type': 'application/json'

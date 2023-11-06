@@ -23,7 +23,7 @@ export default function Login() {
   }, [session])
 
   return (
-    <section className={"flex flex-col items-center gap-3 p-8 h-fit my-5" + (status === 'unauthenticated' ? " border-2 border-gray-700 shadow-md dark:shadow-gray-700 rounded" : "")}>
+    <section className={"flex flex-col items-center gap-3 p-8 h-fit my-5" + (status === 'unauthenticated' ? " border-2 border-gray-700 shadow-md shadow-gray-400 rounded" : "")}>
       <Image src="/flipboard-icon.png" alt="FlipBoard" width={100} height={100} />
       <h1 className="text-xl">¡Bienvenido!</h1>
       {

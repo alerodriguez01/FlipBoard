@@ -18,9 +18,9 @@ export default function Cursos() {
 
   return (
     status === 'loading' || isLoading ?
-      <Spinner color="primary" size="lg" className="bg-gray-300 justify-center items-center h-full" />
+      <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
     :
-    <section className=" bg-gray-300 flex flex-1 p-24 gap-5">
+    <section className="flex flex-wrap overflow-auto justify-center items-center gap-6 p-8">
       {
         data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={color++%3} editable/>).concat(
           data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={color++%3}/>)
