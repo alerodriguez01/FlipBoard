@@ -46,6 +46,7 @@ const Header = () => {
                                             <ul>
                                                 {curso?.tema && <li>Tema: {curso?.tema}</li>}
                                                 {curso?.descripcion && <li>Descripción: {curso?.descripcion}</li>}
+                                                {curso.emailContacto && <li className="text-sm">Contacto: <a className="text-blue-600 italic" href={"mailto:" + curso?.emailContacto}>{curso?.emailContacto}</a></li>}
                                                 {curso?.sitioweb && <li>Sitio web: <a href={curso?.sitioweb} className="text-blue-600 italic">{curso?.sitioweb}</a></li>}
                                             </ul>
                                         </article>
@@ -56,7 +57,6 @@ const Header = () => {
                                 </Tooltip>
                             }
                         </div>
-                        {curso ? <p className="text-sm">Contacto: <a className="text-blue-600 italic" href={"mailto:" + curso?.emailContacto}>{curso?.emailContacto}</a></p> : <p></p>}
                     </section>
             }
             <ButtonTheme />
