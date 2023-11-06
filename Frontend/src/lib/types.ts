@@ -20,3 +20,13 @@ export type Curso = {
     rubricasGrupos: string[];
     rubicasAlumnos: string[];
 }
+
+export type Mural = {
+    id: string,
+    nombre: string,
+    contenido: string,
+    descripcion: string,
+    rubricaId: string,
+    cursoId: string
+    rubricaModel?: any
+}
