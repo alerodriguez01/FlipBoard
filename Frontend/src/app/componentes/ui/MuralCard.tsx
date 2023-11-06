@@ -35,11 +35,6 @@ const MuralCard = (props: CardProps) => {
         }
         color={props.color}
         onPress={() => router.push(`/cursos/murales/${props.muralId}`)}>
-          {/*
-          <div title={`Rúbrica asignada: ${props.rubrica ?? "No se ha asignado rúbrica"}`} className="place-self-center">
-            <RubricaIcon toggle={!!props.rubrica}/>
-          </div>
-          */}
           <Tooltip
             showArrow={false}
             placement="bottom-end"
