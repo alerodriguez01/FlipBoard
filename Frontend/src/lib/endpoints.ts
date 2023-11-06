@@ -22,9 +22,14 @@ function createUser() {
     return '/api/usuarios';
 }
 
+function getAllMuralesWithRubricas(idCurso: string) {
+    return `/api/cursos/${idCurso}/murales?rubrica=true`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
-    getUserWithCursos, getCursoById, login, createUser
+    getUserWithCursos, getCursoById, login, createUser,
+    getAllMuralesWithRubricas
 }

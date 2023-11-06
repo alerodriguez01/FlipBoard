@@ -23,28 +23,30 @@ const colors = [
 const FBCard = (props: FBProps) => {
   return (
     <Card isPressable onPress={() => props.onPress()} className="shadow-xl w-[400px] h-[200px]">
-      <CardHeader className="flex justify-between min-h-[120px]">
-          <h2 className="text-justify self-start max-w-[220px]">{props.title}</h2>
-          {props.children}
-          {props.editable && 
-          <Dropdown>
-            <DropdownTrigger>
-              <Button isIconOnly variant="light" radius="full" className="self-start">
-                <ThreeDotsVerticalIcon/>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()}>
-              {(item) => (
-                <DropdownItem
-                  key={item.key}
-                  color={item.key === "delete" ? "danger" : "default"}
-                  className={item.key === "delete" ? "text-danger" : ""}>
-                  {item.label}
-                </DropdownItem>
-              )}
-            </DropdownMenu>
-          </Dropdown>
-          }
+      <CardHeader className="flex justify-between min-h-[120px] text-lg">
+          <h2 className="text-justify  self-start max-w-[220px] ">{props.title}</h2>
+          <div className="flex self-start">
+            {props.children}
+            {props.editable && 
+            <Dropdown>
+              <DropdownTrigger>
+                <Button isIconOnly variant="light" radius="full">
+                  <ThreeDotsVerticalIcon/>
+                </Button>
+              </DropdownTrigger>
+              <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()}>
+                {(item) => (
+                  <DropdownItem
+                    key={item.key}
+                    color={item.key === "delete" ? "danger" : "default"}
+                    className={item.key === "delete" ? "text-danger" : ""}>
+                    {item.label}
+                  </DropdownItem>
+                )}
+              </DropdownMenu>
+            </Dropdown>
+            }
+          </div>
       </CardHeader>
       <CardBody className={colors.at(props.color)}/>
     </Card>

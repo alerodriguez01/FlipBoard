@@ -26,16 +26,16 @@ async function load_initial_data() {
   // Crear usuarios de ejemplo
   const usuario1 = await prisma.usuario.create({
     data: {
-      nombre: 'Juan'.toLowerCase(),
-      correo: 'juan@example.com',
-      contrasena: await bcryptjs.hash('Contra123456', salt1),
+      nombre: 'Tomas Peiretti'.toLowerCase(),
+      correo: 'tomaspeiretti@gmail.com',
+      contrasena: await bcryptjs.hash('123456789A', salt1),
     },
   });
 
   const usuario2 = await prisma.usuario.create({
     data: {
-      nombre: 'Maria'.toLowerCase(),
-      correo: 'maria@example.com',
+      nombre: 'Alejandro Rodriguez'.toLowerCase(),
+      correo: 'rodriguezalejandro.anr@gmail.com',
       contrasena: await bcryptjs.hash('Contra123456', salt2),
     },
   });

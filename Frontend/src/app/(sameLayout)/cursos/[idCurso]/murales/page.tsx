@@ -1,17 +1,30 @@
-import Link from "next/link";
+'use client'
+import { MuralCard } from "@/app/componentes/ui/MuralCard";
+import endpoints from "@/lib/endpoints";
+import { Mural } from "@/lib/types";
+import { Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
+  
+  const {data: session, status} = useSession();
+  const {data, error, isLoading} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
+  let color = 0;
+
+  if(error) return (<h1>{error.message}</h1>);
+  
   return (
-    <section className="flex flex-wrap justify-center p-16 gap-5 overflow-auto">
-      <Link href="/cursos/murales/1" className="p-24 border">FlipBoard Mural 1</Link>
-      <Link href="/cursos/murales/2" className="p-24 border">FlipBoard Mural 2</Link>
-      <Link href="/cursos/murales/3" className="p-24 border">FlipBoard Mural 3</Link>
-      <Link href="/cursos/murales/4" className="p-24 border">FlipBoard Mural 4</Link>
-      <Link href="/cursos/murales/5" className="p-24 border">FlipBoard Mural 5</Link>
-      <Link href="/cursos/murales/6" className="p-24 border">FlipBoard Mural 6</Link>
-      <Link href="/cursos/murales/7" className="p-24 border">FlipBoard Mural 7</Link>
-      <Link href="/cursos/murales/8" className="p-24 border">FlipBoard Mural 8</Link>
-      <Link href="/cursos/murales/9" className="p-24 border">FlipBoard Mural 9</Link>
+    status === 'loading' || isLoading ?
+      <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+    :
+    <section className="flex flex-wrap overflow-auto items-center gap-6 p-8">
+      {
+        data.length < 1 ? <h3>No hay murales</h3> :
+        data.map((m: Mural) => 
+        <MuralCard title={m.nombre} muralId={m.id} rubrica={m.rubricaModel?.nombre} color={color++%3} editable={session?.user.cursosDocente.includes(m.cursoId)}/>)
+
+      }
     </section>
   )
 }
