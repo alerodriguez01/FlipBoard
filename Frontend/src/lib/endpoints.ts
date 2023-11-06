@@ -26,10 +26,14 @@ function getAllMuralesWithRubricas(idCurso: string) {
     return `/api/cursos/${idCurso}/murales?rubrica=true`;
 }
 
+function createCurso() {
+    return '/api/cursos'
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
-    getAllMuralesWithRubricas
+    getAllMuralesWithRubricas, createCurso
 }

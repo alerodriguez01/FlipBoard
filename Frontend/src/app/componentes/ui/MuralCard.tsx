@@ -3,6 +3,7 @@ import React from "react";
 import { FBCard } from "./FBCard";
 import { useRouter } from "next/navigation";
 import { RubricaIcon } from "./icons/RubricaIcon";
+import { Button, Tooltip } from "@nextui-org/react";
 
 type CardProps = {
   title: string,
@@ -34,10 +35,21 @@ const MuralCard = (props: CardProps) => {
         }
         color={props.color}
         onPress={() => router.push(`/cursos/murales/${props.muralId}`)}>
-          <div title={`Rúbrica asignada: ${props.rubrica ?? "No se ha asignado rúbrica"}`} className="place-self-center">
-            <RubricaIcon toggle={!!props.rubrica}/>
-          </div>
-          
+          <Tooltip
+            showArrow={false}
+            placement="bottom-end"
+            className="bg-gray-100 text-black"
+            content={
+                <article className="flex flex-row">
+                  <h3 className="font-semibold mr-2">Rúbrica asignada:</h3>
+                  <p>{props.rubrica ?? "No se ha asignado rúbrica"}</p>
+                </article>
+                
+            }>
+            <Button isIconOnly disableAnimation className="bg-transparent rounded-full">
+                <RubricaIcon toggle={!!props.rubrica}/>
+            </Button>
+        </Tooltip>
         </FBCard>
   );
 };

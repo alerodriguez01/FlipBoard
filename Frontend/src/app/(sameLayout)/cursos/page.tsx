@@ -1,18 +1,20 @@
 'use client';
+import { CrearCursoModal } from "@/app/componentes/CrearCursoModal";
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
 import { Curso } from "@/lib/types";
-import { Spinner } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { useEffect, useState } from "react";
 import useSWR from 'swr';
 
 export default function Cursos() {
 
   const {data: session, status} = useSession();
-  const {data, error, isLoading} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url).then(res => res.json()));
+  const {data, error, isLoading, mutate} = useSWR( session ? process.env.NEXT_PUBLIC_BACKEND_URL+endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
+  // para crear curso
+  const {isOpen, onOpen, onOpenChange} = useDisclosure();
 
   if(error) return (<h1>{error.message}</h1>);
 
@@ -32,6 +34,15 @@ export default function Cursos() {
           </>
         </>
       }
+
+      <Button 
+        className="bg-[#181e25] text-white fixed bottom-10 right-10"
+        startContent={<PlusIcon color="#FFFFFF"/>} 
+        size="lg"
+        onPress={onOpen}> Crear nuevo curso </Button>
+      
+      {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id}/>)}
+      
     </section>
   )
 }
