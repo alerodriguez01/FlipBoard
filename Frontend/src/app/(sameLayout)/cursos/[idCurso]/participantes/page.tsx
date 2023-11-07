@@ -1,5 +1,5 @@
 'use client';
-import { AlumnosTable } from "@/app/componentes/ui/AlumnosTable";
+import { AlumnosTable2 } from "@/app/componentes/ui/AlumnosTable2";
 import { Spinner, Tab, Tabs } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 
@@ -18,7 +18,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                 <Tab key="grupos" title="Grupos"/>
             </Tabs>
 
-            <AlumnosTable className="mt-5" idCurso={params.idCurso} editable={!!session?.user.cursosDocente.includes(params.idCurso)}/>
+            <AlumnosTable2 idCurso={params.idCurso} editable={!!session?.user.cursosDocente.includes(params.idCurso)}/>
+            {/*<AlumnosTable className="mt-5" idCurso={params.idCurso} editable={!!session?.user.cursosDocente.includes(params.idCurso)}/>*/}
         </section>
     )
 }
