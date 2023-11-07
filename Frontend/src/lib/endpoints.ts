@@ -30,10 +30,14 @@ function createCurso() {
     return '/api/cursos'
 }
 
+function getMuralById(idMural: string) {
+    return `/api/cursos/murales/${idMural}`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
-    getAllMuralesWithRubricas, createCurso
+    getAllMuralesWithRubricas, createCurso, getMuralById
 }
