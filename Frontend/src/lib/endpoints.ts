@@ -32,6 +32,10 @@ function createCurso() {
 
 function getMuralById(idMural: string) {
     return `/api/cursos/murales/${idMural}`;
+
+function getAllAlumnos(idCurso: string, limit: number, offset: number, nombre?: string) {
+    return `/api/cursos/${idCurso}/alumnos?limit=${limit}&offset?=${offset}`+ (!!nombre ? `&nombre=${nombre}` : "");
+
 }
 
 // TODO: Agregar demas rutas
@@ -39,5 +43,5 @@ function getMuralById(idMural: string) {
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
-    getAllMuralesWithRubricas, createCurso, getMuralById
+    getAllMuralesWithRubricas, createCurso, getMuralById, getAllAlumnos
 }

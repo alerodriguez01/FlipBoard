@@ -79,6 +79,8 @@ const router = Router();
  *        content:
  *          application/json:
  *            example:
+ *              count: 1
+ *              groups:
  *              - id: "653732252ce4b9810daa0d3a"
  *                numero: 1
  *                cursoId: "653732252ce4b9810daa0d36"

@@ -21,7 +21,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
     }
 
     // metodos
-    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number): Promise<Grupo[] | null> {
+    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number) {
 
         let query = {
             skip: offset,
@@ -35,8 +35,21 @@ export class GrupoPrismaDAO implements GrupoDataSource {
         }
 
         try {
-            if (limit === 0) return await this.prisma.grupo.findMany(query)
-            else return await this.prisma.grupo.findMany({ ...query, take: limit })
+            if(limit === 0) {
+                const [grupos, count] = await this.prisma.$transaction([
+                  this.prisma.grupo.findMany(query),
+                  this.prisma.grupo.count({where: query.where})
+                ]);
+        
+                return {count: count, groups: grupos}
+              }
+              
+              const [grupos, count] = await this.prisma.$transaction([
+                this.prisma.grupo.findMany({...query, take: limit}),
+                this.prisma.grupo.count({where: query.where})
+              ]);
+        
+              return {count: count, groups: grupos}
 
         } catch (error) {
             throw new InvalidValueError("Grupo", "idCurso"); // el id no tiene los 12 bytes
