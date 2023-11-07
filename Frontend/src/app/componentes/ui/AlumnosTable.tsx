@@ -5,6 +5,7 @@ import { Button, Chip, TableColumn, getKeyValue } from "@nextui-org/react";
 import { Usuario } from "@/lib/types";
 import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";
+import { PersonAddIcon } from "./icons/PersonAddIcon";
 
 const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
 
@@ -48,7 +49,8 @@ const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
       editable={false} 
       endpoint={endpoints.getAllAlumnos(props.idCurso)} 
       itemType={"alumno"} 
-      renderCell={(item, cKey) => renderCell(item,cKey)}>
+      renderCell={(item, cKey) => renderCell(item,cKey)}
+      addButton={<Button startContent={<PersonAddIcon/>}>Agregar alumno</Button>}>
       <TableColumn key="nombre" className="w-[500px]">Nombre</TableColumn>
         <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
         <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>
