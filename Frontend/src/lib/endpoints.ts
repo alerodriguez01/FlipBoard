@@ -30,10 +30,14 @@ function createCurso() {
     return '/api/cursos'
 }
 
+function getAllAlumnos(idCurso: string, limit: number, offset: number, nombre?: string) {
+    return `/api/cursos/${idCurso}/alumnos?limit=${limit}&offset?=${offset}`+ (!!nombre ? `&nombre=${nombre}` : "");
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
-    getAllMuralesWithRubricas, createCurso
+    getAllMuralesWithRubricas, createCurso, getAllAlumnos
 }
