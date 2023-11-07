@@ -6,7 +6,7 @@ import { Usuario } from "@/lib/types";
 import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";
 
-const AlumnosTable2 = (props: {idCurso: string, editable: boolean}) => {
+const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
 
   const renderCell = React.useCallback((user: Usuario, columnKey: Key) => {
 
@@ -57,4 +57,4 @@ const AlumnosTable2 = (props: {idCurso: string, editable: boolean}) => {
   );
 }
 
-export { AlumnosTable2 };
+export { AlumnosTable };
