@@ -7,7 +7,7 @@ import { Spinner } from "./ui/Spinner";
 import { Usuario } from "@/lib/types";
 import { CrossIcon } from "./ui/icons/CrossIcon";
 
-const AlumnosTable = (props: {className: string, idCurso: string}) => {
+const AlumnosTable = (props: {className: string, idCurso: string, editable: boolean}) => {
 
   const [page, setPage] = useState(1);
   const rows = 10;
@@ -26,10 +26,10 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
 
     const esDocente = user.cursosDocente.includes(props.idCurso);
 
-    if (columnKey === "evaluar")
+    if (props.editable && columnKey === "evaluar")
       return !esDocente ? (<Button radius="full">Evaluar</Button>) : <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
 
-    if (columnKey === "eliminar")
+    if (props.editable && columnKey === "eliminar")
       return (<Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light"><CrossIcon/></Button>);
 
     //agregarle las mayusculas al nombre
@@ -37,7 +37,7 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
       let words = user.nombre.split(' ');
       return words.map(w => w[0].toUpperCase()+w.substring(1)).join(' ')
     }
-    
+
     return getKeyValue(user, columnKey);
 
   }, []);

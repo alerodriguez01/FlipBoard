@@ -18,7 +18,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                 <Tab key="grupos" title="Grupos"/>
             </Tabs>
 
-            <AlumnosTable className="mt-5" idCurso={params.idCurso}/>
+            <AlumnosTable className="mt-5" idCurso={params.idCurso} editable={!!session?.user.cursosDocente.includes(params.idCurso)}/>
         </section>
     )
 }
