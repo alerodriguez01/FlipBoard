@@ -7,7 +7,7 @@ const router = Router();
  * @swagger
  * /api/cursos/{idCurso}/alumnos:
  *   get:
- *    summary: Obtener alumnos de un curso
+ *    summary: Obtener participantes de un curso
  *    tags: [Usuario]
  *    parameters:
  *      - name: idCurso
@@ -48,29 +48,31 @@ const router = Router();
  *        content:
  *          application/json:
  *            example:
- *              - id: "653460ae39e91bc002bf42f1"
- *                nombre: "Juan"
- *                correo: "juan@example.com"
- *                contrasena: "$2a$10$RSPl7lG2beDJMvGZSpOcC./0oe4aFSILusGYZUFIKjNwhRFGSQEq6"
- *                cursosAlumno:
- *                  - "653460ae39e91bc002bf42f5"
- *                  - "653460ae39e91bc002bf42f6"
- *                cursosDocente:
- *                  - "653460ae39e91bc002bf42f5"
- *                  - "65368e734dcb343388ce78a1"
- *                grupos:
- *                  - "653460ae39e91bc002bf42f9"
- *                  - "653460ae39e91bc002bf42fa"
- *              
- *              - id: "653460ae39e91bc002bf42f2"
- *                nombre: "Maria"
- *                correo: "maria@example.com"
- *                contrasena: "$2a$10$tzUI6s7ajVJIM2ukmwhed.CZACun7iDJcGAwu3g4jLZaYBK/vSdtS"
- *                cursosAlumno:
- *                  - "653460ae39e91bc002bf42f6"
- *                cursosDocente: []
- *                grupos:
- *                  - "653460ae39e91bc002bf42f9"
+ *              count: 2
+ *              participantes:
+  *              - id: "653460ae39e91bc002bf42f1"
+  *                nombre: "Juan"
+  *                correo: "juan@example.com"
+  *                contrasena: "$2a$10$RSPl7lG2beDJMvGZSpOcC./0oe4aFSILusGYZUFIKjNwhRFGSQEq6"
+  *                cursosAlumno:
+  *                  - "653460ae39e91bc002bf42f5"
+  *                  - "653460ae39e91bc002bf42f6"
+  *                cursosDocente:
+  *                  - "653460ae39e91bc002bf42f5"
+  *                  - "65368e734dcb343388ce78a1"
+  *                grupos:
+  *                  - "653460ae39e91bc002bf42f9"
+  *                  - "653460ae39e91bc002bf42fa"
+  *              
+  *              - id: "653460ae39e91bc002bf42f2"
+  *                nombre: "Maria"
+  *                correo: "maria@example.com"
+  *                contrasena: "$2a$10$tzUI6s7ajVJIM2ukmwhed.CZACun7iDJcGAwu3g4jLZaYBK/vSdtS"
+  *                cursosAlumno:
+  *                  - "653460ae39e91bc002bf42f6"
+  *                cursosDocente: []
+  *                grupos:
+  *                  - "653460ae39e91bc002bf42f9"
  *      400:
  *        description: Valor invalido para idCurso
  *        content:

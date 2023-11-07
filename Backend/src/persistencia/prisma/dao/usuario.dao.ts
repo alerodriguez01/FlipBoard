@@ -109,20 +109,26 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   */
   async getUsuariosFromCursoByNombre(idCurso: string, nombreUser: string) {
 
+    const query = {
+      where: {
+        AND: [
+          { nombre: { contains: nombreUser.toLowerCase() } },
+          {
+            OR: [
+              { cursosAlumno: { has: idCurso } },
+              { cursosDocente: { has: idCurso } },
+            ]
+          }
+        ]
+      },
+    };
+
     try {
-      return await this.prisma.usuario.findMany({
-        where: {
-          AND: [
-            { nombre: { contains: nombreUser.toLowerCase() } },
-            {
-              OR: [
-                { cursosAlumno: { has: idCurso } },
-                { cursosDocente: { has: idCurso } },
-              ]
-            }
-          ]
-        },
-      });
+      const [users, count] = await this.prisma.$transaction([
+        this.prisma.usuario.findMany(query),
+        this.prisma.usuario.count({where: query.where})
+      ]);
+      return {count: count, participantes: users};
     }
     catch (error) {
       throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
@@ -150,8 +156,23 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     }
 
     try {
-      if (limit === 0) return await this.prisma.usuario.findMany(query);
-      else return await this.prisma.usuario.findMany({ ...query, take: limit });
+
+      if(limit === 0) {
+        const [users, count] = await this.prisma.$transaction([
+          this.prisma.usuario.findMany(query),
+          this.prisma.usuario.count({where: query.where})
+        ]);
+
+        return {count: count, participantes: users}
+      }
+      
+      const [users, count] = await this.prisma.$transaction([
+        this.prisma.usuario.findMany({...query, take: limit}),
+        this.prisma.usuario.count({where: query.where})
+      ]);
+
+      return {count: count, participantes: users}
+
     }
     catch (error) {
       throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
