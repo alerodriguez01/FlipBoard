@@ -74,10 +74,10 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
           </div>
       } >
       <TableHeader>
-        <TableColumn key="nombre">Nombre</TableColumn>
-        <TableColumn key="correo">Correo electrónico</TableColumn>
-        <TableColumn key="evaluar" align="center"> </TableColumn>
-        <TableColumn key="eliminar"> </TableColumn>
+        <TableColumn key="nombre" className="w-[500px]">Nombre</TableColumn>
+        <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
+        <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>
+        <TableColumn key="eliminar" className="w-[10px]"> </TableColumn>
       </TableHeader>
       <TableBody
         items={data?.participantes ?? []}
