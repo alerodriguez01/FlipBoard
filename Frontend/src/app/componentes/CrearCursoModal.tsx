@@ -86,25 +86,21 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
                       errorMessage={errors.nombre?.message}
                       {...register("nombre")}/>
                     <Input
-                      autoFocus
                       variant="bordered"
                       label="Tema"
                       placeholder="Tema del curso"
                       {...register("tema")} />
                     <Input
-                      autoFocus
                       variant="bordered"
                       label="Descripción"
                       placeholder="Descripción del curso"
                       {...register("descripcion")} />
                     <Input
-                      autoFocus
                       variant="bordered"
                       label="Sitio web"
                       placeholder="Sitio web del cruso" 
                       {...register("sitioWeb")} />
                     <Input
-                      autoFocus
                       variant="bordered"
                       label="Contacto"
                       placeholder="Correo electrónico de contacto"
