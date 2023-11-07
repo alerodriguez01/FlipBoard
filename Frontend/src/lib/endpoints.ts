@@ -35,7 +35,7 @@ function getMuralById(idMural: string) {
 }
 
 function getAllAlumnos(idCurso: string, limit: number, offset: number, nombre?: string) {
-    return `/api/cursos/${idCurso}/alumnos?limit=${limit}&offset?=${offset}`+ (!!nombre ? `&nombre=${nombre}` : "");
+    return `/api/cursos/${idCurso}/alumnos?limit=${limit}&offset=${offset}`+ (!!nombre ? `&nombre=${nombre}` : "");
 
 }
 
