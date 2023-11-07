@@ -15,7 +15,7 @@ type TableProps = {
   endpoint: string,
   itemType: string,
   renderCell: (item: any, columnKey: Key) => ReactNode;
-  addButton: ReactNode
+  addButtonProps: {startContent: ReactNode, name: string}
   children: any
 }
 
@@ -49,7 +49,7 @@ const PaginatedTable = (props: TableProps) => {
           startContent={<SearchIcon/>}
           className="w-[300px]" />
         <div className="flex gap-3">
-          {props.addButton}
+          <Button startContent={props.addButtonProps.startContent}>{props.addButtonProps.name}</Button>
           <Button startContent={<RubricaIcon theme={currentTheme}/>} className="">Asignar rúbrica</Button>
         </div>
       </header>
