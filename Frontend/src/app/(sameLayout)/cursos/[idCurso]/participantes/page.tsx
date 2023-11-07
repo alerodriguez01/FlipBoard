@@ -14,7 +14,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     return (
         <section className="flex flex-1 flex-col p-10">
             <Tabs variant="underlined" size="lg">
-                <Tab key="alumnos" title="Alumnos"/>
+                <Tab key="participantes" title="Participantes"/>
                 <Tab key="grupos" title="Grupos"/>
             </Tabs>
 

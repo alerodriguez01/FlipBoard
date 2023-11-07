@@ -1,6 +1,6 @@
 'use client';
 import endpoints from "@/lib/endpoints";
-import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import { Button, Chip, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import React, { Key, useMemo, useState } from "react";
 import useSWR from "swr";
 import { Spinner } from "./ui/Spinner";
@@ -22,15 +22,23 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
   }, [data?.count, rows]);
 
   //funcion para renderizar cada celda
-  const renderCell = React.useCallback((alumno: Usuario, columnKey: Key) => {
+  const renderCell = React.useCallback((user: Usuario, columnKey: Key) => {
+
+    const esDocente = user.cursosDocente.includes(props.idCurso);
 
     if (columnKey === "evaluar")
-      return (<Button radius="full">Evaluar</Button>);
+      return !esDocente ? (<Button radius="full">Evaluar</Button>) : <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
 
     if (columnKey === "eliminar")
-      return (<Button isIconOnly variant="light"><CrossIcon/></Button>);
+      return (<Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light"><CrossIcon/></Button>);
 
-    return getKeyValue(alumno, columnKey);
+    //agregarle las mayusculas al nombre
+    if(columnKey === "nombre"){
+      let words = user.nombre.split(' ');
+      return words.map(w => w[0].toUpperCase()+w.substring(1)).join(' ')
+    }
+    
+    return getKeyValue(user, columnKey);
 
   }, []);
 
@@ -55,7 +63,6 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
           </div>
       } >
       <TableHeader>
-        <TableColumn key="apellido">Apellido</TableColumn>
         <TableColumn key="nombre">Nombre</TableColumn>
         <TableColumn key="correo">Correo electrónico</TableColumn>
         <TableColumn key="evaluar"> </TableColumn>
