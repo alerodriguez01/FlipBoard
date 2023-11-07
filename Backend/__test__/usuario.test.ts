@@ -210,10 +210,11 @@ describe("GET /cursos/:idCurso/alumnos", () => {
     const res = await request(app).get('/api/cursos/'+curso.body.id+'/alumnos');
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(3);
-    expect(res.body).toContainEqual(user1.body);
-    expect(res.body).toContainEqual(user2.body);
-    expect(res.body).toContainEqual(user3.body);
+    expect(res.body.participantes.length).toBe(3);
+    expect(res.body.count).toBe(3);
+    expect(res.body.participantes).toContainEqual(user1.body);
+    expect(res.body.participantes).toContainEqual(user2.body);
+    expect(res.body.participantes).toContainEqual(user3.body);
 
   },15000);
 
@@ -224,7 +225,8 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(2);
+    expect(res.body.count).toBe(3);
+    expect(res.body.participantes).toHaveLength(2);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset invalido y limit validos", async () => {
@@ -234,7 +236,8 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
+    expect(res.body.count).toBe(3);
+    expect(res.body.participantes).toHaveLength(1);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset valido y limit invalido", async () => {
@@ -244,7 +247,8 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(2);
+    expect(res.body.count).toBe(3);
+    expect(res.body.participantes).toHaveLength(2);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset invalido y limit invalido", async () => {
@@ -254,10 +258,10 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(3);
-    expect(res.body).toContainEqual(user1.body);
-    expect(res.body).toContainEqual(user2.body);
-    expect(res.body).toContainEqual(user3.body);
+    expect(res.body.count).toBe(3);
+    expect(res.body.participantes).toContainEqual(user1.body);
+    expect(res.body.participantes).toContainEqual(user2.body);
+    expect(res.body.participantes).toContainEqual(user3.body);
   },15000);
 
   test("Cargar todos los participantes de un curso con offset, limit y nombre validos", async () => {
@@ -268,8 +272,8 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?offset=${offset}&limit=${limit}&nombre=${nombre}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
-    expect(res.body).toEqual([user3.body]);
+    expect(res.body.participantes.length).toBe(1);
+    expect(res.body.participantes).toEqual([user3.body]);
   },15000);
 
   test("Cargar todos los participantes de un curso con nombre invalido", async () => {
@@ -278,7 +282,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+curso.body.id+`/alumnos?nombre=${nombre}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.participantes).toEqual([]);
   },15000);
 
   test("Intentar Cargar todos los participantes de un curso inexistente", async () => {
@@ -286,7 +290,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+"333333333333333333333333"+'/alumnos');
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.participantes).toEqual([]);
   },15000);
 
   test("Intentar cargar todos los participantes de un curso inexistente paginado", async () => {
@@ -294,7 +298,7 @@ describe("GET /cursos/:idCurso/alumnos", () => {
       '/api/cursos/'+"333333333333333333333333"+'/alumnos?offset=1&limit=3');
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toEqual([]);
+    expect(res.body.participantes).toEqual([]);
   },15000);
 
 
