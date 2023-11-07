@@ -1,10 +1,11 @@
 'use client';
 import endpoints from "@/lib/endpoints";
-import { Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
-import React, { useMemo, useState } from "react";
+import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import React, { Key, useMemo, useState } from "react";
 import useSWR from "swr";
 import { Spinner } from "./ui/Spinner";
 import { Usuario } from "@/lib/types";
+import { CrossIcon } from "./ui/icons/CrossIcon";
 
 const AlumnosTable = (props: {className: string, idCurso: string}) => {
 
@@ -17,8 +18,21 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
   const loadingState = isLoading || data?.length === 0 ? "loading" : "idle";
 
   const pages = useMemo(() => {
-    return data?.count ? Math.ceil(data.count/rows) : 0
+    return data?.count ? Math.ceil(data.count/rows) : 1
   }, [data?.count, rows]);
+
+  //funcion para renderizar cada celda
+  const renderCell = React.useCallback((alumno: Usuario, columnKey: Key) => {
+
+    if (columnKey === "evaluar")
+      return (<Button radius="full">Evaluar</Button>);
+
+    if (columnKey === "eliminar")
+      return (<Button isIconOnly variant="light"><CrossIcon/></Button>);
+
+    return getKeyValue(alumno, columnKey);
+
+  }, []);
 
   if(error)
     return <h1>{error.message}</h1>
@@ -28,19 +42,17 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
       aria-label="Tabla de alumnos"
       className={props.className}
       bottomContent={
-        pages > 0 ? (
           <div className="flex w-full justify-center">
             <Pagination
               isCompact
               showControls
+              color="default"
               showShadow
-              color="primary"
               page={page}
               total={pages}
               onChange={(page) => setPage(page)}
             />
           </div>
-        ) : null
       } >
       <TableHeader>
         <TableColumn key="apellido">Apellido</TableColumn>
@@ -56,7 +68,7 @@ const AlumnosTable = (props: {className: string, idCurso: string}) => {
         emptyContent={"No se han encontrado alumnos"} >
           {(alumno: Usuario) => (
             <TableRow key={alumno?.id}>
-              {columnKey => <TableCell>{getKeyValue(alumno, columnKey)}</TableCell>}
+              {columnKey => <TableCell>{renderCell(alumno, columnKey)}</TableCell>}
             </TableRow>
           )}
       </TableBody>
