@@ -10,12 +10,12 @@ import { CrossIcon } from "./ui/icons/CrossIcon";
 const AlumnosTable = (props: {className: string, idCurso: string, editable: boolean}) => {
 
   const [page, setPage] = useState(1);
-  const rows = 10;
+  const rows = 1;
 
   const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllAlumnos(props.idCurso, rows, (page-1)*rows),
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
 
-  const loadingState = isLoading || data?.length === 0 ? "loading" : "idle";
+  const loadingState = isLoading || data?.participantes.length === 0 ? "loading" : "idle";
 
   const pages = useMemo(() => {
     return data?.count ? Math.ceil(data.count/rows) : 1
@@ -80,7 +80,7 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
         <TableColumn key="eliminar"> </TableColumn>
       </TableHeader>
       <TableBody
-        items={data ?? []}
+        items={data.participantes ?? []}
         loadingContent={Spinner}
         loadingState={loadingState}
         emptyContent={"No se han encontrado alumnos"} >
