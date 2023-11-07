@@ -28,7 +28,7 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
 
     if (props.editable && columnKey === "evaluar")
       return !esDocente ? 
-        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full">Evaluar</Button> 
+        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full" className="bg-[#181e25] text-white">Evaluar</Button> 
         :
         <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
 
@@ -72,7 +72,7 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
       <TableHeader>
         <TableColumn key="nombre">Nombre</TableColumn>
         <TableColumn key="correo">Correo electrónico</TableColumn>
-        <TableColumn key="evaluar"> </TableColumn>
+        <TableColumn key="evaluar" align="center"> </TableColumn>
         <TableColumn key="eliminar"> </TableColumn>
       </TableHeader>
       <TableBody
