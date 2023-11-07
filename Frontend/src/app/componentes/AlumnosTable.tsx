@@ -26,11 +26,15 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
 
     const esDocente = user.cursosDocente.includes(props.idCurso);
 
-    if (props.editable && columnKey === "evaluar")
-      return !esDocente ? 
+    if (columnKey === "evaluar") {
+      if(esDocente)
+        return <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
+      
+      return props.editable ? 
         <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full" className="bg-[#181e25] text-white">Evaluar</Button> 
         :
-        <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
+        <></>  
+    }
 
     if (props.editable && columnKey === "eliminar")
       return (
