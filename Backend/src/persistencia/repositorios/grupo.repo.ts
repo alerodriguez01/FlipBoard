@@ -21,7 +21,7 @@ export class GrupoRepository implements GrupoDataSource {
     }
 
     // metodos
-    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number): Promise<Grupo[] | null> {
+    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number) {
         return await this.grupoDao.getGruposFromCurso(idCurso, integrante, limit, offset);
     }
 
