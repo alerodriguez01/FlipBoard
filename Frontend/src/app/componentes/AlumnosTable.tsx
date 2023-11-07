@@ -27,10 +27,17 @@ const AlumnosTable = (props: {className: string, idCurso: string, editable: bool
     const esDocente = user.cursosDocente.includes(props.idCurso);
 
     if (props.editable && columnKey === "evaluar")
-      return !esDocente ? (<Button radius="full">Evaluar</Button>) : <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
+      return !esDocente ? 
+        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full">Evaluar</Button> 
+        :
+        <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
 
     if (props.editable && columnKey === "eliminar")
-      return (<Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light"><CrossIcon/></Button>);
+      return (
+        <Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light">
+          <CrossIcon/>
+        </Button>
+      );
 
     //agregarle las mayusculas al nombre
     if(columnKey === "nombre"){
