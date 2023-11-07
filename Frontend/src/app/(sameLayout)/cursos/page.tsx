@@ -15,7 +15,6 @@ export default function Cursos() {
   let color = 0;
   // para crear curso
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
-  console.log(data)
 
   if (error) return (<h1>{error.message}</h1>);
 
@@ -30,10 +29,10 @@ export default function Cursos() {
           :
           <>
             {data.cursosDocenteModel.length > 0 &&
-              data.cursosDocenteModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={color++ % 3} editable />)
+              data.cursosDocenteModel.map((c: Curso) => <CursoCard key={crypto.randomUUID()} title={c.nombre} cursoId={c.id} color={color++ % 3} editable />)
             }
             {data.cursosAlumnoModel.length > 0 &&
-              data.cursosAlumnoModel.map((c: Curso) => <CursoCard title={c.nombre} cursoId={c.id} color={color++ % 3} />)
+              data.cursosAlumnoModel.map((c: Curso) => <CursoCard key={crypto.randomUUID()} title={c.nombre} cursoId={c.id} color={color++ % 3} />)
             }
           </>
       }

@@ -12,8 +12,8 @@ export const RubricaIcon = (props: { toggle?: boolean, theme: 'light' | 'dark' }
     viewBox="0 0 490 490"
     xmlSpace="preserve"
     stroke="#000000">
-    <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-    <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
+    <g id="SVGRepo_bgCarrier" strokeWidth="0"></g>
+    <g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g>
     <g id="SVGRepo_iconCarrier"> <g> <g>
       <rect y="162.2" width="117.8" height="327.8"> </rect>
       <rect x="186.3" width="117.8" height="490"></rect>

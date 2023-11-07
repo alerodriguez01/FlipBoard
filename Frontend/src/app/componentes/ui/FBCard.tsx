@@ -7,8 +7,8 @@ import { ThreeDotsVerticalIcon } from "./icons/ThreeDotsIVerticalIcon";
  * FLIPBOARD CARD
  */
 type FBProps = {
-  title: string, 
-  dropDownItems: Array<{key: string, label: string, onAction: Function}>,
+  title: string,
+  dropDownItems: Array<{ key: string, label: string, onAction: Function }>,
   children?: ReactNode,
   color: number,
   onPress: Function
@@ -16,22 +16,22 @@ type FBProps = {
 }
 
 const colors = [
-  "bg-slate-200",
-  "bg-slate-400", "bg-slate-600",
+  "bg-slate-300",
+  "bg-slate-400", "bg-slate-500",
 ];
 
 const FBCard = (props: FBProps) => {
   return (
-    <Card isPressable onPress={() => props.onPress()} className="shadow-xl w-[400px] h-[200px]">
+    <Card isPressable onPress={() => props.onPress()} className="shadow-xl w-[400px] h-[200px] dark:shadow-gray-900 dark:bg-gray-800 ">
       <CardHeader className="flex justify-between min-h-[120px] text-lg">
-          <h2 className="text-justify  self-start max-w-[220px] ">{props.title}</h2>
-          <div className="flex self-start">
-            {props.children}
-            {props.editable && 
-            <Dropdown>
+        <h2 className="text-justify  self-start max-w-[220px] ">{props.title}</h2>
+        <div className="flex self-start">
+          {props.children}
+          {props.editable &&
+            <Dropdown className="dark:bg-gray-800">
               <DropdownTrigger>
                 <Button isIconOnly variant="light" radius="full">
-                  <ThreeDotsVerticalIcon/>
+                  <ThreeDotsVerticalIcon />
                 </Button>
               </DropdownTrigger>
               <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()}>
@@ -45,10 +45,10 @@ const FBCard = (props: FBProps) => {
                 )}
               </DropdownMenu>
             </Dropdown>
-            }
-          </div>
+          }
+        </div>
       </CardHeader>
-      <CardBody className={colors.at(props.color)}/>
+      <CardBody className={colors.at(props.color)} />
     </Card>
   );
 };
