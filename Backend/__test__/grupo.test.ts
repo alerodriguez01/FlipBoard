@@ -114,10 +114,10 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThanOrEqual(2);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
-        expect(res.body.grupos[1].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThanOrEqual(2);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
+        expect(res.body.groups[1].cursoId).toBe(curso.id);
     }, 15000);
 
     test("2. Obtener todos los grupos de un curso con id invalido", async () => {
@@ -133,13 +133,13 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integrante=${integrante.nombre}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThanOrEqual(2);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
-        expect(res.body.grupos[1].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThanOrEqual(2);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
+        expect(res.body.groups[1].cursoId).toBe(curso.id);
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
-        expect(res.body.grupos[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
-        expect(res.body.grupos[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body.groups[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body.groups[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
     }, 15000);
 
@@ -151,14 +151,14 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integrante=${integrante.nombre}&limit=${limit}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThan(0);
-        expect(res.body.grupos.length).toBeLessThanOrEqual(limit);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
-        expect(res.body.grupos[1].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThan(0);
+        expect(res.body.groups.length).toBeLessThanOrEqual(limit);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
+        expect(res.body.groups[1].cursoId).toBe(curso.id);
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
-        expect(res.body.grupos[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
-        expect(res.body.grupos[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body.groups[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body.groups[1].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
     }, 15000);
 
@@ -170,8 +170,8 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integrante=${integrante.nombre}&offset=${offset}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos).toHaveLength(0);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups).toHaveLength(0);
 
     },15000);
 
@@ -184,12 +184,12 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integrante=${integrante.nombre}&limit=${limit}&offset=${offset}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThan(0);
-        expect(res.body.grupos.length).toBeLessThanOrEqual(limit);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThan(0);
+        expect(res.body.groups.length).toBeLessThanOrEqual(limit);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
         // del array integrantesModel, espero encontrar un integrante que se llame integrante.nombre
-        expect(res.body.grupos[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
+        expect(res.body.groups[0].integrantesModel).toEqual(expect.arrayContaining([expect.objectContaining({ nombre: integrante.nombre })]));
 
     }, 15000);
 
@@ -201,10 +201,10 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integranteEE=${integrante.nombre}&limit=${limit}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThan(0);
-        expect(res.body.grupos.length).toBeLessThanOrEqual(limit);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThan(0);
+        expect(res.body.groups.length).toBeLessThanOrEqual(limit);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
 
     }, 15000);
 
@@ -216,9 +216,9 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integranteEE=${integrante.nombre}&limit=${limit}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThan(0);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThan(0);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
 
     },15000);
 
@@ -230,9 +230,9 @@ describe("GET /api/cursos/:idCurso/grupos", () => {
         const res = await request(app).get(`/api/cursos/${curso.id}/grupos?integranteEE=${integrante.nombre}&limit=${limit}`);
 
         expect(res.status).toBe(200);
-        expect(res.body.grupos).toBeInstanceOf(Array);
-        expect(res.body.grupos.length).toBeGreaterThan(0);
-        expect(res.body.grupos[0].cursoId).toBe(curso.id);
+        expect(res.body.groups).toBeInstanceOf(Array);
+        expect(res.body.groups.length).toBeGreaterThan(0);
+        expect(res.body.groups[0].cursoId).toBe(curso.id);
 
     },15000);
 

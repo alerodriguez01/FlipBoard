@@ -41,7 +41,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
                   this.prisma.grupo.count({where: query.where})
                 ]);
         
-                return {count: count, grupos: grupos}
+                return {count: count, groups: grupos}
               }
               
               const [grupos, count] = await this.prisma.$transaction([
@@ -49,7 +49,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
                 this.prisma.grupo.count({where: query.where})
               ]);
         
-              return {count: count, grupos: grupos}
+              return {count: count, groups: grupos}
 
         } catch (error) {
             throw new InvalidValueError("Grupo", "idCurso"); // el id no tiene los 12 bytes
