@@ -1,5 +1,5 @@
 'use client';
-import { AlumnosTable } from "@/app/componentes/AlumnosTable";
+import { AlumnosTable } from "@/app/componentes/ui/AlumnosTable";
 import { Spinner, Tab, Tabs } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 

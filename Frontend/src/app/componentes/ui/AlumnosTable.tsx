@@ -3,9 +3,9 @@ import endpoints from "@/lib/endpoints";
 import { Button, Chip, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import React, { Key, useMemo, useState } from "react";
 import useSWR from "swr";
-import { Spinner } from "./ui/Spinner";
+import { Spinner } from "./Spinner";
 import { Usuario } from "@/lib/types";
-import { CrossIcon } from "./ui/icons/CrossIcon";
+import { CrossIcon } from "./icons/CrossIcon";
 
 const AlumnosTable = (props: {className: string, idCurso: string, editable: boolean}) => {
 
