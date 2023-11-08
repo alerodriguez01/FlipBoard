@@ -128,7 +128,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         this.prisma.usuario.findMany(query),
         this.prisma.usuario.count({where: query.where})
       ]);
-      return {count: count, participantes: users};
+      return {count: count, result: users};
     }
     catch (error) {
       throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
@@ -163,7 +163,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
           this.prisma.usuario.count({where: query.where})
         ]);
 
-        return {count: count, participantes: users}
+        return {count: count, result: users}
       }
       
       const [users, count] = await this.prisma.$transaction([
@@ -171,7 +171,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         this.prisma.usuario.count({where: query.where})
       ]);
 
-      return {count: count, participantes: users}
+      return {count: count, result: users}
 
     }
     catch (error) {

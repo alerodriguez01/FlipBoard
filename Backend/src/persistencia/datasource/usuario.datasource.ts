@@ -2,7 +2,7 @@ import { Curso, Usuario } from "@prisma/client";
 
 type PaginatedUsers = {
     count: number,
-    participantes: Usuario[]
+    result: Usuario[]
 }
 
 export default interface UsuarioDataSource {
