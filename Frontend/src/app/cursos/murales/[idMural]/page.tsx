@@ -21,12 +21,13 @@ export default function Mural({ params: { idMural } }: { params: { idMural: stri
 
     const [excalidrawAPI, setExcalidrawAPI] = useState<ExcalidrawAPIRefValue | null>(null);
 
-    
+
 
     return (
         <main className="flex justify-center items-center h-screen ">
             <section className="flex-1 h-full flex justify-center items-center relative">
                 <Excalidraw
+                    langCode="es-ES"
                     theme={currentTheme}
                     UIOptions={{
                         canvasActions: {
