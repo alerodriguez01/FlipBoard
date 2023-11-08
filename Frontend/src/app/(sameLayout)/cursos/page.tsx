@@ -1,5 +1,5 @@
 'use client';
-import { CrearCursoModal } from "@/app/componentes/CrearCursoModal";
+import { CrearCursoModal } from "@/app/componentes/ui/CrearCursoModal";
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";

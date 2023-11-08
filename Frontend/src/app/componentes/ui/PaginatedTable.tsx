@@ -29,8 +29,9 @@ const PaginatedTable = (props: TableProps) => {
 
   const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
+      console.log(data)
 
-  const loadingState = isLoading || data?.result.length === 0 ? "loading" : "idle";
+  const loadingState = isLoading || data?.participantes.length === 0 ? "loading" : "idle";
 
   const pages = useMemo(() => {
     return data?.count ? Math.ceil(data.count/rows) : 1
@@ -41,16 +42,16 @@ const PaginatedTable = (props: TableProps) => {
 
   return (
     <section>
-      <header className="flex flex-row justify-between p-5 mb-4 bg-white rounded-xl shadow-sm border-1">
+      <header className="flex flex-row justify-between p-5 mb-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
         <Input
           radius="none"
           variant="underlined"
           placeholder={`Buscar ${props.itemType}`}
-          startContent={<SearchIcon/>}
-          className="w-[300px]" />
+          startContent={<SearchIcon theme={currentTheme}/>}
+          className="w-80" />
         <div className="flex gap-3">
-          <Button startContent={props.addButtonProps.startContent}>{props.addButtonProps.name}</Button>
-          <Button startContent={<RubricaIcon theme={currentTheme}/>} className="">Asignar rúbrica</Button>
+          <Button variant="faded" startContent={props.addButtonProps.startContent}>{props.addButtonProps.name}</Button>
+          <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>}>Asignar rúbrica</Button>
         </div>
       </header>
 
@@ -74,10 +75,10 @@ const PaginatedTable = (props: TableProps) => {
           {props.children}
         </TableHeader>
         <TableBody
-          items={data?.result ?? []}
+          items={data?.participantes ?? []}
           loadingContent={Spinner}
           loadingState={loadingState}
-          emptyContent={`No se han encontrado ${props.itemType}`} >
+          emptyContent={`No se han encontrado ${props.itemType}s`} >
             {(item: any) => (
               <TableRow key={item?.id}>
                 {columnKey => <TableCell>{props.renderCell(item, columnKey)}</TableCell>}

@@ -35,7 +35,7 @@ const FBCard = (props: FBProps) => {
                 </Button>
               </DropdownTrigger>
               <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()}>
-                {(item) => (
+                {(item: any) => (
                   <DropdownItem
                     key={item.key}
                     color={item.key === "delete" ? "danger" : "default"}

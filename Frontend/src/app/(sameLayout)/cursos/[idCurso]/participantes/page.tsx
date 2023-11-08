@@ -12,7 +12,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
     return (
-        <section className="flex flex-1 flex-col p-10">
+        <section className="flex flex-1 flex-col p-10 gap-4 overflow-auto">
             <Tabs variant="underlined" size="lg">
                 <Tab key="participantes" title="Participantes"/>
                 <Tab key="grupos" title="Grupos"/>
