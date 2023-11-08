@@ -31,7 +31,7 @@ const PaginatedTable = (props: TableProps) => {
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
       console.log(data)
 
-  const loadingState = isLoading || data?.participantes.length === 0 ? "loading" : "idle";
+  const loadingState = isLoading || data?.result.length === 0 ? "loading" : "idle";
 
   const pages = useMemo(() => {
     return data?.count ? Math.ceil(data.count/rows) : 1
@@ -75,7 +75,7 @@ const PaginatedTable = (props: TableProps) => {
           {props.children}
         </TableHeader>
         <TableBody
-          items={data?.participantes ?? []}
+          items={data?.result ?? []}
           loadingContent={Spinner}
           loadingState={loadingState}
           emptyContent={`No se han encontrado ${props.itemType}s`} >

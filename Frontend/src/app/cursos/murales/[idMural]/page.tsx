@@ -101,7 +101,7 @@ export default function Mural({ params: { idMural } }: { params: { idMural: stri
                                 <EvaluarMural tipo="alumnos" />
                             </Sidebar.Tab>
 
-                            <Sidebar.Tab tab="grupos">
+                            <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
                                 <EvaluarMural tipo="grupos" />
                             </Sidebar.Tab>
 
