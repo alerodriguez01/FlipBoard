@@ -4,7 +4,7 @@ import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Spinner } from "./ui/Spinner";
+import { Spinner } from "./Spinner";
 import endpoints from "@/lib/endpoints";
 
 const cursoSchema = z.object({
