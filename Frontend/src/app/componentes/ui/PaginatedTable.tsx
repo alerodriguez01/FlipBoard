@@ -41,7 +41,7 @@ const PaginatedTable = (props: TableProps) => {
 
   return (
     <section>
-      <header className="flex flex-row justify-between">
+      <header className="flex flex-row justify-between p-5 mb-4 bg-white rounded-xl shadow-sm border-1">
         <Input
           radius="none"
           variant="underlined"
