@@ -56,7 +56,7 @@ export default function Mural({ params: { idMural } }: { params: { idMural: stri
                                 tab="alumnos"
                             >
                                 <div className="flex items-center gap-2">
-                                    <RubricaIcon theme={currentTheme} />
+                                    <RubricaIcon toggle={true} theme={currentTheme} />
                                     Evaluar
                                 </div>
                             </Sidebar.Trigger>

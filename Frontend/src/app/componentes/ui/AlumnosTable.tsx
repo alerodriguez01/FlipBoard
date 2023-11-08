@@ -6,8 +6,12 @@ import { Usuario } from "@/lib/types";
 import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";
 import { PersonAddIcon } from "./icons/PersonAddIcon";
+import { useTheme } from "next-themes";
 
 const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
+
+  const {theme} = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
 
   const renderCell = React.useCallback((user: Usuario, columnKey: Key) => {
 
@@ -18,7 +22,7 @@ const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
         return <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
       
       return props.editable ? 
-        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full" className="bg-[#181e25] text-white">Evaluar</Button> 
+        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full" variant="faded" className="">Evaluar</Button> 
         :
         <></>  
     }
@@ -50,7 +54,7 @@ const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
       endpoint={endpoints.getAllAlumnos(props.idCurso)} 
       itemType={"alumno"} 
       renderCell={(item, cKey) => renderCell(item,cKey)}
-      addButtonProps={{startContent: <PersonAddIcon/>, name: "Agregar alumno"}}>
+      addButtonProps={{startContent: <PersonAddIcon theme={currentTheme}/>, name: "Agregar alumno"}}>
       <TableColumn key="nombre" className="w-[500px]">Nombre</TableColumn>
         <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
         <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>

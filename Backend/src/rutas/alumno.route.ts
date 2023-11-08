@@ -97,6 +97,12 @@ router.get("/:idCurso/alumnos", controller.getParticipantes);
  *          type: string
  *        example: 
  *          65326ed824fea7e06d01e211
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            id: 653460ae39e91bc002bf42f1
  *    responses:
  *      204:
  *        description: Participante agregado al curso
