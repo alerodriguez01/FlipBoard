@@ -49,7 +49,7 @@ const router = Router();
  *          application/json:
  *            example:
  *              count: 2
- *              participantes:
+ *              result:
   *              - id: "653460ae39e91bc002bf42f1"
   *                nombre: "Juan"
   *                correo: "juan@example.com"
