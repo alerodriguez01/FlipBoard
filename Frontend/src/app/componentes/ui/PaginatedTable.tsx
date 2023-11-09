@@ -1,21 +1,19 @@
 'use client';
-import { Button, Input, Pagination, Table, TableBody, TableCell, TableHeader, TableRow } from "@nextui-org/react";
+import { Input, Pagination, Table, TableBody, TableCell, TableHeader, TableRow } from "@nextui-org/react";
 import React, { Key, ReactNode, useMemo, useState } from "react";
 import useSWR from "swr";
 import { Spinner } from "./Spinner";
 import { SearchIcon } from "./icons/SearchIcon";
-import { RubricaIcon } from "./icons/RubricaIcon";
 import { useTheme } from "next-themes";
 
 type TableProps = {
   className: string,
   label: string,
   idCurso: string,
-  editable: boolean,
   endpoint: string,
   itemType: string,
   renderCell: (item: any, columnKey: Key) => ReactNode;
-  addButtonProps: {startContent: ReactNode, name: string}
+  headerRightContent: ReactNode
   children: any
 }
 
@@ -49,10 +47,7 @@ const PaginatedTable = (props: TableProps) => {
           placeholder={`Buscar ${props.itemType}`}
           startContent={<SearchIcon theme={currentTheme}/>}
           className="w-80" />
-        <div className="flex gap-3">
-          <Button variant="faded" startContent={props.addButtonProps.startContent}>{props.addButtonProps.name}</Button>
-          <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>}>Asignar rúbrica</Button>
-        </div>
+        {props.headerRightContent}
       </header>
 
       <Table

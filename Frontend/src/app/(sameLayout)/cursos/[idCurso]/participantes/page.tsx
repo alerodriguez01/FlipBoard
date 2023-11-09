@@ -18,7 +18,13 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                 <Tab key="grupos" title="Grupos"/>
             </Tabs>
 
-            <AlumnosTable idCurso={params.idCurso} editable={!!session?.user.cursosDocente.includes(params.idCurso)}/>
+            <AlumnosTable
+                idCurso={params.idCurso} 
+                editable={!!session?.user.cursosDocente.includes(params.idCurso)}
+                evaluable={!!session?.user.cursosDocente.includes(params.idCurso)}
+                onEvaluarPress={(userId) => alert(`TODO: EVALUAR userID: ${userId}`)}
+                onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
+                onAsignarRubricaPress={() => alert("TODO: ASIGNAR RUBRICA")} />
         </section>
     )
 }
