@@ -27,8 +27,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                 <Tab key="grupos" title="Grupos">
                     <GruposTable 
                         idCurso={params.idCurso} 
-                        editable={true}
-                        evaluable={true}
+                        editable={!!session?.user.cursosDocente.includes(params.idCurso)}
+                        evaluable={!!session?.user.cursosDocente.includes(params.idCurso)}
                         onEvaluarPress={(userId) => alert(`TODO: EVALUAR grupoID: ${userId}`)}
                         onCrearGrupoPress={() => alert("TODO: CREAR GRUPO")} />
                 </Tab>
