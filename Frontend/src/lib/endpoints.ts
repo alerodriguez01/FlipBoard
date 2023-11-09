@@ -39,10 +39,15 @@ function getAllAlumnos(idCurso: string) {
 
 }
 
+function getAllGrupos(idCurso: string) {
+    return `/api/cursos/${idCurso}/grupos`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
-    getAllMuralesWithRubricas, createCurso, getMuralById, getAllAlumnos
+    getAllMuralesWithRubricas, createCurso, getMuralById,
+    getAllAlumnos, getAllGrupos
 }

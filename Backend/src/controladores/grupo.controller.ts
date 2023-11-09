@@ -5,12 +5,12 @@ import { Grupo } from "@prisma/client";
 
 /*
     Obtener grupos de un curso idCurso
-    Parametros opcionales: integrante, limit, offset
+    Parametros opcionales: nombre, limit, offset
 */
 async function getGruposFromCurso(req: Request, res: Response) {
     
     const idCurso = req.params.idCurso;
-    const integrante = req.query.integrante ? req.query.integrante as string : "";
+    const nombre = req.query.nombre ? req.query.nombre as string : "";
 
     //            si existe         
     let limit = req.query.limit ? 
@@ -23,7 +23,7 @@ async function getGruposFromCurso(req: Request, res: Response) {
     if(offset < 0) offset = 0;
 
     try {
-        const grupos = await service.getGruposFromCurso(idCurso, integrante, limit, offset);
+        const grupos = await service.getGruposFromCurso(idCurso, nombre, limit, offset);
         res.status(200).json(grupos);
 
     } catch (error) {

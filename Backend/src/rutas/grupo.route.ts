@@ -49,7 +49,7 @@ const router = Router();
  *          type: string
  *        example: 
  *          65326ed824fea7e06d01e211
- *      - name: integrante
+ *      - name: nombre
  *        in: query
  *        required: false
  *        description: Nombre y/o apellido de algun integrante del grupo a buscar

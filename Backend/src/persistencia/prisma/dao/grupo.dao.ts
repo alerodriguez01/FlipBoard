@@ -21,14 +21,14 @@ export class GrupoPrismaDAO implements GrupoDataSource {
     }
 
     // metodos
-    public async getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number) {
+    public async getGruposFromCurso(idCurso: string, nombre: string, limit: number, offset: number) {
 
         let query = {
             skip: offset,
             where: {
                 AND: [
                     { cursoId: idCurso },
-                    { integrantesModel: { some: { nombre: { contains: integrante.toLowerCase() } } } }
+                    { integrantesModel: { some: { nombre: { contains: nombre.toLowerCase() } } } }
                 ]
             },
             include: { integrantesModel: true }

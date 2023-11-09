@@ -4,9 +4,9 @@ import { GrupoRepository } from "../persistencia/repositorios/grupo.repo.js";
 
 const grupoRepository = GrupoRepository.getInstance();
 
-async function getGruposFromCurso(idCurso: string, integrante: string, limit: number, offset: number) {
+async function getGruposFromCurso(idCurso: string, nombre: string, limit: number, offset: number) {
 
-    const grupos = await grupoRepository.getGruposFromCurso(idCurso, integrante, limit, offset);
+    const grupos = await grupoRepository.getGruposFromCurso(idCurso, nombre, limit, offset);
     return grupos
 
 }

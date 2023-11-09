@@ -31,7 +31,7 @@ const PaginatedTable = (props: TableProps) => {
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
       console.log(data)
 
-  const loadingState = isLoading || data?.result.length === 0 ? "loading" : "idle";
+  const loadingState = isLoading ? "loading" : "idle";
 
   const pages = useMemo(() => {
     return data?.count ? Math.ceil(data.count/rows) : 1
