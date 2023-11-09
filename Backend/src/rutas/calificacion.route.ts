@@ -102,8 +102,19 @@ const router = Router();
  *         description: Calificaciones del alumno encontradas (incluye rubrica)
  *         content:
  *           application/json:
- *               schema:
- *                 $ref: '#/components/schemas/Calificacion'
+ *               example:
+ *                count: 1
+ *                result:
+ *                 - id: "65397634490a7145b8387810"
+ *                   valores:
+ *                     - 3
+ *                     - 4
+ *                   observaciones: "Buen trabajo"
+ *                   rubricaId: "65397634490a7145b838780a"
+ *                   grupoId: null
+ *                   usuarioId: "65397634490a7145b8387804"
+ *                   cursoId: "65397634490a7145b8387808"
+ *                   muralId: "65397634490a7145b838780e"
  *       400:
  *         description: El parametro idCurso es invalido
  *         content:
@@ -331,6 +342,8 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  *         content:
  *           application/json:
  *               example:
+ *                count: 2
+ *                result:
  *                 - id: "65397634490a7145b8387810"
  *                   valores:
  *                     - 3

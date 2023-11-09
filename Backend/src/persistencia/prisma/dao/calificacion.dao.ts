@@ -40,9 +40,19 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         }
 
         try {
-            if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
-            return await this.prisma.calificacion.findMany(query)
+            if (limit > 0) {
+                const [califs, count] = await this.prisma.$transaction([
+                    this.prisma.calificacion.findMany({ ...query, take: limit }),
+                    this.prisma.calificacion.count({where: query.where})
+                ]);
+                return {count: count, result: califs};
+            }
 
+            const [califs, count] = await this.prisma.$transaction([
+                this.prisma.calificacion.findMany(query),
+                this.prisma.calificacion.count({where: query.where})
+            ]);
+            return {count: count, result: califs};
         } catch (error) {
             // https://www.prisma.io/docs/concepts/components/prisma-client/handling-exceptions-and-errors
             // if(error instanceof PrismaClientKnownRequestError) {
@@ -100,8 +110,19 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         if (idRubrica) query.where.AND.push({ rubricaId: idRubrica })
 
         try {
-            if (limit > 0) return await this.prisma.calificacion.findMany({ ...query, take: limit })
-            return await this.prisma.calificacion.findMany(query)
+            if (limit > 0) {
+                const [califs, count] = await this.prisma.$transaction([
+                    this.prisma.calificacion.findMany({ ...query, take: limit }),
+                    this.prisma.calificacion.count({where: query.where})
+                ]);
+                return {count: count, result: califs};
+            }
+
+            const [califs, count] = await this.prisma.$transaction([
+                this.prisma.calificacion.findMany(query),
+                this.prisma.calificacion.count({where: query.where})
+            ]);
+            return {count: count, result: califs};
 
         } catch (error) {
             throw new InvalidValueError("Calificacion", "idCurso o idRubrica");

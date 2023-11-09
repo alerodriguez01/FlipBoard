@@ -2,7 +2,7 @@ import { Grupo } from "@prisma/client";
 
 type PaginatedGrupos = {
     count: number,
-    groups: any[]
+    result: any[]
 }
 
 export default interface GrupoDataSource {

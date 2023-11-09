@@ -464,10 +464,10 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones`);
     
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(3);
-    expect(res.body).toContainEqual(calif1.body);
-    expect(res.body).toContainEqual(calif2.body);
-    expect(res.body).toContainEqual(calif3.body);
+    expect(res.body.result.length).toBe(3);
+    expect(res.body.result).toContainEqual(calif1.body);
+    expect(res.body.result).toContainEqual(calif2.body);
+    expect(res.body.result).toContainEqual(calif3.body);
 
   }, 15000);
 
@@ -475,7 +475,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     const res = await request(app).get(`/api/cursos/333333333333333333333333/calificaciones`);
 
     expect(res.statusCode).toBe(200); 
-    expect(res.body).toHaveLength(0);   
+    expect(res.body.result).toHaveLength(0);   
   }, 15000);
 
   test("Intentar cargar todas las calificaciones de un curso invalido", async () => {
@@ -488,9 +488,9 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(2);
-    expect(res.body).toContainEqual(calif1.body);
-    expect(res.body).toContainEqual(calif2.body);
+    expect(res.body.result.length).toBe(2);
+    expect(res.body.result).toContainEqual(calif1.body);
+    expect(res.body.result).toContainEqual(calif2.body);
 
   }, 15000);
 
@@ -498,7 +498,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=333333333333333333333333`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body).toHaveLength(0);
+    expect(res.body.result).toHaveLength(0);
   }, 15000);
 
   test("Intentar cargar todas las calificaciones de un curso de rubrica invalida", async () => {
@@ -514,7 +514,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
         .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
+    expect(res.body.result.length).toBe(1);
   }, 15000);
 
   test("Cargar todas las calificaciones de un curso de rubrica especifica paginado con offset invalido", async () => {
@@ -524,9 +524,9 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
         .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(2);
-    expect(res.body).toContainEqual(calif1.body);
-    expect(res.body).toContainEqual(calif2.body);
+    expect(res.body.result.length).toBe(2);
+    expect(res.body.result).toContainEqual(calif1.body);
+    expect(res.body.result).toContainEqual(calif2.body);
   }, 15000);
 
   test("Cargar todas las calificaciones de un curso de rubrica especifica paginado con limit invalido", async () => {
@@ -536,7 +536,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
         .get(`/api/cursos/${curso.body.id}/calificaciones?rubrica=${rubrica1.body.id}&limit=${limit}&offset=${offset}`);
 
     expect(res.statusCode).toBe(200);
-    expect(res.body.length).toBe(1);
+    expect(res.body.result.length).toBe(1);
   }, 15000);
 
   describe("GET /cursos/:idCurso/calificaciones/alumnos/:idUsuario", () => {
@@ -554,27 +554,27 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
       const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveLength(3); // calif1, calif3 (grupo) y calif4
-      expect(res.body).toContainEqual(calif1.body);
-      expect(res.body).toContainEqual(calif4.body);
-      expect(res.body).toContainEqual(calif3.body);
+      expect(res.body.result).toHaveLength(3); // calif1, calif3 (grupo) y calif4
+      expect(res.body.result).toContainEqual(calif1.body);
+      expect(res.body.result).toContainEqual(calif4.body);
+      expect(res.body.result).toContainEqual(calif3.body);
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno inexistente", async () => {
       const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/333333333333333333333333`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toEqual([]);
+      expect(res.body.result).toEqual([]);
     }, 15000);
 
     test("Cargar todas las calificaciones que le pertenecen a un alumno con rubricas", async () => {
       const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?rubrica=true`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveLength(3); // calif1, calif3 (grupo) y calif4
-      expect(res.body).toContainEqual({...calif1.body, rubricaModel: rubrica1.body});
-      expect(res.body).toContainEqual({...calif4.body, rubricaModel: rubrica2.body});
-      expect(res.body).toContainEqual({...calif3.body, rubricaModel: rubrica2.body});
+      expect(res.body.result).toHaveLength(3); // calif1, calif3 (grupo) y calif4
+      expect(res.body.result).toContainEqual({...calif1.body, rubricaModel: rubrica1.body});
+      expect(res.body.result).toContainEqual({...calif4.body, rubricaModel: rubrica2.body});
+      expect(res.body.result).toContainEqual({...calif3.body, rubricaModel: rubrica2.body});
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno invalido", async () => {
@@ -590,8 +590,8 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
           .get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?offset=${offset}&limit=${limit}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0].rubricaModel).toBeFalsy();
+      expect(res.body.result).toHaveLength(1);
+      expect(res.body.result[0].rubricaModel).toBeFalsy();
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno de un curso inexistente", async () => {
@@ -601,7 +601,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
           .get(`/api/cursos/333333333333333333333333/calificaciones/alumnos/${alumno1.body.id}?offset=${offset}&limit=${limit}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toEqual([]);
+      expect(res.body.result).toEqual([]);
     }, 15000);
 
     test("Cargar todas las calificaciones que le pertenecen a un alumno con rubricas paginado", async () => {
@@ -611,9 +611,9 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
           .get(`/api/cursos/${curso.body.id}/calificaciones/alumnos/${alumno1.body.id}?rubrica=true&offset=${offset}&limit=${limit}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toHaveLength(1);
-      expect(res.body[0]).toHaveProperty("rubricaModel");
-      expect(res.body[0].rubricaModel).toBeTruthy();
+      expect(res.body.result).toHaveLength(1);
+      expect(res.body.result[0]).toHaveProperty("rubricaModel");
+      expect(res.body.result[0].rubricaModel).toBeTruthy();
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno con rubricas paginado de un curso inexistente", async () => {
@@ -623,7 +623,7 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
           .get(`/api/cursos/333333333333333333333333/calificaciones/alumnos/${alumno1.body.id}?rubrica=true&offset=${offset}&limit=${limit}`);
 
       expect(res.statusCode).toBe(200);
-      expect(res.body).toEqual([]);
+      expect(res.body.result).toEqual([]);
     }, 15000);
     
   });
