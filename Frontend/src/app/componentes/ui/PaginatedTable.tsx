@@ -25,7 +25,9 @@ const PaginatedTable = (props: TableProps) => {
   const [page, setPage] = useState(1);
   const rows = 10;
 
-  const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}`,
+  const [nombre, setNombre] = useState("");
+
+  const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
       console.log(data)
 
@@ -34,6 +36,7 @@ const PaginatedTable = (props: TableProps) => {
   const pages = useMemo(() => {
     return data?.count ? Math.ceil(data.count/rows) : 1
   }, [data?.count, rows]);
+
 
   if(error)
     return <h1>{error.message}</h1>
@@ -46,7 +49,8 @@ const PaginatedTable = (props: TableProps) => {
           variant="underlined"
           placeholder={`Buscar ${props.itemType}`}
           startContent={<SearchIcon theme={currentTheme}/>}
-          className="w-80" />
+          className="w-80"
+          onValueChange={(value) => setNombre(value)} />
         {props.headerRightContent}
       </header>
 
