@@ -8,6 +8,12 @@ export type Usuario = {
     //token?: string; // cuando hace el login, retorna el token en el body tmb
 }
 
+export type Grupo = {
+    id: string,
+    numero: number,
+    integrantesModel?: any
+}
+
 export type Curso = {
     id: string;
     nombre: string;
