@@ -7,8 +7,18 @@ import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";
 import { PersonAddIcon } from "./icons/PersonAddIcon";
 import { useTheme } from "next-themes";
+import { RubricaIcon } from "./icons/RubricaIcon";
 
-const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
+type TableProps = {
+  idCurso: string,
+  editable: boolean,
+  evaluable: boolean,
+  onAgregarAlumnoPress?: () => void
+  onAsignarRubricaPress?: () => void
+  onEvaluarPress?: (userId: string) => void
+}
+
+const AlumnosTable = (props: TableProps) => {
 
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
@@ -21,13 +31,13 @@ const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
       if(esDocente)
         return <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
       
-      return props.editable ? 
-        <Button onPress={() => alert(`TODO: EVALUAR userID: ${user.id}`)} radius="full" variant="faded" className="">Evaluar</Button> 
+      return props.evaluable ? 
+        <Button onPress={() => props.onEvaluarPress?.(user.id)} radius="full" variant="faded" className="">Evaluar</Button> 
         :
         <></>  
     }
 
-    if (props.editable && columnKey === "eliminar")
+    if (props.editable && columnKey === "eliminar" && !esDocente) 
       return (
         <Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light">
           <CrossIcon/>
@@ -44,21 +54,24 @@ const AlumnosTable = (props: {idCurso: string, editable: boolean}) => {
 
   }, []);
 
-
   return (
     <PaginatedTable 
       className={""} 
       label={"Tabla de alumnos"} 
       idCurso={props.idCurso} 
-      editable={false} 
       endpoint={endpoints.getAllAlumnos(props.idCurso)} 
       itemType={"alumno"} 
       renderCell={(item, cKey) => renderCell(item,cKey)}
-      addButtonProps={{startContent: <PersonAddIcon theme={currentTheme}/>, name: "Agregar alumno"}}>
+      headerRightContent={ props.editable &&
+        <div className="flex gap-3">
+          <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumno</Button>
+          <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
+        </div>
+      } >
       <TableColumn key="nombre" className="w-[500px]">Nombre</TableColumn>
-        <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
-        <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>
-        <TableColumn key="eliminar" className="w-[10px]"> </TableColumn>
+      <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
+      <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>
+      <TableColumn key="eliminar" className="w-[10px]"> </TableColumn>
     </PaginatedTable>
   );
 }
