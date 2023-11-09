@@ -331,6 +331,8 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  *         content:
  *           application/json:
  *               example:
+ *                count: 2
+ *                result:
  *                 - id: "65397634490a7145b8387810"
  *                   valores:
  *                     - 3
