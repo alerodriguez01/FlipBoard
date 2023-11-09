@@ -29,8 +29,10 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         idCurso={params.idCurso} 
                         editable={!!session?.user.cursosDocente.includes(params.idCurso)}
                         evaluable={!!session?.user.cursosDocente.includes(params.idCurso)}
-                        onEvaluarPress={(userId) => alert(`TODO: EVALUAR grupoID: ${userId}`)}
-                        onCrearGrupoPress={() => alert("TODO: CREAR GRUPO")} />
+                        onEvaluarPress={(grupoId) => alert(`TODO: EVALUAR grupoID: ${grupoId}`)}
+                        onCrearGrupoPress={() => alert("TODO: CREAR GRUPO")}
+                        onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
+                        onAsignarRubricaPress={() => alert("TODO: ASIGNAR RUBRICA")}/>
                 </Tab>
             </Tabs>
 
