@@ -72,7 +72,18 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
               3. Crear un nuevo JWT con los datos del token anterior, pero con la fecha de expiracion actualizada
               4. Se guarda en la cookie del navegador, encriptado mediante JWE
          */
-        async jwt({ token, user, account, profile }) {
+        async jwt({ token, user, account, profile, trigger, session }) {
+
+            // Si se llama a update(sessionActualizada) se actualiza el JWT con los datos de la session actualizada
+            // Ejemplo de cuando se llama a update():
+            // await update({
+            //     ...session,
+            //     user: {
+            //       ...session?.user,
+            //       cursosDocente: [...cursosDocente, curso.id]
+            //     }
+            //   });
+            if(trigger === 'update') return { ...token, ...session.user }; // https://www.youtube.com/watch?v=gDsCueKkFEk&ab_channel=SakuraDev
 
             if (user) {
                 token.id = user.id;
