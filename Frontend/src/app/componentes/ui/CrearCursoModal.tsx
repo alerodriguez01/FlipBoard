@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "./Spinner";
 import endpoints from "@/lib/endpoints";
+import { useSession } from "next-auth/react";
 
 const cursoSchema = z.object({
   nombre: z.string().max(50, "El nombre no puede contener más de 50 caracteres"),
@@ -32,6 +33,9 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
       resolver: zodResolver(cursoSchema)
   });
 
+  const { data: session, status, update } = useSession();
+
+
   const onSubmit = async (onClose: Function, data: CursoForm) => {
 
     try {
@@ -54,6 +58,17 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
           setError("erroresExternos", { message: "Por favor, complete los campos correspondientes" });
           return;
       }
+      const curso = await res.json();
+      
+      // actualizo la sesion
+      const cursosDocente = session?.user.cursosDocente || [];
+      await update({
+        ...session,
+        user: {
+          ...session?.user,
+          cursosDocente: [...cursosDocente, curso.id] // campo a actualizar
+        }
+      });
 
       props.onCrearCurso();
       onClose();
