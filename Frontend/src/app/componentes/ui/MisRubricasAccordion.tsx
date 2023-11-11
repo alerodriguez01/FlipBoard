@@ -9,7 +9,7 @@ import useSWR from "swr";
 import { EditIcon } from "./icons/EditIcon";
 import { CrossIcon } from "./icons/CrossIcon";
 
-const RubricasAccordion = (props: {userId: string}) => {
+const MisRubricasAccordion = (props: {userId: string}) => {
 
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
@@ -62,4 +62,4 @@ const RubricasAccordion = (props: {userId: string}) => {
   );
 }
 
-export { RubricasAccordion };
+export { MisRubricasAccordion };
