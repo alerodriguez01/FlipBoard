@@ -8,6 +8,7 @@ import endpoints from "@/lib/endpoints";
 import useSWR from "swr";
 import { EditIcon } from "./icons/EditIcon";
 import { CrossIcon } from "./icons/CrossIcon";
+import { Spinner } from "./Spinner";
 
 const MisRubricasAccordion = (props: {userId: string}) => {
 
@@ -18,7 +19,7 @@ const MisRubricasAccordion = (props: {userId: string}) => {
       (url) => fetch(url).then(res => res.json()));
     
   if (error) return (<h1>{error.message}</h1>);
-  
+
   return (
     <section className="m-5">
         <header className="flex flex-row justify-between mb-5">
@@ -33,7 +34,8 @@ const MisRubricasAccordion = (props: {userId: string}) => {
             onValueChange={(value) => setNombre(value)} />
         </header>
         
-        <Accordion variant="splitted">
+        {isLoading ? Spinner :
+            <Accordion variant="splitted">
             {data?.map((rubric: Rubrica) => (
             <AccordionItem 
                 key={rubric.id} 
@@ -57,7 +59,7 @@ const MisRubricasAccordion = (props: {userId: string}) => {
                 <RubricaGrid evaluable={false} label={rubric.nombre} criterios={rubric.criterios} niveles={rubric.niveles}/>
             </AccordionItem>
             ))}
-        </Accordion>
+        </Accordion>}
       </section>
   );
 }
