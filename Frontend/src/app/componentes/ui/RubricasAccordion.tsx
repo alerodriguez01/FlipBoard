@@ -6,6 +6,8 @@ import { Rubrica } from "@/lib/types";
 import { RubricaGrid } from "./RubricaGrid";
 import endpoints from "@/lib/endpoints";
 import useSWR from "swr";
+import { EditIcon } from "./icons/EditIcon";
+import { CrossIcon } from "./icons/CrossIcon";
 
 const RubricasAccordion = (props: {userId: string}) => {
 
@@ -39,8 +41,14 @@ const RubricasAccordion = (props: {userId: string}) => {
                     <div className="flex flex-row justify-between">
                         <h1 className="self-center">{rubric.nombre}</h1>
                         <div className="flex gap-3">
-                            <Button className="">Modificar</Button>
-                            <Button>Eliminar</Button>
+                            <Button 
+                                startContent={<EditIcon theme={currentTheme}/>} 
+                                onPress={() => alert(`TODO: MODIFICAR RUBRICA id:${rubric.id}`)}
+                            >Modificar</Button>
+                            <Button 
+                                startContent={<CrossIcon/>}
+                                onPress={() => alert(`TODO: ELIMINAR RUBRICA id:${rubric.id}`)}
+                            >Eliminar</Button>
                         </div>
                     </div>
                 }
