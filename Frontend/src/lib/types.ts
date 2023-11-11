@@ -36,3 +36,21 @@ export type Mural = {
     cursoId: string
     rubricaModel?: any
 }
+
+export type Nivel = {
+    nombre: string,
+    puntaje?: number
+}
+
+export type Criterio = {
+    nombre: string,
+    descripciones: string[]
+}
+
+export type Rubrica = {
+    id: string,
+    nombre: string,
+    criterios: Criterio[],
+    niveles: Nivel[],
+    //agregar atributos requeridos
+}
