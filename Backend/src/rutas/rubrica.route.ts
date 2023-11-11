@@ -251,6 +251,14 @@ routerUsuario.post("/:idUsuario/rubricas", controller.createRubrica);
  *          type: string
  *        example: 
  *          65326ed824fea7e06d01e211
+ *      - name: nombre
+ *        in: query
+ *        requiered: false
+ *        description: el nombre de la rubrica
+ *        schema:
+ *          type: string
+ *        example:
+ *          "mi rubrica"
  *    responses:
  *      200:
  *        description: Rubricas encontradas

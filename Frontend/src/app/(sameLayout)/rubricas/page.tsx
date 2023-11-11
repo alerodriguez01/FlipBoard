@@ -1,7 +1,24 @@
+'use client'
+import { RubricasAccordion } from "@/app/componentes/ui/RubricasAccordion";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
+import { Button, Spinner } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
+
 export default function Rubricas() {
+
+    const { data: session, status } = useSession();    
+
+    if (status === 'loading' || !session?.user)
+        return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+
     return (
-        <section className="flex flex-1 justify-center items-center p-24">
-            <h1>FlipBoard Mis rubricas</h1>
+        <section>
+            <RubricasAccordion userId={session.user.id}/>
+            <Button
+                className="bg-[#181e25] text-white fixed bottom-10 right-10"
+                startContent={<PlusIcon color="#FFFFFF" />}
+                size="lg"
+                onPress={() => {alert("TODO: CREAR NUEVA RUBRICA")}}> Crear nueva rúbrica </Button>
         </section>
     )
 }

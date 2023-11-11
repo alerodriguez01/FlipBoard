@@ -49,9 +49,9 @@ async function createRubrica(rubrica: Rubrica) {
 
 }
 
-async function getAllRubricasByUserId(userId: string) {
+async function getAllRubricasByUserId(userId: string, nombreRub?: string) {
 
-    const rubricas = await rubricaRepository.getAllRubricasByUserId(userId);
+    const rubricas = await rubricaRepository.getAllRubricasByUserId(userId, nombreRub);
     return rubricas;
 }
 

@@ -58,11 +58,14 @@ export class RubricaPrismaDAO implements RubricaDataSource {
     /**
      * Cargar todas las rubricas de un usuario
      */
-    async getAllRubricasByUserId(userId: string) {
+    async getAllRubricasByUserId(userId: string, nombreRub?: string) {
         try {
             return await this.prisma.rubrica.findMany({
                 where: {
-                    usuarioId: userId
+                    AND: [
+                        {usuarioId: userId},
+                        {nombre: {contains: nombreRub}}
+                    ]
                 }
             });
         } catch (err) {

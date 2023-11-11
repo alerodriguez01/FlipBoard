@@ -51,9 +51,10 @@ async function createRubrica(req: Request, res: Response) {
 async function getAllRubricasByUserId(req: Request, res: Response) {
 
     const userId = req.params.idUsuario;
+    const nombreRub = req.query.nombre ? req.query.nombre as string : "";
 
     try {
-        const rubricas = await service.getAllRubricasByUserId(userId);
+        const rubricas = await service.getAllRubricasByUserId(userId, nombreRub);
         return res.status(200).json(rubricas);
 
     } catch (err) {
