@@ -5,13 +5,18 @@ import { useRouter } from "next/navigation";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { Button, Tooltip } from "@nextui-org/react";
 import { useTheme } from "next-themes";
+import { generateContenidoMural } from "@/lib/excalidraw_utils";
+import { link } from "fs";
 
 type CardProps = {
   title: string,
   rubrica?: string, 
   color: number,
   editable?: boolean
-  muralId: string
+  muralId: string,
+  cursoId: string,
+  userId: string,
+  room: string
 };
 
 const MuralCard = (props: CardProps) => {
@@ -28,6 +33,11 @@ const MuralCard = (props: CardProps) => {
     alert("TODO: asignar rúbrica")
   };
 
+  const handleOnPress = async () => {
+    // const linkCollaborative = await generateContenidoMural()
+    router.push(process.env.NEXT_PUBLIC_BACKEND_ROOM_URL+`/?curso=${props.cursoId}&mural=${props.muralId}&user=${props.userId}&theme=${currentTheme}#room=${props.room}`)
+  }
+
   return (
     <FBCard 
         title={props.title}
@@ -38,7 +48,7 @@ const MuralCard = (props: CardProps) => {
           {key: "delete", label: "Eliminar mural", onAction: onDelete},]
         }
         color={props.color}
-        onPress={() => router.push(`/cursos/murales/${props.muralId}`)}>
+        onPress={handleOnPress}>
           <Tooltip
             showArrow={false}
             placement="bottom-end"
