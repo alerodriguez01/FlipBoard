@@ -14,7 +14,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const { isOpen: isAsignarOpen, onOpen: onAsignarOpen, onOpenChange: onAsignarOpenChange } = useDisclosure();
     const esDocente = !!session?.user.cursosDocente.includes(params.idCurso);
 
-    if (status === 'loading')
+    if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
     return (
@@ -42,7 +42,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
             </Tabs>
             <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} />
             {esDocente && 
-                <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session?.user.id}/>}
+                <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
         </section>
     )
 }

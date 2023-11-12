@@ -1,13 +1,13 @@
 'use client';
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup } from "@nextui-org/react";
-import React, { useState } from "react";
+import React from "react";
 import { Spinner } from "./Spinner";
 import { useTheme } from "next-themes";
-import { RubricasCursoAccordion } from "./RubricasCursoAccordion";
 import { z } from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import endpoints from "@/lib/endpoints";
+import { RubricasAccordion } from "./RubricasAccordion";
 
 const rubricaSchema = z.object({
   idRubrica: z.string()
@@ -15,7 +15,7 @@ const rubricaSchema = z.object({
 
 type RubricaForm = z.infer<typeof rubricaSchema> & { erroresExternos?: string };
 
-const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string|undefined, idCurso: string}) => {
+const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string, idCurso: string}) => {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
@@ -74,7 +74,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                     <ModalBody className="gap-5">
                       <Controller control={control} name='idRubrica' render={({field: {onChange, value}}) =>
                         <RadioGroup onValueChange={onChange} value={value}>
-                          <RubricasCursoAccordion idUsuario={props.idUsuario}/>
+                          <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(props.idUsuario)} type={"selectable"} title={"Seleccione una rúbrica"} />
                         </RadioGroup>
                       }/>
                       

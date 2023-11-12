@@ -14,7 +14,7 @@ export default function Rubricas() {
 
     return (
         <section>
-            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} title={"Rúbricas"} />
+            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} />
             <Button
                 className="bg-[#181e25] text-white fixed bottom-10 right-10"
                 startContent={<PlusIcon color="#FFFFFF" />}
