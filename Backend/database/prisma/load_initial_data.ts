@@ -186,6 +186,52 @@ async function load_initial_data() {
     },
   });
 
+  const rubrica3 = await prisma.rubrica.create({
+    data: {
+      nombre: 'Rubrica Test 1',
+      criterios: [
+        { nombre: 'Precisión', descripciones: ['Muy preciso', 'Preciso', 'Poco preciso'] },
+        { nombre: 'Completitud', descripciones: ['Muy completo', 'Completo', 'Poco completo'] },
+      ],
+
+      niveles: [
+        { nombre: 'Nivel A', puntaje: 4 },
+        { nombre: 'Nivel B', puntaje: 3 },
+        { nombre: 'Nivel C', puntaje: 2 },
+      ],
+      gruposModel: {
+        connect: [{ id: curso2.id }]
+      },
+      alumnosModel: {
+        connect: [{ id: curso2.id }]
+      },
+      usuarioModel: { connect: { id: usuario1.id } }
+    },
+  });
+
+  const rubrica4 = await prisma.rubrica.create({
+    data: {
+      nombre: 'Rubrica Test 2',
+      criterios: [
+        { nombre: 'Precisión', descripciones: ['Muy preciso', 'Preciso', 'Poco preciso'] },
+        { nombre: 'Completitud', descripciones: ['Muy completo', 'Completo', 'Poco completo'] },
+      ],
+
+      niveles: [
+        { nombre: 'Nivel A', puntaje: 4 },
+        { nombre: 'Nivel B', puntaje: 3 },
+        { nombre: 'Nivel C', puntaje: 2 },
+      ],
+      gruposModel: {
+        connect: [{ id: curso2.id }]
+      },
+      alumnosModel: {
+        connect: [{ id: curso2.id }]
+      },
+      usuarioModel: { connect: { id: usuario1.id } }
+    },
+  });
+
   // Crear grupos de ejemplo
   const grupo1 = await prisma.grupo.create({
     data: {
