@@ -13,7 +13,7 @@ export default function Rubricas() {
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
     return (
-        <section>
+        <section className="m-5">
             <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} />
             <Button
                 className="bg-[#181e25] text-white fixed bottom-10 right-10"

@@ -63,7 +63,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
           placement="center"
           size="4xl"
           classNames={{closeButton: "p-5"}} >
-            <ModalContent>
+            <ModalContent className="min-h-[400px]">
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col">
@@ -71,10 +71,10 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                     <h4 className="text-sm font-normal">Actividad: ......</h4>
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
-                    <ModalBody className="gap-5">
+                    <ModalBody>
                       <Controller control={control} name='idRubrica' render={({field: {onChange, value}}) =>
                         <RadioGroup onValueChange={onChange} value={value}>
-                          <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(props.idUsuario)} type={"selectable"} title={"Seleccione una rúbrica"} />
+                          <RubricasAccordion searchable endpoint={endpoints.getAllRubricasFromUser(props.idUsuario)} type={"selectable"} title={"Seleccione una rúbrica"} />
                         </RadioGroup>
                       }/>
                       
@@ -83,8 +83,8 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                           <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
                     </ModalBody>
 
-                    <ModalFooter className="flex flex-row justify-end">
-                      <Button className="bg-[#181e25] text-white"
+                    <ModalFooter className="flex flex-row">
+                      <Button className="bg-[#181e25] text-white end-2.5"
                       isLoading={isSubmitting}
                         type="submit"
                         spinner={Spinner}

@@ -27,9 +27,9 @@ const RubricasAccordion = (props: AccordionProps) => {
   if (error) return (<h1>{error.message}</h1>);
 
   return (
-    <section className="m-5">
-        <header className="flex flex-row justify-between mb-5">
-            <h1 className="text-2xl font-semibold">{props.title}</h1>
+    <section className="">
+        <header className="flex flex-row justify-between mb-5 mx-2.5">
+            <h1 className={`${props.type === 'editable' && 'text-2xl'} font-semibold self-center`}>{props.title}</h1>
             {props.searchable && 
                 <Input
                     radius="none"
@@ -43,9 +43,9 @@ const RubricasAccordion = (props: AccordionProps) => {
         </header>
         
         {isLoading ? Spinner :
-            <Accordion variant="splitted">
+            <Accordion variant="splitted" fullWidth>
             {data?.map((rubric: Rubrica) => (
-            <AccordionItem 
+            <AccordionItem
                 key={rubric.id} 
                 title={
                     <div className="flex flex-row justify-between">
