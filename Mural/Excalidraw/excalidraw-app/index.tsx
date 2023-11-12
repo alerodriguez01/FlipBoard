@@ -684,14 +684,16 @@ const ExcalidrawWrapper = () => {
   /* -------------------------- LOGICA FLIPBOARD ------------------------------- */
 
   const searchParams = new URLSearchParams(window.location.search);
-  const idMural = searchParams.get("mural");
-  const idCurso = searchParams.get("curso");
-  const idUser = searchParams.get("user");
-  const themeParam = searchParams.get("theme");
+  let idMural = searchParams.get("mural");
+  let idCurso = searchParams.get("curso");
+  let idUser = searchParams.get("user");
+  let themeParam = searchParams.get("theme");
   // console.log("idMural: ", idMural);
   // console.log("idCurso: ", idCurso);
   // console.log("idUser: ", idUser);
   // console.log("themeParam: ", themeParam);
+  const roomHash = window.location.hash;
+  // console.log("roomHash: ", roomHash);
 
   const FLIPBOARD_FRONTEND = import.meta.env.VITE_FLIPBOARD_FRONTEND_URL;
   const FLIPBOARD_BACKEND = import.meta.env.VITE_FLIPBOARD_BACKEND_URL;
@@ -710,9 +712,44 @@ const ExcalidrawWrapper = () => {
     </div>
 
   )
-  
-  // si no se pasaron los id como search params, muestro un mensaje de error
-  if (!idMural || !idCurso || !idUser) return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser) 
+
+  // ------ inicio logica de search params ------
+
+  // if (!idMural || !idCurso || !idUser) return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser) // si no se quiere manejar librerias
+
+  // si no se pasaron los id como search params, 
+  if (!idMural || !idCurso || !idUser) {
+
+    // me fijo si estan en local storage
+    const searchParamLS = localStorage.getItem("search_param");
+    if (searchParamLS) {
+
+      const searchParamObj = JSON.parse(searchParamLS);
+      idMural = searchParamObj.idMural;
+      idCurso = searchParamObj.idCurso;
+      idUser = searchParamObj.idUser;
+      themeParam = searchParamObj.theme;
+      // seteo la url solo con el valor de room (esto me va a permitir importar las librerias sin problemas)
+      window.history.replaceState({}, APP_NAME, `${window.location.origin}${roomHash}`);
+
+    } else {
+      // si no estan el localstorage ni se pasaron como param, muestro un mensaje de error
+      return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser)
+    }
+
+  } else {
+    // si se pasaron como search params, los guardo en el local storage
+    localStorage.setItem("search_param", JSON.stringify({ idMural, idCurso, idUser, theme: theme || THEME.LIGHT, roomHash }))
+    // los elimino de la url. Solo dejo el el valor de room (esto me va a permitir importar las librerias sin problemas)
+    window.history.replaceState({}, APP_NAME, `${window.location.origin}${roomHash}`);
+  }
+
+  // cuando el usuario cierra o abandona la pagina, elimino los search params del local storage (lo malo es que tambien se ejecuta cuando se recarga)
+  window.addEventListener('beforeunload', function (event) {
+    //localStorage.removeItem("search_param");
+  })
+
+  // ------ fin logica de search params ------
 
   // seteo el tema que viene por search params
   useEffect(() => {
@@ -922,11 +959,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="alumno" />
+              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={idUser || ""} tipo="alumno" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="grupo" />
+              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={idUser || ""} tipo="grupo" />
             </Sidebar.Tab>
 
 
@@ -977,31 +1014,34 @@ const ExcalidrawWrapper = () => {
         )}
 
         <Footer>
-          <Tooltip
-            showArrow={false}
-            placement="top"
-            className="bg-gray-100 text-black"
-            content={mural &&
-              <article className="text-sm">
-                <h1 className="font-semibold">Información del mural</h1>
-                <ul>
-                  <li>- Nombre: {mural?.nombre}</li>
-                  {/* <li>- Contenido: {mural?.contenido}</li> */}
-                  {mural?.descripcion && <li>- Descripcion: {mural.descripcion}</li>}
-                </ul>
-              </article>
-            }
-          >
-            <Button
-              // isIconOnly
-              disableAnimation
-              className="bg-transparent rounded-full"
-              startContent={<InfoIcon width={18} height={18} theme={theme} />}
+          <div className="flex items-center">
+            {!isCollaborating && <p className="text-sm">Colaboración en vivo desactivada, por favor <a href={`${FLIPBOARD_FRONTEND}/cursos`} className="text-blue-600">vuelva a FlipBoard</a> y seleccione un mural.</p>}
+            <Tooltip
+              showArrow={false}
+              placement="top"
+              className="bg-gray-100 text-black"
+              content={mural &&
+                <article className="text-sm">
+                  <h1 className="font-semibold">Información del mural</h1>
+                  <ul>
+                    <li>- Nombre: {mural?.nombre}</li>
+                    {/* <li>- Contenido: {mural?.contenido}</li> */}
+                    {mural?.descripcion && <li>- Descripcion: {mural.descripcion}</li>}
+                  </ul>
+                </article>
+              }
             >
-              {/* <InfoIcon width={18} height={18} theme={theme} /> */}
-              Mural
-            </Button>
-          </Tooltip>
+              <Button
+                // isIconOnly
+                disableAnimation
+                className="bg-transparent rounded-full"
+                startContent={<InfoIcon width={18} height={18} theme={theme} />}
+              >
+                {/* <InfoIcon width={18} height={18} theme={theme} /> */}
+                Mural
+              </Button>
+            </Tooltip>
+          </div>
         </Footer>
 
       </Excalidraw>
