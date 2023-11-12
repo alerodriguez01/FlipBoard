@@ -1,6 +1,7 @@
 'use client'
-import { MisRubricasAccordion } from "@/app/componentes/ui/MisRubricasAccordion";
+import { RubricasAccordion } from "@/app/componentes/ui/RubricasAccordion";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
+import endpoints from "@/lib/endpoints";
 import { Button, Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 
@@ -13,7 +14,7 @@ export default function Rubricas() {
 
     return (
         <section>
-            <MisRubricasAccordion userId={session.user.id}/>
+            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} title={"Rúbricas"} />
             <Button
                 className="bg-[#181e25] text-white fixed bottom-10 right-10"
                 startContent={<PlusIcon color="#FFFFFF" />}
