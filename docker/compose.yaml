@@ -66,6 +66,29 @@ services:
   #   volumes:
   #     - ./../Frontend:/app
 
+  mural-excalidraw:
+    container_name: mural-excalidraw
+    build: ./../Mural/Excalidraw
+    ports:
+      - 4000:4000
+    networks:
+      - mynetwork
+    # Enable this for live reload (tarda bastante en recargar, pero funciona)
+    volumes:
+      - ./../Mural/Excalidraw:/app
+      # exclude node modules
+      - /app/node_modules
+  
+  mural-room-web-socket:
+    container_name: mural-room-web-socket
+    build: ./../Mural/RoomWebSocket
+    ports:
+      - 3002:3002
+    networks:
+      - mynetwork
+    # volumes:
+    #   - ./../Mural/RoomWebSocket:/app
+
 networks:
   mynetwork:
     driver: bridge

@@ -24,7 +24,17 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
           <h3>No hay murales</h3>
           :
           data.map((m: Mural) =>
-            <MuralCard key={crypto.randomUUID()} title={m.nombre} muralId={m.id} rubrica={m.rubricaModel?.nombre} color={color++ % 3} editable={session?.user.cursosDocente.includes(m.cursoId)} />)
+            <MuralCard
+              key={crypto.randomUUID()}
+              title={m.nombre}
+              muralId={m.id}
+              cursoId={params.idCurso}
+              userId={session?.user.id || ""}
+              room={m.contenido}
+              rubrica={m.rubricaModel?.nombre}
+              color={color++ % 3}
+              editable={session?.user.cursosDocente.includes(m.cursoId)}
+            />)
 
       }
     </section>

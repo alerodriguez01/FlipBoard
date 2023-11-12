@@ -175,7 +175,7 @@ model Calificacion {
 model Mural {
   id          String @id @default(auto()) @map("_id") @db.ObjectId
   nombre      String
-  contenido   String
+  contenido   String // room del link colaborativo de excalidraw
   descripcion String?
 
   // many-to-one (rubrica asociado al mural)

@@ -216,7 +216,7 @@ async function load_initial_data() {
   const mural1 = await prisma.mural.create({
     data: {
       nombre: 'Mural de Matemáticas',
-      contenido: 'Contenido del mural de matemáticas',
+      contenido: 'bd8275de19f09823351b,QRG5TUpqSLRf0uVTz6UeeA',
       descripcion: 'Mural de matemáticas para el curso',
       rubricaModel: { connect: { id: rubrica1.id, } },
       cursoModel: { connect: { id: curso1.id, } },
@@ -226,7 +226,7 @@ async function load_initial_data() {
   const mural2 = await prisma.mural.create({
     data: {
       nombre: 'Mural de Historia',
-      contenido: 'Contenido del mural de historia',
+      contenido: '272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA',
       descripcion: 'Mural de historia para el curso',
       rubricaModel: { connect: { id: rubrica2.id, } },
       cursoModel: { connect: { id: curso2.id, } },
