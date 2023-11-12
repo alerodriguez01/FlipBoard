@@ -1,3 +1,8 @@
+// error en caso de no obtener la entidad
+export type Error = {
+    error?: string;
+}
+
 export type Mural = {
     id: string,
     nombre: string,
@@ -5,8 +10,8 @@ export type Mural = {
     descripcion: string,
     rubricaId: string,
     cursoId: string
-    rubricaModel?: any
-}
+    rubricaModel?: any,
+} & Error;
 
 export type Usuario = {
     id: string;
@@ -16,7 +21,7 @@ export type Usuario = {
     cursosDocente: string[];
     grupos: string[];
     //token?: string; // cuando hace el login, retorna el token en el body tmb
-}
+} & Error;
 
 export type Curso = {
     id: string;
@@ -29,4 +34,4 @@ export type Curso = {
     docentes: string[];
     rubricasGrupos: string[];
     rubicasAlumnos: string[];
-}
+} & Error;
