@@ -34,7 +34,7 @@ const RubricasCursoAccordion = (props: {idUsuario: string|undefined}) => {
                 title={
                     <div className="flex flex-row justify-between">
                         <h1 className="self-center">{rubric.nombre}</h1>
-                        <Radio key={rubric.id} value={rubric.id}></Radio>
+                        <Radio value={rubric.id}/>
                     </div>
                 }
                 textValue={`Rubrica ${rubric.nombre}`}

@@ -42,7 +42,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
             </Tabs>
             <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} />
             {esDocente && 
-                <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idUsuario={session?.user.id}/>}
+                <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session?.user.id}/>}
         </section>
     )
 }

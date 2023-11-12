@@ -47,11 +47,16 @@ function getAllRubricasFromUser(idUsuario: string) {
     return `/api/usuarios/${idUsuario}/rubricas`
 }
 
+function asociarRubricaAlumnos(idCurso: string) {
+    return `/api/cursos/${idCurso}/rubricas/alumnos`
+}
+
 // TODO: Agregar demas rutas
 
 export default {
     agregarParticipanteACurso, changePassword,
     getUserWithCursos, getCursoById, login, createUser,
     getAllMuralesWithRubricas, createCurso, getMuralById,
-    getAllAlumnos, getAllGrupos, getAllRubricasFromUser
+    getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
+    asociarRubricaAlumnos
 }

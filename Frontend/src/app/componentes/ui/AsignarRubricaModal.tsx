@@ -1,12 +1,13 @@
 'use client';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, RadioGroup } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup } from "@nextui-org/react";
 import React, { useState } from "react";
 import { Spinner } from "./Spinner";
 import { useTheme } from "next-themes";
 import { RubricasCursoAccordion } from "./RubricasCursoAccordion";
 import { z } from "zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import endpoints from "@/lib/endpoints";
 
 const rubricaSchema = z.object({
   idRubrica: z.string()
@@ -14,13 +15,14 @@ const rubricaSchema = z.object({
 
 type RubricaForm = z.infer<typeof rubricaSchema> & { erroresExternos?: string };
 
-const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string|undefined}) => {
+const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string|undefined, idCurso: string}) => {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
   const {
     register,
     handleSubmit,
+    control,
     formState: {
         errors,
         isSubmitting
@@ -31,9 +33,27 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
   });
 
   const onSubmit = async (onClose: Function, data: RubricaForm) => {
-    console.log(data);
-    console.log("hola");
-    onClose();
+    
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.asociarRubricaAlumnos(props.idCurso), {
+          method: 'PUT',
+          body: JSON.stringify({
+              idRubrica: data.idRubrica
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      if (!res.ok) {
+          setError("erroresExternos", { message: "Por favor, seleccione una rúbrica" });
+          return;
+      }
+      
+      onClose();
+
+    } catch (err) {
+        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
+    }
   };
 
   return (
@@ -52,9 +72,12 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
                     <ModalBody className="gap-5">
-                      <RadioGroup onValueChange={(value) => {console.log(value)}} {...register("idRubrica")}>
-                        <RubricasCursoAccordion idUsuario={props.idUsuario}/>
-                      </RadioGroup>
+                      <Controller control={control} name='idRubrica' render={({field: {onChange, value}}) =>
+                        <RadioGroup onValueChange={onChange} value={value}>
+                          <RubricasCursoAccordion idUsuario={props.idUsuario}/>
+                        </RadioGroup>
+                      }/>
+                      
                         <input type="text" className="hidden" {...register("erroresExternos")} />
                         {errors.erroresExternos &&
                           <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
