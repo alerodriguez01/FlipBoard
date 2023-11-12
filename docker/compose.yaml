@@ -57,14 +57,15 @@ services:
   # nextjs:
   #   container_name: frontend
   #   build: ./../Frontend
-  #   environment:
-  #     BACKEND_URL: "http://api:3100"
+  #   # environment:
+  #    # BACKEND_URL: "http://api:3100"
   #   ports:
   #    - 3000:3000
   #   networks:
   #     - mynetwork
   #   volumes:
   #     - ./../Frontend:/app
+  #     - /app/node_modules
 
   mural-excalidraw:
     container_name: mural-excalidraw
@@ -74,6 +75,8 @@ services:
     networks:
       - mynetwork
     # Enable this for live reload (tarda bastante en recargar, pero funciona)
+    # environment:
+    #   - VITE_DOCKER=true
     volumes:
       - ./../Mural/Excalidraw:/app
       # exclude node modules

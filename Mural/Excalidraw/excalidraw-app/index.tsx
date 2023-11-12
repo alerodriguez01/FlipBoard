@@ -114,7 +114,7 @@ import "./main.css";
 import { Button, Tooltip } from "@nextui-org/react";
 import DarkLightIcon from "./flipboard/icons/DarkLightIcon";
 import { InfoIcon } from "./flipboard/icons/InfoIcon";
-import { Mural, Usuario } from "./flipboard/lib/types";
+import { Curso, Mural, Usuario } from "./flipboard/lib/types";
 import useSWR from "swr";
 import BackIcon from "./flipboard/icons/BackIcon";
 import EvaluarMural from "./flipboard/components/EvaluarMural";
@@ -693,41 +693,55 @@ const ExcalidrawWrapper = () => {
   // console.log("idUser: ", idUser);
   // console.log("themeParam: ", themeParam);
 
+  const FLIPBOARD_FRONTEND = import.meta.env.VITE_FLIPBOARD_FRONTEND_URL;
+  const FLIPBOARD_BACKEND = import.meta.env.VITE_FLIPBOARD_BACKEND_URL;
+
+  const errorEntidadInexistente = (mural: boolean, curso: boolean, user: boolean) => (
+
+    <div className="flex flex-col gap-3 justify-center items-center h-full w-full">
+      <div className="flex gap-3 text-center">
+        {mural ? <p className="text-green-600">Mural</p> : <p className="text-red-600">Mural inexistente</p>}
+        |
+        {curso ? <p className="text-green-600">Curso</p> : <p className="text-red-600">Curso inexistente</p>}
+        |
+        {user ? <p className="text-green-600">Usuario</p> : <p className="text-red-600">Usuario inexistente</p>}
+      </div>
+      <a href={`${FLIPBOARD_FRONTEND}/cursos`} className="text-blue-600">Volver a FlipBoard</a>
+    </div>
+
+  )
+  
+  // si no se pasaron los id como search params, muestro un mensaje de error
+  if (!idMural || !idCurso || !idUser) return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser) 
+
+  // seteo el tema que viene por search params
   useEffect(() => {
     if (themeParam && (themeParam === THEME.DARK || themeParam === THEME.LIGHT)) setTheme(themeParam);
   }, [themeParam]);
 
-  const { data: session, error: errorSession, isLoading: isLoadingSession } = useSWR(`${import.meta.env.VITE_FLIPBOARD_FRONTEND_URL}/api/auth/amiloggedin`, (url: string) => fetch(url, { credentials: "include"}).then(res => res.json()));
+  // obtengo el usuario logueado
+  const { data: session, error: errorSession, isLoading: isLoadingSession } = useSWR(`${FLIPBOARD_FRONTEND}/api/auth/amiloggedin`, (url: string) => fetch(url, { credentials: "include" }).then(res => res.json()));
+  // si no estoy logueado, redirecciono a la pagina de login
+  if (!isLoadingSession && !session.loggedIn) window.location.href = FLIPBOARD_FRONTEND;
 
-  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${import.meta.env.VITE_FLIPBOARD_BACKEND_URL}/api/cursos/murales/${idMural}`, (url: string) => fetch(url).then(res => res.json()));
+  // obtengo el mural
+  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}`, (url: string) => fetch(url).then(res => res.json()));
 
-  const { data: user, error: errorUser, isLoading: isLoadingUser } = useSWR<Usuario>(`${import.meta.env.VITE_FLIPBOARD_BACKEND_URL}/api/usuarios/${idUser}`, (url: string) => fetch(url).then(res => res.json()));
+  // obtengo el curso
+  const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(`${FLIPBOARD_BACKEND}/api/cursos/${idCurso}`, (url: string) => fetch(url).then(res => res.json()));
+
+  // obtengo el usuario
+  const { data: user, error: errorUser, isLoading: isLoadingUser } = useSWR<Usuario>(`${FLIPBOARD_BACKEND}/api/usuarios/${idUser}`, (url: string) => fetch(url).then(res => res.json()));
   const formatNombre = (nombre: string) => {
     const nombres = nombre.split(" ");
     const nombreCompleto = nombres.map((n) => n[0].toUpperCase() + n.slice(1)).join(" ");
     return nombreCompleto;
   }
   // si existe el usuario, seteo el nombre en el canvas
-  if (user) collabAPI?.setUsername(formatNombre(user.nombre))
+  if (!isLoadingUser && user?.nombre) collabAPI?.setUsername(formatNombre(user.nombre))
 
-  // si no estoy logueado, redirecciono a la pagina de login
-  if(!isLoadingSession && !session.loggedIn) window.location.href = import.meta.env.VITE_FLIPBOARD_FRONTEND_URL;
-
-  // si no se pudo cargar el usuario, curso o mural (o no se pasaron los id como search params), muestro un mensaje de error
-  if (!idMural || !idCurso || !idUser) {
-    return (
-      <div className="flex flex-col gap-3 justify-center items-center h-full w-full">
-        <div className="flex gap-3 text-center">
-          {idMural ? <p className="text-green-600">Mural</p> : <p className="text-red-600">Mural inexistente</p>}
-          |
-          {idCurso ? <p className="text-green-600">Curso</p> : <p className="text-red-600">Curso inexistente</p>}
-          |
-          {idUser ? <p className="text-green-600">Usuario</p> : <p className="text-red-600">Usuario inexistente</p>}
-        </div>
-        <a href={`${import.meta.env.VITE_FLIPBOARD_FRONTEND_URL}/cursos`} className="text-blue-600">Volver a FlipBoard</a>
-      </div>
-    );
-  }
+  // si no existe el mural o el usuario, muestro un mensaje de error
+  if ( (!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error) || (!isLoadingUser && user?.error) ) return errorEntidadInexistente(!mural?.error, !curso?.error, !user?.error)
 
   /* -------------------------- FIN LOGICA FLIPBOARD ------------------------------- */
 
@@ -908,11 +922,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="alumno"/>
+              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="alumno" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="grupo"/>
+              <EvaluarMural idCurso={idCurso} idMural={idMural} idUser={idUser} tipo="grupo" />
             </Sidebar.Tab>
 
 

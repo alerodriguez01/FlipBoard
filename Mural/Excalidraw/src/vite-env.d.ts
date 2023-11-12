@@ -16,6 +16,7 @@ interface ImportMetaEnv {
   VITE_APP_WS_SERVER_URL: string;
   VITE_FLIPBOARD_FRONTEND_URL: string;
   VITE_FLIPBOARD_BACKEND_URL: string;
+  VITE_DOCKER: string;
 
   // set this only if using the collaboration workflow we use on excalidraw.com
   VITE_APP_PORTAL_URL: string;
