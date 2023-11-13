@@ -4,6 +4,7 @@ import endpoints from "@/lib/endpoints";
 import { Mural } from "@/lib/types";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
@@ -16,6 +17,15 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
 
   if (status === 'loading' || isLoading)
     return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+
+  if (!session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
+    return (
+      <section className="flex flex-col flex-1 justify-center items-center">
+        <h1>No tienes acceso a este curso</h1>
+        <Link href="/cursos" className="text-blue-600 hover:underline">Volver a cursos</Link>
+      </section>
+    )
+  }
 
   return (
     <section className="flex flex-wrap overflow-auto items-center gap-6 p-8">

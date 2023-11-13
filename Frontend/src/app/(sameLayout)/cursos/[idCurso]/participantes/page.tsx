@@ -5,6 +5,7 @@ import { CrearGrupoModal } from "@/app/componentes/ui/CrearGrupoModal";
 import { GruposTable } from "@/app/componentes/ui/GruposTable";
 import { Spinner, Tab, Tabs, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 export default function Participantes({ params }: { params: { idCurso: string } }) {
 
@@ -16,6 +17,15 @@ export default function Participantes({ params }: { params: { idCurso: string } 
 
     if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+
+    if ( !session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
+        return (
+            <section className="flex flex-col flex-1 justify-center items-center">
+                <h1>No tienes acceso a este curso</h1>
+                <Link href="/cursos" className="text-blue-600 hover:underline">Volver a cursos</Link>
+            </section>
+        )
+    }
 
     return (
         <section className="flex flex-1 flex-col p-10 gap-4 overflow-auto">
