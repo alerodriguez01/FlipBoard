@@ -16,7 +16,8 @@ type CardProps = {
   muralId: string,
   cursoId: string,
   userId: string,
-  room: string
+  room: string,
+  description?: string
 };
 
 const MuralCard = (props: CardProps) => {
@@ -41,6 +42,7 @@ const MuralCard = (props: CardProps) => {
   return (
     <FBCard 
         title={props.title}
+        description={props.description}
         editable={props.editable}
         dropDownItems={
           props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :

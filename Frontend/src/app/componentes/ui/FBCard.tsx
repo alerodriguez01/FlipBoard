@@ -1,6 +1,6 @@
 'use client';
 import React, { ReactNode } from "react";
-import { Button, Card, CardBody, CardHeader, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@nextui-org/react";
+import { Button, Card, CardBody, CardHeader, Divider, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, ScrollShadow } from "@nextui-org/react";
 import { ThreeDotsVerticalIcon } from "./icons/ThreeDotsIVerticalIcon";
 
 /**
@@ -12,20 +12,21 @@ type FBProps = {
   children?: ReactNode,
   color: number,
   onPress: Function
-  editable?: boolean
+  editable?: boolean,
+  description?: string
 }
 
 const colors = [
-  "bg-slate-300",
-  "bg-slate-400", "bg-slate-500",
+  "bg-slate-200 dark:bg-slate-600",
+  "bg-slate-300 dark:bg-slate-700",
 ];
 
 const FBCard = (props: FBProps) => {
   return (
     <Card isPressable onPress={() => props.onPress()} className="shadow-xl w-[400px] h-[200px] dark:shadow-gray-900 dark:bg-gray-800 ">
-      <CardHeader className="flex justify-between min-h-[120px] text-lg">
-        <h2 className="text-justify  self-start max-w-[220px] ">{props.title}</h2>
-        <div className="flex self-start">
+      <CardHeader className={"flex text-lg gap-2 items-center justify-between " + colors.at(props.color)}>
+        <h2 className="max-w-[220px] px-3">{props.title}</h2>
+        <aside className="flex">
           {props.children}
           {props.editable &&
             <Dropdown className="dark:bg-gray-800">
@@ -46,9 +47,14 @@ const FBCard = (props: FBProps) => {
               </DropdownMenu>
             </Dropdown>
           }
-        </div>
+        </aside>
       </CardHeader>
-      <CardBody className={colors.at(props.color)} />
+      <CardBody className="py-4">
+        <ScrollShadow hideScrollBar className="w-full h-full">
+          {/* Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. */}
+          {props.description !== "" ? props.description : <span className="w-full h-full flex items-center justify-center italic text-sm text-gray-300 dark:text-gray-600">FlipBoard</span>}
+        </ScrollShadow>
+      </CardBody>
     </Card>
   );
 };

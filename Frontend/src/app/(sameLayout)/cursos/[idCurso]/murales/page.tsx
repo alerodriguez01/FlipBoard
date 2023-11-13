@@ -50,12 +50,13 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
               <MuralCard
                 key={crypto.randomUUID()}
                 title={m.nombre}
+                description={m.descripcion}
                 muralId={m.id}
                 cursoId={params.idCurso}
                 userId={session?.user.id || ""}
                 room={m.contenido}
                 rubrica={m.rubricaModel?.nombre}
-                color={color++ % 3}
+                color={color++ % 2}
                 editable={session?.user.cursosDocente.includes(m.cursoId)}
               />)
             })
