@@ -10,7 +10,7 @@ import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
 
 const rubricaSchema = z.object({
-  idRubrica: z.string()
+  rubrica: z.string()
 });
 
 type RubricaForm = z.infer<typeof rubricaSchema> & { erroresExternos?: string };
@@ -38,7 +38,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
       const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.asociarRubricaAlumnos(props.idCurso), {
           method: 'PUT',
           body: JSON.stringify({
-              idRubrica: data.idRubrica
+              idRubrica: JSON.parse(data.rubrica).id
           }),
           headers: {
               'Content-Type': 'application/json'
@@ -72,7 +72,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
                     <ModalBody>
-                      <Controller control={control} name='idRubrica' render={({field: {onChange, value}}) =>
+                      <Controller control={control} name='rubrica' render={({field: {onChange, value}}) =>
                         <RadioGroup onValueChange={onChange} value={value}>
                           <RubricasAccordion searchable endpoint={endpoints.getAllRubricasFromUser(props.idUsuario)} type={"selectable"} title={"Seleccione una rúbrica"} />
                         </RadioGroup>

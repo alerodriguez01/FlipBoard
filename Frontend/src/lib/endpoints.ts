@@ -47,6 +47,14 @@ function getAllRubricasFromUser(idUsuario: string) {
     return `/api/usuarios/${idUsuario}/rubricas`
 }
 
+function getAllRubricasIndividuales(idCurso: string) {
+    return `/api/cursos/${idCurso}/rubricas/alumnos`;
+}
+
+function getAllRubricasGrupales(idCurso: string) {
+    return `/api/cursos/${idCurso}/rubricas/grupos`;
+}
+
 function asociarRubricaAlumnos(idCurso: string) {
     return `/api/cursos/${idCurso}/rubricas/alumnos`
 }
@@ -58,5 +66,6 @@ export default {
     getUserWithCursos, getCursoById, login, createUser,
     getAllMuralesWithRubricas, createCurso, getMuralById,
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
-    asociarRubricaAlumnos
+    asociarRubricaAlumnos, getAllRubricasIndividuales,
+    getAllRubricasGrupales
 }

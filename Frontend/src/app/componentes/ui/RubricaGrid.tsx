@@ -4,7 +4,7 @@ import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from 
 import React, { Key, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
 
-const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[], evaluable: boolean}) => {
+const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[], evaluable: boolean, dataSetter?: any}) => {
 
   let n=0;
   const columns = [{nombre: "Criterio", i: -1},...props.niveles.map(niv => ({...niv, i: n++}))];
@@ -23,7 +23,8 @@ const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[
             return;
           if(niv === '-1')
             return;
-          setNivelSelecc(nivelSelecc.set(crit,niv)); 
+          setNivelSelecc(nivelSelecc.set(crit,niv));
+          props.dataSetter?.(nivelSelecc); 
           setCambio(!cambio);
         }}
       >

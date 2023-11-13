@@ -1,39 +1,91 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, usePagination } from "@nextui-org/react";
-import React from "react";
-import { Spinner } from "./Spinner";
-import { Grupo, Usuario } from "@/lib/types";
+'use client';
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, RadioGroup } from "@nextui-org/react";
+import React, { useState } from "react";
+import { Grupo, Rubrica, Usuario } from "@/lib/types";
+import { RubricasAccordion } from "./RubricasAccordion";
+import endpoints from "@/lib/endpoints";
+import { RubricaGrid } from "./RubricaGrid";
 
-const EvaluarModal = (props: {isOpen: boolean, onOpenChange: () => void, entity: Usuario | Grupo | undefined}) => {
+type ModalProps = {
+  isOpen: boolean,
+  onOpenChange: () => void,
+  idCurso: string
+  entity: any,
+  entityType: "Usuario" | "Grupo" | undefined
+}
+
+const EvaluarModal = (props: ModalProps) => {
+
   
-  const {activePage, range, setPage, onNext, onPrevious} = usePagination({
-    total: 2,
-    showControls: false
-  });
-  
+  const [isEvaluando, setIsEvaluando] = useState(false);
+  const [rubrica, setRubrica] = React.useState<Rubrica>();
+  const [valores, setValores] = useState();
+  const [observaciones, setObservaciones] = useState();
+
+
   if(!props.entity) return <></>
+
+  const nombreConMayus = (nom: string) => nom.split(' ').map(w => w[0].toUpperCase()+w.substring(1)).join(' ');
 
   return (
     <Modal
       isOpen={props.isOpen}
       onOpenChange={props.onOpenChange}
       placement="center"
-      size="2xl"
+      size="3xl"
       classNames={{closeButton: "p-5"}} >
         <ModalContent>
           {(onClose) => (
             <>
-              <ModalHeader className="flex flex-col gap-1">Evaluar</ModalHeader>
+              <ModalHeader className="flex flex-col gap-1">
+                <h1 className="text-2xl">Evaluar</h1>
+                <div className="flex flex-row text-sm gap-2">
+                  <h3 className="font-normal">Evaluando a:</h3>
+                  <h4 className="font-semibold">{props.entityType === "Usuario" ? nombreConMayus(props.entity?.nombre) : `Grupo ${props.entity.numero}`}</h4>
+                </div>
+                {isEvaluando && 
+                  <div className="flex flex-row text-sm gap-2">
+                    <h3 className="font-normal">Rubrica seleccionada:</h3>
+                   <h4 className="font-semibold">{rubrica?.nombre}</h4>
+                  </div>
+                }
+              </ModalHeader>
               
-              <ModalBody className="gap-5">
-                
+              <ModalBody>
+                {isEvaluando && rubrica ?
+                  <>
+                    <RubricaGrid
+                      label={rubrica.nombre}
+                      criterios={rubrica.criterios}
+                      niveles={rubrica.niveles}
+                      evaluable
+                      dataSetter={setValores}/>
+                    <Input 
+                      variant="bordered"
+                      label="Observaciones"
+                      placeholder="Escriba aquí sus observaciones..."
+                      className="px-4" />
+                  </>
+                  :
+                  <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
+                    <RubricasAccordion
+                      endpoint={
+                        props.entityType === "Usuario" ? 
+                          endpoints.getAllRubricasIndividuales(props.idCurso) : 
+                          endpoints.getAllRubricasGrupales(props.idCurso)}
+                      type={"selectable"} 
+                      title={"Seleccione una rúbrica"}
+                    />
+                  </RadioGroup>         
+                }
               </ModalBody>
 
               <ModalFooter className="flex flex-row justify-end">
-                <Button className="bg-[#181e25] text-white"
-                isLoading={false}
-                  type="submit"
-                  spinner={Spinner}
-                >Ir a evaluar</Button>
+                  <Button 
+                    className="bg-[#181e25] text-white end-4" 
+                    onPress={isEvaluando ? () => {} : () => setIsEvaluando(true)}>
+                    {isEvaluando ? "Guardar" : "Ir a evaluar"}
+                  </Button>
               </ModalFooter>
             </>
           )}

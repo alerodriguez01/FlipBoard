@@ -62,7 +62,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                                 >Eliminar</Button>
                             </div>
                             :
-                            <Radio value={rubric.id}/>
+                            <Radio value={JSON.stringify(rubric)}/>
                         }
                     </div>
                 }
