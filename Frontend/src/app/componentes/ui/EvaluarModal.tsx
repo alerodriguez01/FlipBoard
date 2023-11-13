@@ -5,6 +5,7 @@ import { Grupo, Rubrica, Usuario } from "@/lib/types";
 import { RubricasAccordion } from "./RubricasAccordion";
 import endpoints from "@/lib/endpoints";
 import { RubricaGrid } from "./RubricaGrid";
+import { EvaluarSection } from "./EvaluarSection";
 
 type ModalProps = {
   isOpen: boolean,
@@ -19,8 +20,6 @@ const EvaluarModal = (props: ModalProps) => {
   
   const [isEvaluando, setIsEvaluando] = useState(false);
   const [rubrica, setRubrica] = React.useState<Rubrica>();
-  const [valores, setValores] = useState();
-  const [observaciones, setObservaciones] = useState();
 
 
   if(!props.entity) return <></>
@@ -53,19 +52,7 @@ const EvaluarModal = (props: ModalProps) => {
               
               <ModalBody>
                 {isEvaluando && rubrica ?
-                  <>
-                    <RubricaGrid
-                      label={rubrica.nombre}
-                      criterios={rubrica.criterios}
-                      niveles={rubrica.niveles}
-                      evaluable
-                      dataSetter={setValores}/>
-                    <Input 
-                      variant="bordered"
-                      label="Observaciones"
-                      placeholder="Escriba aquí sus observaciones..."
-                      className="px-4" />
-                  </>
+                  <EvaluarSection rubrica={rubrica}/>
                   :
                   <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
                     <RubricasAccordion
@@ -83,7 +70,7 @@ const EvaluarModal = (props: ModalProps) => {
               <ModalFooter className="flex flex-row justify-end">
                   <Button 
                     className="bg-[#181e25] text-white end-4" 
-                    onPress={isEvaluando ? () => {} : () => setIsEvaluando(true)}>
+                    onPress={isEvaluando ? () => {} : () => {rubrica && setIsEvaluando(true)}}>
                     {isEvaluando ? "Guardar" : "Ir a evaluar"}
                   </Button>
               </ModalFooter>
