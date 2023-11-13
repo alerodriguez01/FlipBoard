@@ -16,7 +16,12 @@ export default function Cursos() {
   // para crear curso
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
-  if (error) return (<h1>{error.message}</h1>);
+  if (error) return (
+    <section className="flex flex-col flex-1 p-10">
+      {/* {error.message} */}
+      <h1 className="">No se pudieron obtener los cursos</h1>
+      </section>
+  );
 
   if (status === 'loading' || isLoading)
     return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />

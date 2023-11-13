@@ -13,7 +13,12 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { data, error, isLoading } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
 
-  if (error) return (<h1>{error.message}</h1>);
+  if (error) return (
+    <section className="flex flex-col flex-1 p-10">
+      {/* {error.message} */}
+      <h1 className="">No se pudieron obtener los murales</h1>
+      </section>
+  );
 
   if (status === 'loading' || isLoading)
     return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
