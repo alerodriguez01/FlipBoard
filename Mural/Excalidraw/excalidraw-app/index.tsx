@@ -739,7 +739,7 @@ const ExcalidrawWrapper = () => {
 
   } else {
     // si se pasaron como search params, los guardo en el local storage
-    localStorage.setItem("search_param", JSON.stringify({ idMural, idCurso, idUser, theme: theme || THEME.LIGHT, roomHash }))
+    localStorage.setItem("search_param", JSON.stringify({ idMural, idCurso, idUser, theme: themeParam || THEME.LIGHT, roomHash }))
     // los elimino de la url. Solo dejo el el valor de room (esto me va a permitir importar las librerias sin problemas)
     window.history.replaceState({}, APP_NAME, `${window.location.origin}${roomHash}`);
   }
