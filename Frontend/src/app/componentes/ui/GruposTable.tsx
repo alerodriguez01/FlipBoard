@@ -17,7 +17,7 @@ type TableProps = {
   evaluable: boolean,
   onCrearGrupoPress?: () => void
   onAsignarRubricaPress?: () => void
-  onEvaluarPress?: (grupoId: string) => void
+  onEvaluarPress?: (grupo: Grupo) => void
   onEditarPress?: (grupoId: string) => void
 }
 
@@ -30,7 +30,7 @@ const GruposTable = (props: TableProps) => {
 
     if (columnKey === "evaluar")    
       return props.evaluable && 
-        <Button onPress={() => props.onEvaluarPress?.(grupo.id)} radius="full" variant="faded">Evaluar</Button> 
+        <Button onPress={() => props.onEvaluarPress?.(grupo)} radius="full" variant="faded">Evaluar</Button> 
 
 
     if (props.editable && columnKey === "actions") 

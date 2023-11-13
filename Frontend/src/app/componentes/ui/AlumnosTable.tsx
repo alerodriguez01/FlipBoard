@@ -15,7 +15,7 @@ type TableProps = {
   evaluable: boolean,
   onAgregarAlumnoPress?: () => void
   onAsignarRubricaPress?: () => void
-  onEvaluarPress?: (userId: string) => void
+  onEvaluarPress?: (user: Usuario) => void
 }
 
 const AlumnosTable = (props: TableProps) => {
@@ -32,7 +32,7 @@ const AlumnosTable = (props: TableProps) => {
         return <Chip size="md" color="secondary" variant="bordered">Docente</Chip>;
       
       return props.evaluable ? 
-        <Button onPress={() => props.onEvaluarPress?.(user.id)} radius="full" variant="faded" className="">Evaluar</Button> 
+        <Button onPress={() => props.onEvaluarPress?.(user)} radius="full" variant="faded" className="">Evaluar</Button> 
         :
         <></>  
     }
