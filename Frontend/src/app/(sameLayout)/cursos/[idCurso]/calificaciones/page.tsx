@@ -1,4 +1,5 @@
 "use client"
+import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -19,6 +20,7 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
 
     return (
         <section className="flex flex-col flex-1 p-10 gap-4">
+            <PagesHeader title={isDocente ? "Calificaciones realizadas" : "Mis calificaciones"} searchable={false} />
             <h1>FlipBoard Ver Calificaciones</h1>
         </section>
     )
