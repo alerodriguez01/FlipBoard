@@ -61,12 +61,11 @@ const EvaluarModal = (props: ModalProps) => {
               'Content-Type': 'application/json'
           }
       });
-      console.log(res);
+
       if (!res.ok) {
-          setError("erroresExternos", { message: "Por favor, complete los campos correspondientes" });
+          setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
           return;
       }
-      const curso = await res.json();
       
       onClose();
 
