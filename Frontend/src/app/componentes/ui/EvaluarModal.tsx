@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { Grupo, Rubrica, Usuario } from "@/lib/types";
 import { RubricasAccordion } from "./RubricasAccordion";
 import endpoints from "@/lib/endpoints";
-import { EvaluarSection } from "./EvaluarSection";
+import { EvaluarForm } from "./EvaluarForm";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -55,7 +55,7 @@ const EvaluarModal = (props: ModalProps) => {
               
                 <ModalBody>
                   {isEvaluando && rubrica ?
-                    <EvaluarSection
+                    <EvaluarForm
                       rubrica={rubrica}
                       onEvaluarSuccess={onClose} 
                       idDocente={props.idDocente}

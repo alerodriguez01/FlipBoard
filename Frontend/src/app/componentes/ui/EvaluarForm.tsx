@@ -13,7 +13,7 @@ type EvaluarProps = {
   idDocente: string
 }
 
-const EvaluarSection = (props: EvaluarProps, ref: any) => {
+const EvaluarForm = (props: EvaluarProps, ref: any) => {
   
   const evaluarSchema = z.object({
     valores: z.map(z.string(), z.number(), {errorMap: () => ({message: "*Seleccione un nivel para cada criterio"})}),
@@ -96,4 +96,4 @@ const EvaluarSection = (props: EvaluarProps, ref: any) => {
   )
 };
 
-export { EvaluarSection };
+export { EvaluarForm };
