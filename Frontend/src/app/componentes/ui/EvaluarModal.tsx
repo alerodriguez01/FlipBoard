@@ -12,7 +12,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 type ModalProps = {
   isOpen: boolean,
   onOpenChange: () => void,
-  idCurso: string
+  idCurso: string,
+  idDocente: string,
   entity: any,
   entityType: "Usuario" | "Grupo" | undefined
 }
@@ -24,7 +25,7 @@ const EvaluarModal = (props: ModalProps) => {
   const [rubrica, setRubrica] = React.useState<Rubrica>();
 
   const evaluarSchema = z.object({
-    data: z.object({valores: z.map(z.string(), z.string()), observaciones: z.string().optional()}, {errorMap: () => ({message: "Seleccione un nivel para cada criterio"})})
+    data: z.object({valores: z.map(z.string(), z.number()), observaciones: z.string().optional()}, {errorMap: () => ({message: "Seleccione un nivel para cada criterio"})})
   }).refine(data => data.data.valores.size === rubrica?.criterios.length, {message: "Seleccione un nivel para cada criterio", path: ["data"]});
   
   type EvaluarForm = z.infer<typeof evaluarSchema> & { erroresExternos?: string };
@@ -46,8 +47,32 @@ const EvaluarModal = (props: ModalProps) => {
 
   const nombreConMayus = (nom: string) => nom.split(' ').map(w => w[0].toUpperCase()+w.substring(1)).join(' ');
 
-  const onSubmit = (onClose: () => void, data: any) => {
-    
+  const onSubmit = async (onClose: () => void, data: EvaluarForm) => {
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.crearCalificacionAlumno(props.idCurso, props.entity.id), {
+          method: 'POST',
+          body: JSON.stringify({
+              valores: Array.from(data.data.valores.values()),
+              observaciones: data.data.observaciones,
+              idRubrica: rubrica?.id,
+              idDocente: props.idDocente
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+      console.log(res);
+      if (!res.ok) {
+          setError("erroresExternos", { message: "Por favor, complete los campos correspondientes" });
+          return;
+      }
+      const curso = await res.json();
+      
+      onClose();
+
+    } catch (err) {
+        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
+    }
   }
 
 
@@ -90,6 +115,9 @@ const EvaluarModal = (props: ModalProps) => {
                       />
                     </RadioGroup>         
                   }
+                  <input type="text" className="hidden" {...register("erroresExternos")} />
+                  {errors.erroresExternos &&
+                      <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
                 </ModalBody>
 
                 <ModalFooter className="flex flex-row justify-between">

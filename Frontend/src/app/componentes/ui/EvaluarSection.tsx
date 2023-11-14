@@ -20,7 +20,7 @@ const EvaluarSection = forwardRef( (props: EvaluarProps, ref: any) => {
     control: props.control,
   });
   const [observaciones, setObservaciones] = React.useState<string|undefined>();
-  const [valores, setValores] = React.useState<Map<string,string>|undefined>();
+  const [valores, setValores] = React.useState<Map<string,number>|undefined>();
 
   return (
     <section>
@@ -29,7 +29,7 @@ const EvaluarSection = forwardRef( (props: EvaluarProps, ref: any) => {
         criterios={props.rubrica.criterios}
         niveles={props.rubrica.niveles}
         evaluable
-        dataSetter={(map: Map<string,string>) => {setValores(map); field.onChange({valores: map, observaciones})}}/>
+        dataSetter={(map: Map<string,number>) => {setValores(map); field.onChange({valores: map, observaciones})}}/>
       <Input 
         variant="bordered"
         label="Observaciones"

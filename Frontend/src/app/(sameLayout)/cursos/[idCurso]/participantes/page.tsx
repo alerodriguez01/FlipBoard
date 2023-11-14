@@ -50,7 +50,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
             {esDocente && 
                 <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
             {esDocente &&
-                <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} entityType={entityType} idCurso={params.idCurso}/>}
+                <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso}/>}
         </section>
     )
 }

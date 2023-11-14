@@ -17,13 +17,13 @@ const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[
       <RubricaGridCell 
         crit={row.nombre}
         niv={key.toString()}
-        selected={nivelSelecc.get(row.nombre) === key.toString()}
+        selected={nivelSelecc.get(row.nombre) === parseInt(key.toString())}
         onClick={(crit, niv) => {
           if(!props.evaluable)
             return;
           if(niv === '-1')
             return;
-          setNivelSelecc(nivelSelecc.set(crit,niv));
+          setNivelSelecc(nivelSelecc.set(crit,parseInt(niv)));
           props.dataSetter?.(nivelSelecc); 
           setCambio(!cambio);
         }}

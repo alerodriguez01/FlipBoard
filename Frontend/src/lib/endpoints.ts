@@ -59,6 +59,10 @@ function asociarRubricaAlumnos(idCurso: string) {
     return `/api/cursos/${idCurso}/rubricas/alumnos`
 }
 
+function crearCalificacionAlumno(idCurso: string, idAlumno: string) {
+    return `/api/cursos/${idCurso}/calificaciones/alumnos/${idAlumno}`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -67,5 +71,5 @@ export default {
     getAllMuralesWithRubricas, createCurso, getMuralById,
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
     asociarRubricaAlumnos, getAllRubricasIndividuales,
-    getAllRubricasGrupales
+    getAllRubricasGrupales, crearCalificacionAlumno
 }
