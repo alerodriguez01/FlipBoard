@@ -4,8 +4,10 @@ import React, { useState } from "react";
 import { Grupo, Rubrica, Usuario } from "@/lib/types";
 import { RubricasAccordion } from "./RubricasAccordion";
 import endpoints from "@/lib/endpoints";
-import { RubricaGrid } from "./RubricaGrid";
 import { EvaluarSection } from "./EvaluarSection";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type ModalProps = {
   isOpen: boolean,
@@ -21,10 +23,33 @@ const EvaluarModal = (props: ModalProps) => {
   const [isEvaluando, setIsEvaluando] = useState(false);
   const [rubrica, setRubrica] = React.useState<Rubrica>();
 
+  const evaluarSchema = z.object({
+    data: z.object({valores: z.map(z.string(), z.string()), observaciones: z.string().optional()}, {errorMap: () => ({message: "Seleccione un nivel para cada criterio"})})
+  }).refine(data => data.data.valores.size === rubrica?.criterios.length, {message: "Seleccione un nivel para cada criterio", path: ["data"]});
+  
+  type EvaluarForm = z.infer<typeof evaluarSchema> & { erroresExternos?: string };
 
+  const {
+    register,
+    control,
+    handleSubmit,
+    formState: {
+        errors,
+        isSubmitting
+    },
+    setError
+  } = useForm<EvaluarForm>({
+      resolver: zodResolver(evaluarSchema)
+  });
+  
   if(!props.entity) return <></>
 
   const nombreConMayus = (nom: string) => nom.split(' ').map(w => w[0].toUpperCase()+w.substring(1)).join(' ');
+
+  const onSubmit = (onClose: () => void, data: any) => {
+    
+  }
+
 
   return (
     <Modal
@@ -49,31 +74,35 @@ const EvaluarModal = (props: ModalProps) => {
                   </div>
                 }
               </ModalHeader>
-              
-              <ModalBody>
-                {isEvaluando && rubrica ?
-                  <EvaluarSection rubrica={rubrica}/>
-                  :
-                  <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
-                    <RubricasAccordion
-                      endpoint={
-                        props.entityType === "Usuario" ? 
-                          endpoints.getAllRubricasIndividuales(props.idCurso) : 
-                          endpoints.getAllRubricasGrupales(props.idCurso)}
-                      type={"selectable"} 
-                      title={"Seleccione una rúbrica"}
-                    />
-                  </RadioGroup>         
-                }
-              </ModalBody>
+              <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
+                <ModalBody>
+                  {isEvaluando && rubrica ?
+                    <EvaluarSection rubrica={rubrica} control={control} {...register("data")}/>
+                    :
+                    <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
+                      <RubricasAccordion
+                        endpoint={
+                          props.entityType === "Usuario" ? 
+                            endpoints.getAllRubricasIndividuales(props.idCurso) : 
+                            endpoints.getAllRubricasGrupales(props.idCurso)}
+                        type={"selectable"} 
+                        title={"Seleccione una rúbrica"}
+                      />
+                    </RadioGroup>         
+                  }
+                </ModalBody>
 
-              <ModalFooter className="flex flex-row justify-end">
-                  <Button 
-                    className="bg-[#181e25] text-white end-4" 
-                    onPress={isEvaluando ? () => {} : () => {rubrica && setIsEvaluando(true)}}>
-                    {isEvaluando ? "Guardar" : "Ir a evaluar"}
-                  </Button>
-              </ModalFooter>
+                <ModalFooter className="flex flex-row justify-between">
+                    <Button 
+                      className="bg-[#181e25] text-white end-4"
+                      type={isEvaluando ? 'submit' : 'button'} 
+                      onPress={isEvaluando ? () => {} : () => {rubrica && setIsEvaluando(true)}}
+                      isLoading={isSubmitting}
+                    >
+                      {isEvaluando ? "Guardar" : "Ir a evaluar"}
+                    </Button>
+                </ModalFooter>
+              </form>
             </>
           )}
 
