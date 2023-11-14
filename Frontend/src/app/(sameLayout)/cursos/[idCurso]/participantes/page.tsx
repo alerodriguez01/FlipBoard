@@ -40,7 +40,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         idCurso={params.idCurso} 
                         editable={esDocente}
                         evaluable={esDocente}
-                        onEvaluarPress={(grupoId) => onEvaluarOpen()}
+                        onEvaluarPress={(grupo) => {setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen();}}
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
                         onAsignarRubricaPress={onAsignarOpen}/>
