@@ -15,8 +15,8 @@ type CardProps = {
   editable?: boolean
   muralId: string,
   cursoId: string,
-  userId: string,
-  room: string
+  room: string,
+  description?: string
 };
 
 const MuralCard = (props: CardProps) => {
@@ -35,12 +35,13 @@ const MuralCard = (props: CardProps) => {
 
   const handleOnPress = async () => {
     // const linkCollaborative = await generateContenidoMural()
-    router.push(process.env.NEXT_PUBLIC_BACKEND_ROOM_URL+`/?curso=${props.cursoId}&mural=${props.muralId}&user=${props.userId}&theme=${currentTheme}#room=${props.room}`)
+    router.push(process.env.NEXT_PUBLIC_BACKEND_ROOM_URL+`/?curso=${props.cursoId}&mural=${props.muralId}&theme=${currentTheme}#room=${props.room}`)
   }
 
   return (
     <FBCard 
         title={props.title}
+        description={props.description}
         editable={props.editable}
         dropDownItems={
           props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :
