@@ -3,8 +3,18 @@ import { Criterio } from "@/lib/types";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React, { Key, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
+import { useController } from "react-hook-form";
 
-const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[], evaluable: boolean}) => {
+type GridProps = {
+  label: string,
+  criterios: Criterio[],
+  niveles: any[],
+  evaluable: boolean,
+  name?: string,
+  control?: any
+}
+
+const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
 
   let n=0;
   const columns = [{nombre: "Criterio", i: -1},...props.niveles.map(niv => ({...niv, i: n++}))];
@@ -12,18 +22,26 @@ const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[
   const [cambio, setCambio] = useState(false);
   const [nivelSelecc, setNivelSelecc] = useState(new Map());
 
+  // carniceria con los undefined gracias TS :)
+  const {
+    field = undefined,
+    fieldState: {invalid = undefined, error = undefined}
+  } = props.control && props.name ? useController({name: props.name, control: props.control}) : {fieldState: {}};
+
   const renderCell = (row: Criterio, key: Key) => {
     return (
       <RubricaGridCell 
         crit={row.nombre}
         niv={key.toString()}
-        selected={nivelSelecc.get(row.nombre) === key.toString()}
+        selected={nivelSelecc.get(row.nombre) === parseInt(key.toString())}
         onClick={(crit, niv) => {
           if(!props.evaluable)
             return;
           if(niv === '-1')
             return;
-          setNivelSelecc(nivelSelecc.set(crit,niv)); 
+          const newMap = nivelSelecc.set(crit,parseInt(niv));
+          setNivelSelecc(newMap);
+          field?.onChange(newMap); 
           setCambio(!cambio);
         }}
       >
@@ -33,6 +51,7 @@ const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[
   }
 
   return (
+    <>
     <Table isStriped shadow="none" aria-label={`Rubrica ${props.label}`}>
       <TableHeader>
         {columns.map(col => <TableColumn key={col.i}>{col.nombre}</TableColumn>)}
@@ -45,7 +64,10 @@ const RubricaGrid = (props: {label: string, criterios: Criterio[], niveles: any[
         )}
       </TableBody>
     </Table>
+    {invalid &&
+      <p className="text-red-500 text-sm self-start mb-4 ml-4">{error?.message}</p>}
+    </>
   );
-};
+});
 
 export { RubricaGrid };

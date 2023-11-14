@@ -29,7 +29,6 @@ const PaginatedTable = (props: TableProps) => {
 
   const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
-      console.log(data)
 
   const loadingState = isLoading ? "loading" : "idle";
 

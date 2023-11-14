@@ -47,8 +47,24 @@ function getAllRubricasFromUser(idUsuario: string) {
     return `/api/usuarios/${idUsuario}/rubricas`
 }
 
+function getAllRubricasIndividuales(idCurso: string) {
+    return `/api/cursos/${idCurso}/rubricas/alumnos`;
+}
+
+function getAllRubricasGrupales(idCurso: string) {
+    return `/api/cursos/${idCurso}/rubricas/grupos`;
+}
+
 function asociarRubricaAlumnos(idCurso: string) {
     return `/api/cursos/${idCurso}/rubricas/alumnos`
+}
+
+function crearCalificacionAlumno(idCurso: string, idAlumno: string) {
+    return `/api/cursos/${idCurso}/calificaciones/alumnos/${idAlumno}`;
+}
+
+function crearCalificacionGrupo(idCurso: string, idGrupo: string) {
+    return `/api/cursos/${idCurso}/calificaciones/grupos/${idGrupo}`;
 }
 
 // TODO: Agregar demas rutas
@@ -58,5 +74,7 @@ export default {
     getUserWithCursos, getCursoById, login, createUser,
     getAllMuralesWithRubricas, createCurso, getMuralById,
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
-    asociarRubricaAlumnos
+    asociarRubricaAlumnos, getAllRubricasIndividuales,
+    getAllRubricasGrupales, crearCalificacionAlumno,
+    crearCalificacionGrupo
 }
