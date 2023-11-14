@@ -1,13 +1,10 @@
 'use client';
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, RadioGroup } from "@nextui-org/react";
+import { Button,  Modal, ModalBody, ModalContent, ModalHeader, RadioGroup } from "@nextui-org/react";
 import React, { useState } from "react";
-import { Grupo, Rubrica, Usuario } from "@/lib/types";
+import { Rubrica } from "@/lib/types";
 import { RubricasAccordion } from "./RubricasAccordion";
 import endpoints from "@/lib/endpoints";
 import { EvaluarForm } from "./EvaluarForm";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
 
 type ModalProps = {
   isOpen: boolean,

@@ -1,3 +1,4 @@
+'use client';
 import React from "react";
 import { RubricaGrid } from "./RubricaGrid";
 import { Button, Textarea } from "@nextui-org/react";
