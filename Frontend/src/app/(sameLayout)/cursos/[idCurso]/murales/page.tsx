@@ -53,7 +53,6 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                 description={m.descripcion}
                 muralId={m.id}
                 cursoId={params.idCurso}
-                userId={session?.user.id || ""}
                 room={m.contenido}
                 rubrica={m.rubricaModel?.nombre}
                 color={color++ % 2}
