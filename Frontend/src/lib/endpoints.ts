@@ -63,6 +63,10 @@ function crearCalificacionAlumno(idCurso: string, idAlumno: string) {
     return `/api/cursos/${idCurso}/calificaciones/alumnos/${idAlumno}`;
 }
 
+function crearCalificacionGrupo(idCurso: string, idGrupo: string) {
+    return `/api/cursos/${idCurso}/calificaciones/grupos/${idGrupo}`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -71,5 +75,6 @@ export default {
     getAllMuralesWithRubricas, createCurso, getMuralById,
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
     asociarRubricaAlumnos, getAllRubricasIndividuales,
-    getAllRubricasGrupales, crearCalificacionAlumno
+    getAllRubricasGrupales, crearCalificacionAlumno,
+    crearCalificacionGrupo
 }

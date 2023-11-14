@@ -1,47 +1,99 @@
-import React, { forwardRef, useState } from "react";
+import React from "react";
 import { RubricaGrid } from "./RubricaGrid";
-import { Input } from "@nextui-org/react";
+import { Button, Textarea } from "@nextui-org/react";
 import { Rubrica } from "@/lib/types";
-import { useController } from "react-hook-form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 type EvaluarProps = {
   rubrica: Rubrica,
-  control: any,
-  name: string
+  onEvaluarSuccess?: () => void,
+  endpoint: string,
+  idDocente: string
 }
 
-const EvaluarSection = forwardRef( (props: EvaluarProps, ref: any) => {
+const EvaluarSection = (props: EvaluarProps, ref: any) => {
   
+  const evaluarSchema = z.object({
+    valores: z.map(z.string(), z.number(), {errorMap: () => ({message: "*Seleccione un nivel para cada criterio"})}),
+    observaciones: z.string().optional()
+  }).refine(data => data.valores.size === props.rubrica?.criterios.length, {message: "*Seleccione un nivel para cada criterio", path: ["valores"]});
+  
+  type EvaluarForm = z.infer<typeof evaluarSchema> & { erroresExternos?: string };
+
   const {
-    field,
-    fieldState: {invalid, error}
-  } = useController({
-    name: props.name,
-    control: props.control,
+    register,
+    control,
+    handleSubmit,
+    formState: {
+        errors,
+        isSubmitting
+    },
+    setError
+  } = useForm<EvaluarForm>({
+      resolver: zodResolver(evaluarSchema)
   });
-  const [observaciones, setObservaciones] = React.useState<string|undefined>();
-  const [valores, setValores] = React.useState<Map<string,number>|undefined>();
+
+  const onSubmit = async (data: EvaluarForm) => {
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint, {
+          method: 'POST',
+          body: JSON.stringify({
+              valores: Array.from(data.valores.values()),
+              observaciones: data.observaciones,
+              idRubrica: props.rubrica.id,
+              idDocente: props.idDocente
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+
+      if (!res.ok) {
+          setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
+          return;
+      }
+      
+      props.onEvaluarSuccess?.();
+
+    } catch (err) {
+        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
+    }
+  }
 
   return (
-    <section>
+    <form className="flex flex-col" action="" onSubmit={handleSubmit((data) => onSubmit(data))}>
       <RubricaGrid
         label={props.rubrica.nombre}
         criterios={props.rubrica.criterios}
         niveles={props.rubrica.niveles}
         evaluable
-        dataSetter={(map: Map<string,number>) => {setValores(map); field.onChange({valores: map, observaciones})}}/>
-      <Input 
+        control={control}
+        {...register("valores")} />
+      <Textarea 
         variant="bordered"
         label="Observaciones"
         placeholder="Escriba aquí sus observaciones..."
         className="px-4"
-        onValueChange={(value) => {
-          setObservaciones(value);
-          field.onChange({valores, observaciones: value});
-        }} />
-        {invalid && <p>{error?.message}</p>}
-    </section>
+        {...register("observaciones")} />
+      
+      <footer className="flex flex-row justify-between">
+        <div className="min-w-[300px] flex flex-row ml-4">
+          <input type="text" className="hidden" {...register("erroresExternos")} />
+          {errors.erroresExternos &&
+              <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
+        </div>
+        <Button 
+          className="bg-[#181e25] text-white justify-self-end w-[150px] mt-3 end-4"
+          type='submit' 
+          isLoading={isSubmitting}
+        >
+          Guardar
+        </Button>
+      </footer>
+    </form>
   )
-});
+};
 
 export { EvaluarSection };

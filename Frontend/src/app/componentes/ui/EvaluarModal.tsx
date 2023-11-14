@@ -23,58 +23,12 @@ const EvaluarModal = (props: ModalProps) => {
   
   const [isEvaluando, setIsEvaluando] = useState(false);
   const [rubrica, setRubrica] = React.useState<Rubrica>();
-
-  const evaluarSchema = z.object({
-    data: z.object({valores: z.map(z.string(), z.number()), observaciones: z.string().optional()}, {errorMap: () => ({message: "Seleccione un nivel para cada criterio"})})
-  }).refine(data => data.data.valores.size === rubrica?.criterios.length, {message: "Seleccione un nivel para cada criterio", path: ["data"]});
-  
-  type EvaluarForm = z.infer<typeof evaluarSchema> & { erroresExternos?: string };
-
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: {
-        errors,
-        isSubmitting
-    },
-    setError
-  } = useForm<EvaluarForm>({
-      resolver: zodResolver(evaluarSchema)
-  });
   
   if(!props.entity) return <></>
 
   const nombreConMayus = (nom: string) => nom.split(' ').map(w => w[0].toUpperCase()+w.substring(1)).join(' ');
 
-  const onSubmit = async (onClose: () => void, data: EvaluarForm) => {
-    try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.crearCalificacionAlumno(props.idCurso, props.entity.id), {
-          method: 'POST',
-          body: JSON.stringify({
-              valores: Array.from(data.data.valores.values()),
-              observaciones: data.data.observaciones,
-              idRubrica: rubrica?.id,
-              idDocente: props.idDocente
-          }),
-          headers: {
-              'Content-Type': 'application/json'
-          }
-      });
-
-      if (!res.ok) {
-          setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
-          return;
-      }
-      
-      onClose();
-
-    } catch (err) {
-        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
-    }
-  }
-
-
+  
   return (
     <Modal
       isOpen={props.isOpen}
@@ -98,38 +52,38 @@ const EvaluarModal = (props: ModalProps) => {
                   </div>
                 }
               </ModalHeader>
-              <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
+              
                 <ModalBody>
                   {isEvaluando && rubrica ?
-                    <EvaluarSection rubrica={rubrica} control={control} {...register("data")}/>
+                    <EvaluarSection
+                      rubrica={rubrica}
+                      onEvaluarSuccess={onClose} 
+                      idDocente={props.idDocente}
+                      endpoint={
+                        props.entityType === "Usuario" ? 
+                              endpoints.crearCalificacionAlumno(props.idCurso, props.entity.id) : 
+                              endpoints.crearCalificacionGrupo(props.idCurso, props.entity.id)
+                      }
+                    />
                     :
-                    <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
-                      <RubricasAccordion
-                        endpoint={
-                          props.entityType === "Usuario" ? 
-                            endpoints.getAllRubricasIndividuales(props.idCurso) : 
-                            endpoints.getAllRubricasGrupales(props.idCurso)}
-                        type={"selectable"} 
-                        title={"Seleccione una rúbrica"}
-                      />
-                    </RadioGroup>         
+                    <div className="flex flex-col gap-3">
+                      <RadioGroup onValueChange={(value) => setRubrica(JSON.parse(value) as Rubrica)}>
+                        <RubricasAccordion
+                          endpoint={
+                            props.entityType === "Usuario" ? 
+                              endpoints.getAllRubricasIndividuales(props.idCurso) : 
+                              endpoints.getAllRubricasGrupales(props.idCurso)}
+                          type={"selectable"} 
+                          title={"Seleccione una rúbrica"}
+                        />
+                      </RadioGroup>
+                      <Button 
+                        className="bg-[#181e25] text-white w-[150px] self-end end-2.5"
+                        onPress={() => {rubrica && setIsEvaluando(true)}}
+                      >Ir a evaluar</Button>
+                    </div>         
                   }
-                  <input type="text" className="hidden" {...register("erroresExternos")} />
-                  {errors.erroresExternos &&
-                      <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
                 </ModalBody>
-
-                <ModalFooter className="flex flex-row justify-between">
-                    <Button 
-                      className="bg-[#181e25] text-white end-4"
-                      type={isEvaluando ? 'submit' : 'button'} 
-                      onPress={isEvaluando ? () => {} : () => {rubrica && setIsEvaluando(true)}}
-                      isLoading={isSubmitting}
-                    >
-                      {isEvaluando ? "Guardar" : "Ir a evaluar"}
-                    </Button>
-                </ModalFooter>
-              </form>
             </>
           )}
 
