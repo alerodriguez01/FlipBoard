@@ -21,7 +21,11 @@ export type Usuario = {
     cursosDocente: string[];
     grupos: string[];
     //token?: string; // cuando hace el login, retorna el token en el body tmb
-} & Error;
+};
+export type Session = { 
+    loggedIn: boolean,
+    user: Usuario,
+};
 
 export type Curso = {
     id: string;

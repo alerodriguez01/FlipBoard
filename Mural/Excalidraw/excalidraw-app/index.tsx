@@ -114,7 +114,7 @@ import "./main.css";
 import { Button, Tooltip } from "@nextui-org/react";
 import DarkLightIcon from "./flipboard/icons/DarkLightIcon";
 import { InfoIcon } from "./flipboard/icons/InfoIcon";
-import { Curso, Mural, Usuario } from "./flipboard/lib/types";
+import { Curso, Mural, Session, Usuario } from "./flipboard/lib/types";
 import useSWR from "swr";
 import BackIcon from "./flipboard/icons/BackIcon";
 import EvaluarMural from "./flipboard/components/EvaluarMural";
@@ -686,11 +686,9 @@ const ExcalidrawWrapper = () => {
   const searchParams = new URLSearchParams(window.location.search);
   let idMural = searchParams.get("mural");
   let idCurso = searchParams.get("curso");
-  let idUser = searchParams.get("user");
   let themeParam = searchParams.get("theme");
   // console.log("idMural: ", idMural);
   // console.log("idCurso: ", idCurso);
-  // console.log("idUser: ", idUser);
   // console.log("themeParam: ", themeParam);
   const roomHash = window.location.hash;
   // console.log("roomHash: ", roomHash);
@@ -698,15 +696,13 @@ const ExcalidrawWrapper = () => {
   const FLIPBOARD_FRONTEND = import.meta.env.VITE_FLIPBOARD_FRONTEND_URL;
   const FLIPBOARD_BACKEND = import.meta.env.VITE_FLIPBOARD_BACKEND_URL;
 
-  const errorEntidadInexistente = (mural: boolean, curso: boolean, user: boolean) => (
+  const errorEntidadInexistente = (mural: boolean, curso: boolean) => (
 
     <div className="flex flex-col gap-3 justify-center items-center h-full w-full">
       <div className="flex gap-3 text-center">
         {mural ? <p className="text-green-600">Mural</p> : <p className="text-red-600">Mural inexistente</p>}
         |
         {curso ? <p className="text-green-600">Curso</p> : <p className="text-red-600">Curso inexistente</p>}
-        |
-        {user ? <p className="text-green-600">Usuario</p> : <p className="text-red-600">Usuario inexistente</p>}
       </div>
       <a href={`${FLIPBOARD_FRONTEND}/cursos`} className="text-blue-600">Volver a FlipBoard</a>
     </div>
@@ -715,10 +711,15 @@ const ExcalidrawWrapper = () => {
 
   // ------ inicio logica de search params ------
 
+  // obtengo el usuario logueado
+  const { data: session, error: errorSession, isLoading: isLoadingSession } = useSWR<Session>(`${FLIPBOARD_FRONTEND}/api/auth/amiloggedin`, (url: string) => fetch(url, { credentials: "include" }).then(res => res.json()));
+  // si no estoy logueado, redirecciono a la pagina de login
+  if (!isLoadingSession && session && !session.loggedIn) window.location.href = FLIPBOARD_FRONTEND;
+
   // if (!idMural || !idCurso || !idUser) return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser) // si no se quiere manejar librerias
 
   // si no se pasaron los id como search params, 
-  if (!idMural || !idCurso || !idUser) {
+  if (!idMural || !idCurso) {
 
     // me fijo si estan en local storage
     const searchParamLS = localStorage.getItem("search_param");
@@ -727,19 +728,18 @@ const ExcalidrawWrapper = () => {
       const searchParamObj = JSON.parse(searchParamLS);
       idMural = searchParamObj.idMural;
       idCurso = searchParamObj.idCurso;
-      idUser = searchParamObj.idUser;
       themeParam = searchParamObj.theme;
       // seteo la url solo con el valor de room (esto me va a permitir importar las librerias sin problemas)
       window.history.replaceState({}, APP_NAME, `${window.location.origin}${roomHash}`);
 
     } else {
       // si no estan el localstorage ni se pasaron como param, muestro un mensaje de error
-      return errorEntidadInexistente(!!idMural, !!idCurso, !!idUser)
+      return errorEntidadInexistente(!!idMural, !!idCurso)
     }
 
   } else {
     // si se pasaron como search params, los guardo en el local storage
-    localStorage.setItem("search_param", JSON.stringify({ idMural, idCurso, idUser, theme: themeParam || THEME.LIGHT, roomHash }))
+    localStorage.setItem("search_param", JSON.stringify({ idMural, idCurso, theme: themeParam || THEME.LIGHT, roomHash }))
     // los elimino de la url. Solo dejo el el valor de room (esto me va a permitir importar las librerias sin problemas)
     window.history.replaceState({}, APP_NAME, `${window.location.origin}${roomHash}`);
   }
@@ -756,29 +756,33 @@ const ExcalidrawWrapper = () => {
     if (themeParam && (themeParam === THEME.DARK || themeParam === THEME.LIGHT)) setTheme(themeParam);
   }, [themeParam]);
 
-  // obtengo el usuario logueado
-  const { data: session, error: errorSession, isLoading: isLoadingSession } = useSWR(`${FLIPBOARD_FRONTEND}/api/auth/amiloggedin`, (url: string) => fetch(url, { credentials: "include" }).then(res => res.json()));
-  // si no estoy logueado, redirecciono a la pagina de login
-  if (!isLoadingSession && !session.loggedIn) window.location.href = FLIPBOARD_FRONTEND;
-
   // obtengo el mural
   const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}`, (url: string) => fetch(url).then(res => res.json()));
 
   // obtengo el curso
   const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(`${FLIPBOARD_BACKEND}/api/cursos/${idCurso}`, (url: string) => fetch(url).then(res => res.json()));
 
-  // obtengo el usuario
-  const { data: user, error: errorUser, isLoading: isLoadingUser } = useSWR<Usuario>(`${FLIPBOARD_BACKEND}/api/usuarios/${idUser}`, (url: string) => fetch(url).then(res => res.json()));
   const formatNombre = (nombre: string) => {
     const nombres = nombre.split(" ");
     const nombreCompleto = nombres.map((n) => n[0].toUpperCase() + n.slice(1)).join(" ");
     return nombreCompleto;
   }
   // si existe el usuario, seteo el nombre en el canvas
-  if (!isLoadingUser && user?.nombre) collabAPI?.setUsername(formatNombre(user.nombre))
+  if (!isLoadingSession && session?.user.nombre) collabAPI?.setUsername(formatNombre(session.user.nombre))
 
-  // si no existe el mural o el usuario, muestro un mensaje de error
-  if ( (!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error) || (!isLoadingUser && user?.error) ) return errorEntidadInexistente(!mural?.error, !curso?.error, !user?.error)
+  // si no existe el mural o el curso, muestro un mensaje de error
+  if ((!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error)) return errorEntidadInexistente(!mural?.error, !curso?.error)
+
+  if (!session?.user.cursosAlumno.includes(idCurso || "") && !session?.user.cursosDocente.includes(idCurso || "")) {
+    return (
+      <section className="flex flex-col justify-center items-center h-full w-full">
+        <h1>No tienes acceso a este mural</h1>
+        <a href={`${FLIPBOARD_FRONTEND}/cursos`} className="text-blue-600 hover:underline">Volver a FlipBoard</a>
+      </section>
+    )
+  }
+
+  const isDocente = session?.user.cursosDocente.includes(idCurso || "");
 
   /* -------------------------- FIN LOGICA FLIPBOARD ------------------------------- */
 
@@ -884,19 +888,20 @@ const ExcalidrawWrapper = () => {
               <DarkLightIcon theme={theme} />
             </Button>
 
-            <Sidebar.Trigger
-              name="Evaluar"
-              style={{
-                fontWeight: 600,
-                fontSize: '0.8rem',
-              }}
-              tab="alumnos"
-            >
-              <div className="flex items-center gap-2">
-                <RubricaIcon toggle={true} theme={theme} />
-                Evaluar
-              </div>
-            </Sidebar.Trigger>
+            {isDocente &&
+              <Sidebar.Trigger
+                name="Evaluar"
+                style={{
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                }}
+                tab="alumnos"
+              >
+                <div className="flex items-center gap-2">
+                  <RubricaIcon toggle={true} theme={theme} />
+                  Evaluar
+                </div>
+              </Sidebar.Trigger>}
 
           </div>
 
@@ -959,11 +964,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={idUser || ""} tipo="alumno" />
+              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="alumno" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={idUser || ""} tipo="grupo" />
+              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="grupo" />
             </Sidebar.Tab>
 
 
