@@ -13,6 +13,7 @@ type EvaluarProps = {
   onEvaluarSuccess?: () => void,
   endpoint: string,
   idDocente: string
+  onAtrasPressed?: () => void,
 }
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
@@ -86,13 +87,19 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
           {errors.erroresExternos &&
               <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
         </div>
-        <Button 
-          className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black justify-self-end w-[150px] mt-5"
-          type='submit' 
-          isLoading={isSubmitting}
-        >
-          Guardar
-        </Button>
+        <div className="flex flex-row justify-end mt-5 gap-3">
+          <Button
+            onPress={props.onAtrasPressed}
+            className="w-[100px]"
+          >Atrás</Button>
+          <Button 
+            className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black w-[100px]"
+            type='submit' 
+            isLoading={isSubmitting}
+          >
+            Guardar
+          </Button>
+        </div>
       </footer>
     </form>
   )

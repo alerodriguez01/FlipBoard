@@ -54,7 +54,8 @@ const EvaluarModal = (props: ModalProps) => {
                   {isEvaluando && rubrica ?
                     <EvaluarForm
                       rubrica={rubrica}
-                      onEvaluarSuccess={onClose} 
+                      onEvaluarSuccess={onClose}
+                      onAtrasPressed={() => setIsEvaluando(false)} 
                       idDocente={props.idDocente}
                       endpoint={
                         props.entityType === "Usuario" ? 
