@@ -77,8 +77,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         variant="bordered"
         label="Observaciones"
         placeholder="Escriba aquí sus observaciones..."
-        className="px-4"
-        {...register("observaciones")} />
+        {...register("observaciones")}
+        className="mt-3" />
       
       <footer className="flex flex-row justify-between">
         <div className="min-w-[300px] flex flex-row ml-4">
@@ -87,7 +87,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
         </div>
         <Button 
-          className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black justify-self-end w-[150px] mt-3 end-4"
+          className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black justify-self-end w-[150px] mt-5"
           type='submit' 
           isLoading={isSubmitting}
         >
