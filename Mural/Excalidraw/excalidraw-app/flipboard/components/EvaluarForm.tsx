@@ -2,10 +2,11 @@
 import React from "react";
 import { RubricaGrid } from "./RubricaGrid";
 import { Button, Textarea } from "@nextui-org/react";
-import { Rubrica } from "@/lib/types";
-import { useForm } from "react-hook-form";
+import { Rubrica } from "../lib/types";
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
 
 type EvaluarProps = {
   rubrica: Rubrica,
@@ -39,7 +40,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
 
   const onSubmit = async (data: EvaluarForm) => {
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint, {
+      const res = await fetch(import.meta.env.VITE_FLIPBOARD_BACKEND_URL + props.endpoint, {
           method: 'POST',
           body: JSON.stringify({
               valores: Array.from(data.valores.values()),
@@ -77,8 +78,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         variant="bordered"
         label="Observaciones"
         placeholder="Escriba aquí sus observaciones..."
-        className="px-4"
-        {...register("observaciones")} />
+        {...register("observaciones")}
+        className="mt-3" />
       
       <footer className="flex flex-row justify-between">
         <div className="min-w-[300px] flex flex-row ml-4">
@@ -86,13 +87,13 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
           {errors.erroresExternos &&
               <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
         </div>
-        <div className="flex flex-row justify-end mt-5 gap-3 mr-4">
+        <div className="flex flex-row justify-end mt-5 gap-3">
           <Button
             onPress={props.onAtrasPressed}
             className="w-[100px]"
           >Atrás</Button>
           <Button 
-            className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black w-[100px]"
+            className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black w-[100px]"
             type='submit' 
             isLoading={isSubmitting}
           >

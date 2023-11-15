@@ -23,6 +23,7 @@
     "@excalidraw/laser-pointer": "1.2.0",
     "@excalidraw/mermaid-to-excalidraw": "0.1.2",
     "@excalidraw/random-username": "1.0.0",
+    "@hookform/resolvers": "3.3.2",
     "@nextui-org/react": "2.2.9",
     "@radix-ui/react-popover": "1.0.3",
     "@radix-ui/react-tabs": "1.0.2",
@@ -56,11 +57,13 @@
     "pwacompat": "2.0.17",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "7.48.2",
     "roughjs": "4.6.4",
     "sass": "1.51.0",
     "socket.io-client": "2.3.1",
     "swr": "2.2.4",
-    "tunnel-rat": "0.1.2"
+    "tunnel-rat": "0.1.2",
+    "zod": "3.22.4"
   },
   "devDependencies": {
     "@excalidraw/eslint-config": "1.0.3",

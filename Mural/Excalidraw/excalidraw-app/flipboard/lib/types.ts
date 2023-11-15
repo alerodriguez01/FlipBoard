@@ -39,3 +39,22 @@ export type Curso = {
     rubricasGrupos: string[];
     rubicasAlumnos: string[];
 } & Error;
+
+export type Grupo = {
+    id: string,
+    numero: number,
+    integrantesModel?: any
+}
+
+export type Criterio = {
+    nombre: string,
+    descripciones: string[]
+}
+
+export type Rubrica = {
+    id: string,
+    nombre: string,
+    criterios: Criterio[],
+    niveles: Nivel[],
+    //agregar atributos requeridos
+}
