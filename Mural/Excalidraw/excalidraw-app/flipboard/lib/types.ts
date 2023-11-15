@@ -39,3 +39,9 @@ export type Curso = {
     rubricasGrupos: string[];
     rubicasAlumnos: string[];
 } & Error;
+
+export type Grupo = {
+    id: string,
+    numero: number,
+    integrantesModel?: any
+}
