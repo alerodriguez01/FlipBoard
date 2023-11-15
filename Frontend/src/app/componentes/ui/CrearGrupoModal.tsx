@@ -37,6 +37,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                       label={"Tabla de alumnos"}
                       loadingState={false}
                       title={"Buscar alumno"}
+                      theme={currentTheme}
                       headerContent={
                       <Input
                         radius="none"
@@ -54,14 +55,15 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                       <CrearGrupoTable 
                         label={"Tabla de integrantes"} 
                         loadingState={"idle"} 
-                        title={"Integrantes"} 
+                        title={"Integrantes"}
+                        theme={currentTheme} 
                         searchable={false} 
                         items={integrantes}
                         onActionPress={(user) => setIntegrantes(integrantes.filter(u => u.id !== user.id))}/>
                   </ModalBody>
 
                   <ModalFooter className="flex flex-row justify-end">
-                    <Button className="bg-[#181e25] text-white"
+                    <Button className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black"
                     isLoading={false}
                       type="submit"
                       spinner={Spinner}
