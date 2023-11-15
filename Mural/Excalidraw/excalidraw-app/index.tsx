@@ -946,9 +946,11 @@ const ExcalidrawWrapper = () => {
         </WelcomeScreen>
         <Sidebar
           name="Evaluar"
+          docked
           style={{
             paddingLeft: '0.5rem',
             paddingRight: '0.5rem',
+            minWidth: '33%'
           }}
         >
 
@@ -964,11 +966,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="alumno" />
+              <EvaluarMural theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="alumno" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="grupo" />
+              <EvaluarMural theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="grupo" />
             </Sidebar.Tab>
 
 
