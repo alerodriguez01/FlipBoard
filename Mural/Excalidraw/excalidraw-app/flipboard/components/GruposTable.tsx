@@ -70,6 +70,7 @@ const GruposTable = (props: TableProps) => {
       idCurso={props.idCurso} 
       endpoint={endpoints.getAllGrupos(props.idCurso)} 
       itemType={"grupo"} 
+      theme={props.theme}
       renderCell={(item, cKey) => renderCell(item,cKey)}
       headerRightContent={ props.editable &&
         <div className="flex gap-3">
