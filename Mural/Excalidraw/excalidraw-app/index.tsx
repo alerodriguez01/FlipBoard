@@ -757,7 +757,7 @@ const ExcalidrawWrapper = () => {
   }, [themeParam]);
 
   // obtengo el mural
-  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}`, (url: string) => fetch(url).then(res => res.json()));
+  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}?rubrica=true`, (url: string) => fetch(url).then(res => res.json()));
 
   // obtengo el curso
   const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(`${FLIPBOARD_BACKEND}/api/cursos/${idCurso}`, (url: string) => fetch(url).then(res => res.json()));
@@ -966,11 +966,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="alumno" />
+              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="alumno" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="grupo" />
+              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="grupo" />
             </Sidebar.Tab>
 
 

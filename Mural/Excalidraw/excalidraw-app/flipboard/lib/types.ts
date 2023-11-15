@@ -45,3 +45,16 @@ export type Grupo = {
     numero: number,
     integrantesModel?: any
 }
+
+export type Criterio = {
+    nombre: string,
+    descripciones: string[]
+}
+
+export type Rubrica = {
+    id: string,
+    nombre: string,
+    criterios: Criterio[],
+    niveles: Nivel[],
+    //agregar atributos requeridos
+}
