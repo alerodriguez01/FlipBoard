@@ -86,7 +86,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
         </div>
         <Button 
-          className="bg-[#181e25] text-white justify-self-end w-[150px] mt-3 end-4"
+          className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black justify-self-end w-[150px] mt-3 end-4"
           type='submit' 
           isLoading={isSubmitting}
         >

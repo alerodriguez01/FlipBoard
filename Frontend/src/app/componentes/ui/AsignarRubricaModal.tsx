@@ -61,9 +61,9 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
           isOpen={props.isOpen}
           onOpenChange={props.onOpenChange}
           placement="center"
-          size="4xl"
+          size="3xl"
           classNames={{closeButton: "p-5"}} >
-            <ModalContent className="min-h-[400px]">
+            <ModalContent className="">
               {(onClose) => (
                 <>
                   <ModalHeader className="flex flex-col">
@@ -84,7 +84,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                     </ModalBody>
 
                     <ModalFooter className="flex flex-row">
-                      <Button className="bg-[#181e25] text-white end-2.5"
+                      <Button className="bg-[#181e25] text-white end-2.5 dark:bg-gray-200 dark:text-black"
                       isLoading={isSubmitting}
                         type="submit"
                         spinner={Spinner}

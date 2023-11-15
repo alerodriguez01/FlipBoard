@@ -50,7 +50,7 @@ const EvaluarModal = (props: ModalProps) => {
                 }
               </ModalHeader>
               
-                <ModalBody>
+                <ModalBody className="p-3">
                   {isEvaluando && rubrica ?
                     <EvaluarForm
                       rubrica={rubrica}
@@ -75,7 +75,7 @@ const EvaluarModal = (props: ModalProps) => {
                         />
                       </RadioGroup>
                       <Button 
-                        className="bg-[#181e25] text-white w-[150px] self-end end-2.5"
+                        className="bg-[#181e25] text-white w-[150px] self-end end-2.5 dark:bg-gray-200 dark:text-black"
                         onPress={() => {rubrica && setIsEvaluando(true)}}
                       >Ir a evaluar</Button>
                     </div>         

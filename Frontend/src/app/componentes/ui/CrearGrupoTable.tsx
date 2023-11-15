@@ -12,7 +12,8 @@ type TableProps = {
   onActionPress: (user: Usuario) => void
   items: any[],
   loadingState: any,
-  headerContent?: ReactNode
+  headerContent?: ReactNode,
+  theme: string
 }
 
 const CrearGrupoTable = (props: TableProps) => {
@@ -28,7 +29,7 @@ const CrearGrupoTable = (props: TableProps) => {
     if(columnKey === "action")
       return (
         <Button isIconOnly variant="light" onPress={() => props.onActionPress(user)}>
-          {props.searchable ? <PlusIcon color="#000000"/> : <CrossIcon/>}
+          {props.searchable ? <PlusIcon color={props.theme === 'light' ? "#000000" : "#ffffff"}/> : <CrossIcon/>}
         </Button>)
 
     return getKeyValue(user,columnKey);
