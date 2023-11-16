@@ -58,3 +58,8 @@ export type Rubrica = {
     niveles: Nivel[],
     //agregar atributos requeridos
 }
+
+export type Nivel = {
+    nombre: string,
+    puntaje?: number
+}
