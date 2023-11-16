@@ -66,7 +66,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
   }
 
   return (
-    <form className="flex flex-col" action="" onSubmit={handleSubmit((data) => onSubmit(data))}>
+    <form className="flex flex-col gap-2" action="" onSubmit={handleSubmit((data) => onSubmit(data))}>
       <RubricaGrid
         label={props.rubrica.nombre}
         criterios={props.rubrica.criterios}
@@ -79,21 +79,21 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         label="Observaciones"
         placeholder="Escriba aquí sus observaciones..."
         {...register("observaciones")}
-        className="mt-3" />
+        />
       
       <footer className="flex flex-row justify-between">
-        <div className="min-w-[300px] flex flex-row ml-4">
+        <div className="flex flex-row ml-4">
           <input type="text" className="hidden" {...register("erroresExternos")} />
           {errors.erroresExternos &&
               <p className="text-red-500 text-sm self-center">{`${errors.erroresExternos.message}`}</p>}
         </div>
-        <div className="flex flex-row justify-end mt-5 gap-3">
+        <div className="flex flex-row justify-end gap-3 mt-1">
           <Button
             onPress={props.onAtrasPressed}
-            className="w-[100px]"
+            className=""
           >Atrás</Button>
           <Button 
-            className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black w-[100px]"
+            className=" text-white bg-[#6965DB] dark:bg-[#A8A5FF] dark:text-black "
             type='submit' 
             isLoading={isSubmitting}
           >
