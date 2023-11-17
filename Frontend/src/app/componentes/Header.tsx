@@ -18,8 +18,8 @@ const Header = () => {
     if (nombre) nombre = nombre[0].toUpperCase() + nombre.slice(1)
 
     const [mounted, setMounted] = useState(false)
-    const { theme } = useTheme()
-    const currentTheme = theme === "dark" ? "dark" : "light"
+    const { theme, systemTheme } = useTheme()
+    const currentTheme = theme === "system" ? systemTheme : theme
 
     // useEffect only runs on the client, so now we can safely show the UI
     useEffect(() => {

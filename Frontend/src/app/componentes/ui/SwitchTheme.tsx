@@ -9,8 +9,8 @@ const SwitchTheme = () => {
 
     // https://www.npmjs.com/package/next-themes#avoid-hydration-mismatch
     const [mounted, setMounted] = useState(false)
-    const { theme, setTheme } = useTheme()
-    const currentTheme = theme === "dark" ? "dark" : "light"
+    const { theme, systemTheme, setTheme } = useTheme()
+    const currentTheme = theme === "system" ? systemTheme : theme
 
 
     // useEffect only runs on the client, so now we can safely show the UI
@@ -29,7 +29,7 @@ const SwitchTheme = () => {
             variant="flat"
             className="rounded-full bg-transparent hover:text-gray-600 hover:dark:text-gray-400"
         >
-            <DarkLightIcon theme={currentTheme} />
+            <DarkLightIcon theme={currentTheme || "light"} />
         </Button>
     );
 
