@@ -40,13 +40,13 @@ async function login(req: Request, res: Response) {
 
 async function loginProvider(req: Request, res: Response) {
 
-    const { id, nombre, correo } = req.body;
+    const { nombre, correo } = req.body;
     const { provider } = req.params;
 
-    if(!id || !nombre || !correo || !provider) return res.status(400).json({error: 'Faltan campos obligatorios'});
+    if(!nombre || !correo || !provider) return res.status(400).json({error: 'Faltan campos obligatorios'});
 
     try{
-        const usuario = await usuarioService.loginProvider(id, provider, nombre, correo);
+        const usuario = await usuarioService.loginProvider(provider, nombre, correo);
         return res.status(200).json(usuario);
     }catch(error){
         return res.status(400).json({error: "Error al iniciar sesion con el proveedor"});

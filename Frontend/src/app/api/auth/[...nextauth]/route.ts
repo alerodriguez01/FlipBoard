@@ -67,7 +67,7 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
             // si inicio sesion con google, busco el usuario en la BD y lo retorno
             if(account?.provider === "google"){
                 // Buscar el usuario en la BD
-                const userLogged = await loginProvider(user.id, account.provider, user.name || "No name", user.email || `No email|${user.id}`);
+                const userLogged = await loginProvider(account.provider, user.name || "No name", user.email || `No email|${user.id}`);
 
                 if(!userLogged) return '/?loginback=error'; // si sale mal, retorna la URL a la que se redirecciona
 

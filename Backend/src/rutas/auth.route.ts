@@ -76,7 +76,6 @@ router.post('/login', controller.login)
  *      content:
  *        application/json:
  *          example:
- *            id: 109461709516461777805
  *            nombre: Juan Perez
  *            correo: juanperez@gmail.com
  *    parameters:

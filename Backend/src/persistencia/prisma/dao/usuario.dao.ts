@@ -190,20 +190,21 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       }
   }
 
-  async loginProvider(id: string, provider: string, nombre: string, correo: string) {
+  async loginProvider(provider: string, nombre: string, correo: string) {
 
-    const idProvider = `${provider}|${id}` // "google|1234567890"
+    // const idProvider = `${provider}|${id}` // "google|1234567890"
     const correoProvider = `${provider}|${correo}` // "google|juanperez@gmailcom"
     
     try {
 
       return await this.prisma.usuario.upsert({
-        where: {idProvider: idProvider},
+        // where: { idProvider: idProvider },
+        where: { correo: correoProvider },
         create: {
           nombre: nombre.toLowerCase(),
           correo: correoProvider, // "google|juanperez@gmail.com"
           contrasena: "",
-          idProvider: idProvider,
+          // idProvider: idProvider,
         },
         update: {
           nombre: nombre.toLowerCase(),

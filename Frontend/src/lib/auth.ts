@@ -30,10 +30,9 @@ async function login(correo: string, contrasena: string) {
     
 }
 
-async function loginProvider(id: string, provider: string, nombre: string, correo: string): Promise<Usuario | null>{
+async function loginProvider(provider: string, nombre: string, correo: string): Promise<Usuario | null>{
 
     const data = {
-        id,
         nombre,
         correo
     }

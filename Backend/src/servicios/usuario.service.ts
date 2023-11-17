@@ -147,8 +147,8 @@ function generateResetJWT(usuario: Usuario): string {
     return jwt.sign({ id: usuario.id }, process.env.JWT_SECRET_KEY || "", { expiresIn: '15m' });
 }
 
-async function loginProvider(id: string, provider: string, nombre: string, correo: string) {
-    return await usuarioRepository.loginProvider(id, provider, nombre, correo);
+async function loginProvider(provider: string, nombre: string, correo: string) {
+    return await usuarioRepository.loginProvider(provider, nombre, correo);
 }
 
 /**

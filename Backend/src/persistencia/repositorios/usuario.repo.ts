@@ -66,8 +66,8 @@ export class UsuarioRepository implements UsuarioDataSource {
         return await this.usuarioDAO.updateUsuarioPassword(idUsuario, password);
     }
 
-    async loginProvider(id: string, provider: string, nombre: string, correo: string, ): Promise<Usuario> {
-        return await this.usuarioDAO.loginProvider(id, provider, nombre, correo);
+    async loginProvider(provider: string, nombre: string, correo: string, ): Promise<Usuario> {
+        return await this.usuarioDAO.loginProvider(provider, nombre, correo);
     }
 
     // demas metodos
