@@ -1,17 +1,13 @@
 "use client"
 import { useTheme } from "next-themes";
-import { Button, button } from "@nextui-org/react";
-import { MoonIcon } from "./icons/MoonIcon";
-import { SunIcon } from "./icons/SunIcon";
+import { Button } from "@nextui-org/react";
 import DarkLightIcon from "./icons/DarkLightIcon";
 
 
 const SwitchTheme = () => {
 
-    const { systemTheme, theme, setTheme } = useTheme();
-    const currentTheme = theme === 'system' ? systemTheme : theme;
-
-    if(!currentTheme) return <button/> // esto lo hago para que no retorne un error en la consola
+    const { theme, setTheme } = useTheme();
+    const currentTheme = theme === "dark" ? "dark" : "light"
 
     return (
         <Button
