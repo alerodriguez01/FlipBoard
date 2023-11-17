@@ -8,6 +8,7 @@ import { usePathname } from "next/navigation"
 import useSWR from "swr"
 import { InfoIcon } from "./ui/icons/InfoIcon"
 import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
 const Header = () => {
 
@@ -16,8 +17,14 @@ const Header = () => {
     let nombre = session?.user.nombre.split(" ")[0]
     if (nombre) nombre = nombre[0].toUpperCase() + nombre.slice(1)
 
+    const [mounted, setMounted] = useState(false)
     const { theme } = useTheme()
     const currentTheme = theme === "dark" ? "dark" : "light"
+
+    // useEffect only runs on the client, so now we can safely show the UI
+    useEffect(() => {
+        setMounted(true)
+    }, [])
 
     const pathname = usePathname()
     const isCursosOrRubricas = pathname === "/cursos" || pathname === "/rubricas"
@@ -52,7 +59,7 @@ const Header = () => {
                                         </article>
                                     }>
                                     <Button isIconOnly disableAnimation className="bg-transparent rounded-full">
-                                        <InfoIcon width={18} height={18} theme={currentTheme} />
+                                        {mounted && <InfoIcon width={18} height={18} theme={currentTheme} />}
                                     </Button>
                                 </Tooltip>
                             }
