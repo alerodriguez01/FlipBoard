@@ -23,7 +23,9 @@ const colors = [
 
 const FBCard = (props: FBProps) => {
   return (
-    <Card isPressable onPress={() => props.onPress()} className="shadow-xl w-[400px] h-[200px] dark:shadow-gray-900 dark:bg-gray-800 ">
+    // <article onClick={() => props.onPress()} className="rounded-[14px] hover:cursor-pointer dark:shadow-gray-800 hover:shadow-xl transition duration-300">
+    //   <Card className="shadow-md w-[400px] h-[200px]  dark:bg-gray-800 dark:border dark:border-gray-900">
+    <Card isPressable onPress={() => props.onPress()} className="shadow-md w-[400px] h-[200px]  dark:bg-gray-800 dark:border-gray-900 hover:shadow-xl dark:shadow-gray-700 transition duration-300">
       <CardHeader className={"flex text-lg gap-2 items-center justify-between " + colors.at(props.color)}>
         <h2 className="max-w-[220px] px-3">{props.title}</h2>
         <aside className="flex">
@@ -56,6 +58,7 @@ const FBCard = (props: FBProps) => {
         </ScrollShadow>
       </CardBody>
     </Card>
+    // </article>
   );
 };
 
