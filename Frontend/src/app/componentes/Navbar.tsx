@@ -48,12 +48,14 @@ const Navbar = () => {
               <SpinnerNextUI color="default" className="my-8" />
               :
               <>
-                {/* Imagen con iniciales del usuario*/}
+                {session?.user.imagen ?
+                  <img src={session?.user.imagen} alt="Imagen del usuario" className="w-20 h-20 rounded-full mb-1 shadow-md shadow-gray-600" />
+                :
                 <div className="flex items-center justify-center min-w-[80px] min-h-[80px] rounded-full border-2 bg-gray-800 shadow-md shadow-gray-600 mb-1">
                   <p className="text-2xl">
                     {(nombreUser?.split(" ").flatMap((word: string) => word[0]))}
                   </p>
-                </div>
+                </div>}
 
                 <h2 className="font-medium text-center">
                   {(nombreUser)}

@@ -39,6 +39,8 @@ model Usuario {
   cursosDocenteModel Curso[]  @relation(name: "docentes_cursos", fields: [cursosDocente], references: [id]) // x
   cursosDocente      String[] @db.ObjectId
 
+  idProvider String? @unique
+
   // one-to-many (todas las rubricas creadas por el usuario)
   rubricas Rubrica[] // x
 

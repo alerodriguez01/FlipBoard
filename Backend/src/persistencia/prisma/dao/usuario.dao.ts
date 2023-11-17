@@ -190,5 +190,32 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       }
   }
 
+  async loginProvider(id: string, provider: string, nombre: string, correo: string) {
+
+    const idProvider = `${provider}|${id}` // "google|1234567890"
+    const correoProvider = `${provider}|${correo}` // "google|juanperez@gmailcom"
+    
+    try {
+
+      return await this.prisma.usuario.upsert({
+        where: {idProvider: idProvider},
+        create: {
+          nombre: nombre.toLowerCase(),
+          correo: correoProvider, // "google|juanperez@gmail.com"
+          contrasena: "",
+          idProvider: idProvider,
+        },
+        update: {
+          nombre: nombre.toLowerCase(),
+          correo: correoProvider
+        }
+      })
+
+    }catch(error) {
+      throw new Error("Hubo un problema al crear/actualizar el usuario en la bd")
+    }
+
+  }
+
   // demas metodos
 }
