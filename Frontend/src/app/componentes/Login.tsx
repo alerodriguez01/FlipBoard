@@ -5,8 +5,9 @@ import SignUp from "@/app/componentes/SignUp"
 import SignIn from "@/app/componentes/SignIn"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useSession } from "next-auth/react"
-import { Spinner as SpinnerNextUI } from "@nextui-org/react";
+import { Divider, Spinner as SpinnerNextUI } from "@nextui-org/react";
 import { useEffect } from "react"
+import { GoogleLogIn } from "./ui/GoogleLogIn"
 
 export default function Login() {
 
@@ -41,6 +42,10 @@ export default function Login() {
               <>
                 <SignIn />
                 <p className="text-sm">¿No tienes una cuenta? <Link href='/?registro=true' className="text-blue-500">Regístrate</Link></p>
+                <div className="flex items-center justify-center gap-2 w-max-[250px]">
+                  <Divider className="w-28" /> ó <Divider className="w-28" />
+                </div>
+                <GoogleLogIn />
               </>
             }
           </>

@@ -147,6 +147,10 @@ function generateResetJWT(usuario: Usuario): string {
     return jwt.sign({ id: usuario.id }, process.env.JWT_SECRET_KEY || "", { expiresIn: '15m' });
 }
 
+async function loginProvider(provider: string, nombre: string, correo: string) {
+    return await usuarioRepository.loginProvider(provider, nombre, correo);
+}
+
 /**
  * 
  */
@@ -211,5 +215,5 @@ async function getUsuarioByCorreo(correo: string) {
 
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider
 };

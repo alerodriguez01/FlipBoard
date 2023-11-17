@@ -1,6 +1,7 @@
-import { login } from "@/lib/auth";
+import { login, loginProvider } from "@/lib/auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
+import GoogleProvider from "next-auth/providers/google";
 
 const handler = NextAuth({ // https://next-auth.js.org/configuration/options#options
 
@@ -46,11 +47,41 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
                 }
             },
         }),
+
+        // https://next-auth.js.org/providers/google
+        GoogleProvider({
+            clientId: process.env.GOOGLE_CLIENT_ID || "",
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+
+        }),
     ],
 
     // https://next-auth.js.org/configuration/callbacks
     // Callbacks are asynchronous functions you can use to control what happens when an action is performed.
     callbacks: {
+
+        // https://next-auth.js.org/configuration/callbacks#sign-in-callback
+        // Called when a user signs in (es lo primero que se llama despues de hacer el login; solo se ejecuta cuando se inicia sesion).
+        async signIn({ user, account, profile, email, credentials }) {
+
+            // si inicio sesion con google, busco el usuario en la BD y lo retorno
+            if(account?.provider === "google"){
+                // Buscar el usuario en la BD
+                const userLogged = await loginProvider(account.provider, user.name || "No name", user.email || `No email|${user.id}`);
+
+                if(!userLogged) return '/?loginback=error'; // si sale mal, retorna la URL a la que se redirecciona
+
+                user.id = userLogged.id;
+                user.nombre = user.name || "";
+                user.correo = user.email || "";
+                // user.image nos provee google
+                user.cursosAlumno = userLogged.cursosAlumno;
+                user.cursosDocente = userLogged.cursosDocente;
+                user.grupos = userLogged.grupos;
+            }
+
+            return true; // si sale todo bien, retorna true
+        },
 
         // https://next-auth.js.org/configuration/callbacks#jwt-callback
         /*
@@ -85,7 +116,17 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
             //   });
             if(trigger === 'update') return { ...token, ...session.user }; // https://www.youtube.com/watch?v=gDsCueKkFEk&ab_channel=SakuraDev
 
-            if (user) {
+            if(account?.provider === "google" && user) {
+                token.id = user.id;
+                token.nombre = user.name || "";
+                token.correo = user.email || "";
+                token.imagen = user.image || "";
+                token.cursosAlumno = user.cursosAlumno;
+                token.cursosDocente = user.cursosDocente;
+                token.grupos = user.grupos;
+            }
+
+            if (account?.provider === "credentials" && user) {
                 token.id = user.id;
                 token.nombre = user.nombre;
                 token.correo = user.correo;
@@ -108,6 +149,7 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
                 id: token.id ?? "",
                 nombre: token.nombre ?? "",
                 correo: token.correo ?? "",
+                imagen: token.imagen ?? "",
                 cursosAlumno: token.cursosAlumno ?? [],
                 cursosDocente: token.cursosDocente ?? [],
                 grupos: token.grupos ?? [],
@@ -153,6 +195,7 @@ declare module "next-auth" {
             id: string,
             nombre: string,
             correo: string,
+            imagen: string,
             cursosAlumno: string[],
             cursosDocente: string[],
             grupos: string[],
@@ -165,6 +208,7 @@ declare module "next-auth/jwt" {
         id: string
         nombre: string
         correo: string
+        imagen: string
         cursosAlumno: string[],
         cursosDocente: string[],
         grupos: string[],
