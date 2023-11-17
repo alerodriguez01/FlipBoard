@@ -17,6 +17,7 @@ const Header = () => {
     if (nombre) nombre = nombre[0].toUpperCase() + nombre.slice(1)
 
     const { theme } = useTheme()
+    const currentTheme = theme === "dark" ? "dark" : "light"
 
     const pathname = usePathname()
     const isCursosOrRubricas = pathname === "/cursos" || pathname === "/rubricas"
@@ -51,7 +52,7 @@ const Header = () => {
                                         </article>
                                     }>
                                     <Button isIconOnly disableAnimation className="bg-transparent rounded-full">
-                                        <InfoIcon width={18} height={18} theme={theme} />
+                                        <InfoIcon width={18} height={18} theme={currentTheme} />
                                     </Button>
                                 </Tooltip>
                             }
