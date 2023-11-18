@@ -76,6 +76,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
     <Modal
           isOpen={props.isOpen}
           onOpenChange={props.onOpenChange}
+          onClose={() => {setIntegrantes([]); setNombre("")}}
           placement="center"
           size="2xl"
           classNames={{closeButton: "p-5"}} >
