@@ -13,13 +13,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "./Spinner";
 
 
-const grupoSchema = z.object({
-  integrantes: z.array(z.string(), {errorMap: () => ({message: "El grupo debe contener al menos 2 integrantes"})})
-    .min(2, "El grupo debe contener al menos 2 integrantes")
-});
-
-type GrupoForm = z.infer<typeof grupoSchema> & { erroresExternos?: string };
-
 const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void, user?: Usuario}) => {
   
   const {theme} = useTheme();
@@ -30,6 +23,13 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
   
   const [integrantes, setIntegrantes] = React.useState<Usuario[]>(props.user ? [props.user] : []); 
+
+  const grupoSchema = z.object({
+    integrantes: z.array(z.string(), {errorMap: () => ({message: "El grupo debe contener al menos 2 integrantes"})})
+      .min(2, "El grupo debe contener al menos 2 integrantes")
+  }).refine(data => props.user ? data.integrantes.includes(props.user.id) : true, "Error: no puedes crear un grupo en el que no eres participante");
+  
+  type GrupoForm = z.infer<typeof grupoSchema> & { erroresExternos?: string };
 
   const {
     control,
