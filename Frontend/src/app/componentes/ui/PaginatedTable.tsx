@@ -79,7 +79,7 @@ const PaginatedTable = (props: TableProps) => {
           emptyContent={`No se han encontrado ${props.itemType}s`} >
             {(item: any) => (
               <TableRow key={item?.id}>
-                {columnKey => <TableCell>{props.renderCell(item, columnKey)}</TableCell>}
+                {columnKey => <TableCell key={item?.id+columnKey}>{props.renderCell(item, columnKey)}</TableCell>}
               </TableRow>
             )}
         </TableBody>
