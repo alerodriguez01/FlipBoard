@@ -1,4 +1,5 @@
 'use client';
+import { CriteriosCard } from "@/app/componentes/ui/CriteriosCard";
 import { NivelCard } from "@/app/componentes/ui/NivelCard";
 import { Input, Switch } from "@nextui-org/react";
 import React, { useState } from "react";
@@ -7,6 +8,7 @@ import React, { useState } from "react";
 export default function CrearRubrica() {
 
   const [niveles, setNiveles] = useState([1]);
+  const [criterios, setCriterios] = useState([1]);
   const [puntuable, setPuntuable] = useState(false);
   const tagClassName = "bg-white rounded-xl mt-3 mb-3 p-4 ";
 
@@ -24,14 +26,15 @@ export default function CrearRubrica() {
         </div>
       </header>
       
-      <section className={tagClassName}>
+      <section className={tagClassName+"mx-3"}>
         <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
         {niveles.map(n => <NivelCard id={n} puntuable={puntuable}/>)}
       </section>
 
       
       <section className={tagClassName}>
-        <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
+        <h2 className="text-lg font-semibold mb-3">Criterios de evaluación</h2>
+        {criterios.map(c => <CriteriosCard niveles={niveles} id={c}/>)}
       </section>
 
       <footer>
