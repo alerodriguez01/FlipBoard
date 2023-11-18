@@ -14,6 +14,7 @@ import { EditIcon } from "./icons/EditIcon";
 type TableProps = {
   idCurso: string,
   editable: boolean,
+  removable: boolean,
   evaluable: boolean,
   onCrearGrupoPress?: () => void
   onAsignarRubricaPress?: () => void
@@ -78,7 +79,7 @@ const GruposTable = (props: TableProps) => {
       headerRightContent={ props.editable &&
         <div className="flex gap-3">
           <Button variant="faded" startContent={<GrupoIcon theme={currentTheme}/>} onPress={() => props.onCrearGrupoPress?.()}>Crear grupo</Button>
-          <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
+          {props.removable && <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>}
         </div>
       } >
       <TableColumn key="numero" className="w-[100px]" align="center" >Grupo</TableColumn>
