@@ -1,5 +1,5 @@
 'use client';
-import { CriteriosCard } from "@/app/componentes/ui/CriteriosCard";
+import { CriterioCard } from "@/app/componentes/ui/CriterioCard";
 import { NivelCard } from "@/app/componentes/ui/NivelCard";
 import { Input, Switch } from "@nextui-org/react";
 import React, { useState } from "react";
@@ -34,7 +34,7 @@ export default function CrearRubrica() {
       
       <section className={tagClassName}>
         <h2 className="text-lg font-semibold mb-3">Criterios de evaluación</h2>
-        {criterios.map(c => <CriteriosCard niveles={niveles} id={c}/>)}
+        {criterios.map(c => <CriterioCard niveles={niveles} id={c}/>)}
       </section>
 
       <footer>
