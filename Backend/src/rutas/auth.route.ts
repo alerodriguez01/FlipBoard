@@ -67,6 +67,45 @@ router.post('/login', controller.login)
 
 /**
  * @swagger
+ * /api/auth/{provider}/login:
+ *   post:
+ *    summary: Iniciar sesion con algún proveedor (por ejemplo, Google)
+ *    tags: [Auth]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            nombre: Juan Perez
+ *            correo: juanperez@gmail.com
+ *    parameters:
+ *      - name: provider
+ *        in: path
+ *        required: true
+ *        description: Proveedor de autenticación
+ *        schema:
+ *          type: string
+ *        example:
+ *          google
+ *    responses:
+ *      200: 
+ *        description: Usuario inicio sesion/registro exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Usuario"
+ *      400:
+ *        description: Faltan campos obligatorios
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Faltan campos obligatorios
+
+ */
+router.post('/:provider/login', controller.loginProvider)
+
+/**
+ * @swagger
  * /api/auth/logout:
  *   post:
  *    summary: Cerrar sesion

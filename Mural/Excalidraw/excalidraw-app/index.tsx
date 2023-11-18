@@ -773,7 +773,7 @@ const ExcalidrawWrapper = () => {
   // si no existe el mural o el curso, muestro un mensaje de error
   if ((!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error)) return errorEntidadInexistente(!mural?.error, !curso?.error)
 
-  if (!session?.user.cursosAlumno.includes(idCurso || "") && !session?.user.cursosDocente.includes(idCurso || "")) {
+  if (!isLoadingSession && !session?.user.cursosAlumno.includes(idCurso || "") && !session?.user.cursosDocente.includes(idCurso || "")) {
     return (
       <section className="flex flex-col justify-center items-center h-full w-full">
         <h1>No tienes acceso a este mural</h1>

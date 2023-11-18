@@ -20,7 +20,7 @@ export default function Cursos() {
 
   const [search, setSearch] = useState("");
 
-  if (error) return (
+  if (!isLoading && data?.error) return (
     <section className="flex flex-col flex-1 p-10">
       {/* {error.message} */}
       <h1 className="">No se pudieron obtener los cursos</h1>
@@ -57,7 +57,7 @@ export default function Cursos() {
       </div>
 
       <Button
-        className="bg-[#181e25] text-white fixed bottom-10 right-10"
+        className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
         startContent={<PlusIcon color="#FFFFFF" />}
         size="lg"
         onPress={onOpen}> Crear nuevo curso </Button>

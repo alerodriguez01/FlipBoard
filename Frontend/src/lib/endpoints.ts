@@ -18,6 +18,10 @@ function login() {
     return '/api/auth/login';
 } 
 
+function loginProvider(provider: string) {
+    return `/api/auth/${provider}/login`;
+}
+
 function createUser() {
     return '/api/usuarios';
 }
@@ -79,5 +83,5 @@ export default {
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
     asociarRubricaAlumnos, getAllRubricasIndividuales,
     getAllRubricasGrupales, crearCalificacionAlumno,
-    crearCalificacionGrupo, crearGrupo
+    crearCalificacionGrupo, loginProvider, crearGrupo
 }

@@ -38,14 +38,18 @@ const PaginatedTable = (props: TableProps) => {
     return <h1>{error.message}</h1>
 
   return (
-    <section>
-      <header className="flex flex-row justify-between p-5 mb-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
+    <section className="flex flex-col gap-3">
+
+      <header className="p-3 rounded-xl shadow-md border dark:border-none dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
         <Input
-          radius="none"
-          variant="underlined"
+          //radius="none"
+          //variant="faded"
           placeholder={`Buscar ${props.itemType}`}
-          startContent={<SearchIcon theme={props.theme ?? 'light'}/>}
-          className="w-80 bg-transparent"
+          startContent={<div className="mr-2"><SearchIcon theme={props.theme ?? 'light'}/></div>}
+          // className="w-80 bg-transparent"
+          classNames={{
+            inputWrapper: "bg-transparent shadow-none",
+          }}
           onValueChange={(value) => setNombre(value)} />
         {props.headerRightContent}
       </header>
