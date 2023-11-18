@@ -8,10 +8,11 @@ export default function CrearRubrica() {
 
   const [niveles, setNiveles] = useState([1]);
   const [puntuable, setPuntuable] = useState(false);
+  const tagClassName = "bg-white rounded-xl mt-3 mb-3 p-4 ";
 
   return (
-    <section className="mt-5 mx-3 gap-3 bg-white rounded-xl flex flex-col">
-      <header className="mt-3 mx-7">
+    <section className="m-5 flex flex-col">
+      <header className={tagClassName}>
         <div className="flex flex-row justify-between">
           <Input
             size="lg"
@@ -21,8 +22,21 @@ export default function CrearRubrica() {
           />
           <Switch size="lg" className="justify-self-center" onValueChange={(isSelected) => setPuntuable(isSelected)}>Usar puntuaciones</Switch>
         </div>
-        {niveles.map(n => <NivelCard id={n} puntuable={puntuable}/>)}
       </header>
+      
+      <section className={tagClassName}>
+        <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
+        {niveles.map(n => <NivelCard id={n} puntuable={puntuable}/>)}
+      </section>
+
+      
+      <section className={tagClassName}>
+        <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
+      </section>
+
+      <footer>
+
+      </footer>
       
     </section>
   )
