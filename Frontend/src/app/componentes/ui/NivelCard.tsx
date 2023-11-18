@@ -2,7 +2,7 @@ import { Button, Card, CardBody, Input } from "@nextui-org/react";
 import React from "react";
 import { CrossIcon } from "./icons/CrossIcon";
 
-const NivelCard = (props: {id: number, puntuable?: boolean, onDelete?: (id: number) => void}) => {
+const NivelCard = (props: {id: string, puntuable?: boolean, onDelete?: (id: string) => void}) => {
 
   return (
     <Card className="max-w-[300px]" key={props.id}>

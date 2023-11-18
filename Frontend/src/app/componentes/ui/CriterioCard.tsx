@@ -2,7 +2,7 @@ import { Button, Card, CardBody, Input, Textarea } from "@nextui-org/react";
 import React from "react";
 import { CrossIcon } from "./icons/CrossIcon";
 
-const CriterioCard = (props: {id: number, niveles: number[], onDelete?: (id: number) => void}) => {
+const CriterioCard = (props: {id: string, niveles: string[], onDelete?: (id: string) => void}) => {
 
   return (
     <Card>

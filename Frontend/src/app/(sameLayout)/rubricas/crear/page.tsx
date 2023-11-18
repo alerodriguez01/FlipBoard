@@ -1,16 +1,22 @@
 'use client';
 import { CriterioCard } from "@/app/componentes/ui/CriterioCard";
 import { NivelCard } from "@/app/componentes/ui/NivelCard";
-import { Input, Switch } from "@nextui-org/react";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
+import { Button, Input, Switch } from "@nextui-org/react";
+import { randomUUID } from "crypto";
+import { useTheme } from "next-themes";
 import React, { useState } from "react";
-
+import {v4} from 'uuid';
 
 export default function CrearRubrica() {
 
-  const [niveles, setNiveles] = useState([1]);
-  const [criterios, setCriterios] = useState([1]);
+  const {theme} = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
+  
+  const [niveles, setNiveles] = useState([v4()]);
+  const [criterios, setCriterios] = useState([v4()]);
   const [puntuable, setPuntuable] = useState(false);
-  const tagClassName = "bg-white rounded-xl mt-3 mb-3 p-4 ";
+  const tagClassName = "bg-white dark:bg-black rounded-xl mt-3 mb-3 p-4 ";
 
   return (
     <section className="m-5 flex flex-col">
@@ -26,21 +32,23 @@ export default function CrearRubrica() {
         </div>
       </header>
       
-      <section className={tagClassName+"mx-3"}>
+      <section className={tagClassName}>
         <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
         {niveles.map(n => <NivelCard id={n} puntuable={puntuable}/>)}
       </section>
 
-      
-      <section className={tagClassName}>
-        <h2 className="text-lg font-semibold mb-3">Criterios de evaluación</h2>
-        {criterios.map(c => <CriterioCard niveles={niveles} id={c}/>)}
+      <section className={tagClassName+"flex flex-col gap-3"}>
+        <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
+        {criterios.map(c => <CriterioCard niveles={niveles} id={c} onDelete={(id) => setCriterios(prev => prev.filter(i => i != id))}/>)}
+        <Button className="mt-2 self-center" isIconOnly size="sm"
+          onPress={() => 
+            alert("TODO ADD CRITERIO")
+          }
+        >
+          <PlusIcon color={currentTheme === "dark" ? "#FFFFFF" : "#000000"}/>
+        </Button>
       </section>
 
-      <footer>
-
-      </footer>
-      
     </section>
   )
 }
