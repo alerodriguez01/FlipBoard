@@ -20,7 +20,7 @@ const grupoSchema = z.object({
 
 type GrupoForm = z.infer<typeof grupoSchema> & { erroresExternos?: string };
 
-const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void}) => {
+const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void, user?: Usuario}) => {
   
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
@@ -29,7 +29,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
   const {data: alumnosData, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllAlumnos(props.idCurso) + `?nombre=${nombre}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
   
-  const [integrantes, setIntegrantes] = React.useState<Usuario[]>([]); 
+  const [integrantes, setIntegrantes] = React.useState<Usuario[]>(props.user ? [props.user] : []); 
 
   const {
     control,
@@ -118,6 +118,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                       searchable={false} 
                       items={integrantes}
                       onActionPress={(user) => setIntegrantes((prev) => {
+                          if(user === props.user) return prev;
                           const nuevo = prev.filter(u => u.id !== user.id);
                           field.onChange(nuevo.map(u => u.id));
                           return nuevo;

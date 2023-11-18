@@ -51,15 +51,16 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                 <Tab key="grupos" title="Grupos">
                     <GruposTable 
                         idCurso={params.idCurso} 
-                        editable={esDocente}
+                        editable={true}
                         evaluable={esDocente}
+                        removable={esDocente}
                         onEvaluarPress={(grupo) => {setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen();}}
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
                         onAsignarRubricaPress={onAsignarOpen}/>
                 </Tab>
             </Tabs>
-            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} />
+            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined}/>
             {esDocente && 
                 <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
             {esDocente &&
