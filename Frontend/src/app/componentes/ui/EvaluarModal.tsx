@@ -32,7 +32,7 @@ const EvaluarModal = (props: ModalProps) => {
       onOpenChange={props.onOpenChange}
       placement="center"
       size="3xl"
-      classNames={{closeButton: "p-5"}} >
+      classNames={{closeButton: "m-3"}} >
         <ModalContent>
           {(onClose) => (
             <>

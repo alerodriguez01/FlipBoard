@@ -62,7 +62,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
           onOpenChange={props.onOpenChange}
           placement="center"
           size="3xl"
-          classNames={{closeButton: "p-5"}} >
+          classNames={{closeButton: "m-3"}} >
             <ModalContent className="">
               {(onClose) => (
                 <>
