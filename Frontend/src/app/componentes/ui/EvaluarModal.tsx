@@ -33,7 +33,7 @@ const EvaluarModal = (props: ModalProps) => {
       onClose={() => {setIsEvaluando(false); setRubrica(undefined);}}
       placement="center"
       size="3xl"
-      classNames={{closeButton: "p-5"}} >
+      classNames={{closeButton: "m-3"}} >
         <ModalContent>
           {(onClose) => (
             <>

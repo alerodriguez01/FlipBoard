@@ -1,9 +1,10 @@
 import { login, loginProvider } from "@/lib/auth";
+import { NextAuthOptions } from "next-auth";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-const handler = NextAuth({ // https://next-auth.js.org/configuration/options#options
+export const authOptions: NextAuthOptions = { // https://next-auth.js.org/configuration/options#options
 
     // https://next-auth.js.org/configuration/options#session
     session: {
@@ -166,8 +167,8 @@ const handler = NextAuth({ // https://next-auth.js.org/configuration/options#opt
         signIn: "/", // ruta a la que se redirecciona si no esta logueado o si se llama a signIn() -sin parametros-
         signOut: "/",
     },
-});
-
+};
+const handler = NextAuth(authOptions)
 export { handler as GET, handler as POST };
 
 // --------------------------------------------------------------------------------------------- //

@@ -84,7 +84,7 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
         isOpen={props.isOpen}
         onOpenChange={props.onOpenChange}
         placement="center" 
-        classNames={{closeButton: "p-5"}} >
+        classNames={{closeButton: "m-3"}} >
           <ModalContent>
             {(onClose) => (
               <>

@@ -5,9 +5,11 @@ import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
 import { Curso } from "@/lib/types";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Spinner, useDisclosure } from "@nextui-org/react";
+import { Button, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import useSWR from 'swr';
 
 export default function Cursos() {
@@ -19,6 +21,16 @@ export default function Cursos() {
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
+
+  const searchParams = useSearchParams();
+  const [toastShowed, setToastShowed] = useState(false);
+  // mostrar toast de error si luego de intentar ser agregado
+  useEffect(() => {
+    if (searchParams.get("invalidToken") === 'true' && !toastShowed) {
+      toast.error('Hubo un error al añadirte al curso', { id: "invalidToken", position: "top-center", duration: 4000 }) // bug: se muestra muy rapido
+      setToastShowed(true);
+    }
+  }, [])
 
   if (!isLoading && data?.error) return (
     <section className="flex flex-col flex-1 p-10">
@@ -32,6 +44,7 @@ export default function Cursos() {
 
   return (
     <section className="flex flex-col overflow-auto gap-6 p-8">
+      <Toaster />
       <PagesHeader title="Cursos" searchable={true} placeholder="Buscar curso" onSearch={(value: string) => setSearch(value)} />
 
       <div className="flex flex-wrap gap-6">

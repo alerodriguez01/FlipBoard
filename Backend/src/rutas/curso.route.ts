@@ -185,5 +185,32 @@ router.post("/cursos", controller.saveCurso);
  */
 router.get("/cursos", controller.getCursos);
 
+/**
+ * @swagger
+ * /api/cursos/send-email:
+ *   post:
+ *    summary: Enviar correos de invitacion para unirse al curso
+ *    tags: [Curso]
+ *    requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            example:
+ *              emails: ["juan@example.com", "ale@gmail.com"]
+ *              token: 12d3dfsd435sdgfsdf.23423wfe.r2344fds
+ *              idCurso: 1ds45435343242wer
+ *              nombre: "Curso de Matemáticas"
+ *    responses:
+ *      204: 
+ *        description: Se han enviado los correos exitosamente
+ *      400:
+ *        description: Datos incompletos o incorrectos
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Datos incompletos o incorrectos
+ */
+router.post("/cursos/send-email", controller.sendEmailToUsers);
+
 
 export default router;
