@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Input, Textarea } from "@nextui-org/react";
-import React, { useEffect, useState } from "react";
+import React, { forwardRef, useEffect, useState } from "react";
 import { CrossIcon } from "./icons/CrossIcon";
 import { useController } from "react-hook-form";
 
@@ -11,7 +11,7 @@ type CriterioProps = {
   name?: string
 }
 
-const CriterioCard = (props: CriterioProps) => {
+const CriterioCard = forwardRef((props: CriterioProps, ref) => {
 
 
   const [descripciones, setDescripciones] = useState(new Map());
@@ -29,10 +29,14 @@ const CriterioCard = (props: CriterioProps) => {
   }, [props.niveles])
 
   return (
-    <Card>
+    <Card className={invalid ? "border-2 border-[#e41157]":""}>
       <CardBody>
         <header className="flex flex-row justify-between mb-3">
-          <Input defaultValue={nombre} onValueChange={value => setNombre(value)} variant="underlined" className="max-w-[500px]" placeholder="Nombre del criterio"/>
+          <Input 
+            defaultValue={nombre}
+            onValueChange={value => {setNombre(value); field?.onChange({...field.value, nombre: value});}}
+            variant="underlined" className="max-w-[500px]" placeholder="Nombre del criterio"
+          />
           <Button className="self-center" size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
         </header>
         <div className="flex flex-row gap-3">
@@ -40,16 +44,26 @@ const CriterioCard = (props: CriterioProps) => {
             <Textarea 
               key={n}
               defaultValue={descripciones.get(n)}
-              onValueChange={value => setDescripciones(prev => prev.set(n,value))} 
+              onValueChange={value => setDescripciones(prev => {
+                  if(value === "") {
+                    prev.delete(n);
+                    field?.onChange({...field.value, descripciones: prev});
+                    return prev;
+                  }
+                  field?.onChange({...field.value, descripciones: prev.set(n,value)});
+                  return prev.set(n,value);
+                })
+              } 
               placeholder="Descripción del nivel"
               variant="bordered" className="w-[300px]" size="sm"
             />)
           }
         </div>
-        
+        {invalid &&
+          <p className="text-[#e41157] text-sm self-start mt-1">{error?.message}</p>}
       </CardBody>
     </Card>
   );
-}
+});
 
 export { CriterioCard };
