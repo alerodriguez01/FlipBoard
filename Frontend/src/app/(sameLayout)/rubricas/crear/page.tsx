@@ -59,7 +59,7 @@ export default function CrearRubrica() {
 
       <section className={tagClassName+"flex flex-col gap-3"}>
         <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
-        {criterios.map(c => <CriterioCard niveles={niveles} id={c} onDelete={(id) => setCriterios(prev => prev.filter(i => i != id))}/>)}
+        {criterios.map(c => <CriterioCard key={c} niveles={niveles} id={c} onDelete={(id) => setCriterios(prev => prev.filter(i => i != id))}/>)}
         <Button className="mt-2 self-center" variant="ghost" isIconOnly size="sm" onPress={() => setCriterios(prev => [...prev, v4()])}>
           <PlusIcon color={currentTheme === "dark" ? "#FFFFFF" : "#000000"}/>
         </Button>
