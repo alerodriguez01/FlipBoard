@@ -768,7 +768,9 @@ const ExcalidrawWrapper = () => {
     return nombreCompleto;
   }
   // si existe el usuario, seteo el nombre en el canvas
-  if (!isLoadingSession && session?.user.nombre) collabAPI?.setUsername(formatNombre(session.user.nombre))
+  useEffect(() => {
+    if (session?.user.nombre && collabAPI) collabAPI.setUsername(formatNombre(session.user.nombre))
+  }, [session, collabAPI])
 
   // si no existe el mural o el curso, muestro un mensaje de error
   if ((!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error)) return errorEntidadInexistente(!mural?.error, !curso?.error)
