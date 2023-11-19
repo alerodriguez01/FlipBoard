@@ -49,12 +49,12 @@ const EvaluarMural = (props: CompProps) => {
                 <AlumnosTable
                     idCurso={props.idCurso}
                     onEvaluarPress={(user)=>{setIsEvaluando(true); setEntity(user);}}
-                    editable={false} evaluable={true} theme={props.theme}
+                    editable={false} evaluable={true} theme={props.theme} evaluarActive={!!props.rubrica}
                 />
                 :
                 <GruposTable idCurso={props.idCurso}
                     onEvaluarPress={(grupo)=>{setIsEvaluando(true); setEntity(grupo);}}
-                    editable={false} evaluable={true} theme={props.theme}
+                    editable={false} evaluable={true} theme={props.theme} evaluarActive={!!props.rubrica}
                 />
             }
         </section>
