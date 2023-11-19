@@ -6,16 +6,35 @@ import { Mural } from "@/lib/types";
 import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
 
-  const { data: session, status } = useSession();
+  const { data: session, status, update } = useSession();
   const { data, error, isLoading } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
 
   const [search, setSearch] = useState("");
+
+  const searchParams = useSearchParams();
+
+  // si en los search params viene updateCurso, entonces se actualiza la session (se viene de añadir un curso)
+  if (session && searchParams.get("updateCurso") && !session?.user.cursosAlumno.includes(params.idCurso)) {
+
+    const cursosAlumno = session?.user.cursosAlumno || [];
+    update({
+      ...session,
+      user: {
+        ...session?.user,
+        cursosAlumno: [...cursosAlumno, params.idCurso]
+      }
+    });
+    // eliminar el parametro de los search params -> no se puede
+  }
+
+
 
   if (error) return (
     <section className="flex flex-col flex-1 p-10">
@@ -47,17 +66,17 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
             data.map((m: Mural) => {
               if (search !== "" && !m.nombre.toLowerCase().includes(search.toLowerCase())) return null;
               return (
-              <MuralCard
-                key={crypto.randomUUID()}
-                title={m.nombre}
-                description={m.descripcion}
-                muralId={m.id}
-                cursoId={params.idCurso}
-                room={m.contenido}
-                rubrica={m.rubricaModel?.nombre}
-                color={color++ % 2}
-                editable={session?.user.cursosDocente.includes(m.cursoId)}
-              />)
+                <MuralCard
+                  key={crypto.randomUUID()}
+                  title={m.nombre}
+                  description={m.descripcion}
+                  muralId={m.id}
+                  cursoId={params.idCurso}
+                  room={m.contenido}
+                  rubrica={m.rubricaModel?.nombre}
+                  color={color++ % 2}
+                  editable={session?.user.cursosDocente.includes(m.cursoId)}
+                />)
             })
 
         }
