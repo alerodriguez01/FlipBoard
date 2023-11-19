@@ -79,7 +79,10 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
           onClose={() => {setIntegrantes([]); setNombre("")}}
           placement="center"
           size="2xl"
-          classNames={{closeButton: "p-5"}} >
+          classNames={{closeButton: "m-3"}}
+          // scrollBehavior="inside"
+          className="max-h-[90%] overflow-auto"
+          >
             <ModalContent>
               {(onClose) => (
                 <form action="" onSubmit={handleSubmit((data) => onSubmit(data, onClose))}>
