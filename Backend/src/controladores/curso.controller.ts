@@ -2,6 +2,8 @@ import { Curso } from "@prisma/client";
 import service from "../servicios/curso.service.js";
 import { Request, Response } from "express";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
+import validator from "validator";
+import nodemailer from 'nodemailer';
 
 
 /*
@@ -60,5 +62,45 @@ async function getCursos(req: Request, res: Response) {
 
 // demas metodos 
 
+async function sendEmailToUsers(req: Request, res: Response) {
 
-export default { getCursoById, saveCurso, getCursos };
+    const { emails, token, idCurso, nombre } = req.body;
+    
+    if (!emails || !token || !idCurso || !nombre) return res.status(400).json({error: 'Datos incompletos o incorrectos'});
+
+    const correos = emails.filter((correo: string) => validator.default.isEmail(correo));
+
+    try {
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.MAIL_USERNAME,
+                clientId: process.env.OAUTH_CLIENTID,
+                clientSecret: process.env.OAUTH_CLIENT_SECRET,
+                refreshToken: process.env.OAUTH_REFRESH_TOKEN
+            }
+        });
+
+        let mail = {
+            from: process.env.MAIL_USERNAME,
+            to: correos,
+            subject: `FlipBoard: Invitación a curso ${nombre}`,
+            html: `<p>Haga click <a href="http://${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">aquí</a> para unirse al curso: ${nombre}.</p>`
+        }
+
+        transporter.sendMail(mail, (error, body) => {
+            if (error) return res.status(400).json({ error: error.message });
+            return res.status(204).send();
+        });
+
+
+    } catch (error) {
+        console.log(error)
+        return res.status(400).json({error: 'Hubo un problema al enviar los correos'});
+    }
+
+}
+
+export default { getCursoById, saveCurso, getCursos, sendEmailToUsers };
