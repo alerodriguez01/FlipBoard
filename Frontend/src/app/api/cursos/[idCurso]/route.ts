@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, { params: { idCurso } }: { params: {
 
     } catch (error) {
         // token invalido
-        return NextResponse.redirect(new URL('/cursos?invalidToken=true', req.url)) // TODO handle error a traves de search param y un toast?
+        return NextResponse.redirect(new URL('/cursos?invalidToken=true', req.url))
     }
 
 

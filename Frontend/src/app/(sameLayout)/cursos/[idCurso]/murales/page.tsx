@@ -7,7 +7,8 @@ import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
@@ -21,8 +22,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const searchParams = useSearchParams();
 
   // si en los search params viene updateCurso, entonces se actualiza la session (se viene de añadir un curso)
-  if (session && searchParams.get("updateCurso") && !session?.user.cursosAlumno.includes(params.idCurso)) {
-
+  if (session && searchParams.get("updateCurso") && !session.user.cursosAlumno.includes(params.idCurso)) {
     const cursosAlumno = session?.user.cursosAlumno || [];
     update({
       ...session,
@@ -34,7 +34,11 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
     // eliminar el parametro de los search params -> no se puede
   }
 
-
+  // mostrar toast de bienvenida al curso luego de ser agregado
+  useEffect(() => {
+    if (session?.user.cursosAlumno.includes(searchParams.get("updateCurso") || ""))
+      toast.success('¡Bienvenido al curso!', { id: "updateCurso", position: "top-center", duration: 4000 })
+  }, [session?.user.cursosAlumno])
 
   if (error) return (
     <section className="flex flex-col flex-1 p-10">
@@ -57,6 +61,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
 
   return (
     <section className="flex flex-col overflow-auto gap-6 p-8">
+      <Toaster />
       <PagesHeader title="Murales" searchable={true} placeholder="Buscar mural" onSearch={(value: string) => setSearch(value)} />
       <div className="flex flex-wrap gap-6">
         {
