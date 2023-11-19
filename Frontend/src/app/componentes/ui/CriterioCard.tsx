@@ -28,8 +28,6 @@ const CriterioCard = (props: CriterioProps) => {
     setDescripciones(removed);
   }, [props.niveles])
 
-  console.log(props.niveles);
-  console.log(descripciones);
   return (
     <Card>
       <CardBody>
@@ -38,15 +36,14 @@ const CriterioCard = (props: CriterioProps) => {
           <Button className="self-center" size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
         </header>
         <div className="flex flex-row gap-3">
-          {props.niveles.map(n => {
-            console.log(descripciones.get(n));
-            return <Textarea 
+          {props.niveles.map(n => 
+            <Textarea 
               key={n}
               defaultValue={descripciones.get(n)}
               onValueChange={value => setDescripciones(prev => prev.set(n,value))} 
               placeholder="Descripción del nivel"
               variant="bordered" className="w-[300px]" size="sm"
-            />})
+            />)
           }
         </div>
         
