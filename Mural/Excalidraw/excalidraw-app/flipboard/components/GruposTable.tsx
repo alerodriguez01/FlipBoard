@@ -18,6 +18,7 @@ type TableProps = {
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (grupo: Grupo) => void
   onEditarPress?: (grupoId: string) => void
+  evaluarActive?: boolean // si es true, se puede evaluar (hay rubrica asignada)
 }
 
 const GruposTable = (props: TableProps) => {
@@ -26,7 +27,7 @@ const GruposTable = (props: TableProps) => {
 
     if (columnKey === "evaluar")    
       return props.evaluable && 
-        <Button onPress={() => props.onEvaluarPress?.(grupo)} radius="full" variant="faded">Evaluar</Button> 
+        <Button onPress={() => props.onEvaluarPress?.(grupo)} radius="full" variant="faded" isDisabled={!props.evaluarActive}>Evaluar</Button> 
 
 
     if (props.editable && columnKey === "actions") 
