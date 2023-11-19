@@ -22,7 +22,7 @@ export default function CrearRubrica() {
       className="self-center mx-2"
       isIconOnly size="sm" variant="ghost"
       onPress={() => {
-        setNiveles(prev => [...prev.slice(0,pos), v4(), ...prev.slice(pos)])}
+        setNiveles(prev => {prev.splice(pos,0,v4()); return [...prev];})}
       }
     >
       <PlusIcon color={currentTheme === "dark" ? "#FFFFFF" : "#000000"}/>
@@ -49,10 +49,10 @@ export default function CrearRubrica() {
         <div className="flex flex-row">
           {addNivelButton(0)}
           {niveles.map(n => 
-            <>
+            <React.Fragment key={n}>
               <NivelCard id={n} puntuable={puntuable} onDelete={(id) => setNiveles(prev => prev.filter(i => i !== id))}/>
               {addNivelButton(niv++)}
-            </>
+            </React.Fragment>
           )}
         </div>
       </section>
