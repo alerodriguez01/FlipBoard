@@ -9,8 +9,6 @@ import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {v4} from 'uuid';
 import { z } from "zod";
-import errorMap from "zod/locales/en.js";
-
 
 
 export default function CrearRubrica() {
@@ -32,8 +30,12 @@ export default function CrearRubrica() {
                         .pipe(z.literal(niveles.length, {errorMap: () => ({message: "Todas las descripciones deben estar completas"})}))
       }, {errorMap: () => ({message: "Las descripciones y el nombre deben estar completos"})})
     ])),
-    ...Object.fromEntries(niveles.map(n => [
-      n, z.object({nombre: z.string().min(1), puntaje: z.number().min(0).max(100)})
+    ...Object.fromEntries(niveles.map(n => [n,
+      z.object({
+        nombre: z.string().min(1, "El campo nombre no puede estar vacío"),
+        puntaje: puntuable ? z.number({errorMap: () => ({message: "El puntaje debe ser un numero entre 1 y 100"})})
+                              .min(1, "El puntaje debe ser un numero entre 1 y 100").max(100, "El puntaje debe ser un numero entre 1 y 100") : z.number().optional()
+      }, {errorMap: () => ({message: "El campo nombre no puede estar vacío"})})
     ])),
   });
   

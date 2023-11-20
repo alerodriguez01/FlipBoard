@@ -19,7 +19,9 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
   const {
     field = undefined,
     fieldState: {invalid = undefined, error = undefined}
-  } = props.control && props.name ? useController({name: props.name, control: props.control}) : {fieldState: {}};
+  } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, puntaje: Number(puntaje)}}) : {fieldState: {}};
+
+  console.log(error);
 
   return (
     <Card className={`max-w-[300px] ${invalid ? "border-2 border-[#e41157]":""}`}>
@@ -40,8 +42,12 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
           placeholder="Nombre del nivel"
           variant="underlined"
         />
-        {invalid &&
+        {invalid && error?.message &&
           <p className="text-[#e41157] text-sm self-start mt-1">{error?.message}</p>}
+        {invalid && (error as any)?.puntaje &&
+          <p className="text-[#e41157] text-sm self-start mt-1">{(error as any)?.puntaje.message}</p>}
+        {invalid && (error as any)?.nombre &&
+          <p className="text-[#e41157] text-sm self-start mt-1">{(error as any)?.nombre.message}</p>}
       </CardBody>
     </Card>
   )
