@@ -1,5 +1,5 @@
 import { Button, Card, CardBody, Input } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { forwardRef, useState } from "react";
 import { CrossIcon } from "./icons/CrossIcon";
 import { useController } from "react-hook-form";
 
@@ -11,7 +11,7 @@ type NivelProps = {
   name?: string
 };
 
-const NivelCard = (props: NivelProps) => {
+const NivelCard = forwardRef((props: NivelProps, ref) => {
 
   const [nombre, setNombre] = useState("");
   const [puntaje, setPuntaje] = useState("");
@@ -22,12 +22,12 @@ const NivelCard = (props: NivelProps) => {
   } = props.control && props.name ? useController({name: props.name, control: props.control}) : {fieldState: {}};
 
   return (
-    <Card className="max-w-[300px]">
+    <Card className={`max-w-[300px] ${invalid ? "border-2 border-[#e41157]":""}`}>
       <CardBody className="gap-3">
         <div className="flex flex-row justify-between">
           <Input
             defaultValue={puntaje}
-            onValueChange={value => setPuntaje(value)} 
+            onValueChange={value => {setPuntaje(value); field?.onChange({...field.value, puntaje: Number(value)})}} 
             disabled={!props.puntuable}
             className="max-w-[100px] self-center"
             size="sm" placeholder="Puntaje" variant={props.puntuable? "underlined" : "flat"}
@@ -36,13 +36,15 @@ const NivelCard = (props: NivelProps) => {
         </div>
         <Input
           defaultValue={nombre}
-          onValueChange={value => setNombre(value)} 
+          onValueChange={value => {setNombre(value); field?.onChange({...field.value, nombre: value})}} 
           placeholder="Nombre del nivel"
           variant="underlined"
         />
+        {invalid &&
+          <p className="text-[#e41157] text-sm self-start mt-1">{error?.message}</p>}
       </CardBody>
     </Card>
   )
-}
+});
 
 export { NivelCard };
