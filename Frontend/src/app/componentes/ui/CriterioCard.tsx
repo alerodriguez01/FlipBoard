@@ -67,7 +67,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
           <p className="text-[#e41157] text-sm self-start mt-1">{(error as any).descripciones.message}</p>}
         {invalid && (error as any).descripciones instanceof Array &&
           <p className="text-[#e41157] text-sm self-start mt-1">
-            {(error as any).descripciones.at(1) ? (error as any).descripciones.at(1).value.message : (error as any).descripciones.at(0).value.message}
+            {(error as any).descripciones.at((error as any).descripciones.length-1).value.message}
           </p>}
       </CardBody>
     </Card>
