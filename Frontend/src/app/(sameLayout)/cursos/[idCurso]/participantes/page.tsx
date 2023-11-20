@@ -42,7 +42,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     }
 
     return (
-        <section className="flex flex-1 flex-col p-10 gap-4 overflow-auto">
+        <section className="flex flex-1 flex-col p-8 gap-2 overflow-auto">
             <PagesHeader title="Participantes" searchable={false} />
             <Tabs variant="underlined" size="lg">
                 <Tab key="participantes" title="Alumnos">

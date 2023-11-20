@@ -16,7 +16,7 @@ const PagesHeader = ({title, placeholder, searchable, onSearch}: PagesHeaderProp
     const currentTheme = theme === "dark" ? "dark" : "light";
 
     return (
-        <header className="flex flex-row justify-between mb-5 mx-2.5">
+        <header className="flex flex-row justify-between mb-4 mx-2.5">
             <h1 className="text-2xl font-semibold self-center">{title}</h1>
             {searchable &&
                 <Input
