@@ -56,7 +56,8 @@ const PaginatedTable = (props: TableProps) => {
 
       <Table
         aria-label={props.label}
-        className={props.className}
+        isHeaderSticky
+        className={props.className + " max-h-[calc(99vh-228px)]"}
         bottomContent={
             <div className="flex w-full justify-center">
               <Pagination

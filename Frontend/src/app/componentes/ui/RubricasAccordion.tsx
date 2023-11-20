@@ -8,6 +8,7 @@ import useSWR from "swr";
 import { EditIcon } from "./icons/EditIcon";
 import { CrossIcon } from "./icons/CrossIcon";
 import PagesHeader from "./PagesHeader";
+import { toMayusFirstLetters } from "@/lib/utils";
 
 type AccordionProps = {
     endpoint: string,
@@ -23,10 +24,6 @@ const RubricasAccordion = (props: AccordionProps) => {
     const [nombre, setNombre] = useState("");
     const { data, error, isLoading } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + (props.searchable ? `?nombre=${nombre}` : ""),
         (url) => fetch(url).then(res => res.json()));
-
-    const toMayusFirstLetters = (str: string) => {
-        return str.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
-    }
 
     if (!isLoading && data?.error) return (
         <section className="flex flex-col flex-1 p-10">
