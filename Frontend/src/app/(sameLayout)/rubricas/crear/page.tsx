@@ -2,9 +2,12 @@
 import { CriterioCard } from "@/app/componentes/ui/CriterioCard";
 import { NivelCard } from "@/app/componentes/ui/NivelCard";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
+import endpoints from "@/lib/endpoints";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Input, Switch } from "@nextui-org/react";
+import { Button, Input, Spinner, Switch } from "@nextui-org/react";
+import { useSession } from "next-auth/react";
 import { useTheme } from "next-themes";
+import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import {v4} from 'uuid';
@@ -15,6 +18,9 @@ export default function CrearRubrica() {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
   
+  const { data: session, status } = useSession();
+  const router = useRouter();
+
   const [niveles, setNiveles] = useState([v4()]);
   const [criterios, setCriterios] = useState([v4()]);
   const [puntuable, setPuntuable] = useState(false);
@@ -26,8 +32,7 @@ export default function CrearRubrica() {
       z.object({
         nombre: z.string().min(1, "El campo nombre no puede estar vacío"), 
         descripciones: z.map(z.string(), z.string({errorMap: () => ({message: "Todas las descripciones deben estar completas"})}))
-                        .transform(m => m.size)
-                        .pipe(z.literal(niveles.length, {errorMap: () => ({message: "Todas las descripciones deben estar completas"})}))
+                        .refine(m => m.size === niveles.length, "Todas las descripciones deben estar completas")
       }, {errorMap: () => ({message: "Las descripciones y el nombre deben estar completos"})})
     ])),
     ...Object.fromEntries(niveles.map(n => [n,
@@ -54,8 +59,47 @@ export default function CrearRubrica() {
     resolver: zodResolver(rubricaSchema)
   });
 
+  if (status === 'loading' || !session?.user)
+    return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+
   const onSubmit = async (data: RubricaForm) => {
-    console.log("ok",data);
+
+    const crits = Object.values(data)
+                        .filter((v: any) => !!v.descripciones)
+                        .map((c: any) => ({nombre: c.nombre, descripciones: Array.from(c.descripciones.values())}));
+    let nivs;
+    if(puntuable)
+      nivs = Object.values(data)
+                    .filter((v: any) => !v.descripciones && !!v.nombre)
+                    .map((n: any) => ({nombre: n.nombre, puntaje: n.puntaje}));
+    else
+      nivs = Object.values(data)
+                  .filter((v: any) => !v.descripciones && !!v.nombre)
+                  .map((n: any) => ({nombre: n.nombre}));
+
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.crearRubrica(session.user.id), {
+          method: 'POST',
+          body: JSON.stringify({
+              nombre: data.nombre,
+              criterios: crits,
+              niveles: nivs
+          }),
+          headers: {
+              'Content-Type': 'application/json'
+          }
+      });
+
+      if (!res.ok) {
+          setError("erroresExternos", { message: "Por favor, complete los campos correspondientes" });
+          return;
+      }
+
+      router.replace("/rubricas");
+
+    } catch (err) {
+        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
+    }
   }
 
   const addNivelButton = (pos: number) => (
@@ -125,7 +169,8 @@ export default function CrearRubrica() {
         className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
         size="lg"
         type="submit"
-        onPress={() => console.log(niveles)}> Crear rúbrica </Button>
+        isLoading={isSubmitting}
+      > Crear rúbrica </Button>
 
     </form>
   )

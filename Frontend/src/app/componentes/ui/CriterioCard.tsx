@@ -26,6 +26,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
     let removed = new Map();
     props.niveles.forEach(n => removed.set(n, descripciones.get(n)));
     setDescripciones(removed);
+    field?.onChange({...field.value, descripciones: removed});
   }, [props.niveles])
 
   return (
