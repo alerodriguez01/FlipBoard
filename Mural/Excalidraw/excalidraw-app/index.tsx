@@ -952,7 +952,7 @@ const ExcalidrawWrapper = () => {
           style={{
             paddingLeft: '0.5rem',
             paddingRight: '0.5rem',
-            minWidth: '35%'
+            minWidth: '36%'
           }}
         >
 
