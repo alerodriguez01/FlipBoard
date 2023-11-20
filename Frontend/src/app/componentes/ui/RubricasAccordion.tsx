@@ -24,6 +24,10 @@ const RubricasAccordion = (props: AccordionProps) => {
     const { data, error, isLoading } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + (props.searchable ? `?nombre=${nombre}` : ""),
         (url) => fetch(url).then(res => res.json()));
 
+    const toMayusFirstLetters = (str: string) => {
+        return str.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+    }
+
     if (!isLoading && data?.error) return (
         <section className="flex flex-col flex-1 p-10">
             {/* {error.message} */}
@@ -47,7 +51,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                             key={rubric.id}
                             title={
                                 <div className="flex flex-row justify-between">
-                                    <h1 className="self-center text-base">{rubric.nombre}</h1>
+                                    <h1 className="self-center text-base">{toMayusFirstLetters(rubric.nombre)}</h1>
                                     {props.type === "editable" ?
                                         <div className="flex gap-3">
                                             <Button
