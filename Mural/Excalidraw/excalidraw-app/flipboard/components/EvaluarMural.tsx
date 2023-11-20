@@ -4,6 +4,7 @@ import { Grupo, Rubrica, Usuario } from '../lib/types';
 import { AlumnosTable } from './AlumnosTable';
 import { GruposTable } from './GruposTable';
 import endpoints from '../lib/endpoints';
+import { toMayusFirstLetters } from '../lib/utils';
 
 type CompProps = {
     tipo: "Usuario" | "Grupo",
@@ -27,7 +28,7 @@ const EvaluarMural = (props: CompProps) => {
                     {props.tipo === "Usuario" ? nombreConMayus(entity?.nombre) : `Grupo ${entity?.numero}`}
                 </h2>
                 <h3 className='place-self-center mb-3'>
-                    {props.rubrica.nombre}
+                    {toMayusFirstLetters(props.rubrica.nombre)}
                 </h3>
                 <EvaluarForm
                     rubrica={props.rubrica}
