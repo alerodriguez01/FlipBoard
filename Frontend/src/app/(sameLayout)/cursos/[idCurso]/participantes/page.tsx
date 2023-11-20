@@ -23,6 +23,12 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const [evaluarEntity, setEvaluarEntity] = React.useState<Usuario | Grupo>();
     const [entityType, setEntityType] = React.useState<"Usuario" | "Grupo" | undefined>();
 
+    // para que se refresque la tabla de grupos cuando se crea uno nuevo
+    const [mutateGrupos, setMutateGrupos] = useState(0);
+    const onCreateGrupoSuccess = () => {
+        setMutateGrupos(prev => prev + 1);
+    }
+
     if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
@@ -57,10 +63,11 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onEvaluarPress={(grupo) => {setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen();}}
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
-                        onAsignarRubricaPress={onAsignarOpen}/>
+                        onAsignarRubricaPress={onAsignarOpen}
+                        mutarDatos={mutateGrupos}/>
                 </Tab>
             </Tabs>
-            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined}/>
+            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess}/>
             {esDocente && 
                 <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
             {esDocente &&

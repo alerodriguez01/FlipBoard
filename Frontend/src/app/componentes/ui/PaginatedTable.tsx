@@ -1,6 +1,6 @@
 'use client';
 import { Input, Pagination, Table, TableBody, TableCell, TableHeader, TableRow } from "@nextui-org/react";
-import React, { Key, ReactNode, useMemo, useState } from "react";
+import React, { Key, ReactNode, useEffect, useMemo, useState } from "react";
 import useSWR from "swr";
 import { Spinner } from "./Spinner";
 import { SearchIcon } from "./icons/SearchIcon";
@@ -15,6 +15,7 @@ type TableProps = {
   renderCell: (item: any, columnKey: Key) => ReactNode;
   headerRightContent: ReactNode
   children: any
+  mutarDatos: number
 }
 
 const PaginatedTable = (props: TableProps) => {
@@ -27,8 +28,13 @@ const PaginatedTable = (props: TableProps) => {
 
   const [nombre, setNombre] = useState("");
 
-  const {data, error, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
+  const {data, error, isLoading, mutate} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
+
+  // para que cada vez que se cree un grupo, se refresque la tabla
+  useEffect(() => {
+    mutate();
+  }, [props.mutarDatos]);
 
   const loadingState = isLoading ? "loading" : "idle";
 

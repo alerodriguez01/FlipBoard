@@ -20,6 +20,7 @@ type TableProps = {
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (grupo: Grupo) => void
   onEditarPress?: (grupoId: string) => void
+  mutarDatos: number
 }
 
 const GruposTable = (props: TableProps) => {
@@ -81,7 +82,8 @@ const GruposTable = (props: TableProps) => {
           <Button variant="faded" startContent={<GrupoIcon theme={currentTheme}/>} onPress={() => props.onCrearGrupoPress?.()}>Crear grupo</Button>
           {props.removable && <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>}
         </div>
-      } >
+      } 
+      mutarDatos={props.mutarDatos}>
       <TableColumn key="numero" className="w-[100px]" align="center" >Grupo</TableColumn>
       <TableColumn key="integrantes" className="w-[400px]">Integrantes</TableColumn>
       <TableColumn key="correo" className="w-[400px]">Correo electrónico</TableColumn>
