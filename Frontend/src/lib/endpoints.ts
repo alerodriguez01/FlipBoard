@@ -74,6 +74,11 @@ function crearCalificacionGrupo(idCurso: string, idGrupo: string) {
 function crearGrupo(idCurso: string) {
     return `/api/cursos/${idCurso}/grupos`;
 }
+
+function crearRubrica(idUsuario: string) {
+    return `/api/usuarios/${idUsuario}/rubricas`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -83,5 +88,6 @@ export default {
     getAllAlumnos, getAllGrupos, getAllRubricasFromUser,
     asociarRubricaAlumnos, getAllRubricasIndividuales,
     getAllRubricasGrupales, crearCalificacionAlumno,
-    crearCalificacionGrupo, loginProvider, crearGrupo
+    crearCalificacionGrupo, loginProvider, crearGrupo,
+    crearRubrica
 }

@@ -23,6 +23,7 @@
     "react-hot-toast": "^2.4.1",
     "react-qr-code": "^2.0.12",
     "swr": "^2.2.4",
+    "uuid": "^9.0.1",
     "zod": "^3.22.4"
   },
   "authors": [
@@ -40,6 +41,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@types/uuid": "^9.0.7",
     "autoprefixer": "^10",
     "eslint": "^8",
     "eslint-config-next": "13.5.4",
