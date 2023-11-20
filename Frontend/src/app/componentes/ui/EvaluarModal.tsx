@@ -5,6 +5,7 @@ import { Rubrica } from "@/lib/types";
 import { RubricasAccordion } from "./RubricasAccordion";
 import endpoints from "@/lib/endpoints";
 import { EvaluarForm } from "./EvaluarForm";
+import { toMayusFirstLetters } from "@/lib/utils";
 
 type ModalProps = {
   isOpen: boolean,
@@ -46,7 +47,7 @@ const EvaluarModal = (props: ModalProps) => {
                 {isEvaluando && 
                   <div className="flex flex-row text-sm gap-2">
                     <h3 className="font-normal">Rubrica seleccionada:</h3>
-                   <h4 className="font-semibold">{rubrica?.nombre}</h4>
+                   <h4 className="font-semibold">{toMayusFirstLetters(rubrica?.nombre || "")}</h4>
                   </div>
                 }
               </ModalHeader>

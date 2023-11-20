@@ -9,4 +9,8 @@ const getCorreoFromProvider = (correo: string) => {
     return correoSplit[1];
 }
 
-export { getCorreoFromProvider }
+const toMayusFirstLetters = (str: string) => {
+    return str.split(" ").map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(" ");
+}
+
+export { getCorreoFromProvider, toMayusFirstLetters }
