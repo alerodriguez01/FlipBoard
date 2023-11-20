@@ -4,6 +4,7 @@ import { Spinner } from "./Spinner";
 import { Usuario } from "@/lib/types";
 import { PlusIcon } from "./icons/PlusIcon";
 import { CrossIcon } from "./icons/CrossIcon";
+import { getCorreoFromProvider } from "@/lib/utils";
 
 type TableProps = {
   label: string,
@@ -32,6 +33,10 @@ const CrearGrupoTable = (props: TableProps) => {
           {props.searchable ? <PlusIcon color={props.theme === 'light' ? "#000000" : "#ffffff"}/> : <CrossIcon/>}
         </Button>)
 
+    if(columnKey === "correo") {
+      return getCorreoFromProvider(user.correo);
+    }
+
     return getKeyValue(user,columnKey);
   }
 
@@ -43,7 +48,8 @@ const CrearGrupoTable = (props: TableProps) => {
       </header>
       <Table
           aria-label={props.label}
-          radius="sm" >
+          radius="sm"
+          className="max-h-[40vh]" isHeaderSticky >
           <TableHeader>
             <TableColumn key={"nombre"} className="min-w-[200px]">Nombre</TableColumn>
             <TableColumn key={"correo"} className="min-w-[300px]">Correo electrónico</TableColumn>

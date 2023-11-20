@@ -27,10 +27,10 @@ const Header = () => {
     }, [])
 
     const pathname = usePathname()
-    const isCursosOrRubricas = pathname === "/cursos" || pathname === "/rubricas"
+    const isCursosOrRubricas = pathname === "/cursos" || pathname === "/rubricas" || pathname === "/rubricas/crear"
 
     const idCurso = pathname.split("/")[2] ?? ""
-    const { data: curso, error, isLoading } = useSWR<Curso>(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
+    const { data: curso, error, isLoading } = useSWR<Curso>(session && !isCursosOrRubricas ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
 
 
     return (
