@@ -4,6 +4,7 @@ import { Spinner } from "./Spinner";
 import { Usuario } from "@/lib/types";
 import { PlusIcon } from "./icons/PlusIcon";
 import { CrossIcon } from "./icons/CrossIcon";
+import { getCorreoFromProvider } from "@/lib/utils";
 
 type TableProps = {
   label: string,
@@ -31,6 +32,10 @@ const CrearGrupoTable = (props: TableProps) => {
         <Button isIconOnly variant="light" onPress={() => props.onActionPress(user)}>
           {props.searchable ? <PlusIcon color={props.theme === 'light' ? "#000000" : "#ffffff"}/> : <CrossIcon/>}
         </Button>)
+
+    if(columnKey === "correo") {
+      return getCorreoFromProvider(user.correo);
+    }
 
     return getKeyValue(user,columnKey);
   }

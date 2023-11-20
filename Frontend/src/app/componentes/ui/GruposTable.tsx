@@ -10,6 +10,7 @@ import { useTheme } from "next-themes";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { GrupoIcon } from "./icons/GrupoIcon";
 import { EditIcon } from "./icons/EditIcon";
+import { getCorreoFromProvider } from "@/lib/utils";
 
 type TableProps = {
   idCurso: string,
@@ -60,8 +61,8 @@ const GruposTable = (props: TableProps) => {
     if (columnKey === "correo")
       return (
         <>
-          {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <>{user.correo} <Divider className="mt-1 mb-1"/></>)}
-          {grupo.integrantesModel?.at(grupo.integrantesModel?.length-1).correo}
+          {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <>{getCorreoFromProvider(user.correo)} <Divider className="mt-1 mb-1"/></>)}
+          {getCorreoFromProvider(grupo.integrantesModel?.at(grupo.integrantesModel?.length-1).correo)}
         </>
       );
 

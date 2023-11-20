@@ -8,6 +8,7 @@ import endpoints from "@/lib/endpoints";
 import { PersonAddIcon } from "./icons/PersonAddIcon";
 import { useTheme } from "next-themes";
 import { RubricaIcon } from "./icons/RubricaIcon";
+import { getCorreoFromProvider } from "@/lib/utils";
 
 type TableProps = {
   idCurso: string,
@@ -48,6 +49,10 @@ const AlumnosTable = (props: TableProps) => {
     if(columnKey === "nombre"){
       let words = user.nombre.split(' ');
       return words.map(w => w[0].toUpperCase()+w.substring(1)).join(' ')
+    }
+
+    if(columnKey === "correo") {
+      return getCorreoFromProvider(user.correo);
     }
 
     return getKeyValue(user, columnKey);

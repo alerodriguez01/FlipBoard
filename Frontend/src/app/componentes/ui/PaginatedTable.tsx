@@ -15,7 +15,7 @@ type TableProps = {
   renderCell: (item: any, columnKey: Key) => ReactNode;
   headerRightContent: ReactNode
   children: any
-  mutarDatos: number
+  mutarDatos?: number
 }
 
 const PaginatedTable = (props: TableProps) => {
