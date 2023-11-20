@@ -48,7 +48,8 @@ const CrearGrupoTable = (props: TableProps) => {
       </header>
       <Table
           aria-label={props.label}
-          radius="sm" >
+          radius="sm"
+          className="max-h-[40vh]" >
           <TableHeader>
             <TableColumn key={"nombre"} className="min-w-[200px]">Nombre</TableColumn>
             <TableColumn key={"correo"} className="min-w-[300px]">Correo electrónico</TableColumn>
