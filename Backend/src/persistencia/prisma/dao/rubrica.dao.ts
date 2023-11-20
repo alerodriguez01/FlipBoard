@@ -48,7 +48,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
     async createRubrica(rubrica: Rubrica) {
         try {
             return await this.prisma.rubrica.create({
-                data: rubrica,
+                data: {...rubrica, nombre: rubrica.nombre.toLowerCase()},
             });
         } catch (err) {
             return null;
@@ -64,7 +64,7 @@ export class RubricaPrismaDAO implements RubricaDataSource {
                 where: {
                     AND: [
                         {usuarioId: userId},
-                        {nombre: {contains: nombreRub}}
+                        {nombre: {contains: nombreRub?.toLowerCase()}}
                     ]
                 }
             });
