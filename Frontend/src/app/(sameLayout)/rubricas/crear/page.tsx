@@ -165,6 +165,10 @@ export default function CrearRubrica() {
         </Button>
       </section>
 
+      <input type="text" className="hidden" {...register("erroresExternos")} />
+      {errors.erroresExternos &&
+        <p className="text-red-500 text-lg">{`${errors.erroresExternos.message}`}</p>}
+
       <Button
         className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
         size="lg"
