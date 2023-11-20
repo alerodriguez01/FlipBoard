@@ -20,7 +20,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
   const {
     field = undefined,
     fieldState: {invalid = undefined, error = undefined}
-  } = props.control && props.name ? useController({name: props.name, control: props.control}) : {fieldState: {}};
+  } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, descripciones}}) : {fieldState: {}};
 
   useEffect(() => {
     let removed = new Map();
@@ -59,8 +59,12 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
             />)
           }
         </div>
-        {invalid &&
-          <p className="text-[#e41157] text-sm self-start mt-1">{error?.message}</p>}
+        {invalid && !!error?.message && 
+          <p className="text-[#e41157] text-sm self-start mt-1">{error.message}</p>}
+        {invalid && !!(error as any).nombre &&
+          <p className="text-[#e41157] text-sm self-start mt-1">{(error as any).nombre.message}</p>}
+        {invalid && !!(error as any).descripciones &&
+        <p className="text-[#e41157] text-sm self-start mt-1">{(error as any).descripciones.message}</p>}
       </CardBody>
     </Card>
   );
