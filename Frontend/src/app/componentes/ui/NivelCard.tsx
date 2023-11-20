@@ -21,8 +21,6 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
     fieldState: {invalid = undefined, error = undefined}
   } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, puntaje: Number(puntaje)}}) : {fieldState: {}};
 
-  console.log(error);
-
   return (
     <Card className={`max-w-[300px] ${invalid ? "border-2 border-[#e41157]":""}`}>
       <CardBody className="gap-3">

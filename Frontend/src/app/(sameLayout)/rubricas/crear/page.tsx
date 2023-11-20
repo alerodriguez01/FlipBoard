@@ -25,7 +25,7 @@ export default function CrearRubrica() {
     ...Object.fromEntries(criterios.map(c => [c, 
       z.object({
         nombre: z.string().min(1, "El campo nombre no puede estar vacío"), 
-        descripciones: z.map(z.string(), z.string())
+        descripciones: z.map(z.string(), z.string({errorMap: () => ({message: "Todas las descripciones deben estar completas"})}))
                         .transform(m => m.size)
                         .pipe(z.literal(niveles.length, {errorMap: () => ({message: "Todas las descripciones deben estar completas"})}))
       }, {errorMap: () => ({message: "Las descripciones y el nombre deben estar completos"})})
