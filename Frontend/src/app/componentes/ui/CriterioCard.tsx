@@ -56,7 +56,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
                 })
               } 
               placeholder="Descripción del nivel"
-              variant="bordered" className="w-[300px]" size="sm"
+              variant="bordered" className="w-[300px]" maxRows={5}
             />)
           }
         </div>
