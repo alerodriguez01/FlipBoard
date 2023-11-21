@@ -69,7 +69,6 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                 <>
                   <ModalHeader className="flex flex-col">
                     <h1>Asignar rúbrica</h1>
-                    <h4 className="text-sm font-normal">Actividad: ......</h4>
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
                     <ModalBody>
