@@ -145,7 +145,7 @@ export default function CrearRubrica() {
                 <NivelCard
                   id={n}
                   puntuable={puntuable}
-                  onDelete={(id) => setNiveles(prev => prev.filter(i => i !== id))}
+                  onDelete={(id) => setNiveles(prev => prev.length === 1 ? prev : prev.filter(i => i !== id))}
                   control={control}
                   {...register(n as any)}
                 />
@@ -159,7 +159,7 @@ export default function CrearRubrica() {
           <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
           {criterios.map(c =>
             <CriterioCard key={c} niveles={niveles} id={c}
-              onDelete={(id) => setCriterios(prev => prev.filter(i => i != id))}
+              onDelete={(id) => setCriterios(prev => prev.length === 1 ? prev : prev.filter(i => i != id))}
               control={control}
               {...register(c as any)}
             />)
