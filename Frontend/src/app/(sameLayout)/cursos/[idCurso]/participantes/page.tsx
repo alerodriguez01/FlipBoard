@@ -22,6 +22,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const esDocente = !!session?.user.cursosDocente.includes(params.idCurso);
     const [evaluarEntity, setEvaluarEntity] = React.useState<Usuario | Grupo>();
     const [entityType, setEntityType] = React.useState<"Usuario" | "Grupo" | undefined>();
+    const [asignarMode, setAsignarMode] = React.useState<'alumno' | 'grupo'>();
 
     // para que se refresque la tabla de grupos cuando se crea uno nuevo
     const [mutateGrupos, setMutateGrupos] = useState(0);
@@ -52,7 +53,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                     evaluable={esDocente}
                     onEvaluarPress={(user) => {setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen();}}
                     onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
-                    onAsignarRubricaPress={onAsignarOpen} />
+                    onAsignarRubricaPress={() => {setAsignarMode('alumno'); onAsignarOpen();}} />
                 </Tab>
                 <Tab key="grupos" title="Grupos">
                     <GruposTable 
@@ -63,13 +64,13 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onEvaluarPress={(grupo) => {setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen();}}
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
-                        onAsignarRubricaPress={onAsignarOpen}
+                        onAsignarRubricaPress={() => {setAsignarMode('grupo'); onAsignarOpen();}}
                         mutarDatos={mutateGrupos}/>
                 </Tab>
             </Tabs>
             <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess}/>
             {esDocente && 
-                <AsignarRubricaModal isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
+                <AsignarRubricaModal mode={asignarMode} isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
             {esDocente &&
                 <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso}/>}
         </section>

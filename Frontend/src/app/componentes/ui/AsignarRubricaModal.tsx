@@ -15,9 +15,23 @@ const rubricaSchema = z.object({
 
 type RubricaForm = z.infer<typeof rubricaSchema> & { erroresExternos?: string };
 
-const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string, idCurso: string}) => {
+type ModalProps = {
+  isOpen: boolean,
+  onOpenChange: any,
+  idUsuario: string,
+  idCurso: string,
+  mode?: 'alumno' | 'mural' | 'grupo',
+  idMural?: string
+};
+
+
+const AsignarRubricaModal = (props:  ModalProps) => {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
+
+  const asignarEndpoint = props.mode === 'mural' ? endpoints.asociarRubricaMural(props.idMural ?? "") :
+                          props.mode === 'grupo' ? endpoints.asociarRubricaGrupos(props.idCurso) :
+                          endpoints.asociarRubricaAlumnos(props.idCurso);
 
   const {
     register,
@@ -35,7 +49,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
   const onSubmit = async (onClose: Function, data: RubricaForm) => {
     
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.asociarRubricaAlumnos(props.idCurso), {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + asignarEndpoint, {
           method: 'PUT',
           body: JSON.stringify({
               idRubrica: JSON.parse(data.rubrica).id
