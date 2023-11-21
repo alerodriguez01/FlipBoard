@@ -21,7 +21,8 @@ type ModalProps = {
   idUsuario: string,
   idCurso: string,
   mode?: 'alumno' | 'mural' | 'grupo',
-  idMural?: string
+  idMural?: string,
+  onRubricaAsignada?: () => void
 };
 
 
@@ -64,6 +65,7 @@ const AsignarRubricaModal = (props:  ModalProps) => {
       }
       
       onClose();
+      props.onRubricaAsignada?.();
 
     } catch (err) {
         setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });

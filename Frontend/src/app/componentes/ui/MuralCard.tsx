@@ -16,7 +16,8 @@ type CardProps = {
   muralId: string,
   cursoId: string,
   room: string,
-  description?: string
+  description?: string,
+  onAsignarPress?: (id: string) => void
 };
 
 const MuralCard = (props: CardProps) => {
@@ -28,9 +29,6 @@ const MuralCard = (props: CardProps) => {
 
   const onDelete = () => {
     alert("TODO: eliminar mural");
-  };
-  const onAsignarRubrica = () => {
-    alert("TODO: asignar rúbrica")
   };
 
   const handleOnPress = async () => {
@@ -45,7 +43,7 @@ const MuralCard = (props: CardProps) => {
         editable={props.editable}
         dropDownItems={
           props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :
-          [{key: "asignar", label: "Asignar rúbrica", onAction: onAsignarRubrica },
+          [{key: "asignar", label: "Asignar rúbrica", onAction: () => props.onAsignarPress?.(props.muralId) },
           {key: "delete", label: "Eliminar mural", onAction: onDelete},]
         }
         color={props.color}
