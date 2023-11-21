@@ -118,7 +118,7 @@ export default function CrearRubrica() {
   let niv = 1;
 
   return (
-    <section className="flex flex-col overflow-auto p-8">
+    <section className={`flex flex-col p-8 overflow-auto max-w-[calc(89vw-2rem)]`}>
       <PagesHeader title="Crear rúbrica" searchable={false} />
       <form action="" className="flex flex-col" onSubmit={handleSubmit((data) => onSubmit(data))}>
         <header className={tagClassName}>
@@ -138,7 +138,7 @@ export default function CrearRubrica() {
 
         <section className={tagClassName}>
           <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
-          <div className="flex flex-row">
+          <div className="flex flex-row pb-3 overflow-auto">
             {addNivelButton(0)}
             {niveles.map(n =>
               <React.Fragment key={n}>
@@ -155,7 +155,7 @@ export default function CrearRubrica() {
           </div>
         </section>
 
-        <section className={tagClassName + "flex flex-col gap-3"}>
+        <section className={tagClassName + `flex flex-col gap-3`}>
           <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
           {criterios.map(c =>
             <CriterioCard key={c} niveles={niveles} id={c}
