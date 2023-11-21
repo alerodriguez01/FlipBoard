@@ -19,7 +19,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
 
-  const [selectedMural, setSelectedMural] = React.useState<string | undefined>();
+  const [selectedMural, setSelectedMural] = React.useState<Mural | undefined>();
   const { isOpen: isEvaluarOpen, onOpen: onEvaluarOpen, onOpenChange: onEvaluarOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
@@ -86,7 +86,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
-                  onAsignarPress={(id) => {setSelectedMural(id); onEvaluarOpen();}}
+                  onAsignarPress={(id, nombre) => {setSelectedMural({id, nombre} as Mural); onEvaluarOpen();}}
                 />)
             })
 
@@ -98,7 +98,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
         onOpenChange={onEvaluarOpenChange} 
         mode="mural"
         idUsuario={session.user.id}
-        idMural={selectedMural}
+        mural={selectedMural}
         onRubricaAsignada={mutate}
       />
     </section>

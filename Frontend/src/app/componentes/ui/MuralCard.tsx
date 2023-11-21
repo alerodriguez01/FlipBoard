@@ -7,6 +7,7 @@ import { Button, Tooltip } from "@nextui-org/react";
 import { useTheme } from "next-themes";
 import { generateContenidoMural } from "@/lib/excalidraw_utils";
 import { link } from "fs";
+import { Mural } from "@/lib/types";
 
 type CardProps = {
   title: string,
@@ -17,7 +18,7 @@ type CardProps = {
   cursoId: string,
   room: string,
   description?: string,
-  onAsignarPress?: (id: string) => void
+  onAsignarPress?: (id: string, nombre: string) => void
 };
 
 const MuralCard = (props: CardProps) => {
@@ -43,7 +44,7 @@ const MuralCard = (props: CardProps) => {
         editable={props.editable}
         dropDownItems={
           props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :
-          [{key: "asignar", label: "Asignar rúbrica", onAction: () => props.onAsignarPress?.(props.muralId) },
+          [{key: "asignar", label: "Asignar rúbrica", onAction: () => props.onAsignarPress?.(props.muralId, props.title) },
           {key: "delete", label: "Eliminar mural", onAction: onDelete},]
         }
         color={props.color}

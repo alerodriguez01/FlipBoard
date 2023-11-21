@@ -8,6 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
+import { Mural } from "@/lib/types";
 
 const rubricaSchema = z.object({
   rubrica: z.string()
@@ -21,7 +22,7 @@ type ModalProps = {
   idUsuario: string,
   idCurso: string,
   mode?: 'alumno' | 'mural' | 'grupo',
-  idMural?: string,
+  mural?: Mural,
   onRubricaAsignada?: () => void
 };
 
@@ -30,7 +31,7 @@ const AsignarRubricaModal = (props:  ModalProps) => {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
-  const asignarEndpoint = props.mode === 'mural' ? endpoints.asociarRubricaMural(props.idMural ?? "") :
+  const asignarEndpoint = props.mode === 'mural' ? endpoints.asociarRubricaMural(props.mural?.id ?? "") :
                           props.mode === 'grupo' ? endpoints.asociarRubricaGrupos(props.idCurso) :
                           endpoints.asociarRubricaAlumnos(props.idCurso);
 
@@ -85,6 +86,11 @@ const AsignarRubricaModal = (props:  ModalProps) => {
                 <>
                   <ModalHeader className="flex flex-col">
                     <h1>Asignar rúbrica</h1>
+                    {props.mode === 'mural' &&
+                      <div className="flex flex-row text-sm gap-2">
+                        <h3 className="font-normal">Mural:</h3>
+                        <h4 className="font-medium">{props.mural?.nombre}</h4>
+                      </div>}
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
                     <ModalBody>
