@@ -70,4 +70,6 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
   );
 });
 
+RubricaGrid.displayName = "RubricaGrid";
+
 export { RubricaGrid };

@@ -7,8 +7,8 @@ type CriterioProps = {
   id: string,
   niveles: string[],
   onDelete?: (id: string) => void,
-  control?: any,
-  name?: string
+  control: any,
+  name: string
 }
 
 const CriterioCard = forwardRef((props: CriterioProps, ref) => {
@@ -18,9 +18,9 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
   const [nombre, setNombre] = useState("");
 
   const {
-    field = undefined,
-    fieldState: {invalid = undefined, error = undefined}
-  } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, descripciones: new Map()}}) : {fieldState: {}};
+    field,
+    fieldState: {invalid, error}
+  } = useController({name: props.name, control: props.control, defaultValue: {nombre, descripciones: new Map()}});
 
   useEffect(() => {
     let removed = new Map();
@@ -74,5 +74,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
     </Card>
   );
 });
+
+CriterioCard.displayName = "CriterioCard";
 
 export { CriterioCard };

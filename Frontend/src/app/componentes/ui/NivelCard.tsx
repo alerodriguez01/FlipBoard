@@ -7,8 +7,8 @@ type NivelProps = {
   id: string,
   puntuable?: boolean,
   onDelete?: (id: string) => void,
-  control?: any,
-  name?: string
+  control: any,
+  name: string
 };
 
 const NivelCard = forwardRef((props: NivelProps, ref) => {
@@ -17,9 +17,9 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
   const [puntaje, setPuntaje] = useState("");
 
   const {
-    field = undefined,
-    fieldState: {invalid = undefined, error = undefined}
-  } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, puntaje: Number(puntaje)}}) : {fieldState: {}};
+    field,
+    fieldState: {invalid, error}
+  } = useController({name: props.name, control: props.control, defaultValue: {nombre, puntaje: Number(puntaje)}});
 
   return (
     <Card className={`min-w-[300px] shadow-sm border-2 ${invalid ? "border-[#e41157]":""}`}>
@@ -50,5 +50,7 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
     </Card>
   )
 });
+
+NivelCard.displayName = "NivelCard";
 
 export { NivelCard };
