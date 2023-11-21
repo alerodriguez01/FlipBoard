@@ -143,15 +143,20 @@ async function load_initial_data() {
   // Crear rubricas de ejemplo
   const rubrica1 = await prisma.rubrica.create({
     data: {
-      nombre: 'Rubrica de Matemáticas',
+      nombre: 'Ajuste y Tratamiento de datos',
       criterios: [
-        { nombre: 'Precisión', descripciones: ['Muy preciso', 'Preciso', 'Poco preciso'] },
-        { nombre: 'Complejidad', descripciones: ['Muy complejo', 'Complejo', 'Poco complejo'] },
+        { nombre: 'Utiliza estadística descriptiva para obtener parámetros numéricos', 
+        descripciones: ['Aplica correctamente estadística descriptiva y obtiene todos los parámetros numéricos de interés.', 'Aplica correctamente estadística descriptiva y solo obtiene algunos parámetros numéricos de interés', 'Aplica parcialmenteestadística descriptiva y obtiene algunos parámetros numéricos pero no reconoce cuáles son los convenientes.', "Comete error al aplicar estadísitca descriptiva y no obtiene los parámetros numéricos."] },
+        { nombre: 'Diseña el histograma defrecuencia e infiere a que distribución de probabilidad ajustaría', 
+        descripciones: ['Identifica valor Mínimo y Máximo, selecciona el nro. adecuado de intervalos, agrupa correctamente las ocurrencias en cada intervalo en forma secuencial.', 'Identifica valor Mínimo y Máximo, selecciona erróneamente el nro. deintervalos, agrupa las ocurrencias según los intervalos que obtuvo.', 'Plantea un histograma que no está vinculado a los datos dados, reconoce valores mínimo y máximo y un nro. erróneo de intervalos', "No representa el histograma. Solo identifica valores mínimo y máximo."] },
+        { nombre: 'Ajusta los datos a ladistrib. de probabilidad estándar o empírica utilizando una prueba de bondad de ajuste', 
+        descripciones: ['Ajusta los datos aplicando correctamente una prueba de bondad de ajuste adecuada para la muestra de datos dada.', 'Ajusta los datos aplicando correctamente una prueba de bondad de ajuste adecuada para la muestra de datos dada PERO comete errores numéricos en la resolución', 'Ajusta los datos aplicando en forma errónea una prueba de bondad de ajuste para la muestra de datos dada', "Comete error al seleccionar y aplicar una prueba de bondad de ajuste para la muestra de datos dada."] },
       ],
       niveles: [
-        { nombre: 'Nivel 1', puntaje: 1 },
-        { nombre: 'Nivel 2', puntaje: 2 },
-        { nombre: 'Nivel 3', puntaje: 3 },
+        { nombre: 'Excelente', puntaje: 10 },
+        { nombre: 'Logrado', puntaje: 8 },
+        { nombre: 'En proceso', puntaje: 6 },
+        { nombre: 'No logrado', puntaje: 2 },
       ],
       gruposModel: {
         connect: [{ id: curso1.id }]
