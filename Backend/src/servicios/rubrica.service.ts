@@ -38,8 +38,8 @@ async function createRubrica(rubrica: Rubrica) {
         throw new InvalidValueError('Rubrica', 'Criterios o Niveles');
 
     // la primera cond chequea que cantDescripciones == cantNiveles
-    if (!rubrica.criterios.every(c => c.nombre.length <= 50 && c.descripciones.length === rubrica.niveles.length) ||
-        !rubrica.niveles.every(n => n.nombre.length <= 50))
+    if (!rubrica.criterios.every(c => c.nombre.length <= 200 && c.descripciones.length === rubrica.niveles.length) ||
+        !rubrica.niveles.every(n => n.nombre.length <= 200))
         throw new InvalidValueError('Rubrica', 'Criterios o Descripciones o Niveles');
 
     const user = await UsuarioRepository.getInstance().getUsuarioById(rubrica.usuarioId);
