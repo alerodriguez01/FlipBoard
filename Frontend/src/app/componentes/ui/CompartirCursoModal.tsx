@@ -105,7 +105,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
     }
 
     return (
-        <Modal isOpen={isOpen} onOpenChange={personalizedOnOpenChange} classNames={{ closeButton: "m-3" }} scrollBehavior="inside">
+        <Modal isOpen={isOpen} onOpenChange={personalizedOnOpenChange} classNames={{ closeButton: "m-3" }} className="max-h-[90%] overflow-auto">
             <ModalContent>
                 {(onClose) => (
                     <>

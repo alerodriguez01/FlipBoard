@@ -40,7 +40,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
           />
           <Button className="self-center" size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
         </header>
-        <div className="flex flex-row gap-3">
+        <div className="flex flex-row gap-3 overflow-auto pb-2">
           {props.niveles.map(n => 
             <Textarea 
               key={n}
@@ -56,7 +56,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
                 })
               } 
               placeholder="Descripción del nivel"
-              variant="bordered" className="w-[300px]" size="sm"
+              variant="bordered" className="min-w-[300px]" maxRows={5}
             />)
           }
         </div>

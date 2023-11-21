@@ -22,7 +22,7 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
   } = props.control && props.name ? useController({name: props.name, control: props.control, defaultValue: {nombre, puntaje: Number(puntaje)}}) : {fieldState: {}};
 
   return (
-    <Card className={`max-w-[300px] ${invalid ? "border-2 border-[#e41157]":""}`}>
+    <Card className={`min-w-[300px] shadow-sm border-2 ${invalid ? "border-[#e41157]":""}`}>
       <CardBody className="gap-3">
         <div className="flex flex-row justify-between">
           <Input
