@@ -3,18 +3,22 @@ import { generateContenidoMural } from '@/lib/excalidraw_utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
-import React from 'react'
-import { useForm } from 'react-hook-form'
+import React, { useState } from 'react'
+import { set, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { RubricaIcon } from './icons/RubricaIcon'
 import { useTheme } from 'next-themes'
+import { Rubrica } from '@/lib/types'
 
 type CrearMuralModalProps = {
     isOpen: boolean,
     onOpenChange: () => void,
     mutateData: () => void,
     cursoId: string,
-    userId: string
+    userId: string,
+    openAsignarRubrica: () => void,
+    rubrica: Rubrica | null,
+    setRubrica: React.Dispatch<React.SetStateAction<Rubrica | null>>
 }
 
 // schema para validar los datos del formulario
@@ -23,9 +27,10 @@ const muralSchema = z.object({
     descripcion: z.string()
 })
 // tipo inferido a partir del schema
-type MuralCreate = z.infer<typeof muralSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
+type MuralCreate = z.infer<typeof muralSchema> & Rubrica
+    & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
-const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: CrearMuralModalProps) => {
+const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, openAsignarRubrica, rubrica, setRubrica }: CrearMuralModalProps) => {
 
     const { theme, systemTheme, setTheme } = useTheme()
     const currentTheme = theme === "system" ? systemTheme : theme
@@ -50,8 +55,8 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
             nombre: data.nombre,
             contenido: await generateContenidoMural(),
             descripcion: data.descripcion,
-            idDocente: userId
-            // idRubrica
+            idDocente: userId,
+            idRubrica: rubrica?.id // si no se asigno ninguna rubrica, se envia null
         }
 
         try {
@@ -68,6 +73,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
                 setError("erroresExternos", { message: "Hubo un problema al crear el mural." })
 
             } else {
+                setRubrica(null) // seteo en null la rubrica para que si se crea otro mural, no quede asignada la misma rubrica
                 reset()
                 mutateData()
                 onClose()
@@ -78,12 +84,17 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
         }
     }
 
-    const personalizedOnOpenChange = (isOpen: boolean) => {
+    const personalizedOnOpenChange = (isOpen: boolean, goToAsignarRubrica?: boolean) => {
 
         // isOpen es el estado del modal cuando el usuario lo cerro (pero visualmente todav no se cerro)
-        if (!isOpen) {
+        if (!isOpen && !goToAsignarRubrica) {
             // reiniciar el estado del modal si se cierra
             reset()
+        }
+
+        if (goToAsignarRubrica) {
+            // abrir el modal de asignar rubrica
+            openAsignarRubrica()
         }
 
         // funcion del hook para cerrar el modal
@@ -118,17 +129,25 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
                                 {...register("descripcion")}
                             />
 
-                            <Divider  className='max-w-[50%] self-center mt-1'/>
+                            <Divider className='max-w-[50%] self-center mt-1' />
                             <h3 className=''>Rúbrica</h3>
                             <div className='flex gap-3 items-center'>
-                                <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
+                                {rubrica ?
+                                    <p className='text-sm'>Rúbrica asignada: {rubrica.nombre}</p>
+                                    :
+                                    <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
+                                }
                                 <Button
-                                    className='w-[50%]'
+                                    className='min-w-[50%]'
                                     variant="ghost"
                                     startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
-                                    onPress={() => alert("asignar rubrica")}
+                                    onPress={() => personalizedOnOpenChange(false, true)}
                                 >
-                                    Asignar rúbrica
+                                    {rubrica ?
+                                        "Cambiar rúbrica"
+                                        :
+                                        "Asignar rúbrica"
+                                    }
                                 </Button>
                             </div>
 

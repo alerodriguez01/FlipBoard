@@ -52,5 +52,8 @@ export type Rubrica = {
     nombre: string,
     criterios: Criterio[],
     niveles: Nivel[],
+    gruposCursos: string[],
+    alumnosCursos: string[],
+    usuarioId: string,
     //agregar atributos requeridos
 }
