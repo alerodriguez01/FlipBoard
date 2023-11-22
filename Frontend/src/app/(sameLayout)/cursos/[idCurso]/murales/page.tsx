@@ -1,10 +1,12 @@
 'use client'
 import { AsignarRubricaModal } from "@/app/componentes/ui/AsignarRubricaModal";
+import CrearMuralModal from "@/app/componentes/ui/CrearMuralModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
 import { Mural } from "@/lib/types";
-import { Spinner, useDisclosure } from "@nextui-org/react";
+import { Button, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -15,7 +17,11 @@ import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
 
+  const { isOpen: isCrearOpen, onOpen: onCrearOpen, onOpenChange: onCrearOpenChange } = useDisclosure();
+
   const { data: session, status, update } = useSession();
+  const isDocente = session?.user.cursosDocente.includes(params.idCurso)
+
   const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
 
@@ -86,7 +92,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
-                  onAsignarPress={(id, nombre) => {setSelectedMural({id, nombre} as Mural); onEvaluarOpen();}}
+                  onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onEvaluarOpen(); }}
                 />)
             })
 
@@ -95,12 +101,23 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
       <AsignarRubricaModal
         idCurso={params.idCurso}
         isOpen={isEvaluarOpen}
-        onOpenChange={onEvaluarOpenChange} 
+        onOpenChange={onEvaluarOpenChange}
         mode="mural"
         idUsuario={session.user.id}
         mural={selectedMural}
         onRubricaAsignada={mutate}
       />
+
+      {isDocente &&
+        <>
+          <CrearMuralModal isOpen={isCrearOpen} onOpenChange={onCrearOpenChange} mutateData={mutate} cursoId={params.idCurso} userId={session.user.id} />
+          <Button
+            className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
+            startContent={<PlusIcon color="#FFFFFF" />}
+            size="lg"
+            onPress={onCrearOpen}> Crear nuevo mural </Button>
+        </>
+      }
     </section>
   )
 }
