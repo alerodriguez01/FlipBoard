@@ -117,7 +117,8 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
                                 <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>
                             }
                         </ModalBody>
-                        <ModalFooter className='pt-0'>
+                        <ModalFooter className='pt-0 flex items-center justify-between'>
+                            <p className="text-red-600">* Campos obligatorios</p>
                             <Button type='submit' className='bg-[#181e25] text-white dark:border dark:border-gray-700 max-w-[35%]'>
                                 Crear mural
                             </Button>
