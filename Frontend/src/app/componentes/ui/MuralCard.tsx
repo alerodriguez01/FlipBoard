@@ -8,6 +8,7 @@ import { useTheme } from "next-themes";
 import { generateContenidoMural } from "@/lib/excalidraw_utils";
 import { link } from "fs";
 import { Mural } from "@/lib/types";
+import { toMayusFirstLetters } from "@/lib/utils";
 
 type CardProps = {
   title: string,
@@ -56,7 +57,7 @@ const MuralCard = (props: CardProps) => {
             content={
                 <article className="flex flex-row">
                   <h3 className="font-semibold mr-2">Rúbrica asignada:</h3>
-                  <p>{props.rubrica ?? "No se ha asignado rúbrica"}</p>
+                  <p>{props.rubrica ? toMayusFirstLetters(props.rubrica) : "No se ha asignado rúbrica"}</p>
                 </article>
                 
             }>

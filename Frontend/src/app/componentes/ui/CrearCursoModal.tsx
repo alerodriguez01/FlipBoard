@@ -131,7 +131,7 @@ const CrearCursoModal = (props: {isOpen: boolean, onOpenChange: any, idDocente: 
 
                   <ModalFooter className="flex flex-row justify-between">
                     <p className="text-red-600 place-self-center">* Campos obligatorios</p>
-                    <Button className="bg-[#181e25] text-white"
+                    <Button className="bg-[#181e25] text-white dark:border dark:border-gray-700"
                      isLoading={isSubmitting}
                       type="submit"
                       spinner={Spinner}

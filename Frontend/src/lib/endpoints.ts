@@ -87,6 +87,14 @@ function asociarRubricaMural(idMural: string) {
     return `/api/cursos/murales/${idMural}`;
 }
 
+function crearMural(idCurso: string) {
+    return `/api/cursos/${idCurso}/murales`;
+}
+
+function enviarEmails(){
+    return "/api/cursos/send-email"
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -97,5 +105,6 @@ export default {
     asociarRubricaAlumnos, getAllRubricasIndividuales,
     getAllRubricasGrupales, crearCalificacionAlumno,
     crearCalificacionGrupo, loginProvider, crearGrupo,
-    crearRubrica, asociarRubricaGrupos, asociarRubricaMural
+    crearRubrica, asociarRubricaGrupos, asociarRubricaMural,
+    crearMural, enviarEmails
 }

@@ -1,10 +1,12 @@
 'use client'
 import { AsignarRubricaModal } from "@/app/componentes/ui/AsignarRubricaModal";
+import CrearMuralModal from "@/app/componentes/ui/CrearMuralModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
+import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
-import { Mural } from "@/lib/types";
-import { Spinner, useDisclosure } from "@nextui-org/react";
+import { Mural, Rubrica } from "@/lib/types";
+import { Button, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -15,14 +17,24 @@ import useSWR from "swr";
 
 export default function Murales({ params }: { params: { idCurso: string } }) {
 
+  const { isOpen: isCrearOpen, onOpen: onCrearOpen, onOpenChange: onCrearOpenChange } = useDisclosure();
+
   const { data: session, status, update } = useSession();
+  const isDocente = session?.user.cursosDocente.includes(params.idCurso)
+
   const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
 
   const [selectedMural, setSelectedMural] = React.useState<Mural | undefined>();
-  const { isOpen: isEvaluarOpen, onOpen: onEvaluarOpen, onOpenChange: onEvaluarOpenChange } = useDisclosure();
+  const { isOpen: isAsignarOpen, onOpen: onAsignarOpen, onOpenChange: onAsignarOpenChange } = useDisclosure();
+  const { isOpen: isAsignarNewMuralOpen, onOpen: onAsignarNewMuralOpen, onOpenChange: onAsignarNewMuralOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
+
+  const [rubricaAsignadaNewMural, setRubricaAsignadaNewMural] = useState<Rubrica | null>(null); // rubrica que se asigna si se crea un nuevo mural
+  useEffect(() => {
+    if (rubricaAsignadaNewMural) onCrearOpen();
+  }, [rubricaAsignadaNewMural])
 
   const searchParams = useSearchParams();
 
@@ -86,7 +98,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
-                  onAsignarPress={(id, nombre) => {setSelectedMural({id, nombre} as Mural); onEvaluarOpen();}}
+                  onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onAsignarOpen(); }}
                 />)
             })
 
@@ -94,13 +106,41 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
       </div>
       <AsignarRubricaModal
         idCurso={params.idCurso}
-        isOpen={isEvaluarOpen}
-        onOpenChange={onEvaluarOpenChange} 
+        isOpen={isAsignarOpen}
+        onOpenChange={onAsignarOpenChange}
         mode="mural"
         idUsuario={session.user.id}
         mural={selectedMural}
         onRubricaAsignada={mutate}
       />
+
+      {isDocente &&
+        <>
+          <CrearMuralModal
+            isOpen={isCrearOpen}
+            onOpenChange={onCrearOpenChange}
+            mutateData={mutate}
+            cursoId={params.idCurso}
+            userId={session.user.id}
+            openAsignarRubrica={onAsignarNewMuralOpen}
+            rubrica={rubricaAsignadaNewMural}
+            setRubrica={setRubricaAsignadaNewMural}
+          />
+          <AsignarRubricaModal
+            idCurso={params.idCurso}
+            isOpen={isAsignarNewMuralOpen}
+            onOpenChange={onAsignarNewMuralOpenChange}
+            mode="newMural"
+            idUsuario={session.user.id}
+            onRubricaAsignadaNewMural={setRubricaAsignadaNewMural}
+          />
+          <Button
+            className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
+            startContent={<PlusIcon color="#FFFFFF" />}
+            size="lg"
+            onPress={onCrearOpen}> Crear nuevo mural </Button>
+        </>
+      }
     </section>
   )
 }

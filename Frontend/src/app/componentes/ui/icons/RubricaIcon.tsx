@@ -1,6 +1,6 @@
 import React from "react";
 
-export const RubricaIcon = (props: { toggle?: boolean, theme: 'light' | 'dark' }) => (
+export const RubricaIcon = (props: { toggle?: boolean, theme: string }) => (
   <svg
     fill={!props.toggle ? "#828282" : props.theme === 'light' ? "#000000" : "#ffffff"}
     width="18"

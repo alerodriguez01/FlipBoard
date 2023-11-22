@@ -20,7 +20,7 @@ export default function Rubricas() {
             <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} />
             <Link href={'/rubricas/crear'} passHref>
                 <Button
-                    className="bg-[#181e25] text-white fixed bottom-10 right-10"
+                    className="bg-[#181e25] text-white fixed bottom-10 right-10 dark:border dark:border-gray-700"
                     startContent={<PlusIcon color="#FFFFFF" />}
                     size="lg"> Crear nueva rúbrica </Button>
             </Link>

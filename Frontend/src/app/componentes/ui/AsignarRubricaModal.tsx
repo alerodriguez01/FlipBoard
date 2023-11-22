@@ -8,7 +8,7 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
-import { Mural } from "@/lib/types";
+import { Mural, Rubrica } from "@/lib/types";
 import Link from "next/link";
 
 const rubricaSchema = z.object({
@@ -22,9 +22,10 @@ type ModalProps = {
   onOpenChange: any,
   idUsuario: string,
   idCurso: string,
-  mode?: 'alumno' | 'mural' | 'grupo',
+  mode?: 'alumno' | 'mural' | 'grupo' | 'newMural',
   mural?: Mural,
   onRubricaAsignada?: () => void
+  onRubricaAsignadaNewMural?: React.Dispatch<React.SetStateAction<Rubrica | null>>
 };
 
 
@@ -50,6 +51,13 @@ const AsignarRubricaModal = (props:  ModalProps) => {
   });
 
   const onSubmit = async (onClose: Function, data: RubricaForm) => {
+
+    if(props.mode === 'newMural'){
+      const rubrica = JSON.parse(data.rubrica) as Rubrica;
+      if(props.onRubricaAsignadaNewMural) props.onRubricaAsignadaNewMural(rubrica) // seteo la rubrica seleccionada
+      onClose();
+      return;
+    }
     
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + asignarEndpoint, {
