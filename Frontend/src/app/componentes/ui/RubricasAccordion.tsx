@@ -42,35 +42,42 @@ const RubricasAccordion = (props: AccordionProps) => {
             {isLoading ?
                 <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
                 :
-                <Accordion variant="splitted" fullWidth>
-                    {data?.map((rubric: Rubrica) => (
-                        <AccordionItem
-                            key={rubric.id}
-                            title={
-                                <div className="flex flex-row justify-between">
-                                    <h1 className="self-center text-base">{toMayusFirstLetters(rubric.nombre)}</h1>
-                                    {props.type === "editable" ?
-                                        <div className="flex gap-3">
-                                            <Button
-                                                startContent={<EditIcon theme={currentTheme} />}
-                                                onPress={() => alert(`TODO: MODIFICAR RUBRICA id:${rubric.id}`)}
-                                            >Modificar</Button>
-                                            <Button
-                                                startContent={<CrossIcon />}
-                                                onPress={() => alert(`TODO: ELIMINAR RUBRICA id:${rubric.id}`)}
-                                            >Eliminar</Button>
+                <>
+                    {data && data.length > 0 ?
+                        <Accordion variant="splitted" fullWidth>
+                            {data.map((rubric: Rubrica) => (
+                                <AccordionItem
+                                    key={rubric.id}
+                                    title={
+                                        <div className="flex flex-row justify-between">
+                                            <h1 className="self-center text-base">{toMayusFirstLetters(rubric.nombre)}</h1>
+                                            {props.type === "editable" ?
+                                                <div className="flex gap-3">
+                                                    <Button
+                                                        startContent={<EditIcon theme={currentTheme} />}
+                                                        onPress={() => alert(`TODO: MODIFICAR RUBRICA id:${rubric.id}`)}
+                                                    >Modificar</Button>
+                                                    <Button
+                                                        startContent={<CrossIcon />}
+                                                        onPress={() => alert(`TODO: ELIMINAR RUBRICA id:${rubric.id}`)}
+                                                    >Eliminar</Button>
+                                                </div>
+                                                :
+                                                <Radio value={JSON.stringify(rubric)} />
+                                            }
                                         </div>
-                                        :
-                                        <Radio value={JSON.stringify(rubric)} />
                                     }
-                                </div>
-                            }
-                            textValue={`Rubrica ${rubric.nombre}`}
-                        >
-                            <RubricaGrid evaluable={false} label={rubric.nombre} criterios={rubric.criterios} niveles={rubric.niveles} />
-                        </AccordionItem>
-                    ))}
-                </Accordion>}
+                                    textValue={`Rubrica ${rubric.nombre}`}
+                                >
+                                    <RubricaGrid evaluable={false} label={rubric.nombre} criterios={rubric.criterios} niveles={rubric.niveles} />
+                                </AccordionItem>
+                            ))}
+                        </Accordion>
+                        :
+                        <h1 className="px-3">No se han encontrado rúbricas {props.type === "selectable" ? "para evaluar" : ""}</h1>
+                    }
+                </>
+            }
         </section>
     );
 }
