@@ -1,11 +1,13 @@
 import endpoints from '@/lib/endpoints'
 import { generateContenidoMural } from '@/lib/excalidraw_utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
+import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
 import React from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
+import { RubricaIcon } from './icons/RubricaIcon'
+import { useTheme } from 'next-themes'
 
 type CrearMuralModalProps = {
     isOpen: boolean,
@@ -24,6 +26,9 @@ const muralSchema = z.object({
 type MuralCreate = z.infer<typeof muralSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
 const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: CrearMuralModalProps) => {
+
+    const { theme, systemTheme, setTheme } = useTheme()
+    const currentTheme = theme === "system" ? systemTheme : theme
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -92,11 +97,11 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
                 {(onClose) => (
                     <form action="" onSubmit={handleSubmit((data: MuralCreate) => onSubmit(data, onClose))} className='flex flex-col gap-3'>
                         <ModalHeader className="flex flex-col gap-1">Nuevo mural</ModalHeader>
-                        <ModalBody>
+                        <ModalBody className='pt-0'>
                             <Input
                                 variant="bordered"
                                 type="text"
-                                label="Nombre del mural"
+                                label="Nombre"
                                 placeholder="Ej.: Teoría de grafos"
                                 isRequired
                                 isInvalid={!!errors.nombre} // !! -> convierte a booleano la existencia del error en la valdadacion del input
@@ -112,14 +117,29 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId }: 
                                 errorMessage={errors.descripcion?.message}
                                 {...register("descripcion")}
                             />
+
+                            <Divider  className='max-w-[50%] self-center mt-1'/>
+                            <h3 className=''>Rúbrica</h3>
+                            <div className='flex gap-3 items-center'>
+                                <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
+                                <Button
+                                    className='w-[50%]'
+                                    variant="ghost"
+                                    startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
+                                    onPress={() => alert("asignar rubrica")}
+                                >
+                                    Asignar rúbrica
+                                </Button>
+                            </div>
+
                             <input type="text" className="hidden" {...register("erroresExternos")} />
                             {errors.erroresExternos &&
                                 <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>
                             }
                         </ModalBody>
-                        <ModalFooter className='pt-0 flex items-center justify-between'>
+                        <ModalFooter className='flex items-center justify-between'>
                             <p className="text-red-600">* Campos obligatorios</p>
-                            <Button type='submit' className='bg-[#181e25] text-white dark:border dark:border-gray-700 max-w-[35%]'>
+                            <Button type='submit' className='bg-[#181e25] text-white dark:border dark:border-gray-700 w-[40%]'>
                                 Crear mural
                             </Button>
                         </ModalFooter>
