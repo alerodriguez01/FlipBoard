@@ -9,6 +9,7 @@ import { z } from 'zod'
 import { RubricaIcon } from './icons/RubricaIcon'
 import { useTheme } from 'next-themes'
 import { Rubrica } from '@/lib/types'
+import { toMayusFirstLetters } from '@/lib/utils'
 
 type CrearMuralModalProps = {
     isOpen: boolean,
@@ -89,6 +90,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
         // isOpen es el estado del modal cuando el usuario lo cerro (pero visualmente todav no se cerro)
         if (!isOpen && !goToAsignarRubrica) {
             // reiniciar el estado del modal si se cierra
+            setRubrica(null) // seteo en null la rubrica para que si se crea otro mural, no quede asignada la misma rubrica
             reset()
         }
 
@@ -130,10 +132,10 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
                             />
 
                             <Divider className='max-w-[50%] self-center mt-1' />
-                            <h3 className=''>Rúbrica</h3>
-                            <div className='flex gap-3 items-center'>
+                            <h3 className=''>Rúbrica <span className='text-xs align-top'>*</span></h3>
+                            <div className='flex gap-3 items-center justify-between'>
                                 {rubrica ?
-                                    <p className='text-sm'>Rúbrica asignada: {rubrica.nombre}</p>
+                                    <p className='text-sm'>Rúbrica asignada: <span className='italic'>{toMayusFirstLetters(rubrica.nombre)}</span></p>
                                     :
                                     <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
                                 }
@@ -150,6 +152,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
                                     }
                                 </Button>
                             </div>
+                            {!rubrica && <p className='text-xs'>* Puedes asignarla más tarde</p>}
 
                             <input type="text" className="hidden" {...register("erroresExternos")} />
                             {errors.erroresExternos &&
