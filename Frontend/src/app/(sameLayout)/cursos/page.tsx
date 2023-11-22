@@ -50,7 +50,7 @@ export default function Cursos() {
       <div className="flex flex-wrap gap-6">
         {
           data.cursosDocenteModel.length === 0 && data.cursosAlumnoModel.length === 0 ?
-            <h3>No hay cursos</h3>
+            <h3 className="px-3">No hay cursos</h3>
             :
             <>
               {data.cursosDocenteModel.length > 0 &&

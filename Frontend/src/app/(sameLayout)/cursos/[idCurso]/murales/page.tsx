@@ -83,7 +83,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
       <div className="flex flex-wrap gap-6">
         {
           data.length < 1 ?
-            <h3>No hay murales</h3>
+            <h3 className="px-3">El curso no posee murales creados</h3>
             :
             data.map((m: Mural) => {
               if (search !== "" && !m.nombre.toLowerCase().includes(search.toLowerCase())) return null;
