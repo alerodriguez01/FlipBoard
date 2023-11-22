@@ -8,6 +8,7 @@ import useSWR from "swr"
 import { useSession } from "next-auth/react"
 import { PersonAddIcon } from "./icons/PersonAddIcon"
 import { CrossIcon } from "./icons/CrossIcon"
+import endpoints from "@/lib/endpoints"
 
 type CompartirCursoModalProps = {
     isOpen: boolean,
@@ -73,7 +74,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
     const [emailLoading, setEmailLoading] = useState(false)
     const sendEmails = async () => {
         setEmailLoading(true)
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/send-email`, {
+        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.enviarEmails(), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
