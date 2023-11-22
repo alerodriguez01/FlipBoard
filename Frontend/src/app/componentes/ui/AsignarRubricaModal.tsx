@@ -9,6 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
 import { Mural } from "@/lib/types";
+import Link from "next/link";
 
 const rubricaSchema = z.object({
   rubrica: z.string()
@@ -105,7 +106,8 @@ const AsignarRubricaModal = (props:  ModalProps) => {
                           <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
                     </ModalBody>
 
-                    <ModalFooter className="flex flex-row">
+                    <ModalFooter className="flex flex-row justify-between">
+                      <p className="self-center">Puedes crear tu rúbrica <Link href={"/rubricas/crear"} className="text-blue-500">aquí</Link></p>
                       <Button className="bg-[#181e25] text-white end-2.5 dark:bg-gray-200 dark:text-black"
                       isLoading={isSubmitting}
                         type="submit"
