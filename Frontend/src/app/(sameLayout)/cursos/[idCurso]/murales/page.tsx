@@ -1,12 +1,14 @@
 'use client'
+import { AsignarRubricaModal } from "@/app/componentes/ui/AsignarRubricaModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import endpoints from "@/lib/endpoints";
 import { Mural } from "@/lib/types";
-import { Spinner } from "@nextui-org/react";
+import { Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import React from "react";
 import { useEffect, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import useSWR from "swr";
@@ -14,8 +16,11 @@ import useSWR from "swr";
 export default function Murales({ params }: { params: { idCurso: string } }) {
 
   const { data: session, status, update } = useSession();
-  const { data, error, isLoading } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
+  const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
   let color = 0;
+
+  const [selectedMural, setSelectedMural] = React.useState<Mural | undefined>();
+  const { isOpen: isEvaluarOpen, onOpen: onEvaluarOpen, onOpenChange: onEvaluarOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
 
@@ -81,11 +86,21 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
+                  onAsignarPress={(id, nombre) => {setSelectedMural({id, nombre} as Mural); onEvaluarOpen();}}
                 />)
             })
 
         }
       </div>
+      <AsignarRubricaModal
+        idCurso={params.idCurso}
+        isOpen={isEvaluarOpen}
+        onOpenChange={onEvaluarOpenChange} 
+        mode="mural"
+        idUsuario={session.user.id}
+        mural={selectedMural}
+        onRubricaAsignada={mutate}
+      />
     </section>
   )
 }

@@ -8,6 +8,8 @@ import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
+import { Mural } from "@/lib/types";
+import Link from "next/link";
 
 const rubricaSchema = z.object({
   rubrica: z.string()
@@ -15,9 +17,24 @@ const rubricaSchema = z.object({
 
 type RubricaForm = z.infer<typeof rubricaSchema> & { erroresExternos?: string };
 
-const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuario: string, idCurso: string}) => {
+type ModalProps = {
+  isOpen: boolean,
+  onOpenChange: any,
+  idUsuario: string,
+  idCurso: string,
+  mode?: 'alumno' | 'mural' | 'grupo',
+  mural?: Mural,
+  onRubricaAsignada?: () => void
+};
+
+
+const AsignarRubricaModal = (props:  ModalProps) => {
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
+
+  const asignarEndpoint = props.mode === 'mural' ? endpoints.asociarRubricaMural(props.mural?.id ?? "") :
+                          props.mode === 'grupo' ? endpoints.asociarRubricaGrupos(props.idCurso) :
+                          endpoints.asociarRubricaAlumnos(props.idCurso);
 
   const {
     register,
@@ -35,7 +52,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
   const onSubmit = async (onClose: Function, data: RubricaForm) => {
     
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.asociarRubricaAlumnos(props.idCurso), {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + asignarEndpoint, {
           method: 'PUT',
           body: JSON.stringify({
               idRubrica: JSON.parse(data.rubrica).id
@@ -50,6 +67,7 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
       }
       
       onClose();
+      props.onRubricaAsignada?.();
 
     } catch (err) {
         setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
@@ -69,6 +87,11 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                 <>
                   <ModalHeader className="flex flex-col">
                     <h1>Asignar rúbrica</h1>
+                    {props.mode === 'mural' &&
+                      <div className="flex flex-row text-sm gap-2">
+                        <h3 className="font-normal">Mural:</h3>
+                        <h4 className="font-medium">{props.mural?.nombre}</h4>
+                      </div>}
                   </ModalHeader>
                   <form action="" onSubmit={handleSubmit((data) => onSubmit(onClose, data))}>
                     <ModalBody>
@@ -83,7 +106,8 @@ const AsignarRubricaModal = (props: {isOpen: boolean, onOpenChange: any, idUsuar
                           <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
                     </ModalBody>
 
-                    <ModalFooter className="flex flex-row">
+                    <ModalFooter className="flex flex-row justify-between">
+                      <p className="self-center">Puedes crear tu rúbrica <Link href={"/rubricas/crear"} className="text-blue-500">aquí</Link></p>
                       <Button className="bg-[#181e25] text-white end-2.5 dark:bg-gray-200 dark:text-black"
                       isLoading={isSubmitting}
                         type="submit"
