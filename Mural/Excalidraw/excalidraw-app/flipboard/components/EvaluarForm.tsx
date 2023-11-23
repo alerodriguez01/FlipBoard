@@ -14,6 +14,7 @@ type EvaluarProps = {
   endpoint: string,
   idDocente: string
   onAtrasPressed?: () => void,
+  idMural: string
 }
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
@@ -46,7 +47,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               valores: Array.from(data.valores.values()),
               observaciones: data.observaciones,
               idRubrica: props.rubrica.id,
-              idDocente: props.idDocente
+              idDocente: props.idDocente,
+              idMural: props.idMural
           }),
           headers: {
               'Content-Type': 'application/json'

@@ -80,9 +80,9 @@ const GruposTable = (props: TableProps) => {
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={props.theme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
       } >
-      <TableColumn key="numero" className="w-[100px]" align="center" >Grupo</TableColumn>
-      <TableColumn key="integrantes" className="w-[400px]">Integrantes</TableColumn>
-      <TableColumn key="correo" className="w-[400px]">Correo electrónico</TableColumn>
+      <TableColumn key="numero" className="w-[100px] text-sm font-bold" align="center" >Grupo</TableColumn>
+      <TableColumn key="integrantes" className="w-[400px] text-sm font-bold">Integrantes</TableColumn>
+      <TableColumn key="correo" className="w-[400px] text-sm font-bold">Correo electrónico</TableColumn>
       <TableColumn key="evaluar" className="w-[70px]"> </TableColumn>
       <TableColumn key="actions" className="w-[10px]"> </TableColumn>
     </PaginatedTable>
