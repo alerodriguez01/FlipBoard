@@ -73,10 +73,10 @@ const AlumnosTable = (props: TableProps) => {
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
       } >
-      <TableColumn key="nombre" className="w-[500px]">Nombre</TableColumn>
-      <TableColumn key="correo" className="w-[500px]">Correo electrónico</TableColumn>
-      <TableColumn key="evaluar" className="w-[70px]" align="center"> </TableColumn>
-      <TableColumn key="eliminar" className="w-[10px]"> </TableColumn>
+      <TableColumn key="nombre" className="w-[500px] text-sm font-bold">Nombre</TableColumn>
+      <TableColumn key="correo" className="w-[500px] text-sm font-bold">Correo electrónico</TableColumn>
+      <TableColumn key="evaluar" className="w-[70px] text-sm font-bold" align="center"> </TableColumn>
+      <TableColumn key="eliminar" className="w-[10px] text-sm font-bold"> </TableColumn>
     </PaginatedTable>
   );
 }

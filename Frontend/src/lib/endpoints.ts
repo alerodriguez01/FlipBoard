@@ -95,6 +95,14 @@ function enviarEmails(){
     return "/api/cursos/send-email"
 }
 
+function getCalificacionesAlumnos(idCurso: string, idAlumno: string) {
+    return `/api/cursos/${idCurso}/calificaciones/alumnos/${idAlumno}`;
+}
+
+function getCalificacionesCurso(idCurso: string) {
+    return `/api/cursos/${idCurso}/calificaciones/`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -106,5 +114,6 @@ export default {
     getAllRubricasGrupales, crearCalificacionAlumno,
     crearCalificacionGrupo, loginProvider, crearGrupo,
     crearRubrica, asociarRubricaGrupos, asociarRubricaMural,
-    crearMural, enviarEmails
+    crearMural, enviarEmails, getCalificacionesAlumnos,
+    getCalificacionesCurso
 }

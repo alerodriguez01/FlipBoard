@@ -39,6 +39,7 @@ const EvaluarMural = (props: CompProps) => {
                     idDocente={props.idUser}
                     onEvaluarSuccess={() => setIsEvaluando(false)}
                     onAtrasPressed={() => setIsEvaluando(false)}
+                    idMural={props.idMural}
                 />
             </section>
         )

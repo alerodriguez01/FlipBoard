@@ -13,9 +13,12 @@ type TableProps = {
   endpoint: string,
   itemType: string,
   renderCell: (item: any, columnKey: Key) => ReactNode;
-  headerRightContent: ReactNode
+  notHeader?: boolean
+  headerRightContent?: ReactNode
   children: any
   mutarDatos?: number
+  searchParams?: string
+  isStriped?: boolean
 }
 
 const PaginatedTable = (props: TableProps) => {
@@ -28,7 +31,7 @@ const PaginatedTable = (props: TableProps) => {
 
   const [nombre, setNombre] = useState("");
 
-  const {data, error, isLoading, mutate} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
+  const {data, error, isLoading, mutate} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}&${props.searchParams}`,
       (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
 
   // para que cada vez que se cree un grupo, se refresque la tabla
@@ -48,7 +51,8 @@ const PaginatedTable = (props: TableProps) => {
 
   return (
     <section>
-      <header className="flex flex-row justify-between p-5 mb-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
+      { !props.notHeader && 
+        <header className="flex flex-row justify-between p-5 mb-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
         <Input
           radius="none"
           variant="underlined"
@@ -58,6 +62,7 @@ const PaginatedTable = (props: TableProps) => {
           onValueChange={(value) => setNombre(value)} />
         {props.headerRightContent}
       </header>
+      }
 
       <Table
         aria-label={props.label}
@@ -74,7 +79,9 @@ const PaginatedTable = (props: TableProps) => {
                 onChange={(page) => setPage(page)}
               />
             </div>
-        } >
+        } 
+        isStriped={props.isStriped}
+        >
         <TableHeader>
           {props.children}
         </TableHeader>
