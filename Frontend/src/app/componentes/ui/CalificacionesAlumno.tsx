@@ -21,9 +21,9 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
     const renderCell = useCallback((calificacion: Calificacion, columnKey: Key) => {
 
         const nombreRubrica = toMayusFirstLetters(calificacion.rubricaModel?.nombre || "")
-        const tipo = calificacion.muralId ? ("Mural " + calificacion.muralModel?.nombre + " - " + (calificacion.grupoId ? `Grupo ${calificacion.grupoModel?.numero}` : "Indivdual"))
+        const tipo = calificacion?.muralId ? ("Mural (" + (calificacion?.grupoId ? `grupal)` : "individual)"))
             :
-            calificacion.grupoId ? `Grupal - Grupo ${calificacion.grupoModel?.numero}` : "Individual"
+            calificacion?.grupoId ? `Grupal` : "Individual"
 
         switch (columnKey) {
             case "nombre":
@@ -32,13 +32,17 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
                 return tipo
             case "fecha":
                 return "TODO"
+            case "mural":
+                return calificacion?.muralId ? calificacion?.muralModel?.nombre : "-"
+            case "grupo":
+                return calificacion?.grupoId ? (calificacion.grupoModel?.integrantesModel?.map(integr => toMayusFirstLetters(integr.nombre)).join(", ") + " - (" + calificacion.grupoModel?.numero + ")") : "-"
             case "ver":
                 return (
                     <Button
-                        className="px-3" 
+                        className="px-3"
                         variant='light'
                         color='primary'
-                        onPress={() => {setCalificacion(calificacion ?? null); onOpen()}} >
+                        onPress={() => { setCalificacion(calificacion ?? null); onOpen() }} >
                         Ver calificación
                     </Button>
                 )
@@ -62,10 +66,12 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
             >
                 <TableColumn key="nombre" className="text-sm font-bold" >Nombre de la rubrica</TableColumn>
                 <TableColumn key="tipo" className="text-sm font-bold">Tipo de evaluación</TableColumn>
+                <TableColumn key="mural" className="text-sm font-bold">Mural</TableColumn>
+                <TableColumn key="grupo" className="text-sm font-bold">Grupo</TableColumn>
                 <TableColumn key="fecha" className="text-sm font-bold">Fecha de calificación</TableColumn>
                 <TableColumn key="ver" className="w-[100px]"> </TableColumn>
             </PaginatedTable>
-            <CalificacionModal isOpen={isOpen} onOpenChange={onOpenChange} calificacion={calificacion}/>
+            <CalificacionModal isOpen={isOpen} onOpenChange={onOpenChange} calificacion={calificacion} />
         </section>
     )
 }

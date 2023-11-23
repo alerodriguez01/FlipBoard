@@ -17,7 +17,7 @@ type GridProps = {
 const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
 
   let n=0;
-  const columns = [{nombre: "Criterio", i: -1},...props.niveles.map(niv => ({...niv, i: n++}))];
+  const columns = [{nombre: "Criterio", i: -1},...props.niveles.map(niv => ({nombre: niv.puntaje ? `${niv.nombre} (${niv.puntaje} puntos)`:niv.nombre, i: n++}))];
   const rows = props.criterios;
   const [cambio, setCambio] = useState(false);
   const [nivelSelecc, setNivelSelecc] = useState(new Map());

@@ -37,7 +37,11 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             include: {
                 rubricaModel: rubrica,
                 muralModel: true,
-                grupoModel: true,
+                grupoModel: {
+                    include: {
+                        integrantesModel: true
+                    }
+                },
             }
         }
 

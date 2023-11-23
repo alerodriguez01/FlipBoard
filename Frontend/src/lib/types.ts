@@ -11,7 +11,7 @@ export type Usuario = {
 export type Grupo = {
     id: string,
     numero: number,
-    integrantesModel?: any
+    integrantesModel?: Usuario[],
 }
 
 export type Curso = {
