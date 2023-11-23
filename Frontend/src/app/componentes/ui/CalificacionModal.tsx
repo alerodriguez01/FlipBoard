@@ -11,11 +11,11 @@ type CalificacionModalProps = {
 }
 
 const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionModalProps) => {
-
+  
   const nombreRubrica = toMayusFirstLetters(calificacion?.rubricaModel?.nombre || "")
-  const tipo = calificacion?.muralId ? ("Mural " + calificacion?.muralModel?.nombre + " - " + calificacion?.grupoId ? `Grupo ${calificacion?.grupoModel?.numero}` : "")
+  const tipo = calificacion?.muralId ? ("Mural (" + (calificacion?.grupoId ? `grupal)` : "individual)"))
     :
-    calificacion?.grupoId ? `Grupal - Grupo ${calificacion?.grupoModel?.numero}` : "Individual"
+    calificacion?.grupoId ? `Grupal` : "Individual"
 
   const valoresEvaluados = new Map<string, number>();
   calificacion?.valores.forEach((valor, i) => valoresEvaluados.set(calificacion?.rubricaModel?.criterios[i].nombre || "", valor));
@@ -41,8 +41,14 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                   <ul>
                     <li><span className='font-semibold'>Nombre de la rúbrica:</span> {nombreRubrica}</li>
                     <li><span className='font-semibold'>Tipo de evaluación:</span> {tipo}</li>
+                    {calificacion?.muralId &&
+                      <li><span className='font-semibold'>Mural:</span> {calificacion?.muralModel?.nombre}</li>
+                    }
+                    {calificacion?.grupoId &&
+                      <li><span className='font-semibold'>Integrantes del grupo:</span> {calificacion.grupoModel?.integrantesModel?.map(integr => toMayusFirstLetters(integr.nombre)).join(", ")} (grupo {calificacion?.grupoModel?.numero})</li>
+                    }
                     {puntaje && puntajeTotal && calificacion?.rubricaModel?.criterios &&
-                      <li><span className='font-semibold'>Puntaje: </span>{`${(100*puntaje / puntajeTotal).toFixed(2)}% (${puntaje}/${puntajeTotal})`}</li>
+                      <li><span className='font-semibold'>Puntaje: </span>{`${(100 * puntaje / puntajeTotal).toFixed(2)}% (${puntaje}/${puntajeTotal})`}</li>
                     }
                   </ul>
                   <p><span className='font-semibold'>Fecha de calificación:</span> TODO</p>
