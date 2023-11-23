@@ -51,9 +51,9 @@ const CrearGrupoTable = (props: TableProps) => {
           radius="sm"
           className="max-h-[40vh]" isHeaderSticky >
           <TableHeader>
-            <TableColumn key={"nombre"} className="min-w-[200px]">Nombre</TableColumn>
-            <TableColumn key={"correo"} className="min-w-[300px]">Correo electrónico</TableColumn>
-            <TableColumn key={"action"} className="w-[50px]"> </TableColumn>
+            <TableColumn key={"nombre"} className="min-w-[200px] text-sm font-bold">Nombre</TableColumn>
+            <TableColumn key={"correo"} className="min-w-[300px] text-sm font-bold">Correo electrónico</TableColumn>
+            <TableColumn key={"action"} className="w-[50px] text-sm font-bold"> </TableColumn>
           </TableHeader>
           <TableBody
             items={props.items ?? []}
