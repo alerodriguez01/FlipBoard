@@ -1,5 +1,8 @@
 "use client"
+import CalificacionesAlumno from "@/app/componentes/ui/CalificacionesAlumno";
+import CalificacionesDocente from "@/app/componentes/ui/CalificacionesDocente";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
+import { Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -8,8 +11,10 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
     const { data: session, status } = useSession();
     const isDocente = session?.user.cursosDocente.includes(idCurso)
 
+    if (status === 'loading')
+        return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
-    if (status !== 'loading' && !session?.user.cursosAlumno.includes(idCurso) && !session?.user.cursosDocente.includes(idCurso)) {
+    if (!session?.user.cursosAlumno.includes(idCurso) && !session?.user.cursosDocente.includes(idCurso)) {
         return (
             <section className="flex flex-col flex-1 justify-center items-center">
                 <h1>No tienes acceso a este curso</h1>
@@ -19,9 +24,13 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
     }
 
     return (
-        <section className="flex flex-col flex-1 p-10 gap-4">
+        <section className="flex flex-col flex-1 p-10 gap-4 overflow-auto">
             <PagesHeader title={isDocente ? "Calificaciones realizadas" : "Mis calificaciones"} searchable={false} />
-            <h1>FlipBoard Ver Calificaciones</h1>
+            {isDocente ?
+                <CalificacionesDocente idCurso={idCurso} idDocente={session.user.id} />
+                :
+                <CalificacionesAlumno idCurso={idCurso} idAlumno={session.user.id} />
+            }
         </section>
     )
 }

@@ -57,3 +57,18 @@ export type Rubrica = {
     usuarioId: string,
     //agregar atributos requeridos
 }
+
+export type Calificacion = {
+    id: string,
+    valores: number[],
+    observaciones?: string,
+    rubricaId: string,
+    rubricaModel?: Rubrica,
+    grupoId?: string,
+    grupoModel?: Grupo,
+    usuarioId?: string,
+    docenteId: string,
+    cursoId: string,
+    muralId?: string
+    muralModel?: Mural
+}
