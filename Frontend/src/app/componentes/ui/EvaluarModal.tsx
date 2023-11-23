@@ -79,7 +79,7 @@ const EvaluarModal = (props: ModalProps) => {
                         />
                       </RadioGroup>
                       <Button 
-                        className="bg-[#181e25] text-white w-[150px] self-end end-2.5 dark:bg-gray-200 dark:text-black"
+                        className="bg-[#181e25] text-white w-[150px] self-end end-2.5 dark:border dark:border-gray-700"
                         onPress={() => {rubrica && setIsEvaluando(true)}}
                       >Ir a evaluar</Button>
                     </div>         
