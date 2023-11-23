@@ -139,7 +139,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                          <p>{errors.erroresExternos?.message}</p>
                       </div>
                     }
-                    <Button className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black ml-auto"
+                    <Button className="bg-[#181e25] text-white dark:border dark:border-gray-700 ml-auto"
                     isLoading={isSubmitting}
                       type="submit"
                       spinner={Spinner}

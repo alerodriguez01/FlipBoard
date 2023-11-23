@@ -116,7 +116,7 @@ const AsignarRubricaModal = (props:  ModalProps) => {
 
                     <ModalFooter className="flex flex-row justify-between">
                       <p className="self-center">Puedes crear tu rúbrica <Link href={"/rubricas/crear"} className="text-blue-500">aquí</Link></p>
-                      <Button className="bg-[#181e25] text-white end-2.5 dark:bg-gray-200 dark:text-black"
+                      <Button className="bg-[#181e25] text-white end-2.5 dark:border dark:border-gray-700"
                       isLoading={isSubmitting}
                         type="submit"
                         spinner={Spinner}

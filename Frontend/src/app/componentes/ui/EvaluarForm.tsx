@@ -90,9 +90,10 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
           <Button
             onPress={props.onAtrasPressed}
             className="w-[100px]"
+            variant="light"
           >Atrás</Button>
           <Button 
-            className="bg-[#181e25] text-white dark:bg-gray-200 dark:text-black w-[100px]"
+            className="bg-[#181e25] text-white dark:border dark:border-gray-700 w-[100px]"
             type='submit' 
             isLoading={isSubmitting}
           >
