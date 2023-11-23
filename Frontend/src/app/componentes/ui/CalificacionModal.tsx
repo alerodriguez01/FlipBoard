@@ -24,6 +24,10 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
     calificacion?.rubricaModel?.criterios.reduce((accumulator, criterio, i) => accumulator + (calificacion?.rubricaModel?.niveles[calificacion.valores[i]].puntaje ?? 0), 0)
     :
     null;
+  const puntajeTotal = calificacion?.rubricaModel?.niveles[0].puntaje ?
+    calificacion?.rubricaModel?.criterios.reduce((acc, crit, i) => acc + (calificacion?.rubricaModel?.niveles[0].puntaje ?? 0), 0)
+    :
+    null;
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ closeButton: "m-3" }} className="max-h-[90%] overflow-auto" size="4xl">
@@ -37,8 +41,8 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                   <ul>
                     <li><span className='font-semibold'>Nombre de la rúbrica:</span> {nombreRubrica}</li>
                     <li><span className='font-semibold'>Tipo de evaluación:</span> {tipo}</li>
-                    {puntaje && calificacion?.rubricaModel?.criterios &&
-                      <li><span className='font-semibold'>Puntaje: </span>{(puntaje / calificacion.rubricaModel.criterios.length).toFixed(2)}</li>
+                    {puntaje && puntajeTotal && calificacion?.rubricaModel?.criterios &&
+                      <li><span className='font-semibold'>Puntaje: </span>{`${(100*puntaje / puntajeTotal).toFixed(2)}% (${puntaje}/${puntajeTotal})`}</li>
                     }
                   </ul>
                   <p><span className='font-semibold'>Fecha de calificación:</span> TODO</p>
@@ -61,11 +65,6 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                 }
               </section>
             </ModalBody>
-            <ModalFooter>
-              {/* <Button color="primary" onPress={onClose}>
-                        Action
-                    </Button> */}
-            </ModalFooter>
           </>
         )}
       </ModalContent>
