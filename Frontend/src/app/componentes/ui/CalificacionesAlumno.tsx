@@ -34,8 +34,12 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
                 return "TODO"
             case "ver":
                 return (
-                    <Button variant="light" isIconOnly onPress={() => {setCalificacion(calificacion ?? null); onOpen()}} className='px-1'>
-                        <RubricaIcon toggle={false} theme='ligth'/>
+                    <Button
+                        className="px-3" 
+                        variant='light'
+                        color='primary'
+                        onPress={() => {setCalificacion(calificacion ?? null); onOpen()}} >
+                        Ver calificación
                     </Button>
                 )
         }
@@ -59,7 +63,7 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
                 <TableColumn key="nombre" className="text-sm font-bold" >Nombre de la rubrica</TableColumn>
                 <TableColumn key="tipo" className="text-sm font-bold">Tipo de evaluación</TableColumn>
                 <TableColumn key="fecha" className="text-sm font-bold">Fecha de calificación</TableColumn>
-                <TableColumn key="ver" className=""> </TableColumn>
+                <TableColumn key="ver" className="w-[100px]"> </TableColumn>
             </PaginatedTable>
             <CalificacionModal isOpen={isOpen} onOpenChange={onOpenChange} calificacion={calificacion}/>
         </section>
