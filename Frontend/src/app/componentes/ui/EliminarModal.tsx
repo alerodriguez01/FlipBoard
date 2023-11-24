@@ -20,8 +20,21 @@ const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entity }: EliminarMod
 
     }
 
+    
+    const personalizedOnOpenChange = (isOpen: boolean) => {
+
+        // isOpen es el estado del modal cuando el usuario lo cerro (pero visualmente todav no se cerro)
+        if (!isOpen) {
+            // reiniciar el estado del modal si se cierra
+            setError("")
+        }
+
+        // funcion del hook para cerrar el modal
+        onOpenChange(isOpen)
+    }
+
     return (
-        <Modal isOpen={isOpen} onOpenChange={onOpenChange} classNames={{closeButton: "m-3"}}>
+        <Modal isOpen={isOpen} onOpenChange={personalizedOnOpenChange} classNames={{closeButton: "m-3"}}>
             <ModalContent>
                 {(onClose) => (
                     <>
