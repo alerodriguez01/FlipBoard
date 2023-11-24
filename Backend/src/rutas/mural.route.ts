@@ -245,4 +245,45 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  */
 router.post("/:idCurso/murales", controller.createMural);
 
+/**
+ * @swagger
+ * /api/cursos/murales/{idMural}:
+ *   delete:
+ *     summary: Eliminar un mural por id  
+ *     tags: [Mural]
+ *     parameters:
+ *       - name: idMural
+ *         in: path
+ *         required: true
+ *         description: El id del mural
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: docente
+ *         in: query
+ *         required: true
+ *         description: El id del docente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *     responses:
+ *       204:
+ *         description: Mural eliminado exitosamente
+ *       400:
+ *         description: El usuario no esta autorizado para eliminar el Mural
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Docente' en 'Mural'
+ *       404:
+ *         description: El Mural no fue encontrado
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Mural' en la BDD
+ */
+router.delete("/murales/:idMural", controller.deleteMuralById);
+
 export default router;

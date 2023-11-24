@@ -87,4 +87,20 @@ async function createMural(req: Request, res: Response) {
 
 }
 
-export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural };
+async function deleteMuralById(req: Request, res: Response) {
+
+    const idMural = req.params.idMural;
+    const docente = req.query.docente;
+
+    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    try {
+        await service.deleteMuralById(idMural, docente as string);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+}
+
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural, deleteMuralById };
