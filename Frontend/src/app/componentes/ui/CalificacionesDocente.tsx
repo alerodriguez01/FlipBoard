@@ -19,7 +19,7 @@ const CalificacionesDocente = (props: CalificacionesDocenteProps) => {
       <Tabs variant='underlined' classNames={{base: "w-full", cursor:'w-full', tabList:"w-full justify-between",tab: "w-full h-[50px] text-xl"}}>
         <Tab key="mural" title="Mural">
           {showCalifMural ? 
-            <CalificacionesTable idCurso={props.idCurso} type='mural' rubrica={mural?.rubricaModel} muralName={mural?.nombre}/>
+            <CalificacionesTable idCurso={props.idCurso} type='mural' rubrica={mural?.rubricaModel} muralName={mural?.nombre} onRegresarPressed={() => setShowCalifMural(false)}/>
             :
             <MuralesAccordion idCurso={props.idCurso} onVerPressed={(mural) => {setMural(mural); setShowCalifMural(true);}}/>
           }

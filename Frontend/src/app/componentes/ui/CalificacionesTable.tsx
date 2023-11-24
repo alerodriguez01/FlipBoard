@@ -5,15 +5,21 @@ import { Button, TableColumn, useDisclosure } from '@nextui-org/react';
 import React, { Key, ReactNode, useCallback, useState } from 'react'
 import { PaginatedTable } from './PaginatedTable';
 import CalificacionModal from './CalificacionModal';
+import { BackArrowIcon } from './icons/BackArrowIcon';
+import { useTheme } from 'next-themes';
 
 type TableProps = {
   idCurso: string,
   type: 'mural'|'alumno'|'grupo',
-  rubrica?: Rubrica
-  muralName?: string
+  rubrica?: Rubrica,
+  muralName?: string,
+  onRegresarPressed?: () => void
 }
 
 const CalificacionesTable = (props: TableProps) => {
+
+  const { theme } = useTheme();
+  const currentTheme = theme === "dark" ? "dark" : "light";
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [calificacion, setCalificacion] = useState<Calificacion | null>(null)
@@ -83,6 +89,7 @@ const CalificacionesTable = (props: TableProps) => {
         isOpen={isOpen} onOpenChange={onOpenChange}
         calificacion={calificacion ? {...calificacion, rubricaModel: props.rubrica} as Calificacion : null}
       />
+      <Button className="mt-3" startContent={<BackArrowIcon theme={currentTheme}/>} onPress={() => props.onRegresarPressed?.()}>Regresar</Button>
     </section>
   ) 
 }
