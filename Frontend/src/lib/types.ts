@@ -67,6 +67,7 @@ export type Calificacion = {
     grupoId?: string,
     grupoModel?: Grupo,
     usuarioId?: string,
+    usuarioModel?: Usuario,
     docenteId: string,
     cursoId: string,
     muralId?: string
