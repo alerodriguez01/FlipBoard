@@ -10,6 +10,8 @@ import { useSession } from "next-auth/react";
 import React, { useState } from "react";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import Link from "next/link";
+import EliminarModal from "@/app/componentes/ui/EliminarModal";
+import { toMayusFirstLetters } from "@/lib/utils";
 
 
 export default function Participantes({ params }: { params: { idCurso: string } }) {
@@ -30,10 +32,31 @@ export default function Participantes({ params }: { params: { idCurso: string } 
         setMutateGrupos(prev => prev + 1);
     }
 
+    const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
+
+    const onEliminarEntity = async () => {
+
+        const endpoint = entityType === 'Usuario' ? 'alumnos' : 'grupos';
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${params.idCurso}/${endpoint}/${evaluarEntity?.id}?docente=${session?.user.id}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if (res.ok) {
+            //mutate()
+            return true
+
+        } else {
+            return false
+        }
+    }
+
     if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
-    if ( !session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
+    if (!session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
         return (
             <section className="flex flex-col flex-1 justify-center items-center">
                 <h1>No tienes acceso a este curso</h1>
@@ -48,31 +71,37 @@ export default function Participantes({ params }: { params: { idCurso: string } 
             <Tabs variant="underlined" size="lg">
                 <Tab key="participantes" title="Alumnos">
                     <AlumnosTable
-                    idCurso={params.idCurso} 
-                    editable={esDocente}
-                    evaluable={esDocente}
-                    onEvaluarPress={(user) => {setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen();}}
-                    onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
-                    onAsignarRubricaPress={() => {setAsignarMode('alumno'); onAsignarOpen();}} />
+                        idCurso={params.idCurso}
+                        editable={esDocente}
+                        evaluable={esDocente}
+                        onEvaluarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen(); }}
+                        onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
+                        onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }} 
+                        onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}/>
                 </Tab>
                 <Tab key="grupos" title="Grupos">
-                    <GruposTable 
-                        idCurso={params.idCurso} 
+                    <GruposTable
+                        idCurso={params.idCurso}
                         editable={true}
                         evaluable={esDocente}
                         removable={esDocente}
-                        onEvaluarPress={(grupo) => {setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen();}}
+                        onEvaluarPress={(grupo) => { setEvaluarEntity(grupo); setEntityType('Grupo'); onEvaluarOpen(); }}
                         onCrearGrupoPress={onGrupoOpen}
-                        onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)} 
-                        onAsignarRubricaPress={() => {setAsignarMode('grupo'); onAsignarOpen();}}
-                        mutarDatos={mutateGrupos}/>
+                        onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)}
+                        onAsignarRubricaPress={() => { setAsignarMode('grupo'); onAsignarOpen(); }}
+                        mutarDatos={mutateGrupos} />
                 </Tab>
             </Tabs>
-            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess}/>
-            {esDocente && 
-                <AsignarRubricaModal mode={asignarMode} isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id}/>}
+            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess} />
             {esDocente &&
-                <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso}/>}
+                <>
+                    <AsignarRubricaModal mode={asignarMode} isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id} />
+                    <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso} />
+                    <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={entityType === 'Usuario' ? 'alumno' : 'grupo'}
+                        entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `grupo ${(evaluarEntity as Grupo)?.numero}`}
+                        onEliminar={onEliminarEntity} />
+                </>
+            }
         </section>
     )
 }

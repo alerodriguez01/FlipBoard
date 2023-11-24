@@ -17,6 +17,7 @@ type TableProps = {
   onAgregarAlumnoPress?: () => void
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (user: Usuario) => void
+  onEliminarPress?: (user: Usuario) => void
 }
 
 const AlumnosTable = (props: TableProps) => {
@@ -40,7 +41,7 @@ const AlumnosTable = (props: TableProps) => {
 
     if (props.editable && columnKey === "eliminar" && !esDocente) 
       return (
-        <Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light">
+        <Button onPress={() => props.onEliminarPress?.(user)}isIconOnly variant="light">
           <CrossIcon/>
         </Button>
       );
