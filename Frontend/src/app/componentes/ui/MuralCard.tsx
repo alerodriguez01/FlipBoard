@@ -20,6 +20,7 @@ type CardProps = {
   room: string,
   description?: string,
   onAsignarPress?: (id: string, nombre: string) => void
+  onEliminarPress?: (id: string, nombre: string) => void
 };
 
 const MuralCard = (props: CardProps) => {
@@ -28,10 +29,6 @@ const MuralCard = (props: CardProps) => {
 
   const {theme} = useTheme()
   const currentTheme = theme === "dark" ? "dark" : "light"
-
-  const onDelete = () => {
-    alert("TODO: eliminar mural");
-  };
 
   const handleOnPress = async () => {
     // const linkCollaborative = await generateContenidoMural()
@@ -44,9 +41,9 @@ const MuralCard = (props: CardProps) => {
         description={props.description}
         editable={props.editable}
         dropDownItems={
-          props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: onDelete}] :
+          props.rubrica ? [{key: "delete", label: "Eliminar mural", onAction: () => props.onEliminarPress?.(props.muralId, props.title)}] :
           [{key: "asignar", label: "Asignar rúbrica", onAction: () => props.onAsignarPress?.(props.muralId, props.title) },
-          {key: "delete", label: "Eliminar mural", onAction: onDelete},]
+          {key: "delete", label: "Eliminar mural", onAction: () => props.onEliminarPress?.(props.muralId, props.title)},]
         }
         color={props.color}
         onPress={handleOnPress}>

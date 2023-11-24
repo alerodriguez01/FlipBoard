@@ -1,6 +1,7 @@
 'use client'
 import { AsignarRubricaModal } from "@/app/componentes/ui/AsignarRubricaModal";
 import CrearMuralModal from "@/app/componentes/ui/CrearMuralModal";
+import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
@@ -28,6 +29,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const [selectedMural, setSelectedMural] = React.useState<Mural | undefined>();
   const { isOpen: isAsignarOpen, onOpen: onAsignarOpen, onOpenChange: onAsignarOpenChange } = useDisclosure();
   const { isOpen: isAsignarNewMuralOpen, onOpen: onAsignarNewMuralOpen, onOpenChange: onAsignarNewMuralOpenChange } = useDisclosure();
+  const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
 
@@ -56,6 +58,25 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
     if (session?.user.cursosAlumno.includes(searchParams.get("updateCurso") || ""))
       toast.success('¡Bienvenido al curso!', { id: "updateCurso", position: "top-center", duration: 4000 })
   }, [session?.user.cursosAlumno])
+
+  const onEliminarMural = async () => {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/murales/${selectedMural?.id}?docente=${session?.user.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (res.ok) {
+      mutate()
+      return true
+
+    } else {
+      return false
+    }
+
+  }
 
   if (error) return (
     <section className="flex flex-col flex-1 p-10">
@@ -106,6 +127,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
                   onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onAsignarOpen(); }}
+                  onEliminarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onEliminarOpen(); }}
                 />)
             })
 
@@ -120,6 +142,8 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
         mural={selectedMural}
         onRubricaAsignada={mutate}
       />
+
+      <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} entity="mural" onEliminar={onEliminarMural} />
 
       {isDocente &&
         <>
