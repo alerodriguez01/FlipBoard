@@ -13,50 +13,27 @@ type CardProps = {
   cursoId: string,
   description?: string,
   idUser?: string,
-  mutar: Function
+  mutar: Function,
+  onCompartirPress: (id: string, nombre: string) => void
+  onEliminarPress: (id: string, nombre: string) => void
 };
 
 const CursoCard = (props: CardProps) => {
 
   const router = useRouter();
-  const { isOpen: isOpenCompartir, onOpen: onOpenCompartir, onOpenChange: onOpenChangeCompartir } = useDisclosure(); // Para modal de compartir curso
-  const { isOpen: isOpenEliminar, onOpen: onOpenEliminar, onOpenChange: onOpenChangeEliminar } = useDisclosure(); // Para modal de eliminar curso
-
-  const eliminarCurso = async () => {
-
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${props.cursoId}?docente=${props.idUser}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-    });
-
-    if(res.ok) {
-      props.mutar()
-      return true
-
-    } else {
-      return false
-    }
-
-  }
 
   return (
-    <>
-      <FBCard
-        title={props.title}
-        description={props.description}
-        editable={props.editable}
-        dropDownItems={[
-          { key: "share", label: "Compartir curso", onAction: onOpenCompartir },
-          { key: "delete", label: "Eliminar curso", onAction: onOpenEliminar },
-        ]}
-        color={props.color}
-        onPress={() => router.push(`/cursos/${props.cursoId}/murales`)} />
+    <FBCard
+      title={props.title}
+      description={props.description}
+      editable={props.editable}
+      dropDownItems={[
+        { key: "share", label: "Compartir curso", onAction: () => props.onCompartirPress(props.cursoId, props.title) },
+        { key: "delete", label: "Eliminar curso", onAction: () => props.onEliminarPress(props.cursoId, props.title) },
+      ]}
+      color={props.color}
+      onPress={() => router.push(`/cursos/${props.cursoId}/murales`)} />
 
-        <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={props.cursoId} cursoTitle={props.title}/>
-        <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} entity="curso"/>
-    </>
   );
 };
 
