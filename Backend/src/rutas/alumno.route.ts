@@ -121,4 +121,53 @@ router.get("/:idCurso/alumnos", controller.getParticipantes);
  */
 router.put("/:idCurso/alumnos", controller.addParticipante);
 
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/alumnos/{idAlumno}:
+ *   delete:
+ *     summary: Eliminar un alumno del curso
+ *     tags: [Usuario]
+ *     parameters:
+ *       - name: idAlumno
+ *         in: path
+ *         required: true
+ *         description: El id del alumno
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: docente
+ *         in: query
+ *         required: true
+ *         description: El id del docente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *     responses:
+ *       204:
+ *         description: Alumno eliminado exitosamente
+ *       400:
+ *         description: El usuario no esta autorizado para eliminar el Alumno
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Docente' en 'Alumno'
+ *       404:
+ *         description: El Alumno no fue encontrado
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Alumno' en la BDD
+ */
+router.delete("/:idCurso/alumnos/:idAlumno", controller.deleteAlumnoById);
+
 export default router;

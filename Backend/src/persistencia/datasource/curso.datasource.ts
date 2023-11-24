@@ -16,5 +16,6 @@ export default interface CursoDataSource {
     getCursoByIdWithRubricaAlumnos(idCurso: string) : Promise<CursoRubricaAlumno | null>,
     getCursoByIdWithRubricaGrupos(idCurso: string) : Promise<CursoRubricaGrupo | null>,
     deleteCursoById(idCurso: string): Promise<Curso | null>;
+    deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null>;
     // ir agregando métodos restantes 
 }

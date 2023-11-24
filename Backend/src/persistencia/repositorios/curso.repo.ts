@@ -66,5 +66,9 @@ export class CursoRepository implements CursoDataSource {
         return await this.cursoDAO.deleteCursoById(idCurso);
     }
 
+    async deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null> {
+        return await this.cursoDAO.deleteAlumnoFromCurso(idCurso, idAlumno);
+    }
+
     // demas metodos
 }

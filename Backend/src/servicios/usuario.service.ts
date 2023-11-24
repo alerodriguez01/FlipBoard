@@ -213,7 +213,18 @@ async function getUsuarioByCorreo(correo: string) {
     return user;
 }
 
+async function deleteAlumnoFromCurso(idCurso: string, idAlumno: string, docente: string) {
+
+    // Verificar que el docente sea el docente del curso
+    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
+    if(!docenteCurso) throw new NotFoundError("Docente");
+    if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+
+    const muralDeleted = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
+    return muralDeleted;
+}
+
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso
 };
