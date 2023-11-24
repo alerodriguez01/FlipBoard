@@ -32,7 +32,7 @@ export default function Cursos() {
     }
   }, [])
 
-  if (!isLoading && data?.error) return (
+  if ((!isLoading && data?.error) || error) return (
     <section className="flex flex-col flex-1 p-10">
       {/* {error.message} */}
       <h1 className="">No se pudieron obtener los cursos</h1>

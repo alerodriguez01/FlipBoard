@@ -46,8 +46,12 @@ const PaginatedTable = (props: TableProps) => {
   }, [data?.count, rows]);
 
 
-  if(error)
-    return <h1>{error.message}</h1>
+  if ((!isLoading && data?.error) || error) return (
+    <section className="flex flex-col flex-1 p-10">
+      {/* {error.message} */}
+      <h1 className="">No se pudieron obtener los datos</h1>
+    </section>
+  );
 
   return (
     <section>

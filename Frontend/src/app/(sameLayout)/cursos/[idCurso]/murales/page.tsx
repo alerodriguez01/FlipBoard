@@ -76,6 +76,13 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
     )
   }
 
+  if ((!isLoading && data?.error) || error) return (
+    <section className="flex flex-col flex-1 p-10">
+      {/* {error.message} */}
+      <h1 className="">No se pudieron obtener los murales</h1>
+    </section>
+  );
+
   return (
     <section className="flex flex-col overflow-auto gap-6 p-8">
       <Toaster />
