@@ -220,8 +220,8 @@ async function deleteAlumnoFromCurso(idCurso: string, idAlumno: string, docente:
     if(!docenteCurso) throw new NotFoundError("Docente");
     if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
 
-    const muralDeleted = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
-    return muralDeleted;
+    const curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
+    return curso;
 }
 
 export default {
