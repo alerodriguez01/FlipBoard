@@ -5,17 +5,18 @@ type EliminarModalProps = {
     isOpen: boolean,
     onOpenChange: (open: boolean) => void
     onEliminar: () => Promise<boolean>
-    entity: string
+    entityName: string
+    type: string
 }
 
-const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entity }: EliminarModalProps) => {
+const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entityName, type }: EliminarModalProps) => {
 
     const [error, setError] = useState("")
 
     const onEliminarPress = async (onClose: () => void) => {
 
         const elimino = await onEliminar()
-        if(!elimino) setError(`No se ha podido eliminar el ${entity}`)
+        if(!elimino) setError(`No se ha podido eliminar el ${type}`)
         else onClose()
 
     }
@@ -38,9 +39,9 @@ const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entity }: EliminarMod
             <ModalContent>
                 {(onClose) => (
                     <>
-                        <ModalHeader className="flex flex-col gap-1">Eliminar {entity}</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">Eliminar {type}</ModalHeader>
                         <ModalBody>
-                            <p> ¿Estás seguro que deseas eliminar el {entity}? </p>
+                            <p> ¿Estás seguro que deseas eliminar <span className="italic">{entityName}</span>? </p>
                             {error !== "" && <p className="text-red-500">{error}</p>}
                         </ModalBody>
                         <ModalFooter>
