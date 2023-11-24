@@ -12,7 +12,8 @@ import { toMayusFirstLetters } from "@/lib/utils";
 
 type AccordionProps = {
     endpoint: string,
-    type: 'editable' | 'selectable',
+    type: 'editable' | 'selectable' | 'calificable',
+    onVerPressed?: (rubric: Rubrica) => void,
     searchable?: boolean,
     title: string,
 }
@@ -35,7 +36,21 @@ const RubricasAccordion = (props: AccordionProps) => {
     return (
         <section className="">
             {props.searchable ?
-                <PagesHeader title="Rúbricas" searchable placeholder="Buscar rúbrica" onSearch={(value: string) => setNombre(value)} />
+                (props.type === 'calificable' ?
+                <header className="mb-4 mx-2 p-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
+                    <Input
+                        radius="none"
+                        variant="underlined"
+                        size="lg"
+                        className="px-2"
+                        placeholder={"Buscar rúbrica"}
+                        startContent={<SearchIcon theme={currentTheme} />}
+                        onValueChange={setNombre}
+                    />
+                </header>
+                    :
+                    <PagesHeader title="Rúbricas" searchable placeholder="Buscar rúbrica" onSearch={(value: string) => setNombre(value)} />
+                )
                 :
                 <h1 className="font-semibold self-center p-3 pt-0">Rúbricas</h1>
             }
@@ -63,7 +78,10 @@ const RubricasAccordion = (props: AccordionProps) => {
                                                     >Eliminar</Button>
                                                 </div>
                                                 :
+                                             props.type === 'selectable' ?
                                                 <Radio value={JSON.stringify(rubric)} />
+                                                :
+                                                <Button onPress={() => props.onVerPressed?.(rubric)}>Ver calificaciones</Button>
                                             }
                                         </div>
                                     }

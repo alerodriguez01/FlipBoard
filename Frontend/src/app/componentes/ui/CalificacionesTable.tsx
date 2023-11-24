@@ -68,7 +68,7 @@ const CalificacionesTable = (props: TableProps) => {
           searchParams={`rubrica=${props.rubrica?.id}`}
           isStriped
           headerRightContent={
-            <div className='flex flex-col place-items-end'>
+            <div className='flex flex-col place-items-end justify-center'>
               {props.type === 'mural' && <h2 className='font-semibold flex flex-row gap-3'>Mural:<p className='font-normal'>{props.muralName}</p></h2>}
               <h2 className='font-semibold flex flex-row gap-3'>Rúbrica seleccionada:<p className='font-normal'>{props.rubrica?.nombre}</p></h2>
             </div>
