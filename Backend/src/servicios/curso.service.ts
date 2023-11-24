@@ -47,6 +47,17 @@ async function getCursos() {
     return cursos;
 }
 
+async function deleteCursoById(idCurso: string, docente: string) {
+
+    // Verificar que el docente sea el docente del curso
+    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
+    if(!docenteCurso) throw new NotFoundError("Docente");
+    if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+
+    const curso = await cursoRepository.deleteCursoById(idCurso);
+    return curso;
+}
+
 // demas metodos
 
-export default { getCursoById, createCurso, getCursos };
+export default { getCursoById, createCurso, getCursos, deleteCursoById };

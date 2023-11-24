@@ -103,4 +103,20 @@ async function sendEmailToUsers(req: Request, res: Response) {
 
 }
 
-export default { getCursoById, saveCurso, getCursos, sendEmailToUsers };
+async function deleteCursoById(req: Request, res: Response) {
+
+    const idCurso = req.params.idCurso;
+    const docente = req.query.docente;
+
+    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    try {
+        await service.deleteCursoById(idCurso, docente as string);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json(error.message); // el docente no es docente del curso
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+}
+
+export default { getCursoById, saveCurso, getCursos, sendEmailToUsers, deleteCursoById };

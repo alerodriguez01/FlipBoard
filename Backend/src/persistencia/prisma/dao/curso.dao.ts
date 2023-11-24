@@ -105,20 +105,36 @@ export class CursoPrismaDAO implements CursoDataSource {
     /**
      * Cargar todas las rubricas de los alumnos del curso
      */
-        async getCursoByIdWithRubricaGrupos(idCurso: string) {
+    async getCursoByIdWithRubricaGrupos(idCurso: string) {
 
-            try {
-                return await this.prisma.curso.findUnique({
-                    where: {
-                        id: idCurso
-                    },
-                    include: { rubricasGruposModel: true }
-                });
-            } catch (err) {
-                throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
-            }
-    
+        try {
+            return await this.prisma.curso.findUnique({
+                where: {
+                    id: idCurso
+                },
+                include: { rubricasGruposModel: true }
+            });
+        } catch (err) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
+
+    }
+
+    async deleteCursoById(idCurso: string): Promise<Curso | null> {
+
+        try {
+            const curso = await this.prisma.curso.delete({
+                where: {
+                    id: idCurso
+                }
+            });
+            return curso;
+
+        } catch (err) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+        }
+        
+    }
 
     // demas metodos
 }
