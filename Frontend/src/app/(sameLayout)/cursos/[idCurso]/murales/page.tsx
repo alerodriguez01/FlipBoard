@@ -143,7 +143,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
         onRubricaAsignada={mutate}
       />
 
-      <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} entity="mural" onEliminar={onEliminarMural} />
+      <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type="mural" entityName={selectedMural?.nombre || ""} onEliminar={onEliminarMural} />
 
       {isDocente &&
         <>
