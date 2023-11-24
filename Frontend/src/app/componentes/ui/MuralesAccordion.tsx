@@ -31,16 +31,18 @@ const MuralesAccordion = (props: AccordionProps) => {
     );
 
     return (
-        <section className="flex flex-col gap-3">
-          <Input
-              radius="none"
-              variant="underlined"
-              className="px-2"
-              size="lg"
-              placeholder={"Buscar mural"}
-              startContent={<SearchIcon theme={currentTheme} />}
-              onValueChange={setNombre}
-            />
+        <section className="flex flex-col gap-4">
+            <header className="mx-2 p-4 rounded-xl shadow-md dark:shadow-gray-900 bg-white dark:bg-[#18181B]">
+                <Input
+                    radius="none"
+                    variant="underlined"
+                    size="lg"
+                    className="px-2"
+                    placeholder={"Buscar mural"}
+                    startContent={<SearchIcon theme={currentTheme} />}
+                    onValueChange={setNombre}
+                />
+            </header>
             {isLoading ?
                 <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
                 :
