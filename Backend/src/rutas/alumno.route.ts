@@ -168,6 +168,6 @@ router.put("/:idCurso/alumnos", controller.addParticipante);
  *             example:
  *               error: No se ha podido encontrar 'Alumno' en la BDD
  */
-router.delete("/:idCurso/alumnos/:idAlumno", controller.deleteAlumnoById);
+router.delete("/:idCurso/alumnos/:idAlumno", controller.deleteAlumnoFromCurso);
 
 export default router;

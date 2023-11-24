@@ -103,7 +103,7 @@ async function updateUsuarioPassword(req: Request, res: Response) {
 
 }
 
-async function deleteAlumnoById(req: Request, res: Response) {
+async function deleteAlumnoFromCurso(req: Request, res: Response) {
 
     const idAlumno = req.params.idAlumno;
     const idCurso = req.params.idCurso;
@@ -120,4 +120,4 @@ async function deleteAlumnoById(req: Request, res: Response) {
     }
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoById };
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso };
