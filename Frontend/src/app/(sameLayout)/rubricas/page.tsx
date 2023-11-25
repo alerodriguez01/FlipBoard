@@ -17,7 +17,7 @@ export default function Rubricas() {
 
     return (
         <section className="p-5 overflow-auto">
-            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} />
+            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} userId={session?.user.id}/>
             <Link href={'/rubricas/crear'} passHref>
                 <Button
                     className="bg-[#181e25] text-white fixed bottom-10 right-10 dark:border dark:border-gray-700"

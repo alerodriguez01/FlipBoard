@@ -103,6 +103,11 @@ function getCalificacionesCurso(idCurso: string) {
     return `/api/cursos/${idCurso}/calificaciones/`;
 }
 
+function deleteRubrica(idUsuario: string, idRubrica: string) {
+    return `/api/usuarios/${idUsuario}/rubricas/${idRubrica}`;
+
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -115,5 +120,5 @@ export default {
     crearCalificacionGrupo, loginProvider, crearGrupo,
     crearRubrica, asociarRubricaGrupos, asociarRubricaMural,
     crearMural, enviarEmails, getCalificacionesAlumnos,
-    getCalificacionesCurso
+    getCalificacionesCurso, deleteRubrica
 }
