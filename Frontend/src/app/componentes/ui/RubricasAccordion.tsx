@@ -1,4 +1,4 @@
-import { Accordion, AccordionItem, Button, Input, Radio, Spinner } from "@nextui-org/react";
+import { Accordion, AccordionItem, Button, Input, Radio, Spinner, useDisclosure } from "@nextui-org/react";
 import React, { useState } from "react";
 import { SearchIcon } from "./icons/SearchIcon";
 import { useTheme } from "next-themes";
@@ -9,12 +9,15 @@ import { EditIcon } from "./icons/EditIcon";
 import { CrossIcon } from "./icons/CrossIcon";
 import PagesHeader from "./PagesHeader";
 import { toMayusFirstLetters } from "@/lib/utils";
+import EliminarModal from "./EliminarModal";
+import endpoints from "@/lib/endpoints";
 
 type AccordionProps = {
     endpoint: string,
     type: 'editable' | 'selectable',
     searchable?: boolean,
     title: string,
+    userId?: string
 }
 
 const RubricasAccordion = (props: AccordionProps) => {
@@ -22,8 +25,28 @@ const RubricasAccordion = (props: AccordionProps) => {
     const { theme } = useTheme();
     const currentTheme = theme === "dark" ? "dark" : "light";
     const [nombre, setNombre] = useState("");
-    const { data, error, isLoading } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + (props.searchable ? `?nombre=${nombre}` : ""),
+    const { data, error, isLoading, mutate } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + (props.searchable ? `?nombre=${nombre}` : ""),
         (url) => fetch(url).then(res => res.json()));
+
+    const { isOpen: isOpenEliminar, onOpen: onOpenEliminar, onOpenChange: onOpenChangeEliminar } = useDisclosure(); // Para modal de eliminar
+    const [rubricaSelected, setRubricaSelected] = useState<Rubrica | null>(null);
+
+    const onEliminarRubrica = async () => {
+
+        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.deleteRubrica(props.userId || "", rubricaSelected?.id || ""), {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        });
+
+        if(res.ok){
+            mutate();
+            return true;
+        }
+
+        return false
+    }
 
     if (!isLoading && data?.error) return (
         <section className="flex flex-col flex-1 p-10">
@@ -59,7 +82,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                                                     >Modificar</Button>
                                                     <Button
                                                         startContent={<CrossIcon />}
-                                                        onPress={() => alert(`TODO: ELIMINAR RUBRICA id:${rubric.id}`)}
+                                                        onPress={() => {setRubricaSelected(rubric); onOpenEliminar()}}
                                                     >Eliminar</Button>
                                                 </div>
                                                 :
@@ -78,6 +101,8 @@ const RubricasAccordion = (props: AccordionProps) => {
                     }
                 </>
             }
+
+            <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} type="rubrica" entityName={toMayusFirstLetters(rubricaSelected?.nombre || "")} onEliminar={onEliminarRubrica}/>
         </section>
     );
 }

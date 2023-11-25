@@ -66,7 +66,7 @@ async function getAllRubricasByUserId(req: Request, res: Response) {
 /*
     Obtener las rubricas asociadas a los alumnos de un curso
 */
-async function getRubricasAlumnosFromCurso(req: Request, res: Response){
+async function getRubricasAlumnosFromCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
 
@@ -85,7 +85,7 @@ async function getRubricasAlumnosFromCurso(req: Request, res: Response){
 /*
     Obtener las rubricas asociadas a los grupos de un curso
 */
-async function getRubricasGruposFromCurso(req: Request, res: Response){
+async function getRubricasGruposFromCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
 
@@ -104,12 +104,12 @@ async function getRubricasGruposFromCurso(req: Request, res: Response){
 /*
     Asociar una rubrica a todos los alumnos en un curso
 */
-async function asociateRubricaAlumnosToCurso(req: Request, res: Response){
+async function asociateRubricaAlumnosToCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
     const idRubrica = req.body.idRubrica;
 
-    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+    if (!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
 
     try {
         await service.asociateRubricaAlumnosToCurso(cursoId, idRubrica);
@@ -126,12 +126,12 @@ async function asociateRubricaAlumnosToCurso(req: Request, res: Response){
 /*
     Asociar una rubrica a todos los grupos en un curso
 */
-async function asociateRubricaGruposToCurso(req: Request, res: Response){
+async function asociateRubricaGruposToCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
     const idRubrica = req.body.idRubrica;
 
-    if(!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
+    if (!idRubrica) return res.status(400).json({ error: "Falta el atributo idRubrica" });
 
     try {
         await service.asociateRubricaGruposToCurso(cursoId, idRubrica);
@@ -145,8 +145,22 @@ async function asociateRubricaGruposToCurso(req: Request, res: Response){
 
 }
 
-export default { 
-    getRubricaById, createRubrica, getAllRubricasByUserId, 
-    getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso, 
-    asociateRubricaGruposToCurso 
+async function deleteRubricaById(req: Request, res: Response) {
+
+    const { idUsuario, idRubrica } = req.params;
+
+    try {
+        await service.deleteRubricaById(idRubrica, idUsuario);
+        return res.status(204).send();
+
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // ids invalidos o la rubrica no le pertence al usuario
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+}
+
+export default {
+    getRubricaById, createRubrica, getAllRubricasByUserId,
+    getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso,
+    asociateRubricaGruposToCurso, deleteRubricaById
 };

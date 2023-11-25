@@ -115,6 +115,21 @@ export class RubricaPrismaDAO implements RubricaDataSource {
 
     }
 
+    async deleteRubricaById(idRubrica: string) {
+
+        try {
+            const rubrica = await this.prisma.rubrica.delete({
+                where: { id: idRubrica }
+            })
+            return rubrica;
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2025") throw new InvalidValueError("Rubrica", "idRubrica"); // el idRubrica no tiene los 12 bytes
+            throw new NotFoundError("Rubrica"); // no se encontro la rubrica
+        }
+
+    }
+
     // demas metodos
 
 }

@@ -10,7 +10,7 @@ export class RubricaRepository implements RubricaDataSource {
 
     private constructor() {
         this.rubricaDAO = RubricaPrismaDAO.getInstance();
-     }
+    }
 
     public static getInstance(): RubricaRepository {
         if (!RubricaRepository.INSTANCE) {
@@ -30,7 +30,7 @@ export class RubricaRepository implements RubricaDataSource {
     /**
      * Crear rubrica
      */
-    async createRubrica(rubrica: Rubrica){
+    async createRubrica(rubrica: Rubrica) {
         return await this.rubricaDAO.createRubrica(rubrica);
     }
 
@@ -51,9 +51,13 @@ export class RubricaRepository implements RubricaDataSource {
     /**
      * Asociar rubrica a los grupos de un curso
      */
-        async asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) {
-            return await this.rubricaDAO.asociateRubricaGruposToCurso(idCurso, idRubrica);
-        }
+    async asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) {
+        return await this.rubricaDAO.asociateRubricaGruposToCurso(idCurso, idRubrica);
+    }
+
+    async deleteRubricaById(idRubrica: string) {
+        return await this.rubricaDAO.deleteRubricaById(idRubrica);
+    }
 
     // demas metodos
 }
