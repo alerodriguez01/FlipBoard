@@ -25,7 +25,7 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
     :
     null;
   const puntajeTotal = calificacion?.rubricaModel?.niveles[0].puntaje ?
-    calificacion?.rubricaModel?.criterios.reduce((acc, crit, i) => acc + (calificacion?.rubricaModel?.niveles[0].puntaje ?? 0), 0)
+    Math.max(...calificacion?.rubricaModel?.niveles.map(nivel => nivel.puntaje ?? 0)) * calificacion?.rubricaModel?.criterios.length
     :
     null;
 
@@ -74,6 +74,9 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                 }
               </section>
             </ModalBody>
+            <ModalFooter className='p-2'>
+              
+            </ModalFooter>
           </>
         )}
       </ModalContent>
