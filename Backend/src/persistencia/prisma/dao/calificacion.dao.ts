@@ -112,6 +112,10 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             where: {
                 AND: [{ cursoId: idCurso, }]
             },
+            include: {
+                usuarioModel: true,
+                grupoModel: true,
+            }
             // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
         }
 
