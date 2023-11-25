@@ -82,6 +82,7 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
 
     const idCurso = req.params.idCurso;
     const idRubrica = req.query.rubrica;
+    const idMural = req.query.idMural;
 
     //            si existe         
     let limit = req.query.limit ? 
@@ -94,7 +95,7 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
     if(offset < 0) offset = 0;
 
     try {
-        const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, idRubrica?.toString());
+        const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, idRubrica?.toString(), idMural?.toString());
         return res.status(200).json(calificaciones);
 
     } catch (error) {

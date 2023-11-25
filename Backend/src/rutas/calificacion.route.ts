@@ -336,6 +336,14 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  *           type: number
  *         example:
  *           5
+ *       - name: idMural
+ *         in: query
+ *         required: false
+ *         description: El id del mural asociado a las calificaciones
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490b7145b838789c
  *     responses:
  *       200:
  *         description: Calificaciones del curso encontradas

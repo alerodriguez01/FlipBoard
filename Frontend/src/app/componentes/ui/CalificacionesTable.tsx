@@ -12,7 +12,7 @@ type TableProps = {
   idCurso: string,
   type: 'mural'|'alumno'|'grupo',
   rubrica?: Rubrica,
-  muralName?: string,
+  mural?: Mural,
   onRegresarPressed?: () => void
 }
 
@@ -23,6 +23,10 @@ const CalificacionesTable = (props: TableProps) => {
 
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
   const [calificacion, setCalificacion] = useState<Calificacion | null>(null)
+
+  const endpoint = props.type === 'mural' ? endpoints.getCalificacionesCurso(props.idCurso) :
+                   props.type === 'alumno' ? "" :
+                   "";
 
   const renderCell = useCallback((calificacion: Calificacion, columnKey: Key) => {
 
@@ -62,14 +66,14 @@ const CalificacionesTable = (props: TableProps) => {
           className={""}
           label={"Tabla de calificaciones"}
           idCurso={props.idCurso}
-          endpoint={endpoints.getCalificacionesCurso(props.idCurso)}
+          endpoint={endpoint}
           itemType={"calificaciones"}
           renderCell={(item: Calificacion, cKey: Key) => renderCell(item, cKey)}
-          searchParams={`rubrica=${props.rubrica?.id}`}
+          searchParams={`rubrica=${props.rubrica?.id}&idMural=${props.mural?.id}`}
           isStriped
           headerRightContent={
             <div className='flex flex-col place-items-end justify-center'>
-              {props.type === 'mural' && <h2 className='font-semibold flex flex-row gap-3'>Mural:<p className='font-normal'>{props.muralName}</p></h2>}
+              {props.type === 'mural' && <h2 className='font-semibold flex flex-row gap-3'>Mural:<p className='font-normal'>{props.mural?.nombre}</p></h2>}
               <h2 className='font-semibold flex flex-row gap-3'>Rúbrica seleccionada:<p className='font-normal'>{props.rubrica?.nombre}</p></h2>
             </div>
           }
