@@ -105,7 +105,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     /*
         Obtener calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
     */
-    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, idRubrica?: string, idMural?: string) {
+    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean}) {
 
         let query: any = {
             skip: offset,
@@ -114,13 +114,14 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             },
             include: {
                 usuarioModel: true,
-                grupoModel: true,
+                grupoModel: {include: {integrantesModel: true}},
             }
             // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
         }
 
-        if (idRubrica) query.where.AND.push({ rubricaId: idRubrica })
-        if (idMural) query.where.AND.push({ muralId: idMural })
+        if (params.idRubrica) query.where.AND.push({ rubricaId: params.idRubrica })
+        if (params.idMural) query.where.AND.push({ muralId: params.idMural })
+        if (params.grupo) query.where.AND.push( {grupoId: {not: null}} )
 
         try {
             if (limit > 0) {

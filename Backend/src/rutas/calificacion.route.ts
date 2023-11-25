@@ -381,4 +381,76 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  */
 router.get("/:idCurso/calificaciones", calificacionController.getCalificacionesFromCurso)
 
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/calificaciones/grupos:
+ *   get:
+ *     summary: Obtener las calificaciones del curso asociadas a grupos
+ *     tags: [Calificacion]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387808
+ *       - name: rubrica
+ *         in: query
+ *         required: false
+ *         description: El id de la rubrica asociado a las calificaciones
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b838780a
+ *       - name: limit
+ *         in: query
+ *         required: false
+ *         description: Limite de calificaciones a obtener
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *       - name: offset
+ *         in: query
+ *         required: false
+ *         description: Numero de calificaciones a saltar
+ *         schema:
+ *           type: number
+ *         example:
+ *           5
+ *     responses:
+ *       200:
+ *         description: Calificaciones del curso encontradas
+ *         content:
+ *           application/json:
+ *             example:
+ *               count: 1
+ *               result:
+ *                 - id: "65625e29ac05c8d5efd80f12"
+ *                   valores:
+ *                     - 1
+ *                     - 0
+ *                   observaciones: "Buen trabajo"
+ *                   fecha: "2023-11-25T20:50:49.920Z"
+ *                   rubricaId: "65397634490a7145b838780a"
+ *                   grupoId: "65624ea5fff8bfd446d354c3"
+ *                   usuarioId: null
+ *                   cursoId: "65397634490a7145b8387808"
+ *                   muralId: null
+ *                   grupoModel:
+ *                     id: 65624ea5fff8bfd446d354c3
+ *                     integrantes:
+ *                       - 65624ea5fff8bfd446d354b5
+ *                       - 65624ea5fff8bfd446d354b7
+ *       400:
+ *         description: El parametro idCurso (o idRubrica en query param) es invalido
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Valor invalido para el atributo idCurso o idRubrica de Calificacion
+ */
+router.get("/:idCurso/calificaciones/grupos", calificacionController.getCalificacionesOfGruposFromCurso)
+
 export default router;

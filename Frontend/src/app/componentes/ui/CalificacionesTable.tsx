@@ -26,7 +26,7 @@ const CalificacionesTable = (props: TableProps) => {
 
   const endpoint = props.type === 'mural' ? endpoints.getCalificacionesCurso(props.idCurso) :
                    props.type === 'alumno' ? "" :
-                   "";
+                   endpoints.getCalificacionesGruposCurso(props.idCurso);
 
   const renderCell = useCallback((calificacion: Calificacion, columnKey: Key) => {
 
@@ -69,7 +69,11 @@ const CalificacionesTable = (props: TableProps) => {
           endpoint={endpoint}
           itemType={"calificaciones"}
           renderCell={(item: Calificacion, cKey: Key) => renderCell(item, cKey)}
-          searchParams={`rubrica=${props.rubrica?.id}&idMural=${props.mural?.id}`}
+          searchParams={
+            props.type === 'mural' ? `idMural=${props.mural?.id}` :
+            props.type === 'alumno' ? `` :
+              `rubrica=${props.rubrica?.id}`
+          }
           isStriped
           headerRightContent={
             <div className='flex flex-col place-items-end justify-center'>

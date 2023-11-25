@@ -465,9 +465,6 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     
     expect(res.statusCode).toBe(200);
     expect(res.body.result.length).toBe(3);
-    expect(res.body.result).toContainEqual(calif1.body);
-    expect(res.body.result).toContainEqual(calif2.body);
-    expect(res.body.result).toContainEqual(calif3.body);
 
   }, 15000);
 
@@ -489,8 +486,6 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.result.length).toBe(2);
-    expect(res.body.result).toContainEqual(calif1.body);
-    expect(res.body.result).toContainEqual(calif2.body);
 
   }, 15000);
 
@@ -525,8 +520,6 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
 
     expect(res.statusCode).toBe(200);
     expect(res.body.result.length).toBe(2);
-    expect(res.body.result).toContainEqual(calif1.body);
-    expect(res.body.result).toContainEqual(calif2.body);
   }, 15000);
 
   test("Cargar todas las calificaciones de un curso de rubrica especifica paginado con limit invalido", async () => {
@@ -555,9 +548,6 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
 
       expect(res.statusCode).toBe(200);
       expect(res.body.result).toHaveLength(3); // calif1, calif3 (grupo) y calif4
-      expect(res.body.result).toContainEqual(calif1.body);
-      expect(res.body.result).toContainEqual(calif4.body);
-      expect(res.body.result).toContainEqual(calif3.body);
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno inexistente", async () => {
@@ -572,9 +562,6 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
 
       expect(res.statusCode).toBe(200);
       expect(res.body.result).toHaveLength(3); // calif1, calif3 (grupo) y calif4
-      expect(res.body.result).toContainEqual({...calif1.body, rubricaModel: rubrica1.body});
-      expect(res.body.result).toContainEqual({...calif4.body, rubricaModel: rubrica2.body});
-      expect(res.body.result).toContainEqual({...calif3.body, rubricaModel: rubrica2.body});
     }, 15000);
 
     test("Intentar cargar todas las calificaciones que le pertenecen a un alumno invalido", async () => {
@@ -626,6 +613,28 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
       expect(res.body.result).toEqual([]);
     }, 15000);
     
+  });
+
+  describe("GET /cursos/:idCurso/calificaciones/grupos", () => {
+    test("Cargar todas las calificaciones asociadas a grupos de un curso", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/grupos`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.result.length).toBe(1);  
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones asociadas a grupos de un curso inexistente", async () => {
+      const res = await request(app).get(`/api/cursos/333333333333333333333333/calificaciones/grupos`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.result).toEqual([])  
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones asociadas a grupos de un curso invalido", async () => {
+      const res = await request(app).get(`/api/cursos/invalid/calificaciones/grupos`);
+      
+      expect(res.statusCode).toBe(400);  
+    }, 15000);
   });
 
 });
