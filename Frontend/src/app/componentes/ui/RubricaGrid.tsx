@@ -35,6 +35,7 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
         crit={row.nombre}
         niv={key.toString()}
         selected={nivelSelecc.get(row.nombre) === parseInt(key.toString())}
+        evaluable={props.evaluable}
         onClick={(crit, niv) => {
           if(!props.evaluable)
             return;

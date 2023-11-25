@@ -6,6 +6,7 @@ import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { TokenInvalido } from "../excepciones/TokenError.js";
 import validator from "validator";
 import nodemailer from 'nodemailer';
+import { templateHtml } from "../../lib/utils.js";
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
@@ -171,7 +172,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
             from: process.env.MAIL_USERNAME,
             to: correosAEnviar,
             subject: `FlipBoard: Invitación a curso ${curso.nombre}`,
-            html: `<p>Haga click <a href="http://${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">aquí</a> para unirse al curso: ${curso.nombre}.</p>`
+            html: templateHtml(`Para unirte al curso '${curso.nombre}', hace click <a href="http://${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">en este enlace</a>.`)
         }
 
         transporter.sendMail(mail, (error, body) => {
