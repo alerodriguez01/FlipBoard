@@ -105,7 +105,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     /*
         Obtener calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
     */
-    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean}) {
+    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean}) {
 
         let query: any = {
             skip: offset,
@@ -121,7 +121,8 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
 
         if (params.idRubrica) query.where.AND.push({ rubricaId: params.idRubrica })
         if (params.idMural) query.where.AND.push({ muralId: params.idMural })
-        if (params.grupo) query.where.AND.push( {grupoId: {not: null}} )
+        if (params.grupo) query.where.AND.push({grupoId: {not: null}}, {OR: [{muralId: null}, {muralId: {isSet: false}}]})
+        if (params.alumno) query.where.AND.push( {usuarioId: {not: null}}, {OR: [{muralId: null}, {muralId: {isSet: false}}]})
 
         try {
             if (limit > 0) {

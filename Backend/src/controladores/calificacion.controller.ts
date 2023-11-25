@@ -132,4 +132,32 @@ async function getCalificacionesOfGruposFromCurso(req: Request, res: Response) {
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, getCalificacionesOfGruposFromCurso };
+/*
+    Obtener las calificaciones del curso asociadas a alumnos
+*/
+async function getCalificacionesOfAlumnosFromCurso(req: Request, res: Response) {
+
+    const idCurso = req.params.idCurso;
+    const idRubrica = req.query.rubrica;
+
+    //            si existe         
+    let limit = req.query.limit ? 
+                                parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
+                                : 0; // si no existe, lo seteo en 0
+
+    let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
+
+    if(limit < 0) limit = 0;
+    if(offset < 0) offset = 0;
+
+    try {
+        const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, {idRubrica: idRubrica?.toString(), alumno: true});
+        return res.status(200).json(calificaciones);
+
+    } catch (error) {
+        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+    }
+
+}
+
+export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, getCalificacionesOfGruposFromCurso, getCalificacionesOfAlumnosFromCurso };

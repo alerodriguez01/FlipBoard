@@ -637,4 +637,27 @@ describe("GET /cursos/:idCurso/calificaciones", () => {
     }, 15000);
   });
 
+  describe("GET /cursos/:idCurso/calificaciones/alumnos", () => {
+    test("Cargar todas las calificaciones asociadas a alumnos de un curso", async () => {
+      const res = await request(app).get(`/api/cursos/${curso.body.id}/calificaciones/alumnos`);
+      
+      expect(res.statusCode).toBe(200);
+      // 3 por la calificacion que se crea en los otros tres
+      expect(res.body.result.length).toBe(3);  
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones asociadas a alumnos de un curso inexistente", async () => {
+      const res = await request(app).get(`/api/cursos/333333333333333333333333/calificaciones/alumnos`);
+      
+      expect(res.statusCode).toBe(200);
+      expect(res.body.result).toEqual([])  
+    }, 15000);
+
+    test("Intentar cargar todas las calificaciones asociadas a alumnos de un curso invalido", async () => {
+      const res = await request(app).get(`/api/cursos/invalid/calificaciones/alumnos`);
+      
+      expect(res.statusCode).toBe(400);  
+    }, 15000);
+  });
+
 });
