@@ -12,10 +12,10 @@ const usuarioRepository = UsuarioRepository.getInstance();
 /*
     Obtener curso por id
 */
-async function getCursoById(idCurso: string): Promise<Curso | null> {
+async function getCursoById(idCurso: string): Promise<Curso> {
 
     const curso = await cursoRepository.getCursoById(idCurso);
-    if(!curso) throw new NotFoundError("Curso")
+    if (!curso) throw new NotFoundError("Curso")
     return curso;
 
 }
@@ -23,12 +23,12 @@ async function getCursoById(idCurso: string): Promise<Curso | null> {
 /*
     Guardar curso
 */
-async function createCurso(body: Curso) : Promise<Curso> {
+async function createCurso(body: Curso): Promise<Curso> {
 
     // Verificar existencia de docentes
     const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
 
-    if(!docente) throw new NotFoundError("Docente");
+    if (!docente) throw new NotFoundError("Docente");
 
     // check if mail is valid
     if (!validator.default.isEmail(body.emailContacto))
@@ -51,13 +51,23 @@ async function deleteCursoById(idCurso: string, docente: string) {
 
     // Verificar que el docente sea el docente del curso
     const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if(!docenteCurso) throw new NotFoundError("Docente");
-    if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    if (!docenteCurso) throw new NotFoundError("Docente");
+    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
 
     const curso = await cursoRepository.deleteCursoById(idCurso);
     return curso;
 }
 
+async function addParticipantesToCurso(idCurso: string, correos: string[]) {
+
+    // obtener los usuarios
+    // const usuarios = await usuarioRepository.getUsuariosByCorreo(correos);
+
+    const curso = await cursoRepository.addParticipantesToCurso(idCurso, correos);
+    if (!curso) throw new NotFoundError("Curso");
+    return curso;
+}
+
 // demas metodos
 
-export default { getCursoById, createCurso, getCursos, deleteCursoById };
+export default { getCursoById, createCurso, getCursos, deleteCursoById, addParticipantesToCurso };

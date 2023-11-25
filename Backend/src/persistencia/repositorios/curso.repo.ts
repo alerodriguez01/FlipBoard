@@ -70,5 +70,9 @@ export class CursoRepository implements CursoDataSource {
         return await this.cursoDAO.deleteAlumnoFromCurso(idCurso, idAlumno);
     }
 
+    async addParticipantesToCurso(idCurso: string, correos: string[]): Promise<Curso | null> {
+        return await this.cursoDAO.addParticipantesToCurso(idCurso, correos);
+    }
+
     // demas metodos
 }

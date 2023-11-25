@@ -217,14 +217,29 @@ async function deleteAlumnoFromCurso(idCurso: string, idAlumno: string, docente:
 
     // Verificar que el docente sea el docente del curso
     const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if(!docenteCurso) throw new NotFoundError("Docente");
-    if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    if (!docenteCurso) throw new NotFoundError("Docente");
+    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
 
     const curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
     return curso;
 }
 
+async function getEstadoCorreos(correos: string[]): Promise<{ provider: boolean, correo: string, registered: boolean }[]> {
+
+    const usuarios = await Promise.all(correos.map(async (correo) => {
+
+        const usuario = await usuarioRepository.getUsuarioByCorreo(correo);
+        const usuarioProvider = await usuarioRepository.getUsuarioByCorreo(`google|${correo}`);
+
+        return { registered: !!usuario || !!usuarioProvider, provider: !!usuarioProvider, correo }
+    }));
+
+
+    return usuarios;
+}
+
+
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos
 };

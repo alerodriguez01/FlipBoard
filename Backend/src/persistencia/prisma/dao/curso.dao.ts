@@ -133,7 +133,7 @@ export class CursoPrismaDAO implements CursoDataSource {
         } catch (err) {
             throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
-        
+
     }
 
     async deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null> {
@@ -154,7 +154,26 @@ export class CursoPrismaDAO implements CursoDataSource {
         } catch (err) {
             throw new InvalidValueError("Curso o Alumno", "idCurso o idAlumno"); // el id no tiene los 12 bytes
         }
-        
+
+    }
+
+    async addParticipantesToCurso(idCurso: string, correos: string[]): Promise<Curso | null> {
+        try {
+            const curso = await this.prisma.curso.update({
+                where: {
+                    id: idCurso
+                },
+                data: {
+                    participantesUser: {
+                        connect: [...correos.map((correo: string) => ({ correo }))]
+                    }
+                }
+            })
+            return curso;
+
+        } catch (error) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+        }
     }
 
     // demas metodos

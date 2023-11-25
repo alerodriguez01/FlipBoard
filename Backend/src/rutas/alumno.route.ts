@@ -170,4 +170,37 @@ router.put("/:idCurso/alumnos", controller.addParticipante);
  */
 router.delete("/:idCurso/alumnos/:idAlumno", controller.deleteAlumnoFromCurso);
 
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/invitaciones:
+ *   post:
+ *    summary: Enviar correos de invitacion para unirse al curso o añadirlos si ya estan registrados
+ *    tags: [Usuario]
+ *    parameters:
+ *      - name: idCurso
+ *        in: path
+ *        required: true
+ *        description: El id del curso
+ *        schema:
+ *          type: string
+ *    requestBody:
+ *        required: true
+ *        content:
+ *          application/json:
+ *            example:
+ *              emails: ["juan@example.com", "ale@gmail.com"]
+ *              token: 12d3dfsd435sdgfsdf.23423wfe.r2344fds
+ *              enviarInvitacionSiExiste: false
+ *    responses:
+ *      204: 
+ *        description: Se han enviado los correos/añadido exitosamente
+ *      400:
+ *        description: Datos incompletos o incorrectos
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Datos incompletos o incorrectos
+ */
+router.post("/:idCurso/invitaciones", controller.addOrSendInvitationToUsers);
+
 export default router;
