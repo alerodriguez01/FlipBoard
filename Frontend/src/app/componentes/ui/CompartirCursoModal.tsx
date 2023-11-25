@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
+import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Spinner } from "@nextui-org/react"
 import { useTheme } from "next-themes"
 import CopyIcon from "./icons/CopyIcon"
 import QRCode from "react-qr-code"
@@ -64,7 +64,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
 
     const handleAddEmail = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if(emailInput === '') return;
+        if (emailInput === '') return;
         if (emails.includes(emailInput)) return;
         setEmails([...emails, emailInput]);
         setEmailInput('');
@@ -81,8 +81,8 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
             },
             body: JSON.stringify({ emails, idCurso: cursoId, nombre: cursoTitle, token: data?.token }),
         })
-        
-        if(res.ok) setEmailSent(true)
+
+        if (res.ok) setEmailSent(true)
         setEmailLoading(false)
     }
 
@@ -115,10 +115,14 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
                             <section className="flex flex-col gap-2">
                                 <article className="flex flex-col gap-2 items-center">
                                     <h1 className="text-lg font-medium">{cursoTitle}</h1>
-                                    <QRCode
-                                        className="max-w-[50%] h-auto bg-white p-1 rounded shadow-md dark:shadow-gray-500 border border-red"
-                                        value={urlQr}
-                                    />
+                                    {isLoading ?
+                                        <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+                                        :
+                                        <QRCode
+                                            className="max-w-[50%] h-auto bg-white p-1 rounded shadow-md dark:shadow-gray-500 border border-red"
+                                            value={urlQr}
+                                        />
+                                    }
                                     <Button
                                         variant="ghost"
                                         className={"w-60 border-gray-700 dark:border-gray-300 mt-2" + (textCopied ? " bg-green-100 dark:bg-green-700" : "")}
