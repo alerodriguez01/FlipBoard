@@ -279,7 +279,6 @@ async function load_initial_data() {
       nombre: 'Mural de Historia',
       contenido: '272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA',
       descripcion: 'Mural de historia para el curso',
-      rubricaModel: { connect: { id: rubrica2.id, } },
       cursoModel: { connect: { id: curso2.id, } },
     },
   });
@@ -287,7 +286,7 @@ async function load_initial_data() {
   // Crear calificaciones de ejemplo
   const calificacion1 = await prisma.calificacion.create({
     data: {
-      valores: [3, 4],
+      valores: [0,0,2],
       observaciones: 'Buen trabajo',
       rubricaModel: { connect: { id: rubrica1.id, } },
       usuarioModel: { connect: { id: usuario1.id } },
@@ -299,7 +298,7 @@ async function load_initial_data() {
 
   const calificacion2 = await prisma.calificacion.create({
     data: {
-      valores: [3, 4],
+      valores: [0,1],
       observaciones: 'Puede mejorar',
       rubricaModel: { connect: { id: rubrica2.id, } },
       usuarioModel: { connect: { id: usuario2.id } },
