@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import usuarioService from "../servicios/usuario.service.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import nodemailer from 'nodemailer';
+import { templateHtml } from "../../lib/utils.js";
 
 async function login(req: Request, res: Response) {
     
@@ -85,7 +86,7 @@ async function resetPassword(req: Request, res: Response) {
             from: process.env.MAIL_USERNAME,
             to: user.correo,
             subject: 'FlipBoard: Reestablecer contraseña',
-            html: `<p>Haga click <a href="http://${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}">aquí</a> para reestablecer su contraseña.</p>`
+            html: templateHtml(`Para reestablecer tu contraseña, hace click <a href="http://${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}">en este enlace</a>.`)
         }
 
         transporter.sendMail(mail, (error, body) => {
