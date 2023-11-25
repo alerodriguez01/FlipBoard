@@ -27,11 +27,12 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         let query = {
             skip: offset,
             where: {
-                AND: [ { cursoId: idCurso, },
-                       { OR: [ { usuarioId: idUsuario },
-                               { grupoModel: { integrantes: { has: idUsuario } } }
-                            ]
-                       }
+                AND: [{ cursoId: idCurso, },
+                {
+                    OR: [{ usuarioId: idUsuario },
+                    { grupoModel: { integrantes: { has: idUsuario } } }
+                    ]
+                }
                 ]
             },
             include: {
@@ -48,17 +49,17 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         try {
             if (limit > 0) {
                 const [califs, count] = await this.prisma.$transaction([
-                    this.prisma.calificacion.findMany({ ...query, take: limit }),
-                    this.prisma.calificacion.count({where: query.where})
+                    this.prisma.calificacion.findMany({ ...query, take: limit, orderBy: { fecha: "desc" } }),
+                    this.prisma.calificacion.count({ where: query.where })
                 ]);
-                return {count: count, result: califs};
+                return { count: count, result: califs };
             }
 
             const [califs, count] = await this.prisma.$transaction([
                 this.prisma.calificacion.findMany(query),
-                this.prisma.calificacion.count({where: query.where})
+                this.prisma.calificacion.count({ where: query.where })
             ]);
-            return {count: count, result: califs};
+            return { count: count, result: califs };
         } catch (error) {
             // https://www.prisma.io/docs/concepts/components/prisma-client/handling-exceptions-and-errors
             // if(error instanceof PrismaClientKnownRequestError) {
@@ -80,6 +81,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             data: {
                 valores: calificacion.valores,
                 observaciones: calificacion.observaciones,
+                fecha: new Date(),
                 rubricaModel: { connect: { id: calificacion.rubricaId } },
                 cursoModel: { connect: { id: calificacion.cursoId } },
                 docenteModel: { connect: { id: calificacion.docenteId } }
@@ -119,16 +121,16 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             if (limit > 0) {
                 const [califs, count] = await this.prisma.$transaction([
                     this.prisma.calificacion.findMany({ ...query, take: limit }),
-                    this.prisma.calificacion.count({where: query.where})
+                    this.prisma.calificacion.count({ where: query.where })
                 ]);
-                return {count: count, result: califs};
+                return { count: count, result: califs };
             }
 
             const [califs, count] = await this.prisma.$transaction([
                 this.prisma.calificacion.findMany(query),
-                this.prisma.calificacion.count({where: query.where})
+                this.prisma.calificacion.count({ where: query.where })
             ]);
-            return {count: count, result: califs};
+            return { count: count, result: califs };
 
         } catch (error) {
             throw new InvalidValueError("Calificacion", "idCurso o idRubrica");

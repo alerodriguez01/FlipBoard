@@ -293,7 +293,8 @@ async function load_initial_data() {
       usuarioModel: { connect: { id: usuario1.id } },
       cursoModel: { connect: { id: curso1.id, } },
       muralModel: { connect: { id: mural1.id } },
-      docenteModel: { connect: { id: usuario3.id } }
+      docenteModel: { connect: { id: usuario3.id } },
+      fecha: new Date()
     },
   });
 
@@ -305,7 +306,8 @@ async function load_initial_data() {
       usuarioModel: { connect: { id: usuario2.id } },
       cursoModel: { connect: { id: curso2.id, } },
       muralModel: { connect: { id: mural2.id } },
-      docenteModel: { connect: { id: usuario2.id } }
+      docenteModel: { connect: { id: usuario2.id } },
+      fecha: new Date()
     },
   });
 }
