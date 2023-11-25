@@ -40,7 +40,7 @@ const RubricasAccordion = (props: AccordionProps) => {
             },
         });
 
-        if(res.ok){
+        if (res.ok) {
             mutate();
             return true;
         }
@@ -79,11 +79,17 @@ const RubricasAccordion = (props: AccordionProps) => {
                                                     <Button
                                                         startContent={<EditIcon theme={currentTheme} />}
                                                         onPress={() => alert(`TODO: MODIFICAR RUBRICA id:${rubric.id}`)}
-                                                    >Modificar</Button>
+                                                        variant="flat"
+                                                    >
+                                                        Modificar
+                                                    </Button>
                                                     <Button
                                                         startContent={<CrossIcon />}
-                                                        onPress={() => {setRubricaSelected(rubric); onOpenEliminar()}}
-                                                    >Eliminar</Button>
+                                                        onPress={() => { setRubricaSelected(rubric); onOpenEliminar() }}
+                                                        variant="flat"
+                                                    >
+                                                        Eliminar
+                                                    </Button>
                                                 </div>
                                                 :
                                                 <Radio value={JSON.stringify(rubric)} />
@@ -102,7 +108,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                 </>
             }
 
-            <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} type="rubrica" entityName={toMayusFirstLetters(rubricaSelected?.nombre || "")} onEliminar={onEliminarRubrica}/>
+            <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} type="rubrica" entityName={toMayusFirstLetters(rubricaSelected?.nombre || "")} onEliminar={onEliminarRubrica} />
         </section>
     );
 }
