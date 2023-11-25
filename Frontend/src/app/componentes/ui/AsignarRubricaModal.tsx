@@ -87,7 +87,7 @@ const AsignarRubricaModal = (props:  ModalProps) => {
           isOpen={props.isOpen}
           onOpenChange={props.onOpenChange}
           placement="center"
-          size="3xl"
+          size="5xl"
           classNames={{closeButton: "m-3"}} 
           className="max-h-[90%] overflow-auto">
             <ModalContent className="">
