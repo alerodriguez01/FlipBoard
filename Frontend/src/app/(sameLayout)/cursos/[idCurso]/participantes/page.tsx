@@ -99,7 +99,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                     <AsignarRubricaModal mode={asignarMode} isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id} />
                     <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso} />
                     <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={entityType === 'Usuario' ? 'alumno' : 'grupo'}
-                        entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `grupo ${(evaluarEntity as Grupo)?.numero}`}
+                        entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `Grupo ${(evaluarEntity as Grupo)?.numero}`}
                         onEliminar={onEliminarEntity} />
                 </>
             }
