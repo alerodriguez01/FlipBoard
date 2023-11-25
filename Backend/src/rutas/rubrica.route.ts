@@ -299,6 +299,39 @@ routerUsuario.post("/:idUsuario/rubricas", controller.createRubrica);
  */
 routerUsuario.get("/:idUsuario/rubricas/", controller.getAllRubricasByUserId);
 
+/**
+ * @swagger
+ * /api/usuarios/{idUsuario}/rubricas/{idRubrica}:
+ *   delete:
+ *     summary: Eliminar una Rubrica por id  
+ *     tags: [Rubrica]
+ *     parameters:
+ *       - name: idRubrica
+ *         in: path
+ *         required: true
+ *         description: El id del Rubrica
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *     responses:
+ *       204:
+ *         description: Rubrica eliminado exitosamente
+ *       400:
+ *         description: El usuario no esta autorizado para eliminar el Rubrica
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Docente' en 'Rubrica'
+ *       404:
+ *         description: El Rubrica no fue encontrado
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Rubrica' en la BDD
+ */
+routerUsuario.delete("/:idUsuario/rubricas/:idRubrica", controller.deleteRubricaById);
+
 // ------------ Rutas correspondientes a /cursos ------------
 
 /**

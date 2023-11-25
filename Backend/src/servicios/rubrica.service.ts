@@ -93,8 +93,18 @@ async function asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) 
 
 }
 
+async function deleteRubricaById(idRubrica: string, idUsuario: string) {
+
+    // Verificar que la rubrica le pertenezca al usuario
+    const rubrica = await getRubricaById(idRubrica);
+    if (rubrica.usuarioId !== idUsuario) throw new InvalidValueError('Rubrica', 'Usuario');
+
+    const rubricaDeleted = await rubricaRepository.deleteRubricaById(idRubrica);
+    return rubricaDeleted;
+}
+
 export default { 
     getRubricaById, createRubrica, getAllRubricasByUserId, 
     getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso,
-    asociateRubricaGruposToCurso
+    asociateRubricaGruposToCurso, deleteRubricaById
  };
