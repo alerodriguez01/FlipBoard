@@ -17,6 +17,8 @@ const CalificacionesDocente = (props: CalificacionesDocenteProps) => {
   const [mural, setMural] = React.useState<Mural | undefined>();
   const [showCalifAlumnos, setShowCalifAlumnos] = useState(false);
   const [rubricaAlumnos, setRubricaAlumnos] = React.useState<Rubrica | undefined>();
+  const [showCalifGrupos, setShowCalifGrupos] = useState(false);
+  const [rubricaGrupos, setRubricaGrupos] = React.useState<Rubrica | undefined>();
 
   return (
   <section className='flex flex-col gap-3'>
@@ -33,13 +35,24 @@ const CalificacionesDocente = (props: CalificacionesDocenteProps) => {
             <CalificacionesTable idCurso={props.idCurso} type='alumno' rubrica={rubricaAlumnos} onRegresarPressed={() => setShowCalifAlumnos(false)} />
             :
             <RubricasAccordion
-              endpoint={endpoints.getAllRubricasGrupales(props.idCurso)}
+              endpoint={endpoints.getAllRubricasIndividuales(props.idCurso)}
               type='calificable' searchable title='Rúbricas asignadas a alumnos'
               onVerPressed={(rubrica) => {setRubricaAlumnos(rubrica); setShowCalifAlumnos(true)}}
             />
           }
         </Tab>
-        <Tab key="grupo" title="Grupo"/>
+        <Tab key="grupo" title="Grupo">
+          {
+            showCalifGrupos ?
+              <CalificacionesTable idCurso={props.idCurso} type='grupo' rubrica={rubricaGrupos} onRegresarPressed={() => setShowCalifGrupos(false)} />
+              :
+              <RubricasAccordion
+                endpoint={endpoints.getAllRubricasGrupales(props.idCurso)}
+                type='calificable' searchable title='Rúbricas asignadas a alumnos'
+                onVerPressed={(rubrica) => {setRubricaGrupos(rubrica); setShowCalifGrupos(true)}}
+              />
+          }
+        </Tab>
       </Tabs>
 
     </section>
