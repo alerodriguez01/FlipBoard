@@ -22,6 +22,7 @@ type TableProps = {
   onEvaluarPress?: (grupo: Grupo) => void
   onEditarPress?: (grupoId: string) => void
   mutarDatos: number
+  onEliminarPress?: (user: Grupo) => void
 }
 
 const GruposTable = (props: TableProps) => {
@@ -42,7 +43,7 @@ const GruposTable = (props: TableProps) => {
           <Button onPress={() => alert(`TODO: MODIFICAR idGrupo: ${grupo.id}`)} isIconOnly variant="light">
             <EditIcon theme={currentTheme}/>
           </Button>
-          <Button onPress={() => alert(`TODO: ELIMINAR grupo: ${grupo.id}`)}isIconOnly variant="light">
+          <Button onPress={() => props.onEliminarPress?.(grupo) }isIconOnly variant="light">
             <CrossIcon/>
           </Button>
         </div>
@@ -53,7 +54,7 @@ const GruposTable = (props: TableProps) => {
       return (
         <>
           {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <>{conMayus(user.nombre)} <Divider className="mt-1 mb-1"/></>)}
-          {conMayus(grupo.integrantesModel?.at(grupo.integrantesModel?.length-1).nombre)}
+          {conMayus(grupo.integrantesModel?.at(grupo.integrantesModel.length-1)?.nombre || "")}
         </>
       );
     } 
@@ -62,7 +63,7 @@ const GruposTable = (props: TableProps) => {
       return (
         <>
           {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <>{getCorreoFromProvider(user.correo)} <Divider className="mt-1 mb-1"/></>)}
-          {getCorreoFromProvider(grupo.integrantesModel?.at(grupo.integrantesModel?.length-1).correo)}
+          {getCorreoFromProvider(grupo.integrantesModel?.at(grupo.integrantesModel.length-1)?.correo || "")}
         </>
       );
 

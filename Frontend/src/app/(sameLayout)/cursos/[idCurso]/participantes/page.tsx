@@ -89,7 +89,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)}
                         onAsignarRubricaPress={() => { setAsignarMode('grupo'); onAsignarOpen(); }}
-                        mutarDatos={mutateGrupos} />
+                        mutarDatos={mutateGrupos}
+                        onEliminarPress={(grupo) => { setEvaluarEntity(grupo); setEntityType('Grupo'); onEliminarOpen() }}/>
                 </Tab>
             </Tabs>
             <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess} />
