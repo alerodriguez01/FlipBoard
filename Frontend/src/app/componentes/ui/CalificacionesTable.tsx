@@ -35,6 +35,9 @@ const CalificacionesTable = (props: TableProps) => {
     const tipo = props.type === 'mural' ? ("Mural (" + (calificacion?.grupoId ? `grupal)` : "individual)"))
                                         : props.type === 'grupo' ? `Grupal` : "Individual"
 
+    const fecha = calificacion ? new Date(calificacion.fecha) : new Date();
+    const fechaAMostrar = fecha.toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: "2-digit", month: "2-digit", year: "2-digit" }) + " a las " + fecha.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: "2-digit", minute: "2-digit" }) + " hs."
+
     switch (columnKey) {
         case "nombre":
             return (
@@ -44,7 +47,7 @@ const CalificacionesTable = (props: TableProps) => {
         case "tipo":
             return tipo
         case "fecha":
-            return "TODO"
+            return fechaAMostrar
         case "ver":
             return (
                 <Button
@@ -77,7 +80,7 @@ const CalificacionesTable = (props: TableProps) => {
           headerRightContent={
             <div className='flex flex-col place-items-end justify-center'>
               {props.type === 'mural' && <h2 className='font-semibold flex flex-row gap-3'>Mural:<p className='font-normal'>{props.mural?.nombre}</p></h2>}
-              <h2 className='font-semibold flex flex-row gap-3'>Rúbrica seleccionada:<p className='font-normal'>{props.rubrica?.nombre}</p></h2>
+              <h2 className='font-semibold flex flex-row gap-3'>Rúbrica seleccionada:<p className='font-normal'>{toMayusFirstLetters(props.rubrica?.nombre || "")}</p></h2>
             </div>
           }
       >
@@ -96,7 +99,7 @@ const CalificacionesTable = (props: TableProps) => {
         isOpen={isOpen} onOpenChange={onOpenChange}
         calificacion={calificacion ? {...calificacion, rubricaModel: props.rubrica} as Calificacion : null}
       />
-      <Button className="mt-3" startContent={<BackArrowIcon theme={currentTheme}/>} onPress={() => props.onRegresarPressed?.()}>Regresar</Button>
+      <Button variant='flat' className="mt-3" startContent={<BackArrowIcon theme={currentTheme}/>} onPress={() => props.onRegresarPressed?.()}>Regresar</Button>
     </section>
   ) 
 }
