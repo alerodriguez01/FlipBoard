@@ -33,7 +33,7 @@ const EvaluarModal = (props: ModalProps) => {
       onOpenChange={props.onOpenChange}
       onClose={() => {setIsEvaluando(false); setRubrica(undefined);}}
       placement="center"
-      size="3xl"
+      size="5xl"
       classNames={{closeButton: "m-3"}} 
       className="max-h-[90%] overflow-auto">
         <ModalContent>

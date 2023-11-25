@@ -58,7 +58,7 @@ model Usuario {
 }
 
 model Curso {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  id            String  @id @default(auto()) @map("_id") @db.ObjectId
   nombre        String
   tema          String?
   sitioWeb      String?
@@ -143,9 +143,10 @@ model Grupo {
 }
 
 model Calificacion {
-  id            String @id @default(auto()) @map("_id") @db.ObjectId
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
   valores       Int[]
   observaciones String?
+  fecha         DateTime
 
   // many-to-one (rubrica asociada a la calificacion)
   rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])
@@ -173,10 +174,11 @@ model Calificacion {
 }
 
 model Mural {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  nombre      String
-  contenido   String // room del link colaborativo de excalidraw
-  descripcion String?
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  nombre        String
+  contenido     String // room del link colaborativo de excalidraw
+  descripcion   String?
+  fechaCreacion DateTime
 
   // many-to-one (rubrica asociado al mural)
   rubricaModel Rubrica? @relation(fields: [rubricaId], references: [id])
@@ -191,8 +193,8 @@ model Mural {
 }
 
 model Salt {
-  id    String @id @default(auto()) @map("_id") @db.ObjectId
-  salt  String
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  salt      String
   userModel Usuario @relation(fields: [usuarioId], references: [id])
-  usuarioId String @db.ObjectId @unique
+  usuarioId String  @unique @db.ObjectId
 }

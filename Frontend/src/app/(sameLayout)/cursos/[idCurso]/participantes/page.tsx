@@ -13,6 +13,7 @@ import Link from "next/link";
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { toMayusFirstLetters } from "@/lib/utils";
 import AgregarAlumnoModal from "@/app/componentes/ui/AgregarAlumnoModal";
+import CompartirCursoModal from "@/app/componentes/ui/CompartirCursoModal";
 
 
 export default function Participantes({ params }: { params: { idCurso: string } }) {
@@ -79,7 +80,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         evaluable={esDocente}
                         onEvaluarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen(); }}
                         onAgregarAlumnoPress={() => onAgregarAlumnoOpen()}
-                        onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }} 
+                        onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }}
                         onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}
                         mutarDatos={mutateTableData} />
                 </Tab>
@@ -94,7 +95,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)}
                         onAsignarRubricaPress={() => { setAsignarMode('grupo'); onAsignarOpen(); }}
                         mutarDatos={mutateTableData}
-                        onEliminarPress={(grupo) => { setEvaluarEntity(grupo); setEntityType('Grupo'); onEliminarOpen() }}/>
+                        onEliminarPress={(grupo) => { setEvaluarEntity(grupo); setEntityType('Grupo'); onEliminarOpen() }} />
                 </Tab>
             </Tabs>
             <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={mutarTableData} />
@@ -105,7 +106,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                     <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={entityType === 'Usuario' ? 'alumno' : 'grupo'}
                         entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `Grupo ${(evaluarEntity as Grupo)?.numero}`}
                         onEliminar={onEliminarEntity} />
-                    <AgregarAlumnoModal isOpen={isAgregarAlumnoOpen} onOpenChange={onAgregarAlumnoOpenChange} idCurso={params.idCurso} mutarDatos={mutarTableData} idUser={session?.user.id}/>
+                    <CompartirCursoModal isOpen={isAgregarAlumnoOpen} onOpenChange={onAgregarAlumnoOpenChange} cursoId={params.idCurso} cursoTitle={""} />
                 </>
             }
         </section>

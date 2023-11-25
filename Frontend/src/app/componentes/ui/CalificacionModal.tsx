@@ -25,9 +25,12 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
     :
     null;
   const puntajeTotal = calificacion?.rubricaModel?.niveles[0].puntaje ?
-    calificacion?.rubricaModel?.criterios.reduce((acc, crit, i) => acc + (calificacion?.rubricaModel?.niveles[0].puntaje ?? 0), 0)
+    Math.max(...calificacion?.rubricaModel?.niveles.map(nivel => nivel.puntaje ?? 0)) * calificacion?.rubricaModel?.criterios.length
     :
     null;
+
+  const fecha = calificacion ? new Date(calificacion.fecha) : new Date();
+  const fechaAMostrar = fecha.toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: "2-digit", month: "2-digit", year: "2-digit" }) + " a las " + fecha.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: "2-digit", minute: "2-digit" }) + " hs."
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ closeButton: "m-3" }} className="max-h-[90%] overflow-auto" size="4xl">
@@ -51,7 +54,7 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                       <li><span className='font-semibold'>Puntaje: </span>{`${(100 * puntaje / puntajeTotal).toFixed(2)}% (${puntaje}/${puntajeTotal})`}</li>
                     }
                   </ul>
-                  <p><span className='font-semibold'>Fecha de calificación:</span> TODO</p>
+                  <p><span className='font-semibold'>Fecha de calificación:</span> {fechaAMostrar}</p>
                 </header>
                 <RubricaGrid
                   label={nombreRubrica}
@@ -71,6 +74,9 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                 }
               </section>
             </ModalBody>
+            <ModalFooter className='p-2'>
+              
+            </ModalFooter>
           </>
         )}
       </ModalContent>

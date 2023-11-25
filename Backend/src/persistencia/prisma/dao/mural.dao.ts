@@ -31,6 +31,9 @@ export class MuralPrismaDAO implements MuralDataSource {
             const murales = await this.prisma.mural.findMany({
                 where: {
                     cursoId: idCurso
+                },
+                orderBy: {
+                    fechaCreacion: "desc"
                 }
             })
 
@@ -118,6 +121,7 @@ export class MuralPrismaDAO implements MuralDataSource {
                 descripcion: mural.descripcion,
                 contenido: mural.contenido,
                 cursoModel: { connect: { id: mural.cursoId } },
+                fechaCreacion: new Date()
             }
         }
 
