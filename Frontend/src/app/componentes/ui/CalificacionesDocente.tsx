@@ -22,7 +22,7 @@ const CalificacionesDocente = (props: CalificacionesDocenteProps) => {
 
   return (
   <section className='flex flex-col gap-3'>
-      <Tabs variant='underlined' classNames={{base: "w-full", cursor:'w-full', tabList:"w-full justify-between",tab: "w-full h-[50px] text-xl"}}>
+      <Tabs variant='underlined' size="lg" classNames={{base: "w-[400px]", tabList:"w-full justify-between",tab: "w-full"}}>
         <Tab key="mural" title="Mural">
           {showCalifMural ? 
             <CalificacionesTable idCurso={props.idCurso} type='mural' rubrica={mural?.rubricaModel} muralName={mural?.nombre} onRegresarPressed={() => setShowCalifMural(false)}/>

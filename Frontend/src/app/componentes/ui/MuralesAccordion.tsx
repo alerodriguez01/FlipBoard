@@ -7,6 +7,7 @@ import useSWR from "swr";
 import PagesHeader from "./PagesHeader";
 import endpoints from "@/lib/endpoints";
 import { SearchIcon } from "./icons/SearchIcon";
+import { toMayusFirstLetters } from "@/lib/utils";
 
 type AccordionProps = {
     idCurso: string,
@@ -55,10 +56,10 @@ const MuralesAccordion = (props: AccordionProps) => {
                                     title={
                                         <div className="flex flex-row justify-between place-items-center">
                                             <div className="">
-                                              <h1 className="text-xl font-semibold">{mural.nombre}</h1>
-                                              <h2 className="text-base">Rúbrica utilizada: {mural.rubricaModel.nombre}</h2>
+                                              <h1 className="text-base font-semibold">{mural.nombre}</h1>
+                                              <h2 className="text-base">Rúbrica utilizada: {toMayusFirstLetters(mural.rubricaModel.nombre)}</h2>
                                             </div>
-                                            <Button onPress={() => props.onVerPressed?.(mural)}>Ver calificaciones</Button>    
+                                            <Button variant="flat" onPress={() => props.onVerPressed?.(mural)}>Ver calificaciones</Button>    
                                         </div>
                                     }
                                     textValue={`Mural ${mural.nombre}`}
