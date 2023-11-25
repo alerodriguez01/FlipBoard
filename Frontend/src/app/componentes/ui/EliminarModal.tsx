@@ -41,7 +41,7 @@ const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entityName, type }: E
                     <>
                         <ModalHeader className="flex flex-col gap-1">Eliminar {type}</ModalHeader>
                         <ModalBody>
-                            <p> ¿Estás seguro que deseas eliminar <span className="italic">{entityName}</span>? </p>
+                            <p> ¿Estás seguro que deseas eliminar <span className="italic font-semibold">{entityName}</span>? </p>
                             {error !== "" && <p className="text-red-500">{error}</p>}
                         </ModalBody>
                         <ModalFooter>
