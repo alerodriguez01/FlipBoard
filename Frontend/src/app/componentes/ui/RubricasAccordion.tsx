@@ -110,7 +110,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                                              props.type === 'selectable' ?
                                                 <Radio value={JSON.stringify(rubric)} />
                                                 :
-                                                <Button onPress={() => props.onVerPressed?.(rubric)}>Ver calificaciones</Button>
+                                                <Button variant="flat" onPress={() => props.onVerPressed?.(rubric)}>Ver calificaciones</Button>
                                             }
                                         </div>
                                     }
