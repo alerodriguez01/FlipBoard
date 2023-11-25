@@ -1,8 +1,11 @@
 import { Request, Response } from "express";
 import service from "../servicios/usuario.service.js";
-import { Usuario } from "@prisma/client";
+import cursoService from "../servicios/curso.service.js";
+import { Curso, Usuario } from "@prisma/client";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { TokenInvalido } from "../excepciones/TokenError.js";
+import validator from "validator";
+import nodemailer from 'nodemailer';
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
@@ -89,18 +92,101 @@ async function updateUsuarioPassword(req: Request, res: Response) {
     const token = req.body.token;
     const newPass = req.body.contrasena;
 
-    if(!token || !newPass)
+    if (!token || !newPass)
         return res.status(400).json("Faltan datos obligatorios");
 
-        try {
-            let userUpdated = await service.updateUsuarioPassword(req.params.idUsuario, newPass, token);
-            return res.status(200).json(userUpdated);
-        } catch (error) {
-            if (error instanceof TokenInvalido) return res.status(401).send();
-            if (error instanceof InvalidValueError) return res.status(400).json(error.message);
-            if (error instanceof NotFoundError) return res.status(404).json(error.message);
-        }
+    try {
+        let userUpdated = await service.updateUsuarioPassword(req.params.idUsuario, newPass, token);
+        return res.status(200).json(userUpdated);
+    } catch (error) {
+        if (error instanceof TokenInvalido) return res.status(401).send();
+        if (error instanceof InvalidValueError) return res.status(400).json(error.message);
+        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+    }
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword };
+async function deleteAlumnoFromCurso(req: Request, res: Response) {
+
+    const idAlumno = req.params.idAlumno;
+    const idCurso = req.params.idCurso;
+    const docente = req.query.docente;
+
+    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    try {
+        await service.deleteAlumnoFromCurso(idCurso, idAlumno, docente as string);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+}
+
+async function addOrSendInvitationToUsers(req: Request, res: Response) {
+
+    const { emails, token, enviarInvitacionSiExiste } = req.body;
+    const idCurso = req.params.idCurso;
+
+    if (!emails || !token) return res.status(400).json({ error: 'Datos incompletos o incorrectos' });
+
+    const correos = emails.filter((correo: string) => validator.default.isEmail(correo));
+
+    let correosAEnviar = correos;
+
+    try {
+
+        // si no se quiere enviar la invitacion a aquellos que ya estan registrados
+        if (!enviarInvitacionSiExiste) {
+
+            const estadoCorreos = await service.getEstadoCorreos(correos);
+            
+            // obtener los usuarios que no estan registrados
+            correosAEnviar = estadoCorreos.filter((obj) => !obj.registered).map((obj) => obj.correo);
+
+            if (estadoCorreos.length > 0) {
+
+                // anadir los que estan registrados
+                const correosRegistrados = estadoCorreos.filter((obj) => obj.registered).map((obj) => `google|${obj.correo}`);
+                await cursoService.addParticipantesToCurso(idCurso, correosRegistrados);
+            }
+        }
+
+        if(correosAEnviar.length === 0) return res.status(204).send();
+
+        const curso = await cursoService.getCursoById(idCurso);
+
+        let transporter = nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                type: 'OAuth2',
+                user: process.env.MAIL_USERNAME,
+                clientId: process.env.OAUTH_CLIENTID,
+                clientSecret: process.env.OAUTH_CLIENT_SECRET,
+                refreshToken: process.env.OAUTH_REFRESH_TOKEN
+            }
+        });
+
+        let mail = {
+            from: process.env.MAIL_USERNAME,
+            to: correosAEnviar,
+            subject: `FlipBoard: Invitación a curso ${curso.nombre}`,
+            html: `<p>Haga click <a href="http://${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">aquí</a> para unirse al curso: ${curso.nombre}.</p>`
+        }
+
+        transporter.sendMail(mail, (error, body) => {
+            if (error) return res.status(400).json({ error: error.message });
+            return res.status(204).send();
+        });
+
+
+    } catch (error) {
+        console.log(error)
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // ids invalidos
+        return res.status(400).json({ error: 'Hubo un problema al enviar los correos o añadir los alumnos' });
+    }
+
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers };

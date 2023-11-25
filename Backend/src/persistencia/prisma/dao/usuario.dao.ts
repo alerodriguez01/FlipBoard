@@ -55,7 +55,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       return user;
 
     } catch (error) {
-      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
+      throw new InvalidValueError("Usuario", "idUsuario"); // el id no tiene los 12 bytes
     }
   }
 

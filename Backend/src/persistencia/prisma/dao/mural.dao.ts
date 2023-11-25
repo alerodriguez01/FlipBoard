@@ -133,6 +133,21 @@ export class MuralPrismaDAO implements MuralDataSource {
 
     }
 
+    public async deleteMuralById(idMural: string) {
+
+        try {
+            return await this.prisma.mural.delete({
+                where: {
+                    id: idMural
+                }
+            })
+
+        } catch (error) {
+            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
+        }
+
+    }
+
 }
 
 

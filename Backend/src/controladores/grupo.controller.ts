@@ -56,4 +56,22 @@ async function createGrupo(req: Request, res: Response) {
     }
 }
 
-export default { getGruposFromCurso, createGrupo}
+async function deleteGrupoFromCurso(req: Request, res: Response) {
+
+    const idGrupo = req.params.idGrupo;
+    const idCurso = req.params.idCurso;
+    const docente = req.query.docente;
+
+    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    try {
+        await service.deleteGrupoFromCurso(idGrupo, idCurso, docente as string);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+
+}
+
+export default { getGruposFromCurso, createGrupo, deleteGrupoFromCurso }

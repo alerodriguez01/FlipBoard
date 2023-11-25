@@ -70,4 +70,20 @@ async function createMural(mural: Mural, idDocente: string) {
     return await muralRepository.createMural(mural);
 }
 
-export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural };
+async function deleteMuralById(idMural: string, docente: string) {
+
+    const mural = await muralRepository.getMuralById(idMural);
+    if(!mural) throw new NotFoundError("Mural");
+
+    const idCurso = mural.cursoId;
+
+    // Verificar que el docente sea el docente del curso
+    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
+    if(!docenteCurso) throw new NotFoundError("Docente");
+    if(!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+
+    const muralDeleted = await muralRepository.deleteMuralById(idMural);
+    return muralDeleted;
+}
+
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural, deleteMuralById };

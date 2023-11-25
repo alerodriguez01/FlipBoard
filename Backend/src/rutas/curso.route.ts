@@ -187,30 +187,43 @@ router.get("/cursos", controller.getCursos);
 
 /**
  * @swagger
- * /api/cursos/send-email:
- *   post:
- *    summary: Enviar correos de invitacion para unirse al curso
- *    tags: [Curso]
- *    requestBody:
- *        required: true
- *        content:
- *          application/json:
- *            example:
- *              emails: ["juan@example.com", "ale@gmail.com"]
- *              token: 12d3dfsd435sdgfsdf.23423wfe.r2344fds
- *              idCurso: 1ds45435343242wer
- *              nombre: "Curso de Matemáticas"
- *    responses:
- *      204: 
- *        description: Se han enviado los correos exitosamente
- *      400:
- *        description: Datos incompletos o incorrectos
- *        content:
- *          application/json:
- *            example:
- *              error: Datos incompletos o incorrectos
+ * /api/cursos/{idCurso}:
+ *   delete:
+ *     summary: Eliminar un curso por id  
+ *     tags: [Curso]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: docente
+ *         in: query
+ *         required: true
+ *         description: El id del docente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *     responses:
+ *       204:
+ *         description: Curso eliminado exitosamente
+ *       400:
+ *         description: El usuario no esta autorizado para eliminar el curso
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Docente' en 'Curso'
+ *       404:
+ *         description: El curso no fue encontrado
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Curso' en la BDD
  */
-router.post("/cursos/send-email", controller.sendEmailToUsers);
-
+router.delete("/cursos/:idCurso", controller.deleteCursoById);
 
 export default router;

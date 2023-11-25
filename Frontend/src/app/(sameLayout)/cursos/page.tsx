@@ -1,6 +1,8 @@
 'use client';
+import CompartirCursoModal from "@/app/componentes/ui/CompartirCursoModal";
 import { CrearCursoModal } from "@/app/componentes/ui/CrearCursoModal";
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
+import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
@@ -20,6 +22,29 @@ export default function Cursos() {
   // para crear curso
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
 
+  const [cursoSelected, setCursoSelected] = useState<Curso | null>(null); // curso presionado
+  const { isOpen: isOpenCompartir, onOpen: onOpenCompartir, onOpenChange: onOpenChangeCompartir } = useDisclosure(); // Para modal de compartir curso
+  const { isOpen: isOpenEliminar, onOpen: onOpenEliminar, onOpenChange: onOpenChangeEliminar } = useDisclosure(); // Para modal de eliminar curso
+
+  const eliminarCurso = async () => {
+
+    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${cursoSelected?.id}?docente=${session?.user.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+    if (res.ok) {
+      mutate()
+      return true
+
+    } else {
+      return false
+    }
+
+  }
+
   const [search, setSearch] = useState("");
 
   const searchParams = useSearchParams();
@@ -32,7 +57,7 @@ export default function Cursos() {
     }
   }, [])
 
-  if (!isLoading && data?.error) return (
+  if ((!isLoading && data?.error) || error) return (
     <section className="flex flex-col flex-1 p-10">
       {/* {error.message} */}
       <h1 className="">No se pudieron obtener los cursos</h1>
@@ -56,13 +81,34 @@ export default function Cursos() {
               {data.cursosDocenteModel.length > 0 &&
                 data.cursosDocenteModel.map((c: Curso) => {
                   if (search !== "" && !c.nombre.toLowerCase().includes(search.toLowerCase())) return null;
-                  return (<CursoCard key={crypto.randomUUID()} title={c.nombre} description={c.descripcion} cursoId={c.id} color={color++ % 2} editable />)
+                  return (<CursoCard
+                    key={crypto.randomUUID()}
+                    title={c.nombre}
+                    description={c.descripcion}
+                    cursoId={c.id}
+                    color={color++ % 2}
+                    editable
+                    idUser={session?.user.id}
+                    mutar={mutate}
+                    onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
+                    onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                  />)
                 })
               }
               {data.cursosAlumnoModel.length > 0 &&
                 data.cursosAlumnoModel.map((c: Curso) => {
                   if (search !== "" && !c.nombre.toLowerCase().includes(search.toLowerCase())) return null;
-                  return (<CursoCard key={crypto.randomUUID()} title={c.nombre} description={c.descripcion} cursoId={c.id} color={color++ % 2} />)
+                  return (<CursoCard
+                    key={crypto.randomUUID()}
+                    title={c.nombre}
+                    description={c.descripcion}
+                    cursoId={c.id}
+                    color={color++ % 2}
+                    idUser={session?.user.id}
+                    mutar={mutate}
+                    onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
+                    onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                  />)
                 })
               }
             </>
@@ -75,7 +121,13 @@ export default function Cursos() {
         size="lg"
         onPress={onOpen}> Crear nuevo curso </Button>
 
-      {!!session && (<CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id} />)}
+      {!!session &&
+        <>
+          <CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id} />
+          <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={cursoSelected?.id  || ""} cursoTitle={cursoSelected?.nombre || ""} />
+          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""}/>
+        </>
+      }
 
     </section>
   );

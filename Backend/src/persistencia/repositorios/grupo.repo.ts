@@ -32,4 +32,8 @@ export class GrupoRepository implements GrupoDataSource {
     public async getGrupoById(id: string): Promise<Grupo | null> {
         return await this.grupoDao.getGrupoById(id);
     }
+
+    public async deleteGrupoFromCurso(idGrupo: string) {
+        return await this.grupoDao.deleteGrupoFromCurso(idGrupo);
+    }
 }

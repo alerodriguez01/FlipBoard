@@ -17,6 +17,8 @@ type TableProps = {
   onAgregarAlumnoPress?: () => void
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (user: Usuario) => void
+  onEliminarPress?: (user: Usuario) => void
+  mutarDatos: number
 }
 
 const AlumnosTable = (props: TableProps) => {
@@ -40,7 +42,7 @@ const AlumnosTable = (props: TableProps) => {
 
     if (props.editable && columnKey === "eliminar" && !esDocente) 
       return (
-        <Button onPress={() => alert(`TODO: ELIMINAR userID: ${user.id}`)}isIconOnly variant="light">
+        <Button onPress={() => props.onEliminarPress?.(user)}isIconOnly variant="light">
           <CrossIcon/>
         </Button>
       );
@@ -69,10 +71,11 @@ const AlumnosTable = (props: TableProps) => {
       renderCell={(item, cKey) => renderCell(item,cKey)}
       headerRightContent={ props.editable &&
         <div className="flex gap-3">
-          <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumno</Button>
+          <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumnos</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
-      } >
+      } 
+      mutarDatos={props.mutarDatos} >
       <TableColumn key="nombre" className="w-[500px] text-sm font-bold">Nombre</TableColumn>
       <TableColumn key="correo" className="w-[500px] text-sm font-bold">Correo electrónico</TableColumn>
       <TableColumn key="evaluar" className="w-[70px] text-sm font-bold" align="center"> </TableColumn>

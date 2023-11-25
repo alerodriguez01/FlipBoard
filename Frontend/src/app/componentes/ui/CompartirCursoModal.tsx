@@ -1,4 +1,4 @@
-import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger } from "@nextui-org/react"
+import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Popover, PopoverContent, PopoverTrigger, Spinner } from "@nextui-org/react"
 import { useTheme } from "next-themes"
 import CopyIcon from "./icons/CopyIcon"
 import QRCode from "react-qr-code"
@@ -9,6 +9,7 @@ import { useSession } from "next-auth/react"
 import { PersonAddIcon } from "./icons/PersonAddIcon"
 import { CrossIcon } from "./icons/CrossIcon"
 import endpoints from "@/lib/endpoints"
+import ListForm from "./ListForm"
 
 type CompartirCursoModalProps = {
     isOpen: boolean,
@@ -59,46 +60,25 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
         setTextCopied(true)
     }
 
-    const [emails, setEmails] = useState<string[]>([])
-    const [emailInput, setEmailInput] = useState('');
+    const sendEmails = async (emails: string[]) => {
 
-    const handleAddEmail = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        if(emailInput === '') return;
-        if (emails.includes(emailInput)) return;
-        setEmails([...emails, emailInput]);
-        setEmailInput('');
-    }
-
-    const [emailSent, setEmailSent] = useState(false)
-    const [emailLoading, setEmailLoading] = useState(false)
-    const sendEmails = async () => {
-        setEmailLoading(true)
-        const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.enviarEmails(), {
+        return await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.enviarEmails(cursoId), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ emails, idCurso: cursoId, nombre: cursoTitle, token: data?.token }),
+            body: JSON.stringify({ emails, token: data?.token, enviarInvitacionSiExiste: true }),
         })
-        
-        if(res.ok) setEmailSent(true)
-        setEmailLoading(false)
     }
 
-    const handleInputOnChange = (e: ChangeEvent<HTMLInputElement>) => {
-        setEmailSent(false)
-        setEmailInput(e.target.value)
-    }
+    const [resetState, setResetState] = useState(false)
 
     const personalizedOnOpenChange = (isOpen: boolean) => {
 
         // isOpen es el estado del modal cuando el usuario lo cerro (pero visualmente todav no se cerro)
         if (!isOpen) {
             // reiniciar el estado del modal si se cierra
-            setEmails([])
-            setEmailInput('')
-            setEmailSent(false)
+            setResetState(true)
         }
 
         // funcion del hook para cerrar el modal
@@ -115,10 +95,14 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
                             <section className="flex flex-col gap-2">
                                 <article className="flex flex-col gap-2 items-center">
                                     <h1 className="text-lg font-medium">{cursoTitle}</h1>
-                                    <QRCode
-                                        className="max-w-[50%] h-auto bg-white p-1 rounded shadow-md dark:shadow-gray-500 border border-red"
-                                        value={urlQr}
-                                    />
+                                    {isLoading ?
+                                        <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
+                                        :
+                                        <QRCode
+                                            className="max-w-[50%] h-auto bg-white p-1 rounded shadow-md dark:shadow-gray-500 border border-red"
+                                            value={urlQr}
+                                        />
+                                    }
                                     <Button
                                         variant="ghost"
                                         className={"w-60 border-gray-700 dark:border-gray-300 mt-2" + (textCopied ? " bg-green-100 dark:bg-green-700" : "")}
@@ -133,50 +117,18 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
                                     </Button>
                                     <Divider className="mt-3 w-[50%]" />
                                 </article>
-                                <article className="flex flex-col gap-2">
-                                    <h2>Invitación por correo</h2>
-                                    <form onSubmit={handleAddEmail} className="flex gap-2">
-                                        <Input
-                                            variant="bordered"
-                                            type="email"
-                                            placeholder="Correo electrónico"
-                                            value={emailInput}
-                                            onChange={handleInputOnChange}
-                                        />
-                                        <Button
-                                            variant="ghost"
-                                            isIconOnly
-                                            type="submit"
-                                        >
-                                            <PersonAddIcon theme={currentTheme ?? 'light'} />
-                                        </Button>
-                                    </form>
-                                    {emails.map((email) => (
-                                        <div key={email} className="flex gap-2 w-full justify-between items-center px-2">
-                                            <p key={email}>{email}</p>
-                                            <Button
-                                                variant="light"
-                                                isIconOnly
-                                                onClick={() => setEmails(emails.filter((e) => e !== email))}
-                                            >
-                                                <CrossIcon />
-                                            </Button>
-                                        </div>
-                                    ))}
-                                    {emails.length > 0 &&
-                                        <Button
-                                            variant="flat"
-                                            onClick={sendEmails}
-                                            isLoading={emailLoading}
-                                            className={emailSent ? "bg-green-100 dark:bg-green-700" : ""}
-                                        >
-                                            {emailSent ? "Invitaciones enviadas" : "Enviar Invitaciones"}
-                                        </Button>
-                                    }
-                                </article>
+                                <ListForm
+                                    title="Invitación por correo"
+                                    inputPlacholder="Correo electrónico"
+                                    buttonMessage="Enviar invitaciones"
+                                    buttonMessageOk="Invitaciones enviadas"
+                                    buttonMessageError="Hubo un error al enviar las invitaciones"
+                                    onSubmitForm={sendEmails}
+                                    resetState={resetState}
+                                />
                             </section>
                         </ModalBody>
-                        <ModalFooter>
+                        <ModalFooter className="p-2">
                             {/* <Button color="primary" onPress={onClose}>
                                 Action
                             </Button> */}

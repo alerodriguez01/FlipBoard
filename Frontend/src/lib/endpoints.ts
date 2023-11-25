@@ -91,8 +91,8 @@ function crearMural(idCurso: string) {
     return `/api/cursos/${idCurso}/murales`;
 }
 
-function enviarEmails(){
-    return "/api/cursos/send-email"
+function enviarEmails(idCurso: string){
+    return `/api/cursos/${idCurso}/invitaciones`
 }
 
 function getCalificacionesAlumnos(idCurso: string, idAlumno: string) {
