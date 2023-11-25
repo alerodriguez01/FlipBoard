@@ -271,6 +271,7 @@ async function load_initial_data() {
       descripcion: 'Mural de matemáticas para el curso',
       rubricaModel: { connect: { id: rubrica1.id, } },
       cursoModel: { connect: { id: curso1.id, } },
+      fechaCreacion: new Date()
     },
   });
 
@@ -281,6 +282,7 @@ async function load_initial_data() {
       descripcion: 'Mural de historia para el curso',
       rubricaModel: { connect: { id: rubrica2.id, } },
       cursoModel: { connect: { id: curso2.id, } },
+      fechaCreacion: new Date()
     },
   });
 
