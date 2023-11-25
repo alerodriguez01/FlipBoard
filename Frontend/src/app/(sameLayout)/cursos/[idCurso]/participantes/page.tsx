@@ -27,9 +27,9 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const [asignarMode, setAsignarMode] = React.useState<'alumno' | 'grupo'>();
 
     // para que se refresque la tabla de grupos cuando se crea uno nuevo
-    const [mutateGrupos, setMutateGrupos] = useState(0);
-    const onCreateGrupoSuccess = () => {
-        setMutateGrupos(prev => prev + 1);
+    const [mutateTableData, setMutateTableData] = useState(0);
+    const mutarTableData = () => {
+        setMutateTableData(prev => prev + 1);
     }
 
     const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
@@ -45,7 +45,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
         });
 
         if (res.ok) {
-            //mutate()
+            mutarTableData()
             return true
 
         } else {
@@ -77,7 +77,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onEvaluarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen(); }}
                         onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
                         onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }} 
-                        onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}/>
+                        onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}
+                        mutarDatos={mutateTableData} />
                 </Tab>
                 <Tab key="grupos" title="Grupos">
                     <GruposTable
@@ -89,11 +90,11 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onCrearGrupoPress={onGrupoOpen}
                         onEditarPress={(grupoId) => alert(`TODO: EDITAR grupoId: ${grupoId}`)}
                         onAsignarRubricaPress={() => { setAsignarMode('grupo'); onAsignarOpen(); }}
-                        mutarDatos={mutateGrupos}
+                        mutarDatos={mutateTableData}
                         onEliminarPress={(grupo) => { setEvaluarEntity(grupo); setEntityType('Grupo'); onEliminarOpen() }}/>
                 </Tab>
             </Tabs>
-            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={onCreateGrupoSuccess} />
+            <CrearGrupoModal isOpen={isGrupoOpen} onOpenChange={onGrupoOpenChange} idCurso={params.idCurso} user={!esDocente ? session.user : undefined} onCrearGrupoSuccess={mutarTableData} />
             {esDocente &&
                 <>
                     <AsignarRubricaModal mode={asignarMode} isOpen={isAsignarOpen} onOpenChange={onAsignarOpenChange} idCurso={params.idCurso} idUsuario={session.user.id} />

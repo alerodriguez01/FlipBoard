@@ -18,6 +18,7 @@ type TableProps = {
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (user: Usuario) => void
   onEliminarPress?: (user: Usuario) => void
+  mutarDatos: number
 }
 
 const AlumnosTable = (props: TableProps) => {
@@ -73,7 +74,8 @@ const AlumnosTable = (props: TableProps) => {
           <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumno</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
-      } >
+      } 
+      mutarDatos={props.mutarDatos} >
       <TableColumn key="nombre" className="w-[500px] text-sm font-bold">Nombre</TableColumn>
       <TableColumn key="correo" className="w-[500px] text-sm font-bold">Correo electrónico</TableColumn>
       <TableColumn key="evaluar" className="w-[70px] text-sm font-bold" align="center"> </TableColumn>
