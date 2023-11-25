@@ -71,4 +71,5 @@ export type Calificacion = {
     cursoId: string,
     muralId?: string
     muralModel?: Mural
+    fecha: string
 }

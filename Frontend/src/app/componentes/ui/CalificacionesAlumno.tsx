@@ -25,13 +25,15 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
             :
             calificacion?.grupoId ? `Grupal` : "Individual"
 
+        const fecha = new Date(calificacion.fecha)
+
         switch (columnKey) {
             case "nombre":
                 return nombreRubrica
             case "tipo":
                 return tipo
             case "fecha":
-                return "TODO"
+                return fecha.toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: "2-digit", month: "2-digit", year: "2-digit" }) + " a las " + fecha.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: "2-digit", minute: "2-digit" }) + " hs."
             case "mural":
                 return calificacion?.muralId ? calificacion?.muralModel?.nombre : "-"
             case "grupo":
