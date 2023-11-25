@@ -71,7 +71,7 @@ const AlumnosTable = (props: TableProps) => {
       renderCell={(item, cKey) => renderCell(item,cKey)}
       headerRightContent={ props.editable &&
         <div className="flex gap-3">
-          <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumno</Button>
+          <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumnos</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
       } 

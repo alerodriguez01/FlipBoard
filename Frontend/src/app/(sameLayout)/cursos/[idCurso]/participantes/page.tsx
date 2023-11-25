@@ -12,6 +12,7 @@ import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import Link from "next/link";
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { toMayusFirstLetters } from "@/lib/utils";
+import AgregarAlumnoModal from "@/app/componentes/ui/AgregarAlumnoModal";
 
 
 export default function Participantes({ params }: { params: { idCurso: string } }) {
@@ -21,6 +22,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const { isOpen: isGrupoOpen, onOpen: onGrupoOpen, onOpenChange: onGrupoOpenChange } = useDisclosure();
     const { isOpen: isAsignarOpen, onOpen: onAsignarOpen, onOpenChange: onAsignarOpenChange } = useDisclosure();
     const { isOpen: isEvaluarOpen, onOpen: onEvaluarOpen, onOpenChange: onEvaluarOpenChange } = useDisclosure();
+    const { isOpen: isAgregarAlumnoOpen, onOpen: onAgregarAlumnoOpen, onOpenChange: onAgregarAlumnoOpenChange } = useDisclosure();
+
     const esDocente = !!session?.user.cursosDocente.includes(params.idCurso);
     const [evaluarEntity, setEvaluarEntity] = React.useState<Usuario | Grupo>();
     const [entityType, setEntityType] = React.useState<"Usuario" | "Grupo" | undefined>();
@@ -75,7 +78,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         editable={esDocente}
                         evaluable={esDocente}
                         onEvaluarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEvaluarOpen(); }}
-                        onAgregarAlumnoPress={() => alert("TODO: AGREGAR ALUMNO")}
+                        onAgregarAlumnoPress={() => onAgregarAlumnoOpen()}
                         onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }} 
                         onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}
                         mutarDatos={mutateTableData} />
@@ -102,6 +105,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                     <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={entityType === 'Usuario' ? 'alumno' : 'grupo'}
                         entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `Grupo ${(evaluarEntity as Grupo)?.numero}`}
                         onEliminar={onEliminarEntity} />
+                    <AgregarAlumnoModal isOpen={isAgregarAlumnoOpen} onOpenChange={onAgregarAlumnoOpenChange} idCurso={params.idCurso} mutarDatos={mutarTableData} idUser={session?.user.id}/>
                 </>
             }
         </section>
