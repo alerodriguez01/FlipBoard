@@ -16,7 +16,7 @@ export default function Rubricas() {
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
     return (
-        <section className="p-5 overflow-auto">
+        <section className="p-8 overflow-auto">
             <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} userId={session?.user.id}/>
             <Link href={'/rubricas/crear'} passHref>
                 <Button
