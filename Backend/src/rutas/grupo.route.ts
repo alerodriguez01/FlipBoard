@@ -154,4 +154,53 @@ router.get("/:idCurso/grupos", grupoController.getGruposFromCurso)
  */
 router.post("/:idCurso/grupos", grupoController.createGrupo);
 
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/grupos/{idGrupo}:
+ *   delete:
+ *     summary: Eliminar un Grupo del curso
+ *     tags: [Grupo]
+ *     parameters:
+ *       - name: idGrupo
+ *         in: path
+ *         required: true
+ *         description: El id del Grupo
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *       - name: docente
+ *         in: query
+ *         required: true
+ *         description: El id del docente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65326ed824fea7e06d01e20b
+ *     responses:
+ *       204:
+ *         description: Grupo eliminado exitosamente
+ *       400:
+ *         description: El usuario no esta autorizado para eliminar el Grupo
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Docente' en 'Grupo'
+ *       404:
+ *         description: El Grupo no fue encontrado
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Grupo' en la BDD
+ */
+router.delete("/:idCurso/grupos/:idGrupo", grupoController.deleteGrupoFromCurso);
+
 export default router;

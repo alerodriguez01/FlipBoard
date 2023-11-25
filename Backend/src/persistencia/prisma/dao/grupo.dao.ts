@@ -107,4 +107,17 @@ export class GrupoPrismaDAO implements GrupoDataSource {
             throw new InvalidValueError("Grupo", "id"); // el id no tiene los 12 bytes
         }
     }
+
+    public async deleteGrupoFromCurso(idGrupo: string) {
+
+        try {
+            return await this.prisma.grupo.delete({
+                where: {
+                    id: idGrupo
+                }
+            });
+        } catch (error) {
+            throw new InvalidValueError("Grupo", "idGrupo"); // el id no tiene los 12 bytes
+        }
+    }
 }
