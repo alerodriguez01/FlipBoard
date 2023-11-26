@@ -95,6 +95,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                                                         startContent={<EditIcon theme={currentTheme} />}
                                                         onPress={() => alert(`TODO: MODIFICAR RUBRICA id:${rubric.id}`)}
                                                         variant="flat"
+                                                        className="hidden"
                                                     >
                                                         Modificar
                                                     </Button>
