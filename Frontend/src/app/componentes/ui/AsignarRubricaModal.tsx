@@ -63,7 +63,10 @@ const AsignarRubricaModal = (props:  ModalProps) => {
       const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + asignarEndpoint, {
           method: 'PUT',
           body: JSON.stringify({
-              idRubrica: JSON.parse(data.rubrica).id
+              nombre: props.mural?.nombre,
+              idRubrica: JSON.parse(data.rubrica).id,
+              idDocente: props.idUsuario,
+              idCurso: props.idCurso
           }),
           headers: {
               'Content-Type': 'application/json'
