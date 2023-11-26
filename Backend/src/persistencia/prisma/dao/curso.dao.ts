@@ -183,17 +183,30 @@ export class CursoPrismaDAO implements CursoDataSource {
     async deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null> {
 
         try {
-            const curso = await this.prisma.curso.update({
-                where: {
-                    id: idCurso
-                },
-                data: {
-                    participantesUser: {
-                        disconnect: { id: idAlumno }
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // borro todas las calificaciones de usuario
+                await this.prisma.calificacion.deleteMany({
+                    where: { AND: [
+                        { usuarioId: idAlumno },
+                        { cursoId: idCurso }
+                    ] }
+                })
+
+
+                const curso = await this.prisma.curso.update({
+                    where: {
+                        id: idCurso
+                    },
+                    data: {
+                        participantesUser: {
+                            disconnect: { id: idAlumno }
+                        }
                     }
-                }
-            });
-            return curso;
+                });
+                return curso;
+            })
 
         } catch (err) {
             throw new InvalidValueError("Curso o Alumno", "idCurso o idAlumno"); // el id no tiene los 12 bytes
