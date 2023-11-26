@@ -127,7 +127,7 @@ const RubricasAccordion = (props: AccordionProps) => {
                 </>
             }
 
-            <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} type="rubrica" entityName={toMayusFirstLetters(rubricaSelected?.nombre || "")} onEliminar={onEliminarRubrica} />
+            <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} type="rubrica" entityName={toMayusFirstLetters(rubricaSelected?.nombre || "")} onEliminar={onEliminarRubrica} extraMessage="NOTA: Se eliminará la rubrica y todas las calificaciones realizadas."/>
         </section>
     );
 }

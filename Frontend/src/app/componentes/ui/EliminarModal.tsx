@@ -7,9 +7,10 @@ type EliminarModalProps = {
     onEliminar: () => Promise<boolean>
     entityName: string
     type: string
+    extraMessage?: string
 }
 
-const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entityName, type }: EliminarModalProps) => {
+const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entityName, type, extraMessage }: EliminarModalProps) => {
 
     const [error, setError] = useState("")
 
@@ -43,6 +44,7 @@ const EliminarModal = ({ isOpen, onOpenChange, onEliminar, entityName, type }: E
                         <ModalBody>
                             <p> ¿Estás seguro que deseas eliminar <span className="italic font-semibold">{entityName}</span>? </p>
                             {error !== "" && <p className="text-red-500">{error}</p>}
+                            {extraMessage && <p className="text-gray-500">{extraMessage}</p>}
                         </ModalBody>
                         <ModalFooter>
                             <Button variant="light" onPress={onClose}>

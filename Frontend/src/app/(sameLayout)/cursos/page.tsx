@@ -130,7 +130,7 @@ export default function Cursos() {
           <CrearModificarCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmitCurso={mutate} idDocente={session.user.id} type="crear"/>
           <CrearModificarCursoModal isOpen={isOpenModificar} onOpenChange={onOpenChangeModificar} onSubmitCurso={mutate} idDocente={session.user.id} type="modificar" data={cursoSelected}/>
           <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={cursoSelected?.id  || ""} cursoTitle={cursoSelected?.nombre || ""} />
-          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""}/>
+          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""} extraMessage="NOTA: Se eliminará el curso y todo su contenido."/>
         </>
       }
 
