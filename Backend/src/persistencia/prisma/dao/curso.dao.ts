@@ -54,6 +54,22 @@ export class CursoPrismaDAO implements CursoDataSource {
         return cursoSaved;
     }
 
+    async updateCurso(idCurso: string, curso: Curso): Promise<Curso> {
+        const cursoUpdated = await this.prisma.curso.update({
+            where: {
+                id: idCurso
+            },
+            data: {
+                ...curso,
+                docentesModel: {
+                    connect: [{ id: curso.docentes[0] }]
+                }
+            }
+        });
+
+        return cursoUpdated;
+    }
+
     /*
         Obtener todos los cursos
     */
