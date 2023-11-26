@@ -1,7 +1,7 @@
 import { Rubrica, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import { RubricaDataSource } from "../../datasource/rubrica.datasource.js";
-import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
+import { DeleteError, InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 
@@ -118,13 +118,25 @@ export class RubricaPrismaDAO implements RubricaDataSource {
     async deleteRubricaById(idRubrica: string) {
 
         try {
-            const rubrica = await this.prisma.rubrica.delete({
-                where: { id: idRubrica }
-            })
-            return rubrica;
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // borro todas las calificaciones de la rubrica
+                await this.prisma.calificacion.deleteMany({
+                    where: { rubricaId: idRubrica }
+                })
+
+                const rubrica = await this.prisma.rubrica.delete({
+                    where: { id: idRubrica }
+                })
+                return rubrica;
+
+            });
+
 
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === "P2025") throw new InvalidValueError("Rubrica", "idRubrica"); // el idRubrica no tiene los 12 bytes
+            //if (error instanceof PrismaClientKnownRequestError && error.code === "P2014") throw new DeleteError("Rubrica", ["Calificacion"]); // ya existe una relacion y no se puede eliminar
             throw new NotFoundError("Rubrica"); // no se encontro la rubrica
         }
 

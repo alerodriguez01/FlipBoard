@@ -11,4 +11,12 @@ class InvalidValueError extends Error {
     this.name = `${model}Invalid${attr}ValueError`
   }
 }
-export { NotFoundError, InvalidValueError }
+
+class DeleteError extends Error {
+  constructor (modelA: string, modelsB: string[]){
+    super(`Ya existe una relacion entre ${modelA} y ${modelsB.join(', ')}`)
+    this.name = `Delete${modelA}Error`
+  }
+}
+
+export { NotFoundError, InvalidValueError, DeleteError }
