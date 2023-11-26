@@ -78,7 +78,9 @@ async function createCalificacion(calificacion: Calificacion) {
 /*
     Obtener las calificaciones de un curso (opcionalmente aquellas asociadas a una rubrica en particular)
 */
-async function getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean}) {
+async function getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean, nombreUser?: string}) {
+
+    params.nombreUser = params.nombreUser?.toLowerCase();
 
     const calificaciones = await califcacionRepository.getCalificacionesFromCurso(idCurso, limit, offset, params);
     return calificaciones;

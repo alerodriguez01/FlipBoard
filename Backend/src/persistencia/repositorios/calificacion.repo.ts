@@ -28,7 +28,7 @@ export class CalificacionRepository implements CalificacionDataSource {
         return await this.calificacionDAO.createCalificacion(calificacion);
     }
 
-    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean}) {
+    public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean, nombreUser?: string}) {
         return await this.calificacionDAO.getCalificacionesFromCurso(idCurso, limit, offset, params);
     }
 }
