@@ -58,21 +58,22 @@ async function getAllRubricasByUserId(userId: string, nombreRub?: string) {
 /*
     Obtener las rubricas asociadas a los alumnos de un curso
 */
-async function getRubricasAlumnosFromCurso(idCurso: string) : Promise<Rubrica[]> {
+async function getRubricasAlumnosFromCurso(idCurso: string, nombre?: string) : Promise<Rubrica[]> {
     
         const curso = await cursoRepository.getCursoByIdWithRubricaAlumnos(idCurso);
         if (!curso) throw new NotFoundError('Curso');
-        return curso.rubricasAlumnosModel;
+        console.log(nombre, curso.rubricasAlumnosModel);
+        return !!nombre ? curso.rubricasAlumnosModel.filter(rub => rub.nombre.toLowerCase().includes(nombre.toLowerCase())) : curso.rubricasAlumnosModel;
 }
 
 /*
     Obtener las rubricas asociadas a los grupos de un curso
 */
-async function getRubricasGruposFromCurso(idCurso: string) : Promise<Rubrica[]> {
+async function getRubricasGruposFromCurso(idCurso: string, nombre?: string) : Promise<Rubrica[]> {
     
     const curso = await cursoRepository.getCursoByIdWithRubricaGrupos(idCurso);
     if (!curso) throw new NotFoundError('Curso');
-    return curso.rubricasGruposModel;
+    return !!nombre ? curso.rubricasGruposModel.filter(rub => rub.nombre.toLowerCase().includes(nombre.toLowerCase())) : curso.rubricasGruposModel;
 }
 
 /*

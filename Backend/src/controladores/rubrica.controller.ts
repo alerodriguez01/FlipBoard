@@ -69,9 +69,10 @@ async function getAllRubricasByUserId(req: Request, res: Response) {
 async function getRubricasAlumnosFromCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
+    const nombre = req.query.nombre;
 
     try {
-        const rubricas = await service.getRubricasAlumnosFromCurso(cursoId);
+        const rubricas = await service.getRubricasAlumnosFromCurso(cursoId, nombre?.toString());
         return res.status(200).json(rubricas);
 
     } catch (err) {
@@ -88,9 +89,10 @@ async function getRubricasAlumnosFromCurso(req: Request, res: Response) {
 async function getRubricasGruposFromCurso(req: Request, res: Response) {
 
     const cursoId = req.params.idCurso;
+    const nombre = req.query.nombre;
 
     try {
-        const rubricas = await service.getRubricasGruposFromCurso(cursoId);
+        const rubricas = await service.getRubricasGruposFromCurso(cursoId, nombre?.toString());
         return res.status(200).json(rubricas);
 
     } catch (err) {
