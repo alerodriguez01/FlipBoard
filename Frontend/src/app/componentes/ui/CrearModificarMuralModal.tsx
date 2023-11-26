@@ -22,6 +22,7 @@ type CrearModificarMuralModalProps = {
     setRubrica: React.Dispatch<React.SetStateAction<Rubrica | null>>
     type: "crear" | "modificar",
     muralToModify?: Mural
+    setMuralToModify?: React.Dispatch<React.SetStateAction<Mural | undefined>>
 }
 
 // schema para validar los datos del formulario
@@ -33,7 +34,7 @@ const muralSchema = z.object({
 type MuralCreate = z.infer<typeof muralSchema> & Rubrica
     & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
-const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, openAsignarRubrica, rubrica, setRubrica, type, muralToModify }: CrearModificarMuralModalProps) => {
+const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, openAsignarRubrica, rubrica, setRubrica, type, muralToModify, setMuralToModify }: CrearModificarMuralModalProps) => {
 
     const { theme, systemTheme, setTheme } = useTheme()
     const currentTheme = theme === "system" ? systemTheme : theme
@@ -105,6 +106,10 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
             // reiniciar el estado del modal si se cierra
             setRubrica(null) // seteo en null la rubrica para que si se crea otro mural, no quede asignada la misma rubrica
             reset()
+            
+            // necesario porque si se cierra el modal (se resetea en la linea anterior) y se vuelve a abrir, 
+            // el useEffect de muralToModify no se ejecuta y no se setea el nombre y descripcion del mural a modificar
+            setMuralToModify?.(undefined) 
         }
 
         if (goToAsignarRubrica) {

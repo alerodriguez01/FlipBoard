@@ -190,6 +190,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
             setRubrica={setRubricaAsignadaNewMural}
             type="modificar"
             muralToModify={selectedMural}
+            setMuralToModify={setSelectedMural}
           />
           <AsignarRubricaModal
             idCurso={params.idCurso}
