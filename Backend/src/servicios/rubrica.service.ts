@@ -62,7 +62,6 @@ async function getRubricasAlumnosFromCurso(idCurso: string, nombre?: string) : P
     
         const curso = await cursoRepository.getCursoByIdWithRubricaAlumnos(idCurso);
         if (!curso) throw new NotFoundError('Curso');
-        console.log(nombre, curso.rubricasAlumnosModel);
         return !!nombre ? curso.rubricasAlumnosModel.filter(rub => rub.nombre.toLowerCase().includes(nombre.toLowerCase())) : curso.rubricasAlumnosModel;
 }
 
