@@ -344,6 +344,14 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  *           type: string
  *         example:
  *           65397634490b7145b838789c
+ *       - name: nombre
+ *         in: query
+ *         required: false
+ *         description: nombre del alumno o integrante del grupo por el que se quiere filtrar
+ *         schema:
+ *           type: string
+ *         example:
+ *           "Tomas P"
  *     responses:
  *       200:
  *         description: Calificaciones del curso encontradas
@@ -420,6 +428,14 @@ router.get("/:idCurso/calificaciones", calificacionController.getCalificacionesF
  *           type: number
  *         example:
  *           5
+ *       - name: nombre
+ *         in: query
+ *         required: false
+ *         description: nombre del integrante del grupo por el que se quiere filtrar
+ *         schema:
+ *           type: string
+ *         example:
+ *           "Tomas P"
  *     responses:
  *       200:
  *         description: Calificaciones del curso encontradas
@@ -492,6 +508,14 @@ router.get("/:idCurso/calificaciones/grupos", calificacionController.getCalifica
  *           type: number
  *         example:
  *           5
+ *       - name: nombre
+ *         in: query
+ *         required: false
+ *         description: nombre del alumno por el que se quiere filtrar
+ *         schema:
+ *           type: string
+ *         example:
+ *           "Tomas P"
  *     responses:
  *       200:
  *         description: Calificaciones del curso encontradas
