@@ -3,7 +3,7 @@ import { generateContenidoMural } from '@/lib/excalidraw_utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { set, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { RubricaIcon } from './icons/RubricaIcon'
@@ -47,10 +47,18 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
         },
         reset, // funcion que resetea el formulario
         getValues,
+        setValue,
         setError // funcion que permite asociar un error a un input -> setError("nombreInput", {message: "error"})
     } = useForm<MuralCreate>({
         resolver: zodResolver(muralSchema)
     })
+
+    useEffect(() => {
+        if (muralToModify) {
+            setValue("nombre", muralToModify.nombre)
+            setValue("descripcion", muralToModify.descripcion)
+        }
+    }, [muralToModify])
 
     const onSubmit = async (data: MuralCreate, onClose: () => void) => {
 
@@ -123,7 +131,6 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
                                 type="text"
                                 label="Nombre"
                                 placeholder="Ej.: Teoría de grafos"
-                                defaultValue={muralToModify?.nombre}
                                 isRequired
                                 isInvalid={!!errors.nombre} // !! -> convierte a booleano la existencia del error en la valdadacion del input
                                 errorMessage={errors.nombre?.message} // se isInvalid es true, se muestra el mensaje de error
@@ -133,7 +140,6 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
                                 variant="bordered"
                                 label="Descripción"
                                 placeholder="Ej.: Se abordarán los conceptos introductorios de teoría de grafos"
-                                defaultValue={muralToModify?.descripcion}
                                 maxRows={4}
                                 isInvalid={!!errors.descripcion}
                                 errorMessage={errors.descripcion?.message}
@@ -148,18 +154,20 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
                                     :
                                     <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
                                 }
-                                <Button
-                                    className='min-w-[50%]'
-                                    variant="ghost"
-                                    startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
-                                    onPress={() => personalizedOnOpenChange(false, true)}
-                                >
-                                    {rubrica ?
-                                        "Cambiar rúbrica"
-                                        :
-                                        "Asignar rúbrica"
-                                    }
-                                </Button>
+                                {type === "crear" &&
+                                    <Button
+                                        className='min-w-[50%]'
+                                        variant="ghost"
+                                        startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
+                                        onPress={() => personalizedOnOpenChange(false, true)}
+                                    >
+                                        {rubrica ?
+                                            "Cambiar rúbrica"
+                                            :
+                                            "Asignar rúbrica"
+                                        }
+                                    </Button>
+                                }
                             </div>
                             {!rubrica && <p className='text-xs'>* Puedes asignarla más tarde</p>}
 

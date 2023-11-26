@@ -1,5 +1,5 @@
 'use client'
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
@@ -29,13 +29,23 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
       errors,
       isSubmitting
     },
-    setError
+    setError,
+    setValue
   } = useForm<CursoForm>({
     resolver: zodResolver(cursoSchema)
   });
 
   const { data: session, status, update } = useSession();
 
+  useEffect(() => {
+    if (props.data) {
+      setValue("nombre", props.data.nombre);
+      setValue("tema", props.data.tema || "");
+      setValue("sitioWeb", props.data.sitioweb || "");
+      setValue("descripcion", props.data.descripcion || "");
+      setValue("contacto", props.data.emailContacto);
+    }
+  }, [props.data])
 
   const onSubmit = async (onClose: Function, data: CursoForm) => {
 
@@ -101,7 +111,6 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
                   variant="bordered"
                   label="Nombre"
                   placeholder="Nombre del curso"
-                  defaultValue={props.data?.nombre}
                   isRequired
                   isInvalid={!!errors.nombre}
                   errorMessage={errors.nombre?.message}
@@ -110,25 +119,21 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
                   variant="bordered"
                   label="Tema"
                   placeholder="Tema del curso"
-                  defaultValue={props.data?.tema}
                   {...register("tema")} />
                 <Input
                   variant="bordered"
                   label="Descripción"
                   placeholder="Descripción del curso"
-                  defaultValue={props.data?.descripcion}
                   {...register("descripcion")} />
                 <Input
                   variant="bordered"
                   label="Sitio web"
                   placeholder="Sitio web del curso"
-                  defaultValue={props.data?.sitioweb}
                   {...register("sitioWeb")} />
                 <Input
                   variant="bordered"
                   label="Contacto"
                   placeholder="Correo electrónico de contacto"
-                  defaultValue={props.data?.emailContacto}
                   isRequired
                   isInvalid={!!errors.contacto}
                   errorMessage={errors.contacto?.message}
