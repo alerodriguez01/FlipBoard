@@ -152,6 +152,27 @@ export class MuralPrismaDAO implements MuralDataSource {
 
     }
 
+    public async updateMural(idMural: string, mural: Mural) {
+
+        try {
+            return await this.prisma.mural.update({
+                where: {
+                    id: idMural
+                },
+                data: {
+                    nombre: mural.nombre,
+                    descripcion: mural.descripcion,
+                    rubricaModel: mural.rubricaId ? { connect: { id: mural.rubricaId } } : undefined
+                }
+            })
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Mural o Rubrica", "idMural o idRubrica"); // el id no tiene los 12 bytes
+            throw new NotFoundError("Mural o Rubrica"); // no se encontro alguna de las entidades
+        }
+
+    }
+
 }
 
 

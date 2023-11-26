@@ -136,7 +136,7 @@ router.get("/:idCurso/murales", controller.getMuralesFromCurso);
  * @swagger
  * /api/cursos/murales/{idMural}:
  *   put:
- *    summary: Asociar una rubrica al mural
+ *    summary: Actualizar una rubrica
  *    tags: [Mural]
  *    parameters:
  *      - name: idMural
@@ -152,24 +152,30 @@ router.get("/:idCurso/murales", controller.getMuralesFromCurso);
  *      content:
  *        application/json:
  *          example:
- *            idRubrica: 653968d5642003e96a382248
+ *            nombre: Mural de Matemáticas
+ *            contenido: Contenido del mural de matemáticas
+ *            descripcion: Mural de matemáticas para el curso (opcional)
+ *            idRubrica: 65326ed824fea7e06d01e20d (opcional)
+ *            idDocente: 65326ed824fea7e06d01e20c
+ *            idCurso: 65326ed824fea7e06d01e20c
  *    responses:
- *      204:
+ *      200:
  *        description: Rubrica asociada exitosamente
  *      400:
- *        description: El parametro idMural o idRubrica es invalido
+ *        description: El parametro idMural o idRubrica o idDocente es invalido
  *        content:
  *          application/json:
  *            example:
- *              error: Valor invalido para el atributo idRubrica o idMural de Rubrica o Mural
+ *              error: Valor invalido para el atributo idRubrica o idMural o idDocente de Rubrica o Mural
  *      404:
  *        description: No se ha podido encontrar el mural o la rubrica
  *        content:
  *          application/json:
  *            example:
- *              error: No se ha podido encontrar 'Rubrica o Mural' en la BDD
+ *              error: No se ha podido encontrar 'Rubrica o Mural o Usuario' en la BDD
  */
-router.put("/murales/:idMural", controller.asociateRubricaToMural);
+// router.put("/murales/:idMural", controller.asociateRubricaToMural);
+router.put("/murales/:idMural", controller.updateMural);
 
 /**
  * @swagger

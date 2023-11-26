@@ -1,6 +1,6 @@
 'use client'
 import { AsignarRubricaModal } from "@/app/componentes/ui/AsignarRubricaModal";
-import CrearMuralModal from "@/app/componentes/ui/CrearMuralModal";
+import CrearModificarMuralModal from "@/app/componentes/ui/CrearModificarMuralModal";
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
@@ -31,12 +31,17 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { isOpen: isAsignarOpen, onOpen: onAsignarOpen, onOpenChange: onAsignarOpenChange } = useDisclosure();
   const { isOpen: isAsignarNewMuralOpen, onOpen: onAsignarNewMuralOpen, onOpenChange: onAsignarNewMuralOpenChange } = useDisclosure();
   const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
+  const { isOpen: isModificarOpen, onOpen: onModificarOpen, onOpenChange: onModificarOpenChange } = useDisclosure();
 
   const [search, setSearch] = useState("");
 
+  const [typeMuralModal, setTypeMuralModal] = useState<"crear" | "modificar">("crear");
   const [rubricaAsignadaNewMural, setRubricaAsignadaNewMural] = useState<Rubrica | null>(null); // rubrica que se asigna si se crea un nuevo mural
   useEffect(() => {
-    if (rubricaAsignadaNewMural) onCrearOpen();
+    if (rubricaAsignadaNewMural){
+       if(typeMuralModal === "crear") onCrearOpen();
+        else onModificarOpen();
+    }
   }, [rubricaAsignadaNewMural])
 
   const searchParams = useSearchParams();
@@ -141,8 +146,9 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
-                  onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onAsignarOpen(); }}
+                  onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural);  setTypeMuralModal("crear"); onAsignarOpen(); }}
                   onEliminarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onEliminarOpen(); }}
+                  onModificarPress={(id, nombre) => { setSelectedMural(m); setTypeMuralModal("modificar"); onModificarOpen(); }}
                 />)
             })
 
@@ -162,7 +168,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
 
       {isDocente &&
         <>
-          <CrearMuralModal
+          <CrearModificarMuralModal
             isOpen={isCrearOpen}
             onOpenChange={onCrearOpenChange}
             mutateData={mutate}
@@ -171,6 +177,19 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
             openAsignarRubrica={onAsignarNewMuralOpen}
             rubrica={rubricaAsignadaNewMural}
             setRubrica={setRubricaAsignadaNewMural}
+            type="crear"
+          />
+          <CrearModificarMuralModal
+            isOpen={isModificarOpen}
+            onOpenChange={onModificarOpenChange}
+            mutateData={mutate}
+            cursoId={params.idCurso}
+            userId={session.user.id}
+            openAsignarRubrica={onAsignarNewMuralOpen}
+            rubrica={rubricaAsignadaNewMural ? rubricaAsignadaNewMural : selectedMural?.rubricaModel}
+            setRubrica={setRubricaAsignadaNewMural}
+            type="modificar"
+            muralToModify={selectedMural}
           />
           <AsignarRubricaModal
             idCurso={params.idCurso}
@@ -184,7 +203,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
             className="bg-[#181e25] text-white fixed bottom-10 right-10 z-10 dark:border dark:border-gray-700"
             startContent={<PlusIcon color="#FFFFFF" />}
             size="lg"
-            onPress={onCrearOpen}> Crear nuevo mural </Button>
+            onPress={() => {onCrearOpen(); setTypeMuralModal("crear")}}> Crear nuevo mural </Button>
         </>
       }
     </section>
