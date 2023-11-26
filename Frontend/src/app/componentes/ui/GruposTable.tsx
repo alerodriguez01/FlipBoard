@@ -40,7 +40,7 @@ const GruposTable = (props: TableProps) => {
     if (props.editable && columnKey === "actions") 
       return (
         <div className="flex flex-row gap-1">
-          <Button onPress={() => alert(`TODO: MODIFICAR idGrupo: ${grupo.id}`)} isIconOnly variant="light">
+          <Button onPress={() => alert(`TODO: MODIFICAR idGrupo: ${grupo.id}`)} isIconOnly variant="light" className="hidden">
             <EditIcon theme={currentTheme}/>
           </Button>
           <Button onPress={() => props.onEliminarPress?.(grupo) }isIconOnly variant="light">

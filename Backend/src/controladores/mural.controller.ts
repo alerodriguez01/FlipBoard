@@ -87,6 +87,31 @@ async function createMural(req: Request, res: Response) {
 
 }
 
+async function updateMural(req: Request, res: Response) {
+
+    const idMural = req.params.idMural;
+    const { nombre, descripcion, idRubrica, idDocente, idCurso } = req.body;
+
+    if (!nombre || !idCurso || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    const mural = {
+        nombre,
+        descripcion,
+        rubricaId: idRubrica
+    }
+
+    try {
+        const newMural = await service.updateMural(idMural, mural as Mural, idCurso, idDocente)
+        return res.status(200).json(newMural);
+
+    } catch (err) {
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
+        if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
+
+    }
+
+}
+
 async function deleteMuralById(req: Request, res: Response) {
 
     const idMural = req.params.idMural;
@@ -103,4 +128,4 @@ async function deleteMuralById(req: Request, res: Response) {
     }
 }
 
-export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural, deleteMuralById };
+export default { getMuralById, getMuralesFromCurso, asociateRubricaToMural, createMural, deleteMuralById, updateMural };

@@ -35,21 +35,21 @@ export class GrupoPrismaDAO implements GrupoDataSource {
         }
 
         try {
-            if(limit === 0) {
+            if (limit === 0) {
                 const [grupos, count] = await this.prisma.$transaction([
-                  this.prisma.grupo.findMany(query),
-                  this.prisma.grupo.count({where: query.where})
+                    this.prisma.grupo.findMany(query),
+                    this.prisma.grupo.count({ where: query.where })
                 ]);
-        
-                return {count: count, result: grupos}
-              }
-              
-              const [grupos, count] = await this.prisma.$transaction([
-                this.prisma.grupo.findMany({...query, take: limit}),
-                this.prisma.grupo.count({where: query.where})
-              ]);
-        
-              return {count: count, result: grupos}
+
+                return { count: count, result: grupos }
+            }
+
+            const [grupos, count] = await this.prisma.$transaction([
+                this.prisma.grupo.findMany({ ...query, take: limit }),
+                this.prisma.grupo.count({ where: query.where })
+            ]);
+
+            return { count: count, result: grupos }
 
         } catch (error) {
             throw new InvalidValueError("Grupo", "idCurso"); // el id no tiene los 12 bytes
@@ -102,7 +102,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
                 where: { id: id },
                 include: { integrantesModel: true }
             });
-            
+
         } catch (error) {
             throw new InvalidValueError("Grupo", "id"); // el id no tiene los 12 bytes
         }
@@ -111,11 +111,22 @@ export class GrupoPrismaDAO implements GrupoDataSource {
     public async deleteGrupoFromCurso(idGrupo: string) {
 
         try {
-            return await this.prisma.grupo.delete({
-                where: {
-                    id: idGrupo
-                }
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // borro todas las calificaciones del grupo
+                await this.prisma.calificacion.deleteMany({
+                    where: { grupoId: idGrupo }
+                })
+
+                return await this.prisma.grupo.delete({
+                    where: {
+                        id: idGrupo
+                    }
+                })
+
             });
+
         } catch (error) {
             throw new InvalidValueError("Grupo", "idGrupo"); // el id no tiene los 12 bytes
         }

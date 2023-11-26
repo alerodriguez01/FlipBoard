@@ -1,7 +1,7 @@
 import { Mural, PrismaClient } from "@prisma/client";
 import PrismaSingleton from "./dbmanager.js";
 import MuralDataSource from "../../datasource/mural.datasource.js";
-import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
+import { DeleteError, InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export class MuralPrismaDAO implements MuralDataSource {
@@ -140,14 +140,46 @@ export class MuralPrismaDAO implements MuralDataSource {
     public async deleteMuralById(idMural: string) {
 
         try {
-            return await this.prisma.mural.delete({
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // borro todas las calificaciones asociadas a este mural
+                await this.prisma.calificacion.deleteMany({
+                    where: { muralId: idMural }
+                })
+
+                return await this.prisma.mural.delete({
+                    where: {
+                        id: idMural
+                    }
+                })
+
+            });
+
+        } catch (error) {
+            //if (error instanceof PrismaClientKnownRequestError && error.code === "P2014") throw new DeleteError("Mural", ["Calificacion"]); // ya existe una relacion y no se puede eliminar
+            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
+        }
+
+    }
+
+    public async updateMural(idMural: string, mural: Mural) {
+
+        try {
+            return await this.prisma.mural.update({
                 where: {
                     id: idMural
+                },
+                data: {
+                    nombre: mural.nombre,
+                    descripcion: mural.descripcion,
+                    rubricaModel: mural.rubricaId ? { connect: { id: mural.rubricaId } } : undefined
                 }
             })
 
         } catch (error) {
-            throw new InvalidValueError("Mural", "idMural"); // el id no tiene los 12 bytes
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Mural o Rubrica", "idMural o idRubrica"); // el id no tiene los 12 bytes
+            throw new NotFoundError("Mural o Rubrica"); // no se encontro alguna de las entidades
         }
 
     }

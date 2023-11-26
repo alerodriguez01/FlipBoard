@@ -144,6 +144,54 @@ router.post("/cursos", controller.saveCurso);
 
 /**
  * @swagger
+ * /api/cursos/{idCurso}:
+ *   put:
+ *    summary: Actualizar un curso
+ *    tags: [Curso]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            nombre: Curso de Matemáticas
+ *            tema: Matemáticas Avanzadas
+ *            sitioWeb: https://matematicas.com
+ *            descripcion: Curso de matemáticas avanzadas
+ *            emailContacto: contacto@matematicas.com
+ *            docentes: ["65326ed824fea7e06d01e207"]
+ *    responses:
+ *      200: 
+ *        description: Curso actualizado exitosamente
+ *        content:
+ *          application/json:
+ *            example:
+ *              id: 65326ed824fea7e06d01e20b
+ *              nombre: Curso de Matemáticas
+ *              tema: Matemáticas Avanzadas
+ *              sitioWeb: https://matematicas.com
+ *              descripcion: Curso de matemáticas avanzadas
+ *              emailContacto: contacto@matematicas.com
+ *              docentes: ["65326ed824fea7e06d01e207"]
+ *              rubricasGrupos: []
+ *              rubricasAlumnos: []
+ *              participantes: []
+ *      400:
+ *        description: Faltan datos obligatorios
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Faltan datos obligatorios
+ *      404:
+ *        description: No se encontro el docente
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Docente' en la BDD
+ */
+router.put("/cursos/:idCurso", controller.updateCurso);
+
+/**
+ * @swagger
  * /api/cursos:
  *   get:
  *     summary: Obtener todos los cursos  

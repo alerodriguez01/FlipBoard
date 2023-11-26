@@ -11,6 +11,7 @@ type CursoRubricaGrupo = Curso & {
 export default interface CursoDataSource {
     getCursoById(idCurso: string): Promise<Curso | null>;
     createCurso(curso: Curso): Promise<Curso>;
+    updateCurso(idCurso: string, curso: Curso): Promise<Curso>;
     getCursos(): Promise<Curso[]>;
     addUsuario(idCurso: string, idUser: string): Promise<Curso | null >;
     getCursoByIdWithRubricaAlumnos(idCurso: string) : Promise<CursoRubricaAlumno | null>,

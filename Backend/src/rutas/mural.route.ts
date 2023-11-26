@@ -21,7 +21,7 @@ const router = Router();
  *           description: La descripcion del mural
  *         contenido:
  *           type: string
- *           description: El contenido del mural
+ *           description: El room del mural colaborativo
  *         rubricaId:
  *           type: string
  *           description: El id de la rubrica asociada al mural
@@ -35,7 +35,7 @@ const router = Router();
  *       example:
  *         id: 65326ed824fea7e06d01e211
  *         nombre: Mural de Matemáticas
- *         contenido: Contenido del mural de matemáticas
+ *         contenido: 272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA
  *         descripcion: Mural de matemáticas para el curso
  *         rubricaId: 65326ed824fea7e06d01e20d
  *         cursoId: 65326ed824fea7e06d01e20b
@@ -119,7 +119,7 @@ router.get("/murales/:idMural", controller.getMuralById);
  *                 murales:
  *                   - id: 653460ae39e91bc002bf42fb
  *                     nombre: Mural de Matemáticas
- *                     contenido: Contenido del mural de matemáticas
+ *                     contenido: 272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA
  *                     descripcion: Mural de matemáticas para el curso
  *                     rubricaId: 653460ae39e91bc002bf42f7
  *                     cursoId: 653460ae39e91bc002bf42f5                              
@@ -136,7 +136,7 @@ router.get("/:idCurso/murales", controller.getMuralesFromCurso);
  * @swagger
  * /api/cursos/murales/{idMural}:
  *   put:
- *    summary: Asociar una rubrica al mural
+ *    summary: Actualizar un mural
  *    tags: [Mural]
  *    parameters:
  *      - name: idMural
@@ -152,24 +152,29 @@ router.get("/:idCurso/murales", controller.getMuralesFromCurso);
  *      content:
  *        application/json:
  *          example:
- *            idRubrica: 653968d5642003e96a382248
+ *            nombre: Mural de Matemáticas 
+ *            descripcion: Mural de matemáticas para el curso (opcional)
+ *            idRubrica: 65326ed824fea7e06d01e20d (opcional)
+ *            idDocente: 65326ed824fea7e06d01e20c
+ *            idCurso: 65326ed824fea7e06d01e20c
  *    responses:
- *      204:
- *        description: Rubrica asociada exitosamente
+ *      200:
+ *        description: Mural actualizado exitosamente
  *      400:
- *        description: El parametro idMural o idRubrica es invalido
+ *        description: El parametro idMural o idRubrica o idDocente es invalido
  *        content:
  *          application/json:
  *            example:
- *              error: Valor invalido para el atributo idRubrica o idMural de Rubrica o Mural
+ *              error: Valor invalido para el atributo idRubrica o idMural o idDocente de Rubrica o Mural
  *      404:
  *        description: No se ha podido encontrar el mural o la rubrica
  *        content:
  *          application/json:
  *            example:
- *              error: No se ha podido encontrar 'Rubrica o Mural' en la BDD
+ *              error: No se ha podido encontrar 'Rubrica o Mural o Usuario' en la BDD
  */
-router.put("/murales/:idMural", controller.asociateRubricaToMural);
+// router.put("/murales/:idMural", controller.asociateRubricaToMural);
+router.put("/murales/:idMural", controller.updateMural);
 
 /**
  * @swagger
@@ -201,7 +206,7 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  *                description: La descripcion del mural
  *              contenido:
  *                type: string
- *                description: El contenido del mural
+ *                description: El room del mural colaborativo
  *              idRubrica:
  *                type: string
  *                description: El id de la rubrica asociada al mural
@@ -214,7 +219,7 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  *              - idDocente
  *            example:
  *              nombre: Mural de Matemáticas
- *              contenido: Contenido del mural de matemáticas
+ *              contenido: 272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA
  *              descripcion: Mural de matemáticas para el curso
  *              idRubrica: 65326ed824fea7e06d01e20d
  *              idDocente: 65326ed824fea7e06d01e20c
@@ -226,7 +231,7 @@ router.put("/murales/:idMural", controller.asociateRubricaToMural);
  *            example:
  *            - id: 653460ae39e91bc002bf42fb
  *              nombre: Mural de Matemáticas
- *              contenido: Contenido del mural de matemáticas
+ *              contenido: 272e3f8041a653b15259,RlYB8Z0stMspXIrCEgzESA
  *              descripcion: Mural de matemáticas para el curso
  *              rubricaId: 653460ae39e91bc002bf42f7
  *              cursoId: 653460ae39e91bc002bf42f5  

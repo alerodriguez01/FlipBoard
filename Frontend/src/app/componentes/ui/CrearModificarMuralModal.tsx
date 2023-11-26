@@ -3,15 +3,15 @@ import { generateContenidoMural } from '@/lib/excalidraw_utils'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button, Divider, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import { useSession } from 'next-auth/react'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { set, useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { RubricaIcon } from './icons/RubricaIcon'
 import { useTheme } from 'next-themes'
-import { Rubrica } from '@/lib/types'
+import { Mural, Rubrica } from '@/lib/types'
 import { toMayusFirstLetters } from '@/lib/utils'
 
-type CrearMuralModalProps = {
+type CrearModificarMuralModalProps = {
     isOpen: boolean,
     onOpenChange: () => void,
     mutateData: () => void,
@@ -20,6 +20,9 @@ type CrearMuralModalProps = {
     openAsignarRubrica: () => void,
     rubrica: Rubrica | null,
     setRubrica: React.Dispatch<React.SetStateAction<Rubrica | null>>
+    type: "crear" | "modificar",
+    muralToModify?: Mural
+    setMuralToModify?: React.Dispatch<React.SetStateAction<Mural | undefined>>
 }
 
 // schema para validar los datos del formulario
@@ -31,7 +34,7 @@ const muralSchema = z.object({
 type MuralCreate = z.infer<typeof muralSchema> & Rubrica
     & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
 
-const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, openAsignarRubrica, rubrica, setRubrica }: CrearMuralModalProps) => {
+const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, openAsignarRubrica, rubrica, setRubrica, type, muralToModify, setMuralToModify }: CrearModificarMuralModalProps) => {
 
     const { theme, systemTheme, setTheme } = useTheme()
     const currentTheme = theme === "system" ? systemTheme : theme
@@ -45,10 +48,18 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
         },
         reset, // funcion que resetea el formulario
         getValues,
+        setValue,
         setError // funcion que permite asociar un error a un input -> setError("nombreInput", {message: "error"})
     } = useForm<MuralCreate>({
         resolver: zodResolver(muralSchema)
     })
+
+    useEffect(() => {
+        if (muralToModify) {
+            setValue("nombre", muralToModify.nombre)
+            setValue("descripcion", muralToModify.descripcion)
+        }
+    }, [muralToModify])
 
     const onSubmit = async (data: MuralCreate, onClose: () => void) => {
 
@@ -57,12 +68,15 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
             contenido: await generateContenidoMural(),
             descripcion: data.descripcion,
             idDocente: userId,
-            idRubrica: rubrica?.id // si no se asigno ninguna rubrica, se envia null
+            idRubrica: rubrica?.id, // si no se asigno ninguna rubrica, se envia null
+            idCurso: cursoId
         }
 
+        const endpoint = type === "crear" ? endpoints.crearMural(cursoId) : endpoints.updateMural(muralToModify?.id || "")
+
         try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.crearMural(cursoId), {
-                method: 'POST',
+            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoint, {
+                method: type === "crear" ? 'POST' : 'PUT',
                 headers: {
                     'Content-Type': 'application/json'
                 },
@@ -71,7 +85,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
 
             if (!res.ok) {
                 // Faltan datos obligatorios o no se encontro el curso o la rubrica
-                setError("erroresExternos", { message: "Hubo un problema al crear el mural." })
+                setError("erroresExternos", { message: `Hubo un problema al ${type} el mural.` })
 
             } else {
                 setRubrica(null) // seteo en null la rubrica para que si se crea otro mural, no quede asignada la misma rubrica
@@ -81,7 +95,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
             }
 
         } catch (e) {
-            setError("erroresExternos", { message: "Hubo un problema al crear el mural." })
+            setError("erroresExternos", { message: `Hubo un problema al ${type} el mural.` })
         }
     }
 
@@ -92,6 +106,10 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
             // reiniciar el estado del modal si se cierra
             setRubrica(null) // seteo en null la rubrica para que si se crea otro mural, no quede asignada la misma rubrica
             reset()
+            
+            // necesario porque si se cierra el modal (se resetea en la linea anterior) y se vuelve a abrir, 
+            // el useEffect de muralToModify no se ejecuta y no se setea el nombre y descripcion del mural a modificar
+            setMuralToModify?.(undefined) 
         }
 
         if (goToAsignarRubrica) {
@@ -109,7 +127,9 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
             <ModalContent>
                 {(onClose) => (
                     <form action="" onSubmit={handleSubmit((data: MuralCreate) => onSubmit(data, onClose))} className='flex flex-col gap-3'>
-                        <ModalHeader className="flex flex-col gap-1">Nuevo mural</ModalHeader>
+                        <ModalHeader className="flex flex-col gap-1">
+                            {type === "crear" ? "Nuevo mural" : "Modificar mural"}
+                        </ModalHeader>
                         <ModalBody className='pt-0'>
                             <Input
                                 variant="bordered"
@@ -139,18 +159,20 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
                                     :
                                     <p className='italic text-sm'>No se ha asignado ninguna rúbrica</p>
                                 }
-                                <Button
-                                    className='min-w-[50%]'
-                                    variant="ghost"
-                                    startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
-                                    onPress={() => personalizedOnOpenChange(false, true)}
-                                >
-                                    {rubrica ?
-                                        "Cambiar rúbrica"
-                                        :
-                                        "Asignar rúbrica"
-                                    }
-                                </Button>
+                                {type === "crear" &&
+                                    <Button
+                                        className='min-w-[50%]'
+                                        variant="ghost"
+                                        startContent={<RubricaIcon toggle={true} theme={currentTheme || "light"} />}
+                                        onPress={() => personalizedOnOpenChange(false, true)}
+                                    >
+                                        {rubrica ?
+                                            "Cambiar rúbrica"
+                                            :
+                                            "Asignar rúbrica"
+                                        }
+                                    </Button>
+                                }
                             </div>
                             {!rubrica && <p className='text-xs'>* Puedes asignarla más tarde</p>}
 
@@ -162,7 +184,7 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
                         <ModalFooter className='flex items-center justify-between'>
                             <p className="text-red-600 text-sm">* Campos obligatorios</p>
                             <Button type='submit' className='bg-[#181e25] text-white dark:border dark:border-gray-700 w-[40%]'>
-                                Crear mural
+                                {type === "crear" ? "Crear mural" : "Modificar mural"}
                             </Button>
                         </ModalFooter>
                     </form>
@@ -172,4 +194,4 @@ const CrearMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, userId, op
     )
 }
 
-export default CrearMuralModal
+export default CrearModificarMuralModal

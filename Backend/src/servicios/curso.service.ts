@@ -39,6 +39,23 @@ async function createCurso(body: Curso): Promise<Curso> {
     return cursoSaved;
 }
 
+async function updateCurso(idCurso: string, body: Curso): Promise<Curso> {
+
+        // Verificar existencia de docentes
+        const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
+
+        if (!docente) throw new NotFoundError("Docente");
+    
+        // check if mail is valid
+        if (!validator.default.isEmail(body.emailContacto))
+            throw new InvalidValueError('Curso', 'EmailContacto');
+    
+        const cursoSaved = await cursoRepository.updateCurso(idCurso, body);
+    
+        return cursoSaved;
+}
+
+
 /*
     Obtener todos los cursos
 */
@@ -70,4 +87,4 @@ async function addParticipantesToCurso(idCurso: string, correos: string[]) {
 
 // demas metodos
 
-export default { getCursoById, createCurso, getCursos, deleteCursoById, addParticipantesToCurso };
+export default { getCursoById, createCurso, getCursos, deleteCursoById, addParticipantesToCurso, updateCurso };

@@ -1,6 +1,6 @@
 'use client';
 import CompartirCursoModal from "@/app/componentes/ui/CompartirCursoModal";
-import { CrearCursoModal } from "@/app/componentes/ui/CrearCursoModal";
+import { CrearModificarCursoModal } from "@/app/componentes/ui/CrearModificarCursoModal";
 import { CursoCard } from "@/app/componentes/ui/CursoCard";
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
@@ -21,6 +21,8 @@ export default function Cursos() {
   let color = 0;
   // para crear curso
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  // para modificar curso
+  const { isOpen: isOpenModificar, onOpen: onOpenModificar, onOpenChange: onOpenChangeModificar } = useDisclosure();
 
   const [cursoSelected, setCursoSelected] = useState<Curso | null>(null); // curso presionado
   const { isOpen: isOpenCompartir, onOpen: onOpenCompartir, onOpenChange: onOpenChangeCompartir } = useDisclosure(); // Para modal de compartir curso
@@ -92,6 +94,7 @@ export default function Cursos() {
                     mutar={mutate}
                     onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
                     onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                    onModificarPress={(id, nombre) => { setCursoSelected(c); onOpenModificar(); }}
                   />)
                 })
               }
@@ -108,6 +111,7 @@ export default function Cursos() {
                     mutar={mutate}
                     onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
                     onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                    onModificarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenModificar(); }}
                   />)
                 })
               }
@@ -123,9 +127,10 @@ export default function Cursos() {
 
       {!!session &&
         <>
-          <CrearCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onCrearCurso={mutate} idDocente={session.user.id} />
+          <CrearModificarCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmitCurso={mutate} idDocente={session.user.id} type="crear"/>
+          <CrearModificarCursoModal isOpen={isOpenModificar} onOpenChange={onOpenChangeModificar} onSubmitCurso={mutate} idDocente={session.user.id} type="modificar" data={cursoSelected}/>
           <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={cursoSelected?.id  || ""} cursoTitle={cursoSelected?.nombre || ""} />
-          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""}/>
+          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""} extraMessage="NOTA: Se eliminará el curso y todo su contenido."/>
         </>
       }
 

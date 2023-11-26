@@ -105,7 +105,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                     <EvaluarModal isOpen={isEvaluarOpen} onOpenChange={onEvaluarOpenChange} entity={evaluarEntity} idDocente={session.user.id} entityType={entityType} idCurso={params.idCurso} />
                     <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={entityType === 'Usuario' ? 'alumno' : 'grupo'}
                         entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `Grupo ${(evaluarEntity as Grupo)?.numero}`}
-                        onEliminar={onEliminarEntity} />
+                        onEliminar={onEliminarEntity} extraMessage="NOTA: Se eliminará junto a todas sus calificaciones."/>
                     <CompartirCursoModal isOpen={isAgregarAlumnoOpen} onOpenChange={onAgregarAlumnoOpenChange} cursoId={params.idCurso} cursoTitle={""} />
                 </>
             }

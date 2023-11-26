@@ -16,6 +16,7 @@ type CardProps = {
   mutar: Function,
   onCompartirPress: (id: string, nombre: string) => void
   onEliminarPress: (id: string, nombre: string) => void
+  onModificarPress: (id: string, nombre: string) => void
 };
 
 const CursoCard = (props: CardProps) => {
@@ -29,6 +30,7 @@ const CursoCard = (props: CardProps) => {
       editable={props.editable}
       dropDownItems={[
         { key: "share", label: "Compartir curso", onAction: () => props.onCompartirPress(props.cursoId, props.title) },
+        { key: "modify", label: "Modificar curso", onAction: () => props.onModificarPress(props.cursoId, props.title) },
         { key: "delete", label: "Eliminar curso", onAction: () => props.onEliminarPress(props.cursoId, props.title) },
       ]}
       color={props.color}

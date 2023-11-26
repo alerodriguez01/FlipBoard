@@ -56,4 +56,8 @@ export class MuralRepository implements MuralDataSource {
     async deleteMuralById(idMural: string) {
         return await this.muralDAO.deleteMuralById(idMural);
     }
+
+    async updateMural(idMural: string, mural: any) {
+        return await this.muralDAO.updateMural(idMural, mural);
+    }
 }

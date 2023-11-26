@@ -1,7 +1,8 @@
 import { Curso, PrismaClient } from "@prisma/client";
 import CursoDataSource from "../../datasource/curso.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
-import { InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { DeleteError, InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export class CursoPrismaDAO implements CursoDataSource {
 
@@ -52,6 +53,22 @@ export class CursoPrismaDAO implements CursoDataSource {
         });
 
         return cursoSaved;
+    }
+
+    async updateCurso(idCurso: string, curso: Curso): Promise<Curso> {
+        const cursoUpdated = await this.prisma.curso.update({
+            where: {
+                id: idCurso
+            },
+            data: {
+                ...curso,
+                docentesModel: {
+                    connect: [{ id: curso.docentes[0] }]
+                }
+            }
+        });
+
+        return cursoUpdated;
     }
 
     /*
@@ -123,14 +140,41 @@ export class CursoPrismaDAO implements CursoDataSource {
     async deleteCursoById(idCurso: string): Promise<Curso | null> {
 
         try {
-            const curso = await this.prisma.curso.delete({
-                where: {
-                    id: idCurso
-                }
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // eliminar todas las calificaciones del curso
+                await this.prisma.calificacion.deleteMany({
+                    where: {
+                        cursoId: idCurso
+                    }
+                });
+
+                // eliminar todos los grupos del curso
+                await this.prisma.grupo.deleteMany({
+                    where: {
+                        cursoId: idCurso
+                    }
+                });
+
+                // eliminar todos los murales del curso
+                await this.prisma.mural.deleteMany({
+                    where: {
+                        cursoId: idCurso
+                    }
+                });
+
+                const curso = await this.prisma.curso.delete({
+                    where: {
+                        id: idCurso
+                    }
+                });
+                return curso;
             });
-            return curso;
+
 
         } catch (err) {
+            //if (err instanceof PrismaClientKnownRequestError && err.code === "P2014") throw new DeleteError("Curso", ["Grupo", "Calificacion", "Mural"]); // ya existe una relacion y no se puede eliminar
             throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
 
@@ -139,17 +183,30 @@ export class CursoPrismaDAO implements CursoDataSource {
     async deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null> {
 
         try {
-            const curso = await this.prisma.curso.update({
-                where: {
-                    id: idCurso
-                },
-                data: {
-                    participantesUser: {
-                        disconnect: { id: idAlumno }
+
+            return await this.prisma.$transaction(async (tx) => {
+
+                // borro todas las calificaciones de usuario
+                await this.prisma.calificacion.deleteMany({
+                    where: { AND: [
+                        { usuarioId: idAlumno },
+                        { cursoId: idCurso }
+                    ] }
+                })
+
+
+                const curso = await this.prisma.curso.update({
+                    where: {
+                        id: idCurso
+                    },
+                    data: {
+                        participantesUser: {
+                            disconnect: { id: idAlumno }
+                        }
                     }
-                }
-            });
-            return curso;
+                });
+                return curso;
+            })
 
         } catch (err) {
             throw new InvalidValueError("Curso o Alumno", "idCurso o idAlumno"); // el id no tiene los 12 bytes

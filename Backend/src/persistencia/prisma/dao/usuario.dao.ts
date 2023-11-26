@@ -91,8 +91,12 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
           id
         },
         include: {
-          cursosAlumnoModel: true,
-          cursosDocenteModel: true
+          cursosAlumnoModel: {
+            orderBy: { nombre: 'asc' }
+          },
+          cursosDocenteModel: { 
+            orderBy: { nombre: 'asc' } 
+          }
         }
       });
 
