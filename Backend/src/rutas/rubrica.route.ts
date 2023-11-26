@@ -349,6 +349,14 @@ routerUsuario.delete("/:idUsuario/rubricas/:idRubrica", controller.deleteRubrica
  *          type: string
  *        example: 
  *          653968d5642003e96a382246
+ *      - name: nombre
+ *        in: query
+ *        required: false
+ *        description: nombre de la rubrica por la que se quiere filtrar
+ *        schema:
+ *          type: string
+ *        example:
+ *          "Mi rubricaA"
  *    responses:
  *      200:
  *        description: Rubricas encontradas
@@ -410,6 +418,14 @@ routerCurso.get("/:idCurso/rubricas/alumnos", controller.getRubricasAlumnosFromC
  *          type: string
  *        example: 
  *          653968d5642003e96a382246
+ *      - name: nombre
+ *        in: query
+ *        required: false
+ *        description: nombre de la rubrica por la que se quiere filtrar
+ *        schema:
+ *          type: string
+ *        example:
+ *          "Mi rubricaA"
  *    responses:
  *      200:
  *        description: Rubricas encontradas
