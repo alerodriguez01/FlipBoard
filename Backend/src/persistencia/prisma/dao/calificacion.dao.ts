@@ -132,14 +132,14 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         try {
             if (limit > 0) {
                 const [califs, count] = await this.prisma.$transaction([
-                    this.prisma.calificacion.findMany({ ...query, take: limit }),
+                    this.prisma.calificacion.findMany({ ...query, take: limit, orderBy: { fecha: "desc" } }),
                     this.prisma.calificacion.count({ where: query.where })
                 ]);
                 return { count: count, result: califs };
             }
 
             const [califs, count] = await this.prisma.$transaction([
-                this.prisma.calificacion.findMany(query),
+                this.prisma.calificacion.findMany({...query, orderBy: { fecha: "desc" }}),
                 this.prisma.calificacion.count({ where: query.where })
             ]);
             return { count: count, result: califs };
