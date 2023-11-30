@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "playwright test --project chromium --headed"
+    "test": "docker exec mongo-db mongo flipboard --eval \"db.dropDatabase()\" && docker exec api npx prisma db push --schema=./database/prisma/schema.prisma && playwright test --project chromium --headed"
   },
   "dependencies": {
     "@excalidraw/excalidraw": "^0.16.1",
