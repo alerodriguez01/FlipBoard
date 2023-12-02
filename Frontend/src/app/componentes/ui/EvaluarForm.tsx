@@ -1,11 +1,11 @@
 'use client';
 import React from "react";
-import { RubricaGrid } from "./RubricaGrid";
 import { Button, Textarea } from "@nextui-org/react";
 import { Rubrica } from "@/lib/types";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { ControllableRubricaGrid } from "./ControllableRubricaGrid";
 
 type EvaluarProps = {
   rubrica: Rubrica,
@@ -66,7 +66,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
 
   return (
     <form className="flex flex-col" action="" onSubmit={handleSubmit((data) => onSubmit(data))}>
-      <RubricaGrid
+      <ControllableRubricaGrid
         label={props.rubrica.nombre}
         criterios={props.rubrica.criterios}
         niveles={props.rubrica.niveles}
