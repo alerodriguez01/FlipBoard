@@ -10,16 +10,23 @@ type GridProps = {
   criterios: Criterio[],
   niveles: any[],
   evaluable: boolean,
-  valoresEvaluados?: Map<string, number>
+  valoresEvaluados?: Map<string, number>,
+  name: string,
+  control: any
 }
 
-const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
+const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
 
   let n=0;
   const columns = [{nombre: "Criterio", i: -1},...props.niveles.map(niv => ({nombre: niv.puntaje ? `${niv.nombre} (${niv.puntaje} puntos)`:niv.nombre, i: n++}))];
   const rows = props.criterios;
   const [cambio, setCambio] = useState(false);
   const [nivelSelecc, setNivelSelecc] = useState(props.valoresEvaluados ?? new Map());
+
+  const {
+    field,
+    fieldState: {invalid, error}
+  } =useController({name: props.name, control: props.control});
 
   const renderCell = (row: Criterio, key: Key) => {
     return (
@@ -35,6 +42,7 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
             return;
           const newMap = nivelSelecc.set(crit,parseInt(niv));
           setNivelSelecc(newMap);
+          field?.onChange(newMap); 
           setCambio(!cambio);
         }}
       >
@@ -57,10 +65,12 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
           )}
         </TableBody>
       </Table>
+      {invalid &&
+        <p className="text-red-500 text-sm self-start mb-4 ml-4">{error?.message}</p>}
     </>
   );
 });
 
-RubricaGrid.displayName = "RubricaGrid";
+ControllableRubricaGrid.displayName = "RubricaGrid";
 
-export { RubricaGrid };
+export { ControllableRubricaGrid };
