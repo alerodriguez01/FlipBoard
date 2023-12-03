@@ -24,7 +24,7 @@ export type Usuario = {
 };
 export type Session = { 
     loggedIn: boolean,
-    user: Usuario,
+    user?: Usuario,
 };
 
 export type Curso = {
