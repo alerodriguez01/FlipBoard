@@ -20,7 +20,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     // const response = NextResponse.json({ loggedIn: Object.keys(session).length !== 0, ...session })
     /* -------------------- */
     const session = await getServerSession(authOptions)
-    const response = NextResponse.json({ loggedIn: !!session, ...session })
+    const response = NextResponse.json({ loggedIn: !!session, ...session }) // si no existe la session, el objeto queda { loggedIn: false }
 
     // add the CORS headers to the response
     response.headers.append('Access-Control-Allow-Credentials', "true")
