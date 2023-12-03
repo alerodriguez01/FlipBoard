@@ -769,13 +769,13 @@ const ExcalidrawWrapper = () => {
   }
   // si existe el usuario, seteo el nombre en el canvas
   useEffect(() => {
-    if (session?.user.nombre && collabAPI) collabAPI.setUsername(formatNombre(session.user.nombre))
+    if (session?.user?.nombre && collabAPI) collabAPI.setUsername(formatNombre(session.user.nombre))
   }, [session, collabAPI])
 
   // si no existe el mural o el curso, muestro un mensaje de error
   if ((!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error)) return errorEntidadInexistente(!mural?.error, !curso?.error)
 
-  if (!isLoadingSession && !session?.user.cursosAlumno.includes(idCurso || "") && !session?.user.cursosDocente.includes(idCurso || "")) {
+  if (!isLoadingSession && !session?.user?.cursosAlumno.includes(idCurso || "") && !session?.user?.cursosDocente.includes(idCurso || "")) {
     return (
       <section className="flex flex-col justify-center items-center h-full w-full">
         <h1>No tienes acceso a este mural</h1>
@@ -784,7 +784,7 @@ const ExcalidrawWrapper = () => {
     )
   }
 
-  const isDocente = session?.user.cursosDocente.includes(idCurso || "");
+  const isDocente = session?.user?.cursosDocente.includes(idCurso || "");
 
   /* -------------------------- FIN LOGICA FLIPBOARD ------------------------------- */
 
@@ -968,11 +968,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="Usuario" />
+              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Usuario" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user.id || ""} tipo="Grupo" />
+              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Grupo" />
             </Sidebar.Tab>
 
 
