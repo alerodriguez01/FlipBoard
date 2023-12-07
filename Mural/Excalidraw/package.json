@@ -124,7 +124,7 @@
     "locales-coverage:description": "node scripts/locales-coverage-description.js",
     "prettier": "prettier \"**/*.{css,scss,json,md,html,yml}\" --ignore-path=.eslintignore",
     "start": "vite",
-    "start:production": "npm run build && npx http-server build -a localhost -p 5001 -o",
+    "start:production": "npm run build && npx http-server build -a localhost -p 4000",
     "test:all": "yarn test:typecheck && yarn test:code && yarn test:other && yarn test:app --watch=false",
     "test:app": "vitest --config vitest.config.ts",
     "test:code": "eslint --max-warnings=0 --ext .js,.ts,.tsx .",

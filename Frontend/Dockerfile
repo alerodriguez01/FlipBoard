@@ -7,5 +7,6 @@ FROM base as dev
 CMD [ "npm", "run", "dev" ] 
 
 FROM base as prod
+ENV NODE_ENV=production
 RUN npm run build
 CMD [ "npm", "run", "start" ]
