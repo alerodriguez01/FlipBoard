@@ -39,7 +39,9 @@ services:
 
   api:
     container_name: api
-    build: ./../Backend
+    build: 
+      context: ./../Backend
+      target: prod
     depends_on:
       - mongo-db
     environment:
@@ -54,18 +56,20 @@ services:
       # Montar el directorio Backend en el contenedor para asi poder modificar el codigo sin tener que reconstruir la imagen
       - ./../Backend:/app
 
-  # nextjs:
-  #   container_name: frontend
-  #   build: ./../Frontend
-  #   # environment:
-  #    # BACKEND_URL: "http://api:3100"
-  #   ports:
-  #    - 3000:3000
-  #   networks:
-  #     - mynetwork
-  #   volumes:
-  #     - ./../Frontend:/app
-  #     - /app/node_modules
+  nextjs:
+    container_name: frontend
+    build: 
+      context: ./../Frontend
+      target: prod
+    # environment:
+     # BACKEND_URL: "http://api:3100"
+    ports:
+     - 3000:3000
+    networks:
+      - mynetwork
+    volumes:
+      - ./../Frontend:/app
+      - /app/node_modules
 
   mural-excalidraw:
     container_name: mural-excalidraw
