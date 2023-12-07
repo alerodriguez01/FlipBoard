@@ -44,10 +44,7 @@ services:
       target: prod
     depends_on:
       - mongo-db
-    environment:
-      # se conecta por la red interna a mongo-db (mongo-db:27017)
-      DATABASE_URL: "mongodb://admin:root@mongo-db:27017/flipboard?authSource=admin&directConnection=true"
-      JWT_SECRET_KEY: "3z4OtpfVIEWrSoDWn5PXZ+QOcjYSfLoNNLQcTNRKQw8="
+    # environment:
     ports:
       - 3100:3100
     networks:
