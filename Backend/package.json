@@ -7,7 +7,9 @@
   "scripts": {
     "test": "docker exec mongo-db mongo flipboard --eval \"db.dropDatabase()\" && docker exec api npx prisma db push --schema=./database/prisma/schema.prisma && jest",
     "dev": "nodemon --exec ts-node --esm src/index.ts",
-    "dev-docker": "nodemon --legacy-watch --exec ts-node --esm src/index.ts"
+    "dev-docker": "nodemon --legacy-watch --exec ts-node --esm src/index.ts",
+    "build": "tsc",
+    "start": "node build/src/index.js"
   },
   "repository": {
     "type": "git",
