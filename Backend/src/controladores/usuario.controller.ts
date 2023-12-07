@@ -172,7 +172,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
             from: process.env.MAIL_USERNAME,
             to: correosAEnviar,
             subject: `FlipBoard: Invitación a curso ${curso.nombre}`,
-            html: templateHtml(`Para unirte al curso '${curso.nombre}', hace click <a href="http://${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">en este enlace</a>.`)
+            html: templateHtml(`Para unirte al curso '${curso.nombre}', hace click <a href="${process.env.FRONTEND_URL}/api/cursos/${idCurso}?token=${token}">en este enlace</a>.`)
         }
 
         transporter.sendMail(mail, (error, body) => {
