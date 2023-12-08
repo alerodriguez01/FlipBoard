@@ -20,6 +20,7 @@ CMD [ "npm", "run", "dev-docker" ]
 # https://stackoverflow.com/questions/58645778/cannot-get-nodemon-ts-node-dev-working-on-dockerized-mean-stack
 
 FROM base as prod
+COPY .env ./
 RUN npx prisma generate --schema=./database/prisma/schema.prisma
 RUN npm run build
 CMD [ "npm", "run", "start" ]
