@@ -4,6 +4,7 @@ import { Inter } from 'next/font/google'
 import NextUIProvider from '@/app/componentes/providers/NextUIProvider'
 import ThemeProvider from './componentes/providers/ThemeProvider'
 import NextAuthProvider from './componentes/providers/NextAuthProvider'
+import MobileMessage from './componentes/ui/MobileMessage'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -17,11 +18,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="es">
       <body className={inter.className}>
         <NextAuthProvider>
-            <ThemeProvider>
-              <NextUIProvider>
+          <ThemeProvider>
+            <NextUIProvider>
+              <MobileMessage />
+              <div className="hidden md:block">
                 {children}
-              </NextUIProvider>
-            </ThemeProvider>
+              </div>
+            </NextUIProvider>
+          </ThemeProvider>
         </NextAuthProvider>
       </body>
     </html>
