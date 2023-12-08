@@ -39,13 +39,12 @@ services:
 
   api:
     container_name: api
-    build: ./../Backend
+    build: 
+      context: ./../Backend
+      target: prod
     depends_on:
       - mongo-db
-    environment:
-      # se conecta por la red interna a mongo-db (mongo-db:27017)
-      DATABASE_URL: "mongodb://admin:root@mongo-db:27017/flipboard?authSource=admin&directConnection=true"
-      JWT_SECRET_KEY: "3z4OtpfVIEWrSoDWn5PXZ+QOcjYSfLoNNLQcTNRKQw8="
+    # environment:
     ports:
       - 3100:3100
     networks:
@@ -54,43 +53,51 @@ services:
       # Montar el directorio Backend en el contenedor para asi poder modificar el codigo sin tener que reconstruir la imagen
       - ./../Backend:/app
 
-  # nextjs:
-  #   container_name: frontend
-  #   build: ./../Frontend
-  #   # environment:
-  #    # BACKEND_URL: "http://api:3100"
-  #   ports:
-  #    - 3000:3000
-  #   networks:
-  #     - mynetwork
-  #   volumes:
-  #     - ./../Frontend:/app
-  #     - /app/node_modules
-
-  mural-excalidraw:
-    container_name: mural-excalidraw
-    build: ./../Mural/Excalidraw
+  nextjs:
+    container_name: frontend
+    build: 
+      context: ./../Frontend
+      target: prod
+    # environment:
+     # BACKEND_URL: "http://api:3100"
     ports:
-      - 4000:4000
+     - 3000:3000
     networks:
       - mynetwork
-    # Enable this for live reload (tarda bastante en recargar, pero funciona)
-    # environment:
-    #   - VITE_DOCKER=true
-    volumes:
-      - ./../Mural/Excalidraw:/app
-      # exclude node modules
-      - /app/node_modules
-  
+    # volumes:
+    #   - ./../Frontend:/app
+    #   - /app/node_modules
+
   mural-room-web-socket:
     container_name: mural-room-web-socket
-    build: ./../Mural/RoomWebSocket
+    build: 
+      context: ./../Mural/RoomWebSocket
+      target: prod
     ports:
       - 3002:3002
     networks:
       - mynetwork
     # volumes:
     #   - ./../Mural/RoomWebSocket:/app
+
+  mural-excalidraw:
+    container_name: mural-excalidraw
+    build: 
+      context: ./../Mural/Excalidraw
+      # target: prod
+    ports:
+      - 4000:80
+    networks:
+      - mynetwork
+    depends_on:
+      - mural-room-web-socket
+    # Enable this for live reload (tarda bastante en recargar, pero funciona)
+    # environment:
+    #   - VITE_DOCKER=true
+    # volumes:
+    #   - ./../Mural/Excalidraw:/app
+    #   # exclude node modules
+    #   - /app/node_modules
 
 networks:
   mynetwork:
