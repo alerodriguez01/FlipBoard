@@ -53,18 +53,18 @@ services:
       # Montar el directorio Backend en el contenedor para asi poder modificar el codigo sin tener que reconstruir la imagen
       - ./../Backend:/app
 
-  nextjs:
-    container_name: frontend
-    build: 
-      context: ./../Frontend
-      target: dev
-    ports:
-     - 3000:3000
-    networks:
-      - mynetwork
-    volumes:
-      - ./../Frontend:/app
-      - /app/node_modules
+  # nextjs:
+  #   container_name: frontend
+  #   build: 
+  #     context: ./../Frontend
+  #     target: dev
+  #   ports:
+  #    - 3000:3000
+  #   networks:
+  #     - mynetwork
+  #   volumes:
+  #     - ./../Frontend:/app
+  #     - /app/node_modules
 
   mural-room-web-socket:
     container_name: mural-room-web-socket
@@ -82,6 +82,7 @@ services:
     container_name: mural-excalidraw
     build: 
       context: ./../Mural/Excalidraw
+      dockerfile: Dockerfile
     ports:
       - 4000:4000
     networks:
@@ -89,8 +90,8 @@ services:
     depends_on:
       - mural-room-web-socket
     # Enable this for live reload (tarda bastante en recargar, pero funciona)
-    # environment:
-    #   - VITE_DOCKER=true
+    environment:
+      - VITE_DOCKER=true
     volumes:
       - ./../Mural/Excalidraw:/app
       # exclude node modules
