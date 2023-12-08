@@ -171,6 +171,11 @@ async function getParticipantes(idCurso: string, nombre: string, limit: number, 
  */
 async function addParticipanteToCurso(idCurso: string, idUser: string) {
 
+    // buscar si ya pertenece al curso
+    const user = await usuarioRepository.getUsuarioById(idUser);
+    if (!user) throw new NotFoundError("Usuario");
+    if(user.cursosAlumno.includes(idCurso) || user.cursosDocente.includes(idCurso)) return;
+
     const curso = await cursoRepository.addUsuario(idCurso, idUser);
 
     if (!curso) throw new NotFoundError("Curso o User");
