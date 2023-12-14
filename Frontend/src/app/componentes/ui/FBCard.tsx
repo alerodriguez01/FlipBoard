@@ -27,7 +27,7 @@ const FBCard = (props: FBProps) => {
     //   <Card className="shadow-md w-[400px] h-[200px]  dark:bg-gray-800 dark:border dark:border-gray-900">
     <Card isPressable onPress={() => props.onPress()} className="shadow-md w-[400px] h-[200px]  dark:bg-gray-800 dark:border-gray-900 hover:shadow-xl dark:shadow-gray-700 transition duration-300">
       <CardHeader className={"flex text-lg gap-2 items-center justify-between " + colors.at(props.color)}>
-        <h2 className="max-w-[220px] px-3">{props.title}</h2>
+        <h2 className="px-3 text-left">{props.title}</h2>
         <aside className="flex">
           {props.children}
           {props.editable &&
