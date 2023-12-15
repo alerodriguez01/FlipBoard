@@ -45,8 +45,11 @@ const ResetPassword = () => {
                 method: 'POST'
             })
 
-            // No verifico la respuesta. Solo le indico que el correo se envio correctamente
-            // (en caso de existir el mail, se envia el correo, sino, no se envia nada)
+            if(!res.ok) {
+                // Por ejemplo, el token para mandar el mail esta expirado
+                setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." })
+                return    
+            }
 
             setCorreoSent(true)
             return
