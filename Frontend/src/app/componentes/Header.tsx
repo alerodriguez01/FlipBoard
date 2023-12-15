@@ -46,7 +46,7 @@ const Header = () => {
                                 <Tooltip
                                     showArrow={false}
                                     placement="right"
-                                    className="bg-gray-200 text-black"
+                                    className="bg-gray-200 text-black max-w-[400px]"
                                     content={
                                         <article className="text-sm">
                                             <h1 className="font-semibold">Información del curso</h1>
