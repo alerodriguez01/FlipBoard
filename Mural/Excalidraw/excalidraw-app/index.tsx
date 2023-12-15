@@ -938,7 +938,7 @@ const ExcalidrawWrapper = () => {
             }
             <WelcomeScreen.Center.Heading>
               {mural &&
-                <div className="flex flex-col gap-4">
+                <div className="flex flex-col gap-4 max-w-[500px]">
                   <h1 className="text-2xl">{mural?.nombre}</h1>
                   <p>{mural?.descripcion}</p>
                 </div>
@@ -1028,7 +1028,7 @@ const ExcalidrawWrapper = () => {
             <Tooltip
               showArrow={false}
               placement="top"
-              className="bg-gray-100 text-black"
+              className="bg-gray-100 text-black max-w-[400px]"
               content={mural &&
                 <article className="text-sm">
                   <h1 className="font-semibold">Información del mural</h1>
