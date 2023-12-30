@@ -1,6 +1,6 @@
 'use client';
 import { Criterio } from "@/lib/types";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React, { Key, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
 import { useController } from "react-hook-form";
@@ -73,8 +73,20 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
           )}
         </TableBody>
       </Table>
-      {invalid &&
-        <p className="text-red-500 text-sm self-start mb-4 ml-4">{error?.message}</p>}
+      <footer className="flex flex-row justify-between items-center mb-4">
+        {invalid &&
+          <p className="text-red-500 text-sm ml-4">{error?.message}</p>}
+        <Button 
+          className="ml-auto mr-4" size="sm"
+          onPress={() => {
+            const map = new Map();
+            setNivelSelecc(map);
+            field?.onChange(map); 
+            setCambio(!cambio);
+          }}
+        >Limpiar selección</Button>
+      </footer>
+      
     </>
   );
 });
