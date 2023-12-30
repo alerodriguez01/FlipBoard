@@ -40,6 +40,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
     },
     setError,
     getValues,
+    setValue,
     watch
   } = useForm<EvaluarForm>({
       resolver: zodResolver(evaluarSchema)
@@ -88,7 +89,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
           observaciones: watch("observaciones") ?? "",
           idRubrica: props.rubrica.id,
           idMural: props.dataToParcialUpdate?.idMural,
-          idDocente: props.idDocente
+          idDocente: props.idDocente,
+          setObservaciones: setValue
         }}
         />
       <Textarea 

@@ -81,7 +81,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
                 AND: [
                     { isParcial: true },
                     { OR: [{ usuarioId: idAlumno }, { grupoId: idGrupo }] },
-                    { muralId: idMural ?? undefined },
+                    { muralId: idMural || undefined },
                     { docenteId: idDocente },
                     { rubricaId: idRubrica }
                 ]
@@ -114,7 +114,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 const calificacionParcial = await this.findCalificacionParcial(calificacion.rubricaId, calificacion.muralId, calificacion.docenteId, calificacion.grupoId, calificacion.usuarioId);
-                console.log(calificacionParcial)
+                // console.log(calificacionParcial)
                 const calificacionReturn = await this.prisma.calificacion.upsert({
                     where: {
                         id: calificacionParcial?.id ?? "333333333333333333333333" // me pide un id si o si

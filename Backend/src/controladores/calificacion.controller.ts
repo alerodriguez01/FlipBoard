@@ -95,10 +95,11 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
 
         try {
             const calificacion = await service.getCalificacionParcial(idRubrica.toString(), idMural?.toString() ?? null, idDocente.toString(), idGrupo?.toString() ?? null, idAlumno?.toString() ?? null)
+            if(!calificacion) return res.status(404).json({ error: "No hay calificacion parcial" });
             return res.status(200).json(calificacion);
 
         } catch (error) {
-            if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+            if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         }
 
     }
@@ -120,7 +121,7 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
     }
 
 }
