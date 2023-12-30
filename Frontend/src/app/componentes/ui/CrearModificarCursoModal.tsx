@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect } from "react";
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from "@nextui-org/react";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -120,10 +120,13 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
                   label="Tema"
                   placeholder="Tema del curso"
                   {...register("tema")} />
-                <Input
+                <Textarea
                   variant="bordered"
                   label="Descripción"
                   placeholder="Descripción del curso"
+                  maxRows={4}
+                  isInvalid={!!errors.descripcion}
+                  errorMessage={errors.descripcion?.message}
                   {...register("descripcion")} />
                 <Input
                   variant="bordered"
