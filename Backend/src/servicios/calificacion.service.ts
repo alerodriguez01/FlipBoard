@@ -66,11 +66,12 @@ async function createCalificacion(calificacion: Calificacion) {
     const rubrica = await rubricaRepository.getRubricaById(calificacion.rubricaId);
     if (!rubrica) throw new NotFoundError("Rubrica");
 
-    if ( calificacion.valores.length !== rubrica.criterios.length ||
-         calificacion.valores.some((valor: number) => valor < 0 || valor >= rubrica.niveles.length) ) throw new InvalidValueError("Calificacion", "valores");
+    if ( calificacion.valores.length !== rubrica.criterios.length || 
+        (!calificacion.isParcial && calificacion.valores.some((valor: number) => valor < 0 || valor >= rubrica.niveles.length) ) ) 
+        throw new InvalidValueError("Calificacion", "valores");
 
 
-    const newCalificacion = await califcacionRepository.createCalificacion(calificacion);
+    const newCalificacion = await califcacionRepository.createOrUpdateCalificacion(calificacion);
     return newCalificacion;
 
 }
@@ -87,4 +88,11 @@ async function getCalificacionesFromCurso(idCurso: string, limit: number, offset
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso };
+async function getCalificacionParcial(idRubrica: string, idMural: string | null, idDocente: string, idGrupo: string | null, idAlumno: string | null) {
+
+    const calificacion = await califcacionRepository.getCalificacionParcial(idRubrica, idMural, idDocente, idGrupo, idAlumno);
+    return calificacion;
+
+}
+
+export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, getCalificacionParcial };

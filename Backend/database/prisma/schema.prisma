@@ -147,6 +147,7 @@ model Calificacion {
   valores       Int[]
   observaciones String?
   fecha         DateTime
+  isParcial     Boolean?
 
   // many-to-one (rubrica asociada a la calificacion)
   rubricaModel Rubrica @relation(fields: [rubricaId], references: [id])

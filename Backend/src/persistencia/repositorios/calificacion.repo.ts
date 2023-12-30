@@ -24,11 +24,15 @@ export class CalificacionRepository implements CalificacionDataSource {
         return await this.calificacionDAO.getCalificacionesFromUser(idCurso, idUsuario, rubrica, limit, offset);
     }
 
-    public async createCalificacion(calificacion: any) {
-        return await this.calificacionDAO.createCalificacion(calificacion);
+    public async createOrUpdateCalificacion(calificacion: any) {
+        return await this.calificacionDAO.createOrUpdateCalificacion(calificacion);
     }
 
     public async getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean, nombreUser?: string}) {
         return await this.calificacionDAO.getCalificacionesFromCurso(idCurso, limit, offset, params);
+    }
+
+    public async getCalificacionParcial(idRubrica: string, idMural: string | null, idDocente: string, idGrupo: string | null, idAlumno: string | null) {
+        return await this.calificacionDAO.getCalificacionParcial(idRubrica, idMural, idDocente, idGrupo, idAlumno);
     }
 }
