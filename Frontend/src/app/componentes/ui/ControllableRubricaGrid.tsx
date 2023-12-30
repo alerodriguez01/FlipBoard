@@ -40,7 +40,15 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
             return;
           if(niv === '-1')
             return;
-          const newMap = nivelSelecc.set(crit,parseInt(niv));
+          
+          let newMap;
+          if(nivelSelecc.get(crit) === parseInt(niv)) {
+            newMap = nivelSelecc;
+            newMap.delete(crit);
+          }
+          else
+            newMap = nivelSelecc.set(crit,parseInt(niv));
+
           setNivelSelecc(newMap);
           field?.onChange(newMap); 
           setCambio(!cambio);
