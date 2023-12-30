@@ -65,6 +65,12 @@ const EvaluarModal = (props: ModalProps) => {
                               endpoints.crearCalificacionAlumno(props.idCurso, props.entity.id) : 
                               endpoints.crearCalificacionGrupo(props.idCurso, props.entity.id)
                       }
+                      dataToParcialUpdate={{
+                        idUsuario: props.entityType === "Usuario" ? props.entity.id : null,
+                        idGrupo: props.entityType === "Grupo" ? props.entity.id : null,
+                        idCurso: props.idCurso,
+                        // idMural: string --> esto se setea unicamente en el mural
+                      }}
                     />
                     :
                     <div className="flex flex-col gap-3">
