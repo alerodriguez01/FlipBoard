@@ -78,6 +78,7 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
           <p className="text-red-500 text-sm ml-4">{error?.message}</p>}
         <Button 
           className="ml-auto mr-4" size="sm"
+          variant="ghost"
           onPress={() => {
             const map = new Map();
             setNivelSelecc(map);
