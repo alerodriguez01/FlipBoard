@@ -1,9 +1,12 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { Button, Checkbox, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
+import { ReactNode } from "react";
 
 type ModalProps = {
     isOpen: boolean,
     onOpenChange: () => void,
     onConfirm?: () => void,
+    message: ReactNode,
+    leftFooterContent?: ReactNode,
 }
 
 const WarningModal = (props: ModalProps) => {
@@ -14,13 +17,16 @@ const WarningModal = (props: ModalProps) => {
                     {(onClose) => (
                         <>
                             <ModalHeader>
-                                titulo
+                                Atención
                             </ModalHeader>
                             <ModalBody>
-                                <p>contenido</p>
+                                {props.message}
                             </ModalBody>
-                            <ModalFooter>
-                                <Button onPress={props.onConfirm}>Confirmar</Button>
+                            <ModalFooter className="flex flex-row justify-between">
+                                {props.leftFooterContent}
+                                <Button className="bg-[#181e25] text-white dark:border dark:border-gray-700 ml-auto"
+                                 onPress={props.onConfirm}
+                                > Confirmar </Button>
                             </ModalFooter>
                         </>
                     )}
