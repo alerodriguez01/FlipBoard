@@ -5,9 +5,6 @@ import { useRouter } from "next/navigation";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { Button, Tooltip } from "@nextui-org/react";
 import { useTheme } from "next-themes";
-import { generateContenidoMural } from "@/lib/excalidraw_utils";
-import { link } from "fs";
-import { Mural } from "@/lib/types";
 import { toMayusFirstLetters } from "@/lib/utils";
 
 type CardProps = {
@@ -19,9 +16,10 @@ type CardProps = {
   cursoId: string,
   room: string,
   description?: string,
-  onAsignarPress?: (id: string, nombre: string) => void
-  onEliminarPress?: (id: string, nombre: string) => void
-  onModificarPress?: (id: string, nombre: string) => void
+  onAsignarPress?: (id: string, nombre: string) => void,
+  onEliminarPress?: (id: string, nombre: string) => void,
+  onModificarPress?: (id: string, nombre: string) => void,
+  onPress?: (redirectFun: () => void) => void
 };
 
 const MuralCard = (props: CardProps) => {
@@ -33,7 +31,8 @@ const MuralCard = (props: CardProps) => {
 
   const handleOnPress = async () => {
     // const linkCollaborative = await generateContenidoMural()
-    router.push(process.env.NEXT_PUBLIC_MURAL_URL+`/?curso=${props.cursoId}&mural=${props.muralId}&theme=${currentTheme}#room=${props.room}`)
+    const redirect = () => router.push(process.env.NEXT_PUBLIC_MURAL_URL+`/?curso=${props.cursoId}&mural=${props.muralId}&theme=${currentTheme}#room=${props.room}`);
+    props.onPress?.(redirect);
   }
 
   return (
