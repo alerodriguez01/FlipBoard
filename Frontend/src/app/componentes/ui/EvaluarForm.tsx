@@ -1,5 +1,5 @@
 'use client';
-import React from "react";
+import React, { useEffect } from "react";
 import { Button, Textarea } from "@nextui-org/react";
 import { Rubrica } from "@/lib/types";
 import { useForm } from "react-hook-form";
@@ -13,6 +13,12 @@ type EvaluarProps = {
   endpoint: string,
   idDocente: string
   onAtrasPressed?: () => void,
+  dataToParcialUpdate?: {
+    idUsuario?: string,
+    idGrupo?: string,
+    idCurso: string,
+    idMural?: string
+  }
 }
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
@@ -32,7 +38,10 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         errors,
         isSubmitting
     },
-    setError
+    setError,
+    getValues,
+    setValue,
+    watch
   } = useForm<EvaluarForm>({
       resolver: zodResolver(evaluarSchema)
   });
@@ -72,7 +81,18 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         niveles={props.rubrica.niveles}
         evaluable
         control={control}
-        {...register("valores")} />
+        {...register("valores")} 
+        dataToParcialUpdate={{
+          idUsuario: props.dataToParcialUpdate?.idUsuario,
+          idGrupo: props.dataToParcialUpdate?.idGrupo,
+          idCurso: props.dataToParcialUpdate?.idCurso ?? "",
+          observaciones: watch("observaciones") ?? "",
+          idRubrica: props.rubrica.id,
+          idMural: props.dataToParcialUpdate?.idMural,
+          idDocente: props.idDocente,
+          setObservaciones: setValue
+        }}
+        />
       <Textarea 
         variant="bordered"
         label="Observaciones"

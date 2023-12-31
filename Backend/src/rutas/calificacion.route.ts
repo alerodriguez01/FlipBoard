@@ -134,7 +134,7 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  * @swagger
  * /api/cursos/{idCurso}/calificaciones/alumnos/{idAlumno}:
  *   post:
- *    summary: Crear una nueva calificacion para un alumno
+ *    summary: Crear una nueva calificacion para un alumno / crear o actualizar una calificacion parcial para un alumno
  *    tags: [Calificacion]
  *    parameters:
  *      - name: idCurso
@@ -179,7 +179,11 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              idDocente:
  *                type: string
  *                description: El docente que califica
+ *              isParcial:
+ *                type: boolean
+ *                description: Indica si la calificacion es parcial
  *            example:
+ *              isParcial: true
  *              valores: [3, 1]
  *              observaciones: Buen trabajo
  *              idRubrica: 65397634490a7145b838780a
@@ -198,6 +202,7 @@ router.get("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionController
  *              usuarioId: 65326ed824fea7e06d01e207
  *              cursoId: 65397634490a7145b8387808
  *              muralId: 65397634490a7145b838780e
+ *              isParcial: true
  *      400:
  *        description: Faltan datos obligatorios o alguno de los id's o datos es invalido
  *        content:
@@ -217,7 +222,7 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  * @swagger
  * /api/cursos/{idCurso}/calificaciones/grupos/{idGrupo}:
  *   post:
- *    summary: Crear una nueva calificacion para un grupo
+ *    summary: Crear una nueva calificacion para un grupo  / crear o actualizar una calificacion parcial para un grupo
  *    tags: [Calificacion]
  *    parameters:
  *      - name: idCurso
@@ -262,7 +267,11 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *              idDocente:
  *                type: string
  *                description: El docente que califica
+ *              isParcial:
+ *                type: boolean
+ *                description: Indica si la calificacion es parcial
  *            example:
+ *              isParcial: true
  *              valores: [3, 1]
  *              observaciones: Buen trabajo
  *              idRubrica: 65397634490a7145b838780a
@@ -281,6 +290,7 @@ router.post("/:idCurso/calificaciones/alumnos/:idUsuario", calificacionControlle
  *              grupoId: 65397634490a7145b838780c
  *              cursoId: 65397634490a7145b8387808
  *              muralId: 65397634490a7145b838780e
+ *              isParcial: true
  *      400:
  *        description: Faltan datos obligatorios o alguno de los id's o datos es invalido
  *        content:
@@ -352,6 +362,38 @@ router.post("/:idCurso/calificaciones/grupos/:idGrupo", calificacionController.c
  *           type: string
  *         example:
  *           "Tomas P"
+ *       - name: isParcial
+ *         in: query
+ *         required: false
+ *         description: buscar una única calificacion parcial, segun los campos del body
+ *         schema:
+ *           type: boolean
+ *         example:
+ *           true
+ *       - name: idDocente
+ *         in: query
+ *         required: false
+ *         description: id del docente que califico parcialmente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387804
+ *       - name: idAlumno   
+ *         in: query
+ *         required: false
+ *         description: id del alumno que se califica parcialmente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387804
+ *       - name: idGrupo
+ *         in: query
+ *         required: false
+ *         description: id del grupo que se califica parcialmente
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387804
  *     responses:
  *       200:
  *         description: Calificaciones del curso encontradas

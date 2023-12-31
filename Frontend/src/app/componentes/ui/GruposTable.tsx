@@ -62,7 +62,7 @@ const GruposTable = (props: TableProps) => {
     if (columnKey === "correo")
       return (
         <>
-          {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <>{getCorreoFromProvider(user.correo)} <Divider className="mt-1 mb-1"/></>)}
+          {grupo.integrantesModel?.slice(0,-1).map((user: Usuario) => <div key={crypto.randomUUID()}>{getCorreoFromProvider(user.correo)} <Divider className="mt-1 mb-1"/></div>)}
           {getCorreoFromProvider(grupo.integrantesModel?.at(grupo.integrantesModel.length-1)?.correo || "")}
         </>
       );

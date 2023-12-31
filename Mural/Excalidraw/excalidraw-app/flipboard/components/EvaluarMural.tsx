@@ -39,7 +39,12 @@ const EvaluarMural = (props: CompProps) => {
                     idDocente={props.idUser}
                     onEvaluarSuccess={() => setIsEvaluando(false)}
                     onAtrasPressed={() => setIsEvaluando(false)}
-                    idMural={props.idMural}
+                    dataToParcialUpdate={{
+                        idUsuario: props.tipo === "Usuario" ? entity.id : null,
+                        idGrupo: props.tipo === "Grupo" ? entity.id : null,
+                        idCurso: props.idCurso,
+                        idMural: props.idMural,
+                      }}
                 />
             </section>
         )

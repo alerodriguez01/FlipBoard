@@ -16,27 +16,27 @@ async function getCalificacionesFromUser(req: Request, res: Response) {
     const { idCurso, idUsuario } = req.params;
 
     //            si existe         
-    let limit = req.query.limit ? 
-                                parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
-                                : 0; // si no existe, lo seteo en 0
+    let limit = req.query.limit ?
+        parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
+        : 0; // si no existe, lo seteo en 0
 
     let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
 
-    if(limit < 0) limit = 0;
-    if(offset < 0) offset = 0;
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
 
     try {
         const calificaciones = await service.getCalificacionesFromUser(idCurso, idUsuario, req.query.rubrica === "true", limit, offset);
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
-    
+
 }
 
 /*
-    Crear calificacion para un alumno o grupo
+    Crear calificacion para un alumno o grupo / crear o actualizar una calificacion parcial
 */
 async function createCalificacion(req: Request, res: Response) {
 
@@ -44,33 +44,34 @@ async function createCalificacion(req: Request, res: Response) {
     const idGrupo = req.params.idGrupo;
     const idCurso = req.params.idCurso;
 
-    const { valores, observaciones, idRubrica, idMural, idDocente } = req.body;
+    const { valores, observaciones, idRubrica, idMural, idDocente, isParcial } = req.body;
 
     // Datos obligatorios
-    if(!valores || !idRubrica || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if (!valores || !idRubrica || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     // valores debe ser un array de numeros
-    if(!Array.isArray(valores) || valores.some((valor: any) => typeof valor !== 'number')) return res.status(400).json({ error: "Valores debe ser un array de numeros. Ejemplo: valores: [1, 3]" });
-    
+    if (!Array.isArray(valores) || valores.some((valor: any) => typeof valor !== 'number')) return res.status(400).json({ error: "Valores debe ser un array de numeros. Ejemplo: valores: [1, 3]" });
+
     let calificacion: any = {
         valores: valores,
         observaciones: observaciones ?? null,
         rubricaId: idRubrica,
         cursoId: idCurso,
         muralId: idMural ?? null,
-        docenteId: idDocente
+        docenteId: idDocente,
+        isParcial: isParcial ?? false
     }
 
-    if(idUsuario) calificacion.usuarioId = idUsuario;
-    if(idGrupo) calificacion.grupoId = idGrupo;
+    if (idUsuario) calificacion.usuarioId = idUsuario;
+    if (idGrupo) calificacion.grupoId = idGrupo;
 
     try {
         const newCalificacion = await service.createCalificacion(calificacion as Calificacion);
         return res.status(201).json(newCalificacion);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message }); // alguno de los id esta mal formado
-        if(error instanceof NotFoundError) res.status(404).json({ error: error.message }); // no se encontro alguna de las entidades
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message }); // alguno de los id esta mal formado
+        if (error instanceof NotFoundError) res.status(404).json({ error: error.message }); // no se encontro alguna de las entidades
     }
 
 }
@@ -85,16 +86,33 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
     const idMural = req.query.idMural;
     const nombreUser = req.query.nombre;
 
+    const isParcial = req.query.isParcial === "true"; // opcional
+    const idDocente = req.query.idDocente;
+    const idGrupo = req.query.idGrupo; // opcional
+    const idAlumno = req.query.idAlumno; // opcional
+
+    if (isParcial && idDocente && idRubrica) {
+
+        try {
+            const calificacion = await service.getCalificacionParcial(idRubrica.toString(), idMural?.toString() ?? null, idDocente.toString(), idGrupo?.toString() ?? null, idAlumno?.toString() ?? null)
+            if(!calificacion) return res.status(404).json({ error: "No hay calificacion parcial" });
+            return res.status(200).json(calificacion);
+
+        } catch (error) {
+            if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        }
+
+    }
 
     //            si existe         
-    let limit = req.query.limit ? 
-                                parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
-                                : 0; // si no existe, lo seteo en 0
+    let limit = req.query.limit ?
+        parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
+        : 0; // si no existe, lo seteo en 0
 
     let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
 
-    if(limit < 0) limit = 0;
-    if(offset < 0) offset = 0;
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
 
     try {
         const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, {
@@ -103,7 +121,7 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
     }
 
 }
@@ -119,14 +137,14 @@ async function getCalificacionesOfGruposFromCurso(req: Request, res: Response) {
 
 
     //            si existe         
-    let limit = req.query.limit ? 
-                                parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
-                                : 0; // si no existe, lo seteo en 0
+    let limit = req.query.limit ?
+        parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
+        : 0; // si no existe, lo seteo en 0
 
     let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
 
-    if(limit < 0) limit = 0;
-    if(offset < 0) offset = 0;
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
 
     try {
         const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, {
@@ -135,7 +153,7 @@ async function getCalificacionesOfGruposFromCurso(req: Request, res: Response) {
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
 
 }
@@ -150,14 +168,14 @@ async function getCalificacionesOfAlumnosFromCurso(req: Request, res: Response) 
     const nombreAlumno = req.query.nombre;
 
     //            si existe         
-    let limit = req.query.limit ? 
-                                parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
-                                : 0; // si no existe, lo seteo en 0
+    let limit = req.query.limit ?
+        parseInt(req.query.limit as string) || 0 // lo parseo a int (si no es un numero, retorna NaN => falsy => me quedo con 0)
+        : 0; // si no existe, lo seteo en 0
 
     let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0;
 
-    if(limit < 0) limit = 0;
-    if(offset < 0) offset = 0;
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
 
     try {
         const calificaciones = await service.getCalificacionesFromCurso(idCurso, limit, offset, {
@@ -166,7 +184,7 @@ async function getCalificacionesOfAlumnosFromCurso(req: Request, res: Response) 
         return res.status(200).json(calificaciones);
 
     } catch (error) {
-        if(error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
     }
 
 }

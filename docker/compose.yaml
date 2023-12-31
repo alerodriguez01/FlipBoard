@@ -52,6 +52,7 @@ services:
     volumes:
       # Montar el directorio Backend en el contenedor para asi poder modificar el codigo sin tener que reconstruir la imagen
       - ./../Backend:/app
+      - /app/node_modules
 
   # nextjs:
   #   container_name: frontend
