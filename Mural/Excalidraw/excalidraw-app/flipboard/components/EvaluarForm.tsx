@@ -1,12 +1,12 @@
 'use client';
-import React from "react";
+import React, { useEffect } from "react";
 import { RubricaGrid } from "./RubricaGrid";
 import { Button, Textarea } from "@nextui-org/react";
 import { Rubrica } from "../lib/types";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 type EvaluarProps = {
   rubrica: Rubrica,
@@ -14,8 +14,13 @@ type EvaluarProps = {
   endpoint: string,
   idDocente: string
   onAtrasPressed?: () => void,
-  idMural: string
-}
+  dataToParcialUpdate?: {
+    idUsuario?: string,
+    idGrupo?: string,
+    idCurso: string,
+    idMural?: string
+  }
+} 
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
   
@@ -34,7 +39,10 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         errors,
         isSubmitting
     },
-    setError
+    setError,
+    getValues,
+    setValue,
+    watch
   } = useForm<EvaluarForm>({
       resolver: zodResolver(evaluarSchema)
   });
@@ -48,7 +56,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               observaciones: data.observaciones,
               idRubrica: props.rubrica.id,
               idDocente: props.idDocente,
-              idMural: props.idMural
+              idMural: props.dataToParcialUpdate?.idMural
           }),
           headers: {
               'Content-Type': 'application/json'
@@ -75,13 +83,38 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
         niveles={props.rubrica.niveles}
         evaluable
         control={control}
-        {...register("valores")} />
-      <Textarea 
+        {...register("valores")} 
+        dataToParcialUpdate={{
+          idUsuario: props.dataToParcialUpdate?.idUsuario,
+          idGrupo: props.dataToParcialUpdate?.idGrupo,
+          idCurso: props.dataToParcialUpdate?.idCurso ?? "",
+          observaciones: watch("observaciones") ?? "",
+          idRubrica: props.rubrica.id,
+          idMural: props.dataToParcialUpdate?.idMural,
+          idDocente: props.idDocente,
+          setObservaciones: (value: string) => setValue("observaciones", value) 
+        }}
+        />
+
+      {/* Es necesario agregar este controller porque el setValue no funciona aca */}
+      <Controller
+        control={control}
+        name="observaciones"
+        render={({field}) => (
+          <Textarea 
+            variant="bordered"
+            label="Observaciones"
+            placeholder="Escriba aquí sus observaciones..."
+            {...field}
+          />
+        )}
+      />
+      {/* <Textarea 
         variant="bordered"
         label="Observaciones"
         placeholder="Escriba aquí sus observaciones..."
         {...register("observaciones")}
-        />
+        /> */}
       
       <footer className="flex flex-row justify-between">
         <div className="flex flex-row ml-4">
