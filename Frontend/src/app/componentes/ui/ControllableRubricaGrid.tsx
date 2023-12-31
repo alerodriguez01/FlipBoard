@@ -46,14 +46,17 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
     fieldState: { invalid, error }
   } = useController({ name: props.name, control: props.control });
 
-  const partialUpdate = async () => {
+  const partialUpdate = async (reset?: boolean) => {
     // cada vez que se selecciona un nivel, se crea/actualiza una calificacion parcial
 
     const curso = props.dataToParcialUpdate?.idCurso;
     const type = props.dataToParcialUpdate?.idGrupo ? "grupos" : "alumnos";
     const id = props.dataToParcialUpdate?.idGrupo || props.dataToParcialUpdate?.idUsuario;
 
-    const valores = Array.from(nivelSelecc.values()).concat(Array(props.criterios.length - nivelSelecc.size).fill(-1));
+    let valores: number[];
+    if(!reset) valores = Array.from(nivelSelecc.values()).concat(Array(props.criterios.length - nivelSelecc.size).fill(-1));
+    else valores = Array(props.criterios.length).fill(-1);
+    
 
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${curso}/calificaciones/${type}/${id}`, {
       method: 'POST',
@@ -178,6 +181,7 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
             setNivelSelecc(map);
             field?.onChange(map); 
             setCambio(!cambio);
+            partialUpdate(true);
           }}
         >Limpiar selección</Button>
       </footer>
