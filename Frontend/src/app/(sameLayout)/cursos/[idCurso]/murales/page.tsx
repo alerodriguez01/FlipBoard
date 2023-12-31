@@ -4,10 +4,11 @@ import CrearModificarMuralModal from "@/app/componentes/ui/CrearModificarMuralMo
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { MuralCard } from "@/app/componentes/ui/MuralCard";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
+import WarningModal from "@/app/componentes/ui/WarningModal";
 import { PlusIcon } from "@/app/componentes/ui/icons/PlusIcon";
 import endpoints from "@/lib/endpoints";
 import { Curso, Mural, Rubrica } from "@/lib/types";
-import { Button, Spinner, useDisclosure } from "@nextui-org/react";
+import { Button, Checkbox, Spinner, useDisclosure } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -32,6 +33,10 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { isOpen: isAsignarNewMuralOpen, onOpen: onAsignarNewMuralOpen, onOpenChange: onAsignarNewMuralOpenChange } = useDisclosure();
   const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
   const { isOpen: isModificarOpen, onOpen: onModificarOpen, onOpenChange: onModificarOpenChange } = useDisclosure();
+  
+  const { isOpen: isWarningOpen, onOpen: onWarningOpen, onOpenChange: onWarningOpenChange } = useDisclosure();
+  const [warningRedirect, setWarningRedirect] = useState<() => void>(() => {});
+  const [warningDontShow, setWarningDontShow] = useState(false);
 
   const [search, setSearch] = useState("");
 
@@ -98,6 +103,19 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
 
   }
 
+  const handleCardPress = (redirect: () => void) => {
+
+    const showWarning = localStorage.getItem("showMuralWarning");
+
+    if(showWarning === "skip") {
+      redirect();
+      return;
+    }
+
+    setWarningRedirect(() => redirect);
+    onWarningOpen();
+  }
+
   if (error) return (
     <section className="flex flex-col flex-1 p-10">
       {/* {error.message} */}
@@ -146,6 +164,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
                   editable={session?.user.cursosDocente.includes(m.cursoId)}
+                  onPress={(redirectFun) => handleCardPress(redirectFun)}
                   onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural);  setTypeMuralModal("crear"); onAsignarOpen(); }}
                   onEliminarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onEliminarOpen(); }}
                   onModificarPress={(id, nombre) => { setSelectedMural(m); setTypeMuralModal("modificar"); onModificarOpen(); }}
@@ -165,6 +184,30 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
       />
 
       <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type="mural" entityName={selectedMural?.nombre || ""} onEliminar={onEliminarMural} extraMessage="NOTA: Se eliminará el mural y todas las calificaciones asociadas."/>
+
+      <WarningModal
+        isOpen={isWarningOpen}
+        onOpenChange={onWarningOpenChange}
+        onConfirm={() => {localStorage.setItem("showMuralWarning", warningDontShow ? "skip" : "show"); warningRedirect();}}
+        message={
+          <>
+            <p className="text-justify">
+              Usted se encuentra a punto de ingresar a un mural colaborativo, en donde múltiples usuarios pueden participar.
+            </p>
+            <p className="text-justify">
+              Le recomendamos que acuerde con el docente un color para identificar sus cambios y evitar conflictos. 
+                Además, le recomendamos asentar su nombre o los nombres de los integrantes de su grupo cerca de los cambios que realice.
+            </p>
+          </>
+        }
+        leftFooterContent={
+          <Checkbox classNames={{label: "text-gray-400"}} radius="none" size="sm" color="primary"
+            onValueChange={(val) => setWarningDontShow(val)}
+          >
+            No volver a mostrar
+          </Checkbox>
+        }
+      />
 
       {isDocente &&
         <>

@@ -1,6 +1,6 @@
 'use client';
 import { Criterio } from "../lib/types";
-import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
+import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, Button } from "@nextui-org/react";
 import React, { Key, useEffect, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
 import { UseFormSetValue, useController } from "react-hook-form";
@@ -130,7 +130,15 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
             return;
           if(niv === '-1')
             return;
-          const newMap = nivelSelecc.set(crit,parseInt(niv));
+          
+          let newMap;
+          if(nivelSelecc.get(crit) === parseInt(niv)) {
+            newMap = nivelSelecc;
+            newMap.delete(crit);
+          }
+          else
+            newMap = nivelSelecc.set(crit,parseInt(niv));
+
           setNivelSelecc(newMap);
           field?.onChange(newMap); 
           setCambio(!cambio);
@@ -144,21 +152,33 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
 
   return (
     <>
-    { restaurada && <p className="text-sm italic text-gray-400 px-4 self-end">Calificacion parcial restaurada</p>}
-    <Table isStriped shadow="none" aria-label={`Rubrica ${props.label}`}>
-      <TableHeader>
-        {columns.map(col => <TableColumn key={col.i} className={"text-sm font-bold" + (col.i !== -1 ? "px-5" : "")}>{col.nombre}</TableColumn>)}
-      </TableHeader>
-      <TableBody>
-        {rows.map(row => 
-          <TableRow key={row.nombre}>
-            {columnKey => <TableCell>{renderCell(row, columnKey)}</TableCell>}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-    {invalid &&
-      <p className="text-red-500 text-sm self-start mb-4 ml-4">{error?.message}</p>}
+      { restaurada && <p className="text-sm italic text-gray-400 px-4 self-end">Calificacion parcial restaurada</p>}
+      <Table isStriped shadow="none" aria-label={`Rubrica ${props.label}`}>
+        <TableHeader>
+          {columns.map(col => <TableColumn key={col.i} className={"text-sm font-bold" + (col.i !== -1 ? "px-5" : "")}>{col.nombre}</TableColumn>)}
+        </TableHeader>
+        <TableBody>
+          {rows.map(row => 
+            <TableRow key={row.nombre}>
+              {columnKey => <TableCell>{renderCell(row, columnKey)}</TableCell>}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+      <footer className="flex flex-row justify-between items-center mb-4">
+        {invalid &&
+          <p className="text-red-500 text-sm ml-4">{error?.message}</p>}
+        <Button 
+          className="ml-auto mr-4" size="sm"
+          variant="ghost"
+          onPress={() => {
+            const map = new Map();
+            setNivelSelecc(map);
+            field?.onChange(map); 
+            setCambio(!cambio);
+          }}
+        >Limpiar selección</Button>
+      </footer>
     </>
   );
 });
