@@ -10,7 +10,7 @@ ARG NODE_ENV=production
 ENV NODE_OPTIONS=--max_old_space_size=8192 
 
 COPY . .
-RUN yarn build:app:docker
+RUN yarn build:app
 
 FROM nginx:1.21-alpine
 
