@@ -206,6 +206,17 @@ async function getCSVofCalificacionesFromCurso(req: Request, res: Response) {
 
         // define csv writer
         const path = `temp_csv/calificaciones_${randomUUID()}.csv`
+        
+        // find the max number of criterios
+        let cantCriterios = 0; 
+        calificaciones.forEach(cal => {
+            if (Object.keys(cal).length - 8 > cantCriterios) cantCriterios = Object.keys(cal).length - 8;
+        })
+        let criterios: any = []
+        for (let i = 0; i < cantCriterios; i++) {
+            criterios.push({id: `criterio${i+1}`, title: `Criterio ${i+1} (nivel evaluado)`})
+        }
+        
         const csvWriter = csv.createObjectCsvWriter({
             path: path,
             header: [
@@ -217,16 +228,7 @@ async function getCSVofCalificacionesFromCurso(req: Request, res: Response) {
                 {id: "rubrica", title: "Rubrica"},
                 {id: "puntaje", title: "Puntaje"},
                 {id: "observaciones", title: "Observaciones"},
-                {id: "criterio1", title: "Criterio 1 (nivel evaluado)"},
-                {id: "criterio2", title: "Criterio 2 (nivel evaluado)"},
-                {id: "criterio3", title: "Criterio 3 (nivel evaluado)"},
-                {id: "criterio4", title: "Criterio 4 (nivel evaluado)"},
-                {id: "criterio5", title: "Criterio 5 (nivel evaluado)"},
-                {id: "criterio6", title: "Criterio 6 (nivel evaluado)"},
-                {id: "criterio7", title: "Criterio 7 (nivel evaluado)"},
-                {id: "criterio8", title: "Criterio 8 (nivel evaluado)"},
-                {id: "criterio9", title: "Criterio 9 (nivel evaluado)"},
-                {id: "criterio10", title: "Criterio 10 (nivel evaluado)"},
+                ...criterios
             ]
         });
 
