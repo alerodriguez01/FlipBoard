@@ -1,3 +1,5 @@
+import fs from 'fs/promises'
+
 export const templateHtml = (message: string) => {
     return `
     <!DOCTYPE html>
@@ -25,4 +27,12 @@ export const templateHtml = (message: string) => {
     </body>
     </html>
     `;
+}
+
+// throws on error
+export const base64ToFile = async (base64: string, path: string, fileName: string): Promise<void> => {
+    //create dir if unexistent
+    await fs.mkdir(path, { recursive: true });
+    const data = base64.replace(/^data:image\/jpeg;base64,/, "");
+    await fs.writeFile(`${path}/${fileName}`, data, 'base64');
 }

@@ -44,7 +44,7 @@ async function createCalificacion(req: Request, res: Response) {
     const idGrupo = req.params.idGrupo;
     const idCurso = req.params.idCurso;
 
-    const { valores, observaciones, idRubrica, idMural, idDocente, isParcial } = req.body;
+    const { valores, observaciones, idRubrica, idMural, idDocente, isParcial, screenshot } = req.body;
 
     // Datos obligatorios
     if (!valores || !idRubrica || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
@@ -59,7 +59,8 @@ async function createCalificacion(req: Request, res: Response) {
         cursoId: idCurso,
         muralId: idMural ?? null,
         docenteId: idDocente,
-        isParcial: isParcial ?? false
+        isParcial: isParcial ?? false,
+        screenshot: screenshot ?? null
     }
 
     if (idUsuario) calificacion.usuarioId = idUsuario;

@@ -3,6 +3,7 @@ import CalificacionDataSource from "../../datasource/calificacion.datasource.js"
 import PrismaSingleton from "./dbmanager.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
+import { base64ToFile } from "../../../../lib/utils.js";
 
 export class CalificacionPrismaDAO implements CalificacionDataSource {
 
@@ -110,7 +111,6 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     public async createOrUpdateCalificacion(calificacion: Calificacion) {
 
         try {
-
             return await this.prisma.$transaction(async (tx) => {
 
                 const calificacionParcial = await this.findCalificacionParcial(calificacion.rubricaId, calificacion.muralId, calificacion.docenteId, calificacion.grupoId, calificacion.usuarioId);
@@ -137,13 +137,21 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
                         fecha: new Date(),
                         isParcial: calificacion.isParcial
                     }
-                })
+                });
+
+                // viene con foto. lo pongo dentro de la transaccion para que si falla no se cree la calificacion
+                if (!calificacion.isParcial && !!calificacion.screenshot) {
+                    const path = `./calificaciones/${calificacion.cursoId}`;
+                    const fileName = `${calificacionParcial?.id}.jpeg`;
+                    await base64ToFile(calificacion.screenshot, path, fileName);
+                    calificacion.screenshot = path;
+                }
 
                 return calificacionReturn;
-
             })
 
         } catch (error) {
+            console.log(error);
             if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Curso, Rubrica, Usuario, Grupo o Mural", "id"); // el id no tiene los 12 bytes
             throw new NotFoundError("Curso, Rubrica, Usuario, Grupo o Mural"); // no se encontro alguna de las entidades
         }
