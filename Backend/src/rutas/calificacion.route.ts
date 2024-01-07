@@ -642,11 +642,11 @@ router.get("/:idCurso/calificaciones/alumnos", calificacionController.getCalific
  *           6a397636690a6145b8387666
  *     responses:
  *       200:
- *         description: Screenshot encontrada
+ *         description: Archivo jpeg
  *         content:
- *           application/json:
- *             example:
- *               base64: "/9h/4AAQskZJRgABAQAAA......"
+ *           image/jpeg:
+ *              example:
+ *                mural.jpeg
  *       400:
  *         description: El parametro idCurso o idCalif es invalido
  *         content:
