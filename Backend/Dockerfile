@@ -9,6 +9,7 @@ COPY nodemon.json ./
 COPY src ./src
 COPY database ./database
 COPY lib ./lib
+COPY temp_csv ./temp_csv
 
 RUN npm install
 COPY .env ./
