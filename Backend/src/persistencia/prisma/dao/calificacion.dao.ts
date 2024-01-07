@@ -4,6 +4,7 @@ import PrismaSingleton from "./dbmanager.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { base64ToFile } from "../../../../lib/utils.js";
+import fs from "fs/promises";
 
 export class CalificacionPrismaDAO implements CalificacionDataSource {
 
@@ -111,10 +112,15 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
     public async createOrUpdateCalificacion(calificacion: Calificacion) {
 
         try {
+            
             return await this.prisma.$transaction(async (tx) => {
 
                 const calificacionParcial = await this.findCalificacionParcial(calificacion.rubricaId, calificacion.muralId, calificacion.docenteId, calificacion.grupoId, calificacion.usuarioId);
                 // console.log(calificacionParcial)
+
+                const path = `./calificaciones/${calificacion.cursoId}`;
+                const fileName = `${calificacionParcial?.id}.jpeg`;
+
                 const calificacionReturn = await this.prisma.calificacion.upsert({
                     where: {
                         id: calificacionParcial?.id ?? "333333333333333333333333" // me pide un id si o si
@@ -129,20 +135,19 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
                         muralModel: calificacion.muralId ? { connect: { id: calificacion.muralId } } : undefined,
                         usuarioModel: calificacion.usuarioId ? { connect: { id: calificacion.usuarioId } } : undefined,
                         grupoModel: calificacion.grupoId ? { connect: { id: calificacion.grupoId } } : undefined,
-                        isParcial: calificacion.isParcial
+                        isParcial: calificacion.isParcial,
                     },
                     update: {
                         valores: calificacion.valores,
                         observaciones: calificacion.observaciones,
                         fecha: new Date(),
-                        isParcial: calificacion.isParcial
+                        isParcial: calificacion.isParcial,
+                        screenshot: calificacion.isParcial ? undefined : path+'/'+fileName
                     }
                 });
 
                 // viene con foto. lo pongo dentro de la transaccion para que si falla no se cree la calificacion
                 if (!calificacion.isParcial && !!calificacion.screenshot) {
-                    const path = `./calificaciones/${calificacion.cursoId}`;
-                    const fileName = `${calificacionParcial?.id}.jpeg`;
                     await base64ToFile(calificacion.screenshot, path, fileName);
                     calificacion.screenshot = path;
                 }
@@ -205,5 +210,24 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             throw new InvalidValueError("Calificacion", "idCurso o idRubrica");
         }
 
+    }
+
+    public async getScreenshotPath(idCurso: string, idCalificacion: string): Promise<string | null> {
+        try {
+            // get screenshot path
+            const calif = await this.prisma.calificacion.findUnique({
+                where: { 
+                    id: idCalificacion, 
+                    cursoId: idCurso 
+                },
+                select: { screenshot: true }
+            });
+            
+            return calif?.screenshot ?? null;
+
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Curso o Calificacion", "id"); // el id no tiene los 12 bytes
+            throw new NotFoundError("Curso o Calificacion");
+        }
     }
 }

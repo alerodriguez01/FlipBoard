@@ -11,5 +11,6 @@ export default interface CalificacionDataSource {
     getCalificacionesFromCurso(idCurso: string, limit: number, offset: number, params: {idRubrica?: string, idMural?: string, grupo?: boolean, alumno?: boolean, nombreUser?: string}) 
         : Promise<PaginatedCalificaciones>;
     getCalificacionParcial(idRubrica: string, idMural: string | null, idDocente: string, idGrupo: string | null, idAlumno: string | null) : Promise<Calificacion | null>;
+    getScreenshotPath(idCurso: string, idCalificacion: string) : Promise<string | null>
     // ir agregando métodos restantes 
 }

@@ -129,6 +129,10 @@ function downloadCalificaciones(idCurso: string) {
 
 }
 
+function downloadScreenshot(idCurso: string, idCalificacion: string) {
+    return `/api/cursos/${idCurso}/calificaciones/${idCalificacion}/screenshot`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -142,5 +146,6 @@ export default {
     crearRubrica, asociarRubricaGrupos, asociarRubricaMural,
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
-    getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones
+    getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
+    downloadScreenshot
 }
