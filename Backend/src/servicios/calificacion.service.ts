@@ -130,6 +130,12 @@ async function getCSVofCalificacionesFromCurso(idCurso: string): Promise<Calific
 
     const calificaciones = await califcacionRepository.getCalificacionesFromCurso(idCurso, 0, 0, {});
 
+    // cant max de criterios
+    let cantCriterios = 0; 
+    calificaciones.result.forEach(cal => {
+        if (cal.rubricaModel?.criterios.length > cantCriterios) cantCriterios = cal.rubricaModel?.criterios.length;
+    })
+
     const calificacionesCSV: CalificacionCSV[] = [];
     calificaciones.result.forEach(cal => {
 
@@ -163,7 +169,7 @@ async function getCSVofCalificacionesFromCurso(idCurso: string): Promise<Calific
             const nivelEvaluado = cal.valores[i];
             criterios[`criterio${i + 1}`] = criterio.nombre + " (" + cal.rubricaModel?.niveles[nivelEvaluado]?.nombre + ")";
         })
-        for (let i = Object.keys(criterios).length; i < 10; i++) {
+        for (let i = Object.keys(criterios).length; i < cantCriterios; i++) {
             criterios[`criterio${i + 1}`] = "-";
         }
 
@@ -175,7 +181,7 @@ async function getCSVofCalificacionesFromCurso(idCurso: string): Promise<Calific
             mural: cal.muralModel?.nombre ?? "-",
             rubrica: toMayusFirstLetters(cal.rubricaModel?.nombre),
             puntaje: porcentaje,
-            observaciones: cal.observaciones,
+            observaciones: cal.observaciones ?? "-",
             ...criterios
         }
 
