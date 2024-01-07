@@ -58,7 +58,7 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
         <section className="flex flex-col flex-1 p-10 gap-4 overflow-auto">
             <header className="flex flex-row justify-between items-center mb-4 mx-2.5">
                 <h1 className="text-2xl font-semibold self-center">{isDocente ? "Calificaciones realizadas" : "Mis calificaciones"}</h1>
-                <Tooltip
+                {isDocente && <Tooltip
                     showArrow={false}
                     placement="bottom"
                     className="max-w-[300px]"
@@ -68,7 +68,7 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
                     <Button isIconOnly className="bg-transparent" onClick={downloadCsv}>
                         <DownloadIcon />
                     </Button>
-                </Tooltip>
+                </Tooltip>}
             </header>
             {isDocente ?
                 <CalificacionesDocente idCurso={idCurso} idDocente={session.user.id} />
