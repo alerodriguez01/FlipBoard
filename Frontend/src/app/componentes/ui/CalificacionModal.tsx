@@ -1,8 +1,9 @@
 import { Calificacion } from '@/lib/types'
 import { toMayusFirstLetters } from '@/lib/utils'
-import { Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
+import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import React from 'react'
 import { RubricaGrid } from './RubricaGrid'
+import endpoints from '@/lib/endpoints'
 
 type CalificacionModalProps = {
   isOpen: boolean,
@@ -32,6 +33,36 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
   const fecha = calificacion ? new Date(calificacion.fecha) : new Date();
   const fechaAMostrar = fecha.toLocaleDateString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', day: "2-digit", month: "2-digit", year: "2-digit" }) + " a las " + fecha.toLocaleTimeString('es-AR', { timeZone: 'America/Argentina/Buenos_Aires', hour: "2-digit", minute: "2-digit" }) + " hs."
 
+  const [downloadError, setDownloadError] = React.useState("");
+  const [downloading, setDownloading] = React.useState(false);
+
+  const handleDescargar = async () => {
+    setDownloadError("");
+    if (!calificacion?.cursoId || !calificacion?.id) return;
+    setDownloading(true);
+    try {
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.downloadScreenshot(calificacion?.cursoId, calificacion?.id));
+      setDownloading(false);
+      if (!res.ok) {
+        setDownloadError("Ha ocurrido un error al descargar el contenido calificado");
+        return;
+      }
+
+      const blob = await res.blob();
+      const link = document.createElement('a');
+      const url = URL.createObjectURL(blob);
+      link.href = url;
+      link.download = 'mural.jpeg';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+    } catch (error) {
+      setDownloadError("Ha ocurrido un error al descargar el contenido calificado");
+    }
+  }
+
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} classNames={{ closeButton: "m-3" }} className="max-h-[90%] overflow-auto" size="4xl">
       <ModalContent>
@@ -54,7 +85,16 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                       <li><span className='font-semibold'>Puntaje: </span>{`${(100 * puntaje / puntajeTotal).toFixed(2)}% (${puntaje}/${puntajeTotal})`}</li>
                     }
                   </ul>
-                  <p><span className='font-semibold'>Fecha de calificación:</span> {fechaAMostrar}</p>
+                  <aside className='flex flex-col justify-between'>
+                    <p><span className='font-semibold'>Fecha de calificación:</span> {fechaAMostrar}</p>
+                    { calificacion?.muralId &&
+                      <Button 
+                        color='primary' variant='light' className='ml-auto w-fit italic p-2'
+                        onPress={handleDescargar}
+                        isLoading={downloading}
+                      >Descargar contenido calificado</Button>
+                    }
+                  </aside>
                 </header>
                 <RubricaGrid
                   label={nombreRubrica}
@@ -74,8 +114,10 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                 }
               </section>
             </ModalBody>
-            <ModalFooter className='p-2'>
-              
+            <ModalFooter className='flex flex-row'>
+            { downloadError &&
+                <p className='text-red-500 text-sm mr-4'>{downloadError}</p>
+            }
             </ModalFooter>
           </>
         )}
