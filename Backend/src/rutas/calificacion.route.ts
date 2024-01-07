@@ -617,7 +617,51 @@ router.get("/:idCurso/calificaciones/grupos", calificacionController.getCalifica
  */
 router.get("/:idCurso/calificaciones/alumnos", calificacionController.getCalificacionesOfAlumnosFromCurso)
 
-
+/**
+ * @swagger
+ * /api/cursos/{idCurso}/calificaciones/{idCalif}/screenshot:
+ *   get:
+ *     summary: Obtener screenshot de una calificacion
+ *     tags: [Calificacion]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387808
+ *       - name: idCalif
+ *         in: path
+ *         required: true
+ *         description: El id de la calificacion
+ *         schema:
+ *           type: string
+ *         example:
+ *           6a397636690a6145b8387666
+ *     responses:
+ *       200:
+ *         description: Screenshot encontrada
+ *         content:
+ *           application/json:
+ *             example:
+ *               base64: "/9h/4AAQskZJRgABAQAAA......"
+ *       400:
+ *         description: El parametro idCurso o idCalif es invalido
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Valor invalido para el atributo idCurso o idCalificacion de Calificacion
+ *       404:
+ *         description: Calificacion no encontrada o sin screenshot, o curso inexistente
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: No se ha podido encontrar 'Curso o calificacion' en la BDD
+ *       500:
+ *         description: Error desconocido
+ */
 router.get("/:idCurso/calificaciones/:idCalif/screenshot", calificacionController.getScreenshotCalificacion);
 
 export default router;
