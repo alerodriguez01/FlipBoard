@@ -191,4 +191,9 @@ function toMayusFirstLetters(str: string) {
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, getCalificacionParcial, getCSVofCalificacionesFromCurso };
+async function getBase64Screenshot(idCurso: string, idCalificacion: string) {
+    return await CalificacionRepository.getInstance().getCalificacionScreenshot(idCurso, idCalificacion);
+}
+
+export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, 
+    getCalificacionParcial, getCSVofCalificacionesFromCurso, getBase64Screenshot, };

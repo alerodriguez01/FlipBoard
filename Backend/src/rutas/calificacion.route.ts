@@ -617,4 +617,7 @@ router.get("/:idCurso/calificaciones/grupos", calificacionController.getCalifica
  */
 router.get("/:idCurso/calificaciones/alumnos", calificacionController.getCalificacionesOfAlumnosFromCurso)
 
+
+router.get("/:idCurso/calificaciones/:idCalif/screenshot", calificacionController.getScreenshotCalificacion);
+
 export default router;
