@@ -7,6 +7,8 @@ import { Rubrica } from "../lib/types";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
+import { exportToBlob } from "../../../src/packages/utils";
+import { ExcalidrawImperativeAPI } from "../../../src/types";
 
 type EvaluarProps = {
   rubrica: Rubrica,
@@ -20,6 +22,7 @@ type EvaluarProps = {
     idCurso: string,
     idMural?: string
   }
+  api: ExcalidrawImperativeAPI | null
 } 
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
@@ -48,7 +51,33 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
   });
 
   const onSubmit = async (data: EvaluarForm) => {
+    //// este metodo difiere del del form de nextjs porque incluye al mural
+
+    if (!props.api){
+      setError("erroresExternos", { message: "Hubo un problema. Por favor, intente recargando el mural." });
+      return;
+    }
+
+    const excalidrawAPI = props.api;
+
+    const bto64 = async (b: Blob): Promise<string> => {
+      return new Promise ((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result as string);
+        reader.readAsDataURL(b);
+      });
+    }
+
     try {
+
+      const blob = await exportToBlob({
+        elements: excalidrawAPI.getSceneElements(),
+        mimeType: "image/jpeg",
+        files: excalidrawAPI.getFiles(),
+      });
+
+      const jpeg = await bto64(blob);
+      
       const res = await fetch(import.meta.env.VITE_FLIPBOARD_BACKEND_URL + props.endpoint, {
           method: 'POST',
           body: JSON.stringify({
@@ -56,7 +85,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               observaciones: data.observaciones,
               idRubrica: props.rubrica.id,
               idDocente: props.idDocente,
-              idMural: props.dataToParcialUpdate?.idMural
+              idMural: props.dataToParcialUpdate?.idMural,
+              screenshot: jpeg
           }),
           headers: {
               'Content-Type': 'application/json'

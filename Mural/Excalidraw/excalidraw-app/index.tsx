@@ -968,11 +968,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Usuario" />
+              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Usuario" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Grupo" />
+              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Grupo" />
             </Sidebar.Tab>
 
 
