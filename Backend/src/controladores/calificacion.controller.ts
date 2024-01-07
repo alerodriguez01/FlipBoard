@@ -249,9 +249,12 @@ async function getScreenshotCalificacion(req: Request, res: Response) {
 
 
     try {
-        const screenshot = await calificacionService.getBase64Screenshot(idCurso, idCalificacion);
-        return res.status(200).json({base64: screenshot});
+        const path = await calificacionService.getScreenshotPath(idCurso, idCalificacion);
+        res.setHeader('Content-Type', 'image/jpeg');
+        res.setHeader('Content-Disposition', 'attachment; filename=mural.jpeg');
+        return res.status(200).sendFile(process.cwd()+path.substring(1));
     } catch (error: any) {
+        console.log(error);
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         return res.status(500).json({ error: error.message });

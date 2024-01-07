@@ -212,8 +212,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
 
     }
 
-    // returns base64 encoding of screenshot
-    public async getCalificacionScreenshot(idCurso: string, idCalificacion: string): Promise<string | null> {
+    public async getScreenshotPath(idCurso: string, idCalificacion: string): Promise<string | null> {
         try {
             // get screenshot path
             const calif = await this.prisma.calificacion.findUnique({
@@ -224,10 +223,7 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
                 select: { screenshot: true }
             });
             
-            if(!calif || !calif.screenshot) return null;
-
-            // load file
-            return await fs.readFile(calif.screenshot, 'base64');
+            return calif?.screenshot ?? null;
 
         } catch (error) {
             if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Curso o Calificacion", "id"); // el id no tiene los 12 bytes

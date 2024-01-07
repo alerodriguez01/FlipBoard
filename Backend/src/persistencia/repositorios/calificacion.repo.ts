@@ -36,7 +36,7 @@ export class CalificacionRepository implements CalificacionDataSource {
         return await this.calificacionDAO.getCalificacionParcial(idRubrica, idMural, idDocente, idGrupo, idAlumno);
     }
 
-    public async getCalificacionScreenshot(idCurso:string, idCalificacion: string) {
-        return await this.calificacionDAO.getCalificacionScreenshot(idCurso, idCalificacion);
+    public async getScreenshotPath(idCurso:string, idCalificacion: string) {
+        return await this.calificacionDAO.getScreenshotPath(idCurso, idCalificacion);
     }
 }

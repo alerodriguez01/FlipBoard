@@ -191,9 +191,11 @@ function toMayusFirstLetters(str: string) {
 
 }
 
-async function getBase64Screenshot(idCurso: string, idCalificacion: string) {
-    return await CalificacionRepository.getInstance().getCalificacionScreenshot(idCurso, idCalificacion);
+async function getScreenshotPath(idCurso: string, idCalificacion: string) {
+    const path = await CalificacionRepository.getInstance().getScreenshotPath(idCurso, idCalificacion);
+    if (!path) throw new NotFoundError("Calificacion");
+    return path;
 }
 
 export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, 
-    getCalificacionParcial, getCSVofCalificacionesFromCurso, getBase64Screenshot, };
+    getCalificacionParcial, getCSVofCalificacionesFromCurso, getScreenshotPath, };
