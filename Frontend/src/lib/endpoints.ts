@@ -124,6 +124,11 @@ function updateCurso(idCurso: string) {
     return `/api/cursos/${idCurso}`;
 }
 
+function downloadCalificaciones(idCurso: string) {
+    return `/api/cursos/${idCurso}/calificaciones/csv`;
+
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -137,5 +142,5 @@ export default {
     crearRubrica, asociarRubricaGrupos, asociarRubricaMural,
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
-    getCalificacionesAlumnosCurso, updateCurso, updateMural
+    getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones
 }

@@ -161,8 +161,9 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             include: {
                 usuarioModel: true,
                 grupoModel: { include: { integrantesModel: true } },
+                rubricaModel: true,
+                muralModel: true
             }
-            // include: { rubricaModel: true } // incluir la misma rubrica en todas las calificaciones no tiene mucho sentido
         }
 
         if (params.idRubrica) query.where.AND.push({ rubricaId: params.idRubrica })
