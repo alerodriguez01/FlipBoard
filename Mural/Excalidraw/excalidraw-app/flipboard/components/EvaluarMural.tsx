@@ -5,6 +5,7 @@ import { AlumnosTable } from './AlumnosTable';
 import { GruposTable } from './GruposTable';
 import endpoints from '../lib/endpoints';
 import { toMayusFirstLetters } from '../lib/utils';
+import { ExcalidrawImperativeAPI } from '../../../src/types';
 
 type CompProps = {
     tipo: "Usuario" | "Grupo",
@@ -12,7 +13,8 @@ type CompProps = {
     idCurso: string,
     idUser: string,
     theme: 'light'|'dark',
-    rubrica: Rubrica
+    rubrica: Rubrica,
+    api: ExcalidrawImperativeAPI | null
 }
 
 const EvaluarMural = (props: CompProps) => {
@@ -31,6 +33,7 @@ const EvaluarMural = (props: CompProps) => {
                     {toMayusFirstLetters(props.rubrica.nombre)}
                 </h3>
                 <EvaluarForm
+                    api={props.api}
                     rubrica={props.rubrica}
                     endpoint={ props.tipo === "Usuario" ? 
                         endpoints.crearCalificacionAlumno(props.idCurso, entity.id) : 
