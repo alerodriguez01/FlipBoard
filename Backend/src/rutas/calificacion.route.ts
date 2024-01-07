@@ -433,6 +433,37 @@ router.get("/:idCurso/calificaciones", calificacionController.getCalificacionesF
 
 /**
  * @swagger
+ * /api/cursos/{idCurso}/calificaciones/csv:
+ *   get:
+ *     summary: Obtener las calificaciones del curso en formato csv
+ *     tags: [Calificacion]
+ *     parameters:
+ *       - name: idCurso
+ *         in: path
+ *         required: true
+ *         description: El id del curso
+ *         schema:
+ *           type: string
+ *         example:
+ *           65397634490a7145b8387808
+ *     responses:
+ *       200:
+ *         description: Archivo csv
+ *         content:
+ *           text/csv:
+ *              example:
+ *                calificaciones.csv
+ *       400:
+ *         description: El parametro idCurso es invalido
+ *         content:
+ *           application/json:
+ *             example:
+ *               error: Valor invalido para el atributo idCurso o idRubrica de Calificacion
+ */
+router.get("/:idCurso/calificaciones/csv", calificacionController.getCSVofCalificacionesFromCurso)
+
+/**
+ * @swagger
  * /api/cursos/{idCurso}/calificaciones/grupos:
  *   get:
  *     summary: Obtener las calificaciones del curso asociadas a grupos

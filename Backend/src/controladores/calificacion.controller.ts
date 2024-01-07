@@ -1,7 +1,10 @@
 import { Request, Response } from "express";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
-import service from "../servicios/calificacion.service.js";
+import service, { CalificacionCSV } from "../servicios/calificacion.service.js";
 import { Calificacion } from "@prisma/client";
+import csv from "csv-writer";
+import { randomUUID } from "crypto";
+import fs from "fs";
 
 /*
     Obtener las calificaciones de un usuario
@@ -189,4 +192,52 @@ async function getCalificacionesOfAlumnosFromCurso(req: Request, res: Response) 
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, getCalificacionesOfGruposFromCurso, getCalificacionesOfAlumnosFromCurso };
+async function getCSVofCalificacionesFromCurso(req: Request, res: Response) {
+
+        const idCurso = req.params.idCurso;
+
+        // get data from service sorted by date
+        let calificaciones: CalificacionCSV[] = [];
+        try {
+            calificaciones = await service.getCSVofCalificacionesFromCurso(idCurso);
+        } catch (error) {
+            if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        }
+
+        // define csv writer
+        const path = `temp_csv/calificaciones_${randomUUID()}.csv`
+        const csvWriter = csv.createObjectCsvWriter({
+            path: path,
+            header: [
+                {id: 'fecha', title: 'Fecha'},
+                {id: "alumno", title: "Alumno"},
+                {id: "grupo", title: "Grupo"},
+                {id: "tipo_evaluacion", title: "Tipo de evaluacion"},
+                {id: "mural", title: "Mural"},
+                {id: "rubrica", title: "Rubrica"},
+                {id: "puntaje", title: "Puntaje"},
+                {id: "observaciones", title: "Observaciones"},
+                {id: "criterio1", title: "Criterio 1 (nivel evaluado)"},
+                {id: "criterio2", title: "Criterio 2 (nivel evaluado)"},
+                {id: "criterio3", title: "Criterio 3 (nivel evaluado)"},
+                {id: "criterio4", title: "Criterio 4 (nivel evaluado)"},
+                {id: "criterio5", title: "Criterio 5 (nivel evaluado)"},
+                {id: "criterio6", title: "Criterio 6 (nivel evaluado)"},
+                {id: "criterio7", title: "Criterio 7 (nivel evaluado)"},
+                {id: "criterio8", title: "Criterio 8 (nivel evaluado)"},
+                {id: "criterio9", title: "Criterio 9 (nivel evaluado)"},
+                {id: "criterio10", title: "Criterio 10 (nivel evaluado)"},
+            ]
+        });
+
+        // write data to csv
+        await csvWriter.writeRecords(calificaciones);
+
+        res.setHeader('Content-Type', 'text/csv');
+        res.setHeader('Content-Disposition', 'attachment; filename=calificaciones.csv');
+        return res.status(200).sendFile(process.cwd() + "/" + path);
+
+}
+
+export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, 
+    getCalificacionesOfGruposFromCurso, getCalificacionesOfAlumnosFromCurso, getCSVofCalificacionesFromCurso };
