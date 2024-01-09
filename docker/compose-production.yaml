@@ -46,6 +46,8 @@ services:
       - mongo-db
     ports:
       - 3100:3100
+    volumes:
+      - ../Backend/calificaciones:/app/calificaciones
     networks:
       - mynetwork
 
