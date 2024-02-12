@@ -7,11 +7,13 @@ import { Divider } from "@nextui-org/divider";
 const Article = ({children, id, title}: {children?: ReactNode, id: string, title: string}) => {
     return (
         <>
-            <article>
+            <article className="px-2">
                 <h1 id={id} className="text-3xl font-bold mb-2">{title}</h1>
                 {children}
             </article>
-            <Divider className="my-8"/>
+            <div className="my-8 px-2">
+                <Divider/>
+            </div>
         </>
     )
 }
@@ -31,8 +33,8 @@ const UL = ({children}: {children: ReactNode}) => {
 
 export default function Ayuda() {
     return (
-        <section className="flex flex-row h-screen p-8 gap-2">
-            <div className="w-[80%] flex flex-col h-full max-h-screen overflow-y-auto">
+        <section className="flex flex-row h-[calc(100vh-88px)] p-8 gap-2">
+            <div className="w-[80%] flex flex-col h-full overflow-y-auto">
                 <Article id="cursos" title="Información sobre cursos">
                     <H2 id="crear-curso">Ver y crear cursos</H2>
                     <p>En la sección Mis cursos puede ver todos los cursos de los que forma parte, ya sea como alumno o como docente. Si desea crear un curso, puede realizarlo presionando el botón “Crear nuevo curso” (1)</p>
@@ -50,7 +52,7 @@ export default function Ayuda() {
                     <IMG src={rubrica} alt="Creacion de una rubrica"/>
                 </Article>
             </div>
-            <aside className="w-[20%] max-h-screen overflow-y-auto">
+            <aside className="w-[20%] overflow-y-auto">
                 <ul>
                     <li><a href="#cursos">Información sobre cursos</a></li>
                     <li><a href="#rubricas">Información sobre rúbricas</a></li>
