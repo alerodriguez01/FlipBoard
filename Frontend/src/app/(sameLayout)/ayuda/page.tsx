@@ -34,7 +34,7 @@ const ItalicBold = ({ children }: { children: ReactNode }) => {
 
 export default function Ayuda() {
     return (
-        <section className="flex flex-row h-[calc(100vh-88px)] gap-2">
+        <section className="flex flex-row h-[calc(100vh-88px)] gap-2 p-1">
             <div className="w-[80%] flex flex-col h-full overflow-y-auto p-8 text-justify">
                 <Article id="cursos" title="Información sobre cursos">
 
