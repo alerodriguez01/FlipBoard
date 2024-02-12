@@ -107,16 +107,24 @@ const Navbar = () => {
         </div>
 
       </section>
-
-      <div className="border-l-1 border-gray-600 w-full">
-        <Button
-          className="dark w-full flex justify-start rounded-none"
-          onClick={handleCerrarSesion}
-          variant="light"
-        >
-          Salir
-        </Button>
-      </div>
+      
+      <footer className="flex flex-col gap-1 w-full">
+        <Link href="/ayuda"
+              className={`${pathname === '/ayuda' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+            >
+              Ayuda
+        </Link>
+        <div className="border-l-1 border-gray-600">
+          <Button
+            className="dark w-full flex justify-start rounded-none"
+            onClick={handleCerrarSesion}
+            variant="light"
+          >
+            Salir
+          </Button>
+        </div>
+      </footer>
+      
 
     </aside>
   )

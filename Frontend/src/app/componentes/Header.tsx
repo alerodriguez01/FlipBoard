@@ -27,16 +27,16 @@ const Header = () => {
     }, [])
 
     const pathname = usePathname()
-    const isCursosOrRubricas = pathname === "/cursos" || pathname === "/rubricas" || pathname === "/rubricas/crear"
+    const isCursosOrRubricasOrAyuda = ["/cursos", "/rubricas", "/rubricas/crear", "/ayuda"].includes(pathname);
 
     const idCurso = pathname.split("/")[2] ?? ""
-    const { data: curso, error, isLoading } = useSWR<Curso>(session && !isCursosOrRubricas ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
+    const { data: curso, error, isLoading } = useSWR<Curso>(session && !isCursosOrRubricasOrAyuda ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
 
 
     return (
         <header className="flex items-center bg-gray-300 dark:text-white dark:bg-gray-900 p-6 shadow-md shadow-slate-300 dark:shadow-slate-950">
             {
-                isCursosOrRubricas ?
+                isCursosOrRubricasOrAyuda ?
                     session ? <h1 className="flex-1 text-md">Hola <span className="font-medium italic">{nombre}</span>, ¡bienvenido!</h1> : <h1 className="flex-1"></h1>
                     :
                     <section className="flex-1" >
