@@ -86,7 +86,7 @@ async function resetPassword(req: Request, res: Response) {
             from: process.env.MAIL_USERNAME,
             to: user.correo,
             subject: 'FlipBoard: Reestablecer contraseña',
-            html: templateHtml(`Para reestablecer tu contraseña, hace click <a href="http://${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}">en este enlace</a>.`)
+            html: templateHtml(`Para reestablecer tu contraseña, hace click <a href="${process.env.FRONTEND_URL}/reset-password/${token}/${user.id}">en este enlace</a>.`)
         }
 
         transporter.sendMail(mail, (error, body) => {
