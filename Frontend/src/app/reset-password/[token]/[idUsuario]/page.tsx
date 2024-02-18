@@ -79,7 +79,7 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
     const [passwordHasChanged, setPasswordHasChanged] = useState(false);
 
     return (
-        <div className="flex h-[100dvh] md:h-screen items-center bg-white">
+        <div className="flex h-[100dvh] md:h-screen items-center bg-white text-black light">
             <aside className="hidden sm:flex justify-center flex-[2] h-full bg-white">
                 <Image src="/bienvenido.png" alt="Bienvenido a FlipBoard" width={500} height={500} className="object-contain" />
             </aside>
