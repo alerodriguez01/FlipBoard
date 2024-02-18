@@ -1,5 +1,7 @@
 # This scripts builds all the images and pushes them to the docker hub
 
+# IT IS NECESSARY TO BE IN THIS DIRECTORY (docker/production) TO RUN THE SCRIPT
+
 export FLIPBOARD_VERSION=1.1.1
 
 # 1. build images
