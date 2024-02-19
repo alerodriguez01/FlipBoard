@@ -143,6 +143,7 @@ export default function CrearRubrica() {
             {niveles.map(n =>
               <React.Fragment key={n}>
                 <NivelCard
+                  eliminable={niveles.length > 1}
                   id={n}
                   puntuable={puntuable}
                   onDelete={(id) => setNiveles(prev => prev.length === 1 ? prev : prev.filter(i => i !== id))}
