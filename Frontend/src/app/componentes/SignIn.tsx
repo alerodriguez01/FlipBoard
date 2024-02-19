@@ -42,6 +42,13 @@ const SignIn = () => {
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get("callbackUrl") || "/cursos"
 
+    const getURLWithCallBackAndSearchParam = (name: string, value: string) => {
+        const newSearchParams = new URLSearchParams()
+        if (searchParams.get("callbackUrl")) newSearchParams.set("callbackUrl", callbackUrl)
+        newSearchParams.set(name, value)
+        return "/?" + newSearchParams.toString()
+    }
+
     const onSubmit = async (data: UserSignIn) => {
 
         // https://next-auth.js.org/getting-started/client#signin
@@ -107,7 +114,7 @@ const SignIn = () => {
                 <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>
             }
 
-            <Link type="button" className="text-blue-500 text-sm text-center" href='/?resetpass=true'>¿Olvidaste tu contraseña?</Link>
+            <Link type="button" className="text-blue-500 text-sm text-center" href={getURLWithCallBackAndSearchParam("resetpass", "true")}>¿Olvidaste tu contraseña?</Link>
 
             <Button
                 className="p-2 bg-blue-500 text-white rounded-md  disabled:cursor-not-allowed"

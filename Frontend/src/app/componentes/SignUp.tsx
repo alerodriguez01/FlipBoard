@@ -1,6 +1,6 @@
 "use client"
 import { useForm } from "react-hook-form"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { z } from "zod"
 import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
@@ -28,6 +28,8 @@ type UserSignUp = z.infer<typeof userSchema> & { erroresExternos?: string } // l
 const SignIn = () => {
 
     const router = useRouter()
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl") || "/cursos"
 
     const {
         register, // función que retorna un objeto con los atributos requeridos para el input
@@ -66,19 +68,25 @@ const SignIn = () => {
                 return
             }
 
+            console.log("ANTES DE INICIAR SESION: "+callbackUrl)
             // https://next-auth.js.org/getting-started/client#signin
             const resLogIn = await signIn("credentials", {
                 correo: data.correo,
                 contrasena: data.contrasena,
                 redirect: false, // https://next-auth.js.org/getting-started/client#using-the-redirect-false-option
-                callbackUrl: "/cursos"
+                callbackUrl: callbackUrl
             });
 
             if (resLogIn?.error)
+                // en este punto el usuario ya se creo. Sin embargo, hubo un problema con next auth
+                // se lo redirige a la pagina de inicio para que intente login, y en su defecto se le mostrara el error alli
                 router.push("/")
 
             if (resLogIn?.ok)
-                router.push("/cursos")
+                router.push(callbackUrl)
+            
+            console.log("DESPUES DE INICIAR SESION: "+callbackUrl)
+            
             return
 
         } catch (error) {
