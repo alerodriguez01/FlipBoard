@@ -8,7 +8,8 @@ type NivelProps = {
   puntuable?: boolean,
   onDelete?: (id: string) => void,
   control: any,
-  name: string
+  name: string,
+  eliminable?: boolean
 };
 
 const NivelCard = forwardRef((props: NivelProps, ref) => {
@@ -32,7 +33,9 @@ const NivelCard = forwardRef((props: NivelProps, ref) => {
             className="max-w-[100px] self-center"
             size="sm" placeholder="Puntaje" variant={props.puntuable? "underlined" : "flat"}
           />
-          <Button size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
+          { props.eliminable &&
+            <Button size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
+          }
         </div>
         <Input
           defaultValue={nombre}
