@@ -1,0 +1,10 @@
+FROM nginx:1.23.3-alpine
+
+COPY nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80
+EXPOSE 443
+EXPOSE 3000
+EXPOSE 3002
+EXPOSE 3100
+EXPOSE 4000

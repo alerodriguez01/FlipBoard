@@ -35,11 +35,11 @@ export async function GET(req: NextRequest, { params: { idCurso } }: { params: {
 
         if (!res.ok) throw new Error()
 
-        return NextResponse.redirect(new URL(`/cursos/${idCurso}/murales?updateCurso=${idCurso}`, req.url))
+        return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/cursos/${idCurso}/murales?updateCurso=${idCurso}`, req.url))
 
     } catch (error) {
         // token invalido
-        return NextResponse.redirect(new URL('/cursos?invalidToken=true', req.url))
+        return NextResponse.redirect(new URL(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/cursos?invalidToken=true`, req.url))
     }
 
 

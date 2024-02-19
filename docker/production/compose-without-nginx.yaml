@@ -2,7 +2,7 @@ services:
 
   mongo-db:
     container_name: mongo-db
-    build: ./mongodb_rs
+    build: ./../mongodb_rs
     restart: always
     environment:
       MONGO_INITDB_ROOT_USERNAME: admin
@@ -40,7 +40,7 @@ services:
   api:
     container_name: api
     build: 
-      context: ./../Backend
+      context: ./../../Backend
       target: prod
     depends_on:
       - mongo-db
@@ -54,7 +54,7 @@ services:
   nextjs:
     container_name: frontend
     build: 
-      context: ./../Frontend
+      context: ./../../Frontend
       target: prod
     ports:
      - 3000:3000
@@ -64,7 +64,7 @@ services:
   mural-room-web-socket:
     container_name: mural-room-web-socket
     build: 
-      context: ./../Mural/RoomWebSocket
+      context: ./../../Mural/RoomWebSocket
       target: prod
     ports:
       - 3002:3002
@@ -74,7 +74,7 @@ services:
   mural-excalidraw:
     container_name: mural-excalidraw
     build: 
-      context: ./../Mural/Excalidraw
+      context: ./../../Mural/Excalidraw
       dockerfile: Dockerfile.prod
     ports:
       - 4000:80
