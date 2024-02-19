@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Button, Input } from "@nextui-org/react";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -29,6 +30,9 @@ const ResetPassword = () => {
     } = useForm<UserResetPassword>({
         resolver: zodResolver(userSchema)
     })
+
+    const searchParams = useSearchParams()
+    const callbackUrl = searchParams.get("callbackUrl")
 
     const [correoSent, setCorreoSent] = useState(false); // hook para renderizar "Se envio un correo a ..."
 
@@ -100,7 +104,7 @@ const ResetPassword = () => {
 
             </form>
 
-            <Link type="button" className="text-blue-500 text-sm" href='/'>Volver</Link>
+            <Link type="button" className="text-blue-500 text-sm" href={callbackUrl ?? "/"}>Volver</Link>
         </>
     )
 }

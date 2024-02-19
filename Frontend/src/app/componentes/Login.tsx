@@ -18,6 +18,13 @@ export default function Login() {
   const searchParams = useSearchParams()
   const callbackUrl = searchParams.get("callbackUrl") || "/cursos"
 
+  const getURLWithCallBackAndSearchParam = (name: string, value: string) => {
+    const newSearchParams = new URLSearchParams()
+    if(searchParams.get("callbackUrl")) newSearchParams.set("callbackUrl", callbackUrl)
+    newSearchParams.set(name, value)
+    return "/?" + newSearchParams.toString()
+  }
+
   useEffect(() => {
     // Si ya esta logueado, redirijo a la pagina que me pasaron por parametro o a la pagina de cursos
     if (session) router.push(callbackUrl)
@@ -36,12 +43,12 @@ export default function Login() {
             {searchParams.get("registro") ?
               <>
                 <SignUp />
-                <p className="text-sm">¿Ya tienes una cuenta? <Link href='/' className="text-blue-500">Inicia sesión</Link></p>
+                <p className="text-sm">¿Ya tienes una cuenta? <Link href={searchParams.get("callbackUrl") ?? '/'} className="text-blue-500">Inicia sesión</Link></p>
               </>
               :
               <>
                 <SignIn />
-                <p className="text-sm">¿No tienes una cuenta? <Link href='/?registro=true' className="text-blue-500">Regístrate</Link></p>
+                <p className="text-sm">¿No tienes una cuenta? <Link href={getURLWithCallBackAndSearchParam("registro", "true")} className="text-blue-500">Regístrate</Link></p>
                 <div className="flex items-center justify-center gap-2 w-max-[250px]">
                   <Divider className="w-28" /> ó <Divider className="w-28" />
                 </div>
