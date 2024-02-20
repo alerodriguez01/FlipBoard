@@ -68,8 +68,11 @@ async function createUsuario(user: Usuario) {
     } as Salt;
     saltRepository.createSalt(userSalt)
 
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const token = generateJWT(newUser);
+
     // retorno el usuario creado (aunque no haya terminado de guardar el salt)
-    return newUser;
+    return { ...newUser, token };
 
 }
 
@@ -122,11 +125,7 @@ function generateJWT(usuario: Usuario): string {
     // Generar JWT (en el payload no guardo el hash de la contrasena)
     const payload = {
         id: usuario.id,
-        nombre: usuario.nombre,
-        correo: usuario.correo,
-        cursosAlumno: usuario.cursosAlumno,
-        cursosDocente: usuario.cursosDocente,
-        grupos: usuario.grupos
+        superUser: usuario.superUser,
     }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY || "", { expiresIn: '48h' });

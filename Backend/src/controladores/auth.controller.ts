@@ -123,7 +123,7 @@ async function resetPassword(req: Request, res: Response) {
 async function authentication(req: Request, res: Response, next: NextFunction) {
     
     // rutas que no requieren autenticacion
-    const rutasSinAuth = ["/api-docs", "/api/auth/login", "/api/auth/google/login", "/api/auth/reset-password"]
+    const rutasSinAuth = ["/api-docs", "/api/auth/login", "/api/auth/google/login", "/api/auth/reset-password", "/api/usuarios"]
 
     // si la ruta no requiere autenticacion, continuo
     if(rutasSinAuth.includes(req.path)) return next()
