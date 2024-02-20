@@ -21,6 +21,10 @@ async function login(correo: string, contrasena: string) {
         if (!res.ok) return null
         
         const userLogged = await res.json()
+
+        // get the 'token' cookie and set to the userLogged
+        userLogged.token = res.headers.get('set-cookie')?.split(';').find(cookie => cookie.startsWith('token='))?.split('=')[1] || ''
+
         return userLogged
 
     } catch (error) {
@@ -49,6 +53,10 @@ async function loginProvider(provider: string, nombre: string, correo: string): 
         if (!res.ok) return null
         
         const userLogged = await res.json()
+
+        // get the 'token' cookie and set to the userLogged
+        userLogged.token = res.headers.get('set-cookie')?.split(';').find(cookie => cookie.startsWith('token='))?.split('=')[1] || ''
+        
         return userLogged
 
     } catch (error) {
