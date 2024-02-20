@@ -119,8 +119,8 @@ export default function CrearRubrica() {
   let niv = 1;
 
   return (
-    <section className={`flex flex-col p-8 overflow-auto max-w-[calc(89vw-2rem)]`}>
-      <PagesHeader title="Crear rúbrica" searchable={false} />
+    <section className={`flex flex-col px-8 pb-8 overflow-auto max-w-[calc(89vw-2rem)]`}>
+      <PagesHeader title="Crear rúbrica" searchable={false} className="mt-8"/>
       <form action="" className="flex flex-col" onSubmit={handleSubmit((data) => onSubmit(data))}>
         <header className={tagClassName}>
           <div className="flex flex-row justify-between">
@@ -138,7 +138,7 @@ export default function CrearRubrica() {
         </header>
         <ScrollSync>
           <>
-          <section className={tagClassName + "sticky top-0 z-50 shadow-lg border border-gray-400 dark:border-white"}>
+          <section className={tagClassName + "sticky top-0 z-50 shadow-lg border border-gray-400 dark:border-white px-9"}>
             <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
             <ScrollSyncPane group={"horizontal"}>
               <div className="flex flex-row pb-3 overflow-auto">

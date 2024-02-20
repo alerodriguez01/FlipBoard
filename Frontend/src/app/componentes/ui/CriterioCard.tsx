@@ -58,7 +58,7 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
                   })
                 } 
                 placeholder="Descripción del nivel"
-                variant="bordered" className={`min-w-[300px] max-w-[300px] mr-[48px] ${index === 0 ? "ml-[30px]":""}`} maxRows={5}
+                variant="bordered" className={`min-w-[300px] max-w-[300px] mr-[36px] ${index === 0 ? "ml-[47px]":""} ${index === props.niveles.length-1 ? "mr-[47px]":""}`} maxRows={5}
               />)
             }
           </div>
