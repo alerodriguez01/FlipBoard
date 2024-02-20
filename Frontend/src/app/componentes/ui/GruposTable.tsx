@@ -5,7 +5,6 @@ import { Button, Chip, Divider, TableColumn, getKeyValue } from "@nextui-org/rea
 import { Grupo, Usuario } from "@/lib/types";
 import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";
-import { PersonAddIcon } from "./icons/PersonAddIcon";
 import { useTheme } from "next-themes";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { GrupoIcon } from "./icons/GrupoIcon";
@@ -37,7 +36,7 @@ const GruposTable = (props: TableProps) => {
         <Button onPress={() => props.onEvaluarPress?.(grupo)} radius="full" variant="faded">Evaluar</Button> 
 
 
-    if (props.editable && columnKey === "actions") 
+    if (props.editable && props.removable && columnKey === "actions") 
       return (
         <div className="flex flex-row gap-1">
           <Button onPress={() => alert(`TODO: MODIFICAR idGrupo: ${grupo.id}`)} isIconOnly variant="light" className="hidden">
