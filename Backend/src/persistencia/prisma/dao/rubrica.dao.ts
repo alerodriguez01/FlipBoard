@@ -64,7 +64,10 @@ export class RubricaPrismaDAO implements RubricaDataSource {
                 where: {
                     AND: [
                         {usuarioId: userId},
-                        {nombre: {contains: nombreRub?.toLowerCase()}}
+                        {OR: [
+                            {nombre: {contains: nombreRub?.toLowerCase()}},
+                            {criterios: {some: {nombre: {contains: nombreRub?.toLowerCase()}}}},
+                        ]}
                     ]
                 }
             });
