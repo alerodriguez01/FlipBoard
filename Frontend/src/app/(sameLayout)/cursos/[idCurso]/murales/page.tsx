@@ -153,7 +153,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
             <h3 className="px-3">El curso no posee murales creados</h3>
             :
             data.map((m: Mural) => {
-              if (search !== "" && !m.nombre.toLowerCase().includes(search.toLowerCase())) return null;
+              if (!!search && (!m.nombre.toLowerCase().includes(search.toLowerCase()) && !m.contenido.includes(search.toLowerCase()))) return null;
               return (
                 <MuralCard
                   key={crypto.randomUUID()}

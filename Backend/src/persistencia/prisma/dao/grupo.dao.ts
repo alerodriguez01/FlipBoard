@@ -28,7 +28,14 @@ export class GrupoPrismaDAO implements GrupoDataSource {
             where: {
                 AND: [
                     { cursoId: idCurso },
-                    { integrantesModel: { some: { nombre: { contains: nombre.toLowerCase() } } } }
+                    { integrantesModel: 
+                        { some: 
+                            {OR: [
+                                { nombre: { contains: nombre.toLowerCase() } },
+                                { correo: { contains: nombre.toLowerCase() } }
+                            ]}
+                        } 
+                    }
                 ]
             },
             include: { integrantesModel: true }
