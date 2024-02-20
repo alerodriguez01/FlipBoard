@@ -7,16 +7,17 @@ type PagesHeaderProps = {
     title: string,
     placeholder?: string,
     searchable: boolean,
-    onSearch?: (value: string) => void
+    onSearch?: (value: string) => void,
+    className?: string
 }
 
-const PagesHeader = ({title, placeholder, searchable, onSearch}: PagesHeaderProps) => {
+const PagesHeader = ({title, placeholder, searchable, onSearch, className}: PagesHeaderProps) => {
 
     const {theme} = useTheme();
     const currentTheme = theme === "dark" ? "dark" : "light";
 
     return (
-        <header className="flex flex-row justify-between mb-4 mx-2.5">
+        <header className={"flex flex-row justify-between mb-4 mx-2.5 " + className}>
             <h1 className="text-2xl font-semibold self-center">{title}</h1>
             {searchable &&
                 <Input

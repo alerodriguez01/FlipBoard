@@ -2,6 +2,7 @@ import { Button, Card, CardBody, Input, Textarea } from "@nextui-org/react";
 import React, { forwardRef, useEffect, useState } from "react";
 import { CrossIcon } from "./icons/CrossIcon";
 import { useController } from "react-hook-form";
+import { ScrollSyncPane } from "react-scroll-sync";
 
 type CriterioProps = {
   id: string,
@@ -40,26 +41,28 @@ const CriterioCard = forwardRef((props: CriterioProps, ref) => {
           />
           <Button className="self-center" size="sm" isIconOnly variant="light" onPress={() => props.onDelete?.(props.id)}><CrossIcon/></Button>
         </header>
-        <div className="flex flex-row gap-3 overflow-auto pb-2">
-          {props.niveles.map(n => 
-            <Textarea 
-              key={n}
-              defaultValue={descripciones.get(n)}
-              onValueChange={value => setDescripciones(prev => {
-                  if(value === "") {
-                    prev.delete(n);
-                    field?.onChange({...field.value, descripciones: prev});
-                    return prev;
-                  }
-                  field?.onChange({...field.value, descripciones: prev.set(n,value)});
-                  return prev.set(n,value);
-                })
-              } 
-              placeholder="Descripción del nivel"
-              variant="bordered" className="min-w-[300px]" maxRows={5}
-            />)
-          }
-        </div>
+        <ScrollSyncPane group={"horizontal"}>
+          <div className="flex flex-row gap-3 overflow-auto pb-2">
+            {props.niveles.map((n, index) => 
+              <Textarea 
+                key={n}
+                defaultValue={descripciones.get(n)}
+                onValueChange={value => setDescripciones(prev => {
+                    if(value === "") {
+                      prev.delete(n);
+                      field?.onChange({...field.value, descripciones: prev});
+                      return prev;
+                    }
+                    field?.onChange({...field.value, descripciones: prev.set(n,value)});
+                    return prev.set(n,value);
+                  })
+                } 
+                placeholder="Descripción del nivel"
+                variant="bordered" className={`min-w-[300px] max-w-[300px] mr-[36px] ${index === 0 ? "ml-[47px]":""} ${index === props.niveles.length-1 ? "mr-[47px]":""}`} maxRows={5}
+              />)
+            }
+          </div>
+        </ScrollSyncPane>
         {invalid && !!error?.message && 
           <p className="text-[#e41157] text-sm self-start mt-1">{error.message}</p>}
         {invalid && !!(error as any).nombre &&

@@ -13,6 +13,7 @@
     "@excalidraw/excalidraw": "^0.16.1",
     "@hookform/resolvers": "^3.3.2",
     "@nextui-org/react": "^2.1.13",
+    "@types/react-scroll-sync": "^0.9.0",
     "framer-motion": "^10.16.4",
     "jsonwebtoken": "^9.0.2",
     "next": "13.5.4",
@@ -23,6 +24,7 @@
     "react-hook-form": "^7.47.0",
     "react-hot-toast": "^2.4.1",
     "react-qr-code": "^2.0.12",
+    "react-scroll-sync": "^0.11.2",
     "swr": "^2.2.4",
     "uuid": "^9.0.1",
     "zod": "^3.22.4"
