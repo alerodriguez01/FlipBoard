@@ -106,7 +106,8 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                       searchable={true}
                       items={alumnosData?.result}
                       onActionPress={(user) => setIntegrantes((prev) => {
-                          if(prev.includes(user))
+                          // necesario porque user != props.user por algun motivo
+                          if(!!prev.find(u => u.id === user.id))
                             return prev;
                           field.onChange([...prev, user].map(u => u.id));
                           return [...prev, user];
@@ -122,7 +123,7 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
                       searchable={false} 
                       items={integrantes}
                       onActionPress={(user) => setIntegrantes((prev) => {
-                          if(user === props.user) return prev;
+                          if(!!props.user && user.id === props.user.id) return prev;
                           const nuevo = prev.filter(u => u.id !== user.id);
                           field.onChange(nuevo.map(u => u.id));
                           return nuevo;
