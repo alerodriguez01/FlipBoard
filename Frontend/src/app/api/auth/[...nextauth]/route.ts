@@ -34,6 +34,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
 
             // una vez submiteado el form y validado, se llama a 
             // signIn("credentials", {correo: "...", contrasena: "..."}) que llama a esta funcion
+            // Es decir, se ejecuta solo cuando se hace login con usuario y contraseña
             async authorize(credentials, req) {
 
                 if (!credentials?.correo || !credentials?.contrasena) return null;
@@ -62,9 +63,12 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
     callbacks: {
 
         // https://next-auth.js.org/configuration/callbacks#sign-in-callback
-        // Called when a user signs in (es lo primero que se llama despues de hacer el login; solo se ejecuta cuando se inicia sesion).
+        // Called when a user signs in - es decir, cuando se llama a signIn(...) -
+        // Es lo primero que se llama despues de llamar a signIn(...), excepto que se inicie sesion con
+        // credenciales, en cuyo caso primero pasa por authorize; solo se ejecuta cuando se inicia sesion.
+        // - user: viene con los datos cargados por el provider (google, credentials, etc)
         async signIn({ user, account, profile, email, credentials }) {
-
+            
             // si inicio sesion con google, busco el usuario en la BD y lo retorno
             if (account?.provider === "google") {
                 // Buscar el usuario en la BD
@@ -94,11 +98,12 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
         // SIEMPRE que se ejecute, crea un nuevo JWT, con su fecha de expiracion actualizada
         /*
             Caso A: 
-              1. El usuario inicia sesión. 
+              1. El usuario inicia sesión con credenciales. 
               2. Se llama a authorize(), retorna el user
-              3. Se llama a jwt() con el user y un token vacio -> { name: undefined, email: undefined, picture: undefined, sub: '654276330c842ac6e1eeb1f4' }
-              4. Se setean y retornan los datos del user en el payload (token) -> { sub: '654276330c842ac6e1eeb1f4', id: '...', nombre: '...', correo: '...', cursosAlumno: [], ... }
-              5. Se guarda en la cookie del navegador, encriptado mediante JWE usando la clave secreta pasada como variable de entorno
+              3. Se llama a signIn() con el user retornado por authorize()
+              4. Se llama a jwt() con el user y un token vacio -> { name: undefined, email: undefined, picture: undefined, sub: '654276330c842ac6e1eeb1f4' }
+              5. Se setean y retornan los datos del user en el payload (token) -> { sub: '654276330c842ac6e1eeb1f4', id: '...', nombre: '...', correo: '...', cursosAlumno: [], ... }
+              6. Se guarda en la cookie del navegador, encriptado mediante JWE usando la clave secreta pasada como variable de entorno
             Caso B:
               1. El usuario ya esta logueado y se llama a useSession() o getSession() o se llama al middleware
               2. Se llama a jwt() solamente con el token decodificado que viene en la cookie del navegador (next-auth.session-token)
