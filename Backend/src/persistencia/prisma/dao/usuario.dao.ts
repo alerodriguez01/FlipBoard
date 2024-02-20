@@ -148,7 +148,10 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       skip: offset,
       where: {
         AND: [
-          { nombre: { contains: nombreUser.toLowerCase() } },
+          {OR: [
+            { nombre: { contains: nombreUser.toLowerCase() } },
+            { correo: { contains: nombreUser.toLowerCase() } }
+          ]},
           {
             OR: [
               { cursosAlumno: { has: idCurso } },
