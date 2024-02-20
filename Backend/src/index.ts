@@ -15,6 +15,7 @@ import swaggerUi from "swagger-ui-express";
 import swaggerJsDoc from "swagger-jsdoc";
 import cors from "cors";
 import 'dotenv/config'
+import authController from "./controladores/auth.controller.js"
 
 const app = express();
 
@@ -41,6 +42,8 @@ const swaggerOptions = {
 }
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)))
 
+// middleware para manejar auth
+app.use(authController.authentication)
 
 // Rutas
 app.get("/api", (req, res) => {

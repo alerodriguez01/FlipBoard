@@ -151,7 +151,10 @@ function generateResetJWT(usuario: Usuario): string {
 }
 
 async function loginProvider(provider: string, nombre: string, correo: string) {
-    return await usuarioRepository.loginProvider(provider, nombre, correo);
+    const usuario = await usuarioRepository.loginProvider(provider, nombre, correo);
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const token = generateJWT(usuario);
+    return { ...usuario, token };
 }
 
 /**
