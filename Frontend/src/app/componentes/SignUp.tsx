@@ -18,8 +18,12 @@ const userSchema = z.object({
     contrasena: z.string()
         .min(8, "La contraseña debe tener al menos 8 caracteres.")
         .regex(/^(?=.*[A-Z])(?=.*\d).+/, "La contraseña debe tener al menos una mayúscula y un número."),
-    nombre: z.string().min(1, "Campo obligatorio."),
-    apellido: z.string().min(1, "Campo obligatorio."),
+    nombre: z.string()
+        .min(1, "Campo obligatorio.")
+        .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, "El nombre solo puede contener letras."),
+    apellido: z.string()
+        .min(1, "Campo obligatorio.")
+        .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/, "El apellido solo puede contener letras.")
 })
 // tipo inferido a partir del schema
 type UserSignUp = z.infer<typeof userSchema> & { erroresExternos?: string } // le agrego el atributo erroresExternos para poder mostrar errores de la API al final del formulario
