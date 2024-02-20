@@ -6,12 +6,14 @@ import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 import { GrupoRepository } from "../persistencia/repositorios/grupo.repo.js";
 import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
+import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 
 const califcacionRepository = CalificacionRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
 const cursoRepository = CursoRepository.getInstance();
 const grupoRepository = GrupoRepository.getInstance();
 const muralRepository = MuralRepository.getInstance();
+const usuarioRepository = UsuarioRepository.getInstance();
 
 async function getCalificacionesFromUser(idCurso: string, idUsuario: string, rubrica: boolean, limit: number, offset: number) {
 
@@ -32,9 +34,11 @@ async function createCalificacion(calificacion: Calificacion) {
     if (calificacion.docenteId.length !== 24)
         throw new InvalidValueError("Calificacion", "docenteId");
 
-    // Verificar que quien califica sea docente en el curso
-    if (!curso.docentes.includes(calificacion.docenteId))
-        throw new NotFoundError("Docente en Curso");
+    // Verificar que quien califica sea super user o docente en el curso
+    const docenteOSuperUser = await usuarioRepository.getUsuarioById(calificacion.docenteId);
+    if (!docenteOSuperUser?.superUser) 
+        if (!curso.docentes.includes(calificacion.docenteId))
+            throw new NotFoundError("Docente en Curso");
 
     // Si se califica a un usuario, verificar que el usuario pertenezca al curso
     if (calificacion.usuarioId && !curso.participantes.includes(calificacion.usuarioId))
@@ -131,7 +135,7 @@ async function getCSVofCalificacionesFromCurso(idCurso: string): Promise<Calific
     const calificaciones = await califcacionRepository.getCalificacionesFromCurso(idCurso, 0, 0, {});
 
     // cant max de criterios
-    let cantCriterios = 0; 
+    let cantCriterios = 0;
     calificaciones.result.forEach(cal => {
         if (cal.rubricaModel?.criterios.length > cantCriterios) cantCriterios = cal.rubricaModel?.criterios.length;
     })
@@ -203,5 +207,7 @@ async function getScreenshotPath(idCurso: string, idCalificacion: string) {
     return path;
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, 
-    getCalificacionParcial, getCSVofCalificacionesFromCurso, getScreenshotPath, };
+export default {
+    getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso,
+    getCalificacionParcial, getCSVofCalificacionesFromCurso, getScreenshotPath,
+};

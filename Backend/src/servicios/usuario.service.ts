@@ -48,7 +48,10 @@ async function createUsuario(user: Usuario) {
     if (pwd.length < 8 || pwd.toLowerCase() === pwd || !pwd.match(/\d/))
         throw new InvalidValueError('Usuario', 'Contrasenia');
 
-
+    // name is only letters and spaces
+    if (!user.nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
+        throw new InvalidValueError('Usuario', 'Nombre o apellido');
+    
     const salt = await bcryptjs.genSalt(15);
     const newUser = await usuarioRepository.createUsuario({
         ...user,
