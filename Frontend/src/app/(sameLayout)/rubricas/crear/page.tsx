@@ -138,7 +138,7 @@ export default function CrearRubrica() {
         </header>
         <ScrollSync>
           <>
-          <section className={tagClassName}>
+          <section className={tagClassName + "sticky top-0 z-50 shadow-lg border border-gray-400 dark:border-white"}>
             <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
             <ScrollSyncPane group={"horizontal"}>
               <div className="flex flex-row pb-3 overflow-auto">
