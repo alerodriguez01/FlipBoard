@@ -66,11 +66,11 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
         async signIn({ user, account, profile, email, credentials }) {
 
             // si inicio sesion con google, busco el usuario en la BD y lo retorno
-            if(account?.provider === "google"){
+            if (account?.provider === "google") {
                 // Buscar el usuario en la BD
                 const userLogged = await loginProvider(account.provider, user.name || "No name", user.email || `No email|${user.id}`);
 
-                if(!userLogged) return '/?loginback=error'; // si sale mal, retorna la URL a la que se redirecciona
+                if (!userLogged) return '/?loginback=error'; // si sale mal, retorna la URL a la que se redirecciona
 
                 user.id = userLogged.id;
                 user.nombre = user.name || "";
@@ -79,6 +79,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 user.cursosAlumno = userLogged.cursosAlumno;
                 user.cursosDocente = userLogged.cursosDocente;
                 user.grupos = userLogged.grupos;
+                user.superUser = userLogged.superUser;
             }
 
             return true; // si sale todo bien, retorna true
@@ -115,9 +116,9 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
             //       cursosDocente: [...cursosDocente, curso.id]
             //     }
             //   });
-            if(trigger === 'update') return { ...token, ...session.user }; // https://www.youtube.com/watch?v=gDsCueKkFEk&ab_channel=SakuraDev
+            if (trigger === 'update') return { ...token, ...session.user }; // https://www.youtube.com/watch?v=gDsCueKkFEk&ab_channel=SakuraDev
 
-            if(account?.provider === "google" && user) {
+            if (account?.provider === "google" && user) {
                 token.id = user.id;
                 token.nombre = user.name || "";
                 token.correo = user.email || "";
@@ -125,6 +126,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 token.cursosAlumno = user.cursosAlumno;
                 token.cursosDocente = user.cursosDocente;
                 token.grupos = user.grupos;
+                token.superUser = user.superUser;
             }
 
             if (account?.provider === "credentials" && user) {
@@ -134,6 +136,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 token.cursosAlumno = user.cursosAlumno;
                 token.cursosDocente = user.cursosDocente;
                 token.grupos = user.grupos;
+                token.superUser = user.superUser;
             }
 
             return token;
@@ -154,6 +157,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 cursosAlumno: token.cursosAlumno ?? [],
                 cursosDocente: token.cursosDocente ?? [],
                 grupos: token.grupos ?? [],
+                superUser: token.superUser ?? false,
             };
             return session; // The return type will match the one returned in `useSession()`
         },
@@ -187,6 +191,7 @@ declare module "next-auth" {
         cursosDocente: string[],
         grupos: string[],
         token: string,
+        superUser?: boolean,
     }
     /**
      * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
@@ -200,6 +205,7 @@ declare module "next-auth" {
             cursosAlumno: string[],
             cursosDocente: string[],
             grupos: string[],
+            superUser?: boolean,
         },
     }
 }
@@ -213,5 +219,6 @@ declare module "next-auth/jwt" {
         cursosAlumno: string[],
         cursosDocente: string[],
         grupos: string[],
+        superUser?: boolean,
     }
 }
