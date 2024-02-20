@@ -8,6 +8,7 @@ import PagesHeader from "./PagesHeader";
 import endpoints from "@/lib/endpoints";
 import { SearchIcon } from "./icons/SearchIcon";
 import { toMayusFirstLetters } from "@/lib/utils";
+import { useSession } from "next-auth/react";
 
 type AccordionProps = {
     idCurso: string,
@@ -19,10 +20,10 @@ const MuralesAccordion = (props: AccordionProps) => {
     const { theme } = useTheme();
     const currentTheme = theme === "dark" ? "dark" : "light";
     const [nombre, setNombre] = useState("");
+    const { data: session, status } = useSession();
     const { data, error, isLoading } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(props.idCurso) + `&nombre=${nombre}`,
-        (url) => fetch(url).then(res => res.json().then(d => d.filter((m: Mural) => !!m.rubricaModel))));
+        (url) => fetch(url, { headers: { "Authorization": session?.user.token || "" } }).then(res => res.json().then(d => d.filter((m: Mural) => !!m.rubricaModel))));
 
-    console.log(data);
 
     if (!isLoading && data?.error) return (
         <section className="flex flex-col flex-1 p-10">

@@ -4,6 +4,7 @@ import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Texta
 import React from 'react'
 import { RubricaGrid } from './RubricaGrid'
 import endpoints from '@/lib/endpoints'
+import { useSession } from 'next-auth/react'
 
 type CalificacionModalProps = {
   isOpen: boolean,
@@ -36,12 +37,19 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
   const [downloadError, setDownloadError] = React.useState("");
   const [downloading, setDownloading] = React.useState(false);
 
+  const { data: session, status } = useSession();
+
   const handleDescargar = async () => {
     setDownloadError("");
     if (!calificacion?.cursoId || !calificacion?.id) return;
     setDownloading(true);
     try {
-      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.downloadScreenshot(calificacion?.cursoId, calificacion?.id));
+      const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.downloadScreenshot(calificacion?.cursoId, calificacion?.id), {
+        method: 'GET',
+        headers: {
+          "Authorization": session?.user.token || ''
+        }
+      });
       setDownloading(false);
       if (!res.ok) {
         setDownloadError("Ha ocurrido un error al descargar el contenido calificado");

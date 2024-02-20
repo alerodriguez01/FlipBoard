@@ -28,7 +28,8 @@ export async function GET(req: NextRequest, { params: { idCurso } }: { params: {
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${idCurso}/alumnos`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": session?.user.token || ''
             },
             body: JSON.stringify({ id: idAlumno }),
         })

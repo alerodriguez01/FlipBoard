@@ -41,18 +41,20 @@ async function createCurso(body: Curso): Promise<Curso> {
 
 async function updateCurso(idCurso: string, body: Curso): Promise<Curso> {
 
-        // Verificar existencia de docentes
-        const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
+    // Verificar que el docente sea superuser o el docente del curso
+    const docenteCurso = await usuarioRepository.getUsuarioById(body.docentes[0]);
+    if (!docenteCurso) throw new NotFoundError("Docente");
+    if (!docenteCurso.superUser) {
+        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    }
 
-        if (!docente) throw new NotFoundError("Docente");
-    
-        // check if mail is valid
-        if (!validator.default.isEmail(body.emailContacto))
-            throw new InvalidValueError('Curso', 'EmailContacto');
-    
-        const cursoSaved = await cursoRepository.updateCurso(idCurso, body);
-    
-        return cursoSaved;
+    // check if mail is valid
+    if (!validator.default.isEmail(body.emailContacto))
+        throw new InvalidValueError('Curso', 'EmailContacto');
+
+    const cursoSaved = await cursoRepository.updateCurso(idCurso, body);
+
+    return cursoSaved;
 }
 
 
@@ -66,10 +68,12 @@ async function getCursos() {
 
 async function deleteCursoById(idCurso: string, docente: string) {
 
-    // Verificar que el docente sea el docente del curso
+    // Verificar que el docente sea superuser o el docente del curso
     const docenteCurso = await usuarioRepository.getUsuarioById(docente);
     if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    if (!docenteCurso.superUser) {
+        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    }
 
     const curso = await cursoRepository.deleteCursoById(idCurso);
     return curso;

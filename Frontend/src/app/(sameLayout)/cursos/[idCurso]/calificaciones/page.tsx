@@ -16,7 +16,11 @@ export default function Calificaciones({ params: { idCurso } }: { params: { idCu
 
     const downloadCsv = async () => {
         try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.downloadCalificaciones(idCurso))
+            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.downloadCalificaciones(idCurso), {
+                headers: {
+                    'Authorization': session?.user.token || ''
+                }
+            })
             const blob = await res.blob()
 
             // Create a link element

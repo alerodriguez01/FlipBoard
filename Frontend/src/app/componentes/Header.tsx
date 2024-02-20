@@ -30,7 +30,7 @@ const Header = () => {
     const isCursosOrRubricasOrAyuda = ["/cursos", "/rubricas", "/rubricas/crear", "/ayuda"].includes(pathname);
 
     const idCurso = pathname.split("/")[2] ?? ""
-    const { data: curso, error, isLoading } = useSWR<Curso>(session && !isCursosOrRubricasOrAyuda ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
+    const { data: curso, error, isLoading } = useSWR<Curso>(session && !isCursosOrRubricasOrAyuda ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(idCurso) : null, (url: string) => fetch(url, { headers: { "Authorization": session?.user.token || "" } }).then(res => res.json()));
 
 
     return (

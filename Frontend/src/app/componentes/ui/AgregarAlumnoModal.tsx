@@ -3,6 +3,7 @@ import ListForm from "./ListForm"
 import { useState } from "react"
 import useSWR from "swr"
 import endpoints from "@/lib/endpoints"
+import { useSession } from "next-auth/react"
 
 type AgregarAlumnoModalProps = {
     isOpen: boolean,
@@ -16,11 +17,12 @@ type TokenAnadirCurso = {
     token: string
 }
 
-const fetcher = (url: string, idDocente: string) => (
+const fetcher = (url: string, idDocente: string, token: string) => (
     fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            "Authorization": token
         },
         body: JSON.stringify({ idDocente }),
     })
@@ -29,14 +31,16 @@ const fetcher = (url: string, idDocente: string) => (
 
 const AgregarAlumnoModal = ({ isOpen, onOpenChange, idCurso, mutarDatos, idUser }: AgregarAlumnoModalProps) => {
 
-    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${idCurso}`, (url: string) => fetcher(url, idUser))
+    const { data: session, status } = useSession();
+    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${idCurso}`, (url: string) => fetcher(url, idUser, session?.user.token || ''))
 
     const handleOnSubmit = async (emails: string[]) => {
 
         const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.enviarEmails(idCurso), {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": session?.user.token || ''
             },
             body: JSON.stringify({ emails, token: data?.token, enviarInvitacionSiExiste: false }),
         })

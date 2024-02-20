@@ -41,6 +41,8 @@ async function createUsuario(req: Request, res: Response) {
 
     try {
         const newUser = await service.createUsuario(user as Usuario);
+        // Guardo el JWT en la cookie (2 dias de duracion)
+        res.cookie('token', newUser.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
         return res.status(201).json(newUser);
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json(err.message);

@@ -11,6 +11,7 @@ import PagesHeader from "./PagesHeader";
 import { toMayusFirstLetters } from "@/lib/utils";
 import EliminarModal from "./EliminarModal";
 import endpoints from "@/lib/endpoints";
+import { useSession } from "next-auth/react";
 
 type AccordionProps = {
     endpoint: string,
@@ -26,8 +27,10 @@ const RubricasAccordion = (props: AccordionProps) => {
     const { theme } = useTheme();
     const currentTheme = theme === "dark" ? "dark" : "light";
     const [nombre, setNombre] = useState("");
+    const { data: session, status } = useSession();
+
     const { data, error, isLoading, mutate } = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + (props.searchable ? `?nombre=${nombre}` : ""),
-        (url) => fetch(url).then(res => res.json()));
+        (url) => fetch(url, { headers: { "Authorization": session?.user.token || "" } }).then(res => res.json()));
 
     const { isOpen: isOpenEliminar, onOpen: onOpenEliminar, onOpenChange: onOpenChangeEliminar } = useDisclosure(); // Para modal de eliminar
     const [rubricaSelected, setRubricaSelected] = useState<Rubrica | null>(null);
@@ -37,7 +40,8 @@ const RubricasAccordion = (props: AccordionProps) => {
         const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.deleteRubrica(props.userId || "", rubricaSelected?.id || ""), {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": session?.user.token || ''
             },
         });
 
@@ -50,8 +54,8 @@ const RubricasAccordion = (props: AccordionProps) => {
     }
 
     if (!isLoading && data?.error) return (
-        <section className="flex flex-col flex-1 p-10">
-            {/* {error.message} */}
+        <section className="flex flex-col flex-1">
+            <PagesHeader title="Rúbricas" searchable={false} />
             <h1 className="">No se pudieron obtener las rúbricas</h1>
         </section>
     );

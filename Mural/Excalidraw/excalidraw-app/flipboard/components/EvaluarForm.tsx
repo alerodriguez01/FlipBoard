@@ -22,7 +22,8 @@ type EvaluarProps = {
     idCurso: string,
     idMural?: string
   }
-  api: ExcalidrawImperativeAPI | null
+  api: ExcalidrawImperativeAPI | null,
+  tokenBackend: string
 } 
 
 const EvaluarForm = (props: EvaluarProps, ref: any) => {
@@ -89,7 +90,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               screenshot: jpeg
           }),
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              "Authorization": props.tokenBackend
           }
       });
 
@@ -124,6 +126,7 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
           idDocente: props.idDocente,
           setObservaciones: (value: string) => setValue("observaciones", value) 
         }}
+        tokenBackend={props.tokenBackend}
         />
 
       {/* Es necesario agregar este controller porque el setValue no funciona aca */}

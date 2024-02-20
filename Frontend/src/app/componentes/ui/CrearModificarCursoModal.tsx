@@ -63,7 +63,8 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
           docentes: [props.idDocente]
         }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": session?.user.token || ''
         }
       });
       console.log(res);

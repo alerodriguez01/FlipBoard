@@ -5,6 +5,7 @@ import useSWR from "swr";
 import { Spinner } from "./Spinner";
 import { SearchIcon } from "./icons/SearchIcon";
 import { useTheme } from "next-themes";
+import { useSession } from "next-auth/react";
 
 type TableProps = {
   className: string,
@@ -30,9 +31,10 @@ const PaginatedTable = (props: TableProps) => {
   const rows = 10;
 
   const [nombre, setNombre] = useState("");
+  const { data: session, status } = useSession();
 
   const {data, error, isLoading, mutate} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}&${props.searchParams}`,
-      (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
+      (url) => fetch(url, { headers: { "Authorization": session?.user.token || "" } }).then(res => res.json()), { keepPreviousData: true });
 
   // para que cada vez que se cree un grupo, se refresque la tabla
   useEffect(() => {

@@ -11,6 +11,7 @@ import { useController, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Spinner } from "./Spinner";
+import { useSession } from "next-auth/react";
 
 
 const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void, user?: Usuario}) => {
@@ -18,9 +19,10 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
+  const { data: session, status } = useSession();
   const [nombre, setNombre] = useState("");
   const {data: alumnosData, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllAlumnos(props.idCurso) + `?nombre=${nombre}`,
-      (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
+      (url) => fetch(url, { headers: { "Authorization": session?.user.token || "" }}).then(res => res.json()), { keepPreviousData: true });
   
   const [integrantes, setIntegrantes] = React.useState<Usuario[]>(props.user ? [props.user] : []); 
 
@@ -55,7 +57,8 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
               integrantes: data.integrantes
           }),
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              "Authorization": session?.user.token || ''
           }
       });
 

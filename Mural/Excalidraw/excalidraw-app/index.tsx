@@ -713,6 +713,7 @@ const ExcalidrawWrapper = () => {
 
   // obtengo el usuario logueado
   const { data: session, error: errorSession, isLoading: isLoadingSession } = useSWR<Session>(`${FLIPBOARD_FRONTEND}/api/auth/amiloggedin`, (url: string) => fetch(url, { credentials: "include" }).then(res => res.json()));
+  console.log(session)
   // si no estoy logueado, redirecciono a la pagina de login
   if (!isLoadingSession && session && !session.loggedIn) window.location.href = FLIPBOARD_FRONTEND;
 
@@ -756,11 +757,14 @@ const ExcalidrawWrapper = () => {
     if (themeParam && (themeParam === THEME.DARK || themeParam === THEME.LIGHT)) setTheme(themeParam);
   }, [themeParam]);
 
+  // obtengo el token del usuario logueado para hacer las peticiones al backend
+  const jwtBackend = session?.user?.token || "";
+
   // obtengo el mural
-  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(`${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}?rubrica=true`, (url: string) => fetch(url).then(res => res.json()));
+  const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(!isLoadingSession && `${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}?rubrica=true`, (url: string) => fetch(url, { headers: { "Authorization": jwtBackend } }).then(res => res.json()));
 
   // obtengo el curso
-  const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(`${FLIPBOARD_BACKEND}/api/cursos/${idCurso}`, (url: string) => fetch(url).then(res => res.json()));
+  const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(!isLoadingSession && `${FLIPBOARD_BACKEND}/api/cursos/${idCurso}`, (url: string) => fetch(url, { headers: { "Authorization": jwtBackend } }).then(res => res.json()));
 
   const formatNombre = (nombre: string) => {
     const nombres = nombre.split(" ");
@@ -968,11 +972,11 @@ const ExcalidrawWrapper = () => {
             </Sidebar.TabTriggers>
 
             <Sidebar.Tab tab="alumnos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Usuario" />
+              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tokenBackend={jwtBackend} tipo="Usuario" />
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tipo="Grupo" />
+              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tokenBackend={jwtBackend}  tipo="Grupo" />
             </Sidebar.Tab>
 
 

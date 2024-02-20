@@ -20,7 +20,7 @@ export type Usuario = {
     cursosAlumno: string[];
     cursosDocente: string[];
     grupos: string[];
-    //token?: string; // cuando hace el login, retorna el token en el body tmb
+    token: string; // cuando hace el login, retorna el token en el body tmb
 };
 export type Session = { 
     loggedIn: boolean,

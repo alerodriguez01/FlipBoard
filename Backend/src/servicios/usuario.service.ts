@@ -48,7 +48,10 @@ async function createUsuario(user: Usuario) {
     if (pwd.length < 8 || pwd.toLowerCase() === pwd || !pwd.match(/\d/))
         throw new InvalidValueError('Usuario', 'Contrasenia');
 
-
+    // name is only letters and spaces
+    if (!user.nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
+        throw new InvalidValueError('Usuario', 'Nombre o apellido');
+    
     const salt = await bcryptjs.genSalt(15);
     const newUser = await usuarioRepository.createUsuario({
         ...user,
@@ -65,8 +68,11 @@ async function createUsuario(user: Usuario) {
     } as Salt;
     saltRepository.createSalt(userSalt)
 
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const token = generateJWT(newUser);
+
     // retorno el usuario creado (aunque no haya terminado de guardar el salt)
-    return newUser;
+    return { ...newUser, token };
 
 }
 
@@ -119,11 +125,7 @@ function generateJWT(usuario: Usuario): string {
     // Generar JWT (en el payload no guardo el hash de la contrasena)
     const payload = {
         id: usuario.id,
-        nombre: usuario.nombre,
-        correo: usuario.correo,
-        cursosAlumno: usuario.cursosAlumno,
-        cursosDocente: usuario.cursosDocente,
-        grupos: usuario.grupos
+        superUser: usuario.superUser,
     }
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY || "", { expiresIn: '48h' });
@@ -148,7 +150,10 @@ function generateResetJWT(usuario: Usuario): string {
 }
 
 async function loginProvider(provider: string, nombre: string, correo: string) {
-    return await usuarioRepository.loginProvider(provider, nombre, correo);
+    const usuario = await usuarioRepository.loginProvider(provider, nombre, correo);
+    // Generar JWT con la salt del usuario (en el payload no guardo el hash de la contrasena)
+    const token = generateJWT(usuario);
+    return { ...usuario, token };
 }
 
 /**

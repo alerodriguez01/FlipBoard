@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ControllableRubricaGrid } from "./ControllableRubricaGrid";
+import { useSession } from "next-auth/react";
 
 type EvaluarProps = {
   rubrica: Rubrica,
@@ -46,6 +47,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
       resolver: zodResolver(evaluarSchema)
   });
 
+  const { data: session, status } = useSession();
+
   const onSubmit = async (data: EvaluarForm) => {
     try {
       const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + props.endpoint, {
@@ -57,7 +60,8 @@ const EvaluarForm = (props: EvaluarProps, ref: any) => {
               idDocente: props.idDocente
           }),
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': session?.user.token || ''
           }
       });
 

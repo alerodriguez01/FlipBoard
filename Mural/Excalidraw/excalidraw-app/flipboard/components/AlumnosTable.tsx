@@ -17,7 +17,8 @@ type TableProps = {
   onAgregarAlumnoPress?: () => void
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (user: Usuario) => void
-  evaluarActive?: boolean // si es true, se puede evaluar (hay rubrica asignada)
+  evaluarActive?: boolean, // si es true, se puede evaluar (hay rubrica asignada)
+  tokenBackend: string
 }
 
 const AlumnosTable = (props: TableProps) => {
@@ -71,7 +72,9 @@ const AlumnosTable = (props: TableProps) => {
           <Button variant="faded" startContent={<PersonAddIcon theme={props.theme ?? 'light'}/>} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumno</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={props.theme ?? 'light'}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
-      } >
+      } 
+      tokenBackend={props.tokenBackend}
+      >
       <TableColumn key="nombre" className="w-[500px] text-sm font-bold">Nombre</TableColumn>
       <TableColumn key="correo" className="w-[500px] text-sm font-bold">Correo electrónico</TableColumn>
       <TableColumn key="evaluar" className="w-[70px] text-sm font-bold" align="center"> </TableColumn>

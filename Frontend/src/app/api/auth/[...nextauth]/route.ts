@@ -68,7 +68,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
         // credenciales, en cuyo caso primero pasa por authorize; solo se ejecuta cuando se inicia sesion.
         // - user: viene con los datos cargados por el provider (google, credentials, etc)
         async signIn({ user, account, profile, email, credentials }) {
-            
+
             // si inicio sesion con google, busco el usuario en la BD y lo retorno
             if (account?.provider === "google") {
                 // Buscar el usuario en la BD
@@ -84,6 +84,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 user.cursosDocente = userLogged.cursosDocente;
                 user.grupos = userLogged.grupos;
                 user.superUser = userLogged.superUser;
+                user.token = userLogged.token;
             }
 
             return true; // si sale todo bien, retorna true
@@ -132,6 +133,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 token.cursosDocente = user.cursosDocente;
                 token.grupos = user.grupos;
                 token.superUser = user.superUser;
+                token.token = user.token;
             }
 
             if (account?.provider === "credentials" && user) {
@@ -142,6 +144,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 token.cursosDocente = user.cursosDocente;
                 token.grupos = user.grupos;
                 token.superUser = user.superUser;
+                token.token = user.token;
             }
 
             return token;
@@ -163,6 +166,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
                 cursosDocente: token.cursosDocente ?? [],
                 grupos: token.grupos ?? [],
                 superUser: token.superUser ?? false,
+                token: token.token,
             };
             return session; // The return type will match the one returned in `useSession()`
         },
@@ -195,7 +199,7 @@ declare module "next-auth" {
         cursosAlumno: string[],
         cursosDocente: string[],
         grupos: string[],
-        token: string,
+        token: string, // jwt retornado por el backend
         superUser?: boolean,
     }
     /**
@@ -210,6 +214,7 @@ declare module "next-auth" {
             cursosAlumno: string[],
             cursosDocente: string[],
             grupos: string[],
+            token: string, // jwt retornado por el backend
             superUser?: boolean,
         },
     }
@@ -224,6 +229,7 @@ declare module "next-auth/jwt" {
         cursosAlumno: string[],
         cursosDocente: string[],
         grupos: string[],
+        token: string, // jwt retornado por el backend
         superUser?: boolean,
     }
 }

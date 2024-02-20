@@ -9,7 +9,7 @@ import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";
 import { Spinner } from "@/app/componentes/ui/Spinner";
-import { signIn } from "next-auth/react"
+import { signIn, useSession } from "next-auth/react"
 import endpoints from "@/lib/endpoints"
 
 // schema para validar los datos del formulario
@@ -49,6 +49,8 @@ const SignIn = () => {
         resolver: zodResolver(userSchema)
     })
 
+    const { data: session, status } = useSession();
+
     const onSubmit = async (data: UserSignUp) => {
 
         const body = {
@@ -62,7 +64,8 @@ const SignIn = () => {
             const resCreate = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.createUser(), {
                 body: JSON.stringify(body),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": session?.user.token || ""
                 },
                 method: 'POST'
             })

@@ -6,6 +6,7 @@ import { Button, Input } from "@nextui-org/react";
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useSession } from "next-auth/react";
 
 // schema para validar los datos del formulario
 const userSchema = z.object({
@@ -30,6 +31,7 @@ const ResetPassword = () => {
     } = useForm<UserResetPassword>({
         resolver: zodResolver(userSchema)
     })
+    const { data: session, status } = useSession();
 
     const searchParams = useSearchParams()
     const callbackUrl = searchParams.get("callbackUrl")
@@ -44,7 +46,8 @@ const ResetPassword = () => {
             const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/auth/reset-password', {
                 body: JSON.stringify({correo}),
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    "Authorization": session?.user.token || ""
                 },
                 method: 'POST'
             })

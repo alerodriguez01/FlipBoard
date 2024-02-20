@@ -14,7 +14,8 @@ type CompProps = {
     idUser: string,
     theme: 'light'|'dark',
     rubrica: Rubrica,
-    api: ExcalidrawImperativeAPI | null
+    api: ExcalidrawImperativeAPI | null,
+    tokenBackend: string
 }
 
 const EvaluarMural = (props: CompProps) => {
@@ -48,6 +49,7 @@ const EvaluarMural = (props: CompProps) => {
                         idCurso: props.idCurso,
                         idMural: props.idMural,
                       }}
+                      tokenBackend={props.tokenBackend}
                 />
             </section>
         )
@@ -60,11 +62,13 @@ const EvaluarMural = (props: CompProps) => {
                     idCurso={props.idCurso}
                     onEvaluarPress={(user)=>{setIsEvaluando(true); setEntity(user);}}
                     editable={false} evaluable={true} theme={props.theme} evaluarActive={!!props.rubrica}
+                    tokenBackend={props.tokenBackend}
                 />
                 :
                 <GruposTable idCurso={props.idCurso}
                     onEvaluarPress={(grupo)=>{setIsEvaluando(true); setEntity(grupo);}}
                     editable={false} evaluable={true} theme={props.theme} evaluarActive={!!props.rubrica}
+                    tokenBackend={props.tokenBackend}
                 />
             }
         </section>

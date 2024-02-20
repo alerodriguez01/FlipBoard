@@ -10,6 +10,7 @@ import endpoints from "@/lib/endpoints";
 import { RubricasAccordion } from "./RubricasAccordion";
 import { Mural, Rubrica } from "@/lib/types";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 
 const rubricaSchema = z.object({
   rubrica: z.string()
@@ -50,6 +51,8 @@ const AsignarRubricaModal = (props:  ModalProps) => {
       resolver: zodResolver(rubricaSchema)
   });
 
+  const { data: session, status } = useSession();
+
   const onSubmit = async (onClose: Function, data: RubricaForm) => {
 
     if(props.mode === 'newMural'){
@@ -69,7 +72,8 @@ const AsignarRubricaModal = (props:  ModalProps) => {
               idCurso: props.idCurso
           }),
           headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              "Authorization": session?.user.token || ''
           }
       });
       if (!res.ok) {

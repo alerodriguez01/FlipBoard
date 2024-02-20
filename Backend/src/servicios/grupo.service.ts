@@ -26,10 +26,12 @@ async function createGrupo(grupo: Grupo) {
 
 async function deleteGrupoFromCurso(idGrupo: string, idCurso: string, docente: string) {
 
-    // Verificar que el docente sea el docente del curso
+    // Verificar que el docente sea superuser o el docente del curso
     const docenteCurso = await usuarioRepository.getUsuarioById(docente);
     if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    if (!docenteCurso.superUser) {
+        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    }
 
     return await grupoRepository.deleteGrupoFromCurso(idGrupo);    
 }
