@@ -11,6 +11,7 @@ import { useTheme } from "next-themes";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
+import { ScrollSync, ScrollSyncPane } from "react-scroll-sync";
 import { v4 } from 'uuid';
 import { z } from "zod";
 
@@ -135,41 +136,45 @@ export default function CrearRubrica() {
             <Switch size="md" className="justify-self-center" onValueChange={(isSelected) => setPuntuable(isSelected)}>Usar puntuaciones</Switch>
           </div>
         </header>
+        <ScrollSync>
+          <>
+          <section className={tagClassName}>
+            <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
+            <ScrollSyncPane group={"horizontal"}>
+              <div className="flex flex-row pb-3 overflow-auto">
+                {addNivelButton(0)}
+                {niveles.map(n =>
+                  <React.Fragment key={n}>
+                    <NivelCard
+                      eliminable={niveles.length > 1}
+                      id={n}
+                      puntuable={puntuable}
+                      onDelete={(id) => setNiveles(prev => prev.length === 1 ? prev : prev.filter(i => i !== id))}
+                      control={control}
+                      {...register(n as any)}
+                    />
+                    {addNivelButton(niv++)}
+                  </React.Fragment>
+                )}
+              </div>
+            </ScrollSyncPane>
+          </section>
 
-        <section className={tagClassName}>
-          <h2 className="text-lg font-semibold mb-3">Niveles a evaluar</h2>
-          <div className="flex flex-row pb-3 overflow-auto">
-            {addNivelButton(0)}
-            {niveles.map(n =>
-              <React.Fragment key={n}>
-                <NivelCard
-                  eliminable={niveles.length > 1}
-                  id={n}
-                  puntuable={puntuable}
-                  onDelete={(id) => setNiveles(prev => prev.length === 1 ? prev : prev.filter(i => i !== id))}
-                  control={control}
-                  {...register(n as any)}
-                />
-                {addNivelButton(niv++)}
-              </React.Fragment>
-            )}
-          </div>
-        </section>
-
-        <section className={tagClassName + `flex flex-col gap-3`}>
-          <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
-          {criterios.map(c =>
-            <CriterioCard key={c} niveles={niveles} id={c}
-              onDelete={(id) => setCriterios(prev => prev.length === 1 ? prev : prev.filter(i => i != id))}
-              control={control}
-              {...register(c as any)}
-            />)
-          }
-          <Button className="mt-2 self-center" variant="ghost" isIconOnly size="sm" onPress={() => setCriterios(prev => [...prev, v4()])}>
-            <PlusIcon color={currentTheme === "dark" ? "#FFFFFF" : "#000000"} />
-          </Button>
-        </section>
-
+          <section className={tagClassName + `flex flex-col gap-3`}>
+            <h2 className="text-lg font-semibold">Criterios de evaluación</h2>
+            {criterios.map(c =>
+              <CriterioCard key={c} niveles={niveles} id={c}
+                onDelete={(id) => setCriterios(prev => prev.length === 1 ? prev : prev.filter(i => i != id))}
+                control={control}
+                {...register(c as any)}
+              />)
+            }
+            <Button className="mt-2 self-center" variant="ghost" isIconOnly size="sm" onPress={() => setCriterios(prev => [...prev, v4()])}>
+              <PlusIcon color={currentTheme === "dark" ? "#FFFFFF" : "#000000"} />
+            </Button>
+          </section>
+          </>
+        </ScrollSync>
         <input type="text" className="hidden" {...register("erroresExternos")} />
         {errors.erroresExternos &&
           <p className="text-red-500">{`${errors.erroresExternos.message}`}</p>}
