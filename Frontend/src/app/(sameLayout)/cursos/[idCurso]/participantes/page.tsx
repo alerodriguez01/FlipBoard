@@ -44,7 +44,8 @@ export default function Participantes({ params }: { params: { idCurso: string } 
         const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${params.idCurso}/${endpoint}/${evaluarEntity?.id}?docente=${session?.user.id}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                "Authorization": session?.user.token || ''
             },
         });
 

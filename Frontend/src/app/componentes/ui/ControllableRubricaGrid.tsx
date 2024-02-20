@@ -5,6 +5,7 @@ import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow
 import React, { Key, useEffect, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
 import { UseFormSetValue, useController } from "react-hook-form";
+import { useSession } from "next-auth/react";
 
 type EvaluarForm = {
   valores: Map<string, number>;
@@ -46,6 +47,8 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
     fieldState: { invalid, error }
   } = useController({ name: props.name, control: props.control });
 
+  const { data: session, status } = useSession();
+
   const partialUpdate = async (reset?: boolean) => {
     // cada vez que se selecciona un nivel, se crea/actualiza una calificacion parcial
 
@@ -62,6 +65,7 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Authorization': session?.user.token || ''
       },
       body: JSON.stringify({
         idUsuario: props.dataToParcialUpdate?.idUsuario,

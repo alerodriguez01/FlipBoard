@@ -19,7 +19,8 @@ type TableProps = {
   onAsignarRubricaPress?: () => void
   onEvaluarPress?: (grupo: Grupo) => void
   onEditarPress?: (grupoId: string) => void
-  evaluarActive?: boolean // si es true, se puede evaluar (hay rubrica asignada)
+  evaluarActive?: boolean, // si es true, se puede evaluar (hay rubrica asignada)
+  tokenBackend: string
 }
 
 const GruposTable = (props: TableProps) => {
@@ -79,7 +80,9 @@ const GruposTable = (props: TableProps) => {
           <Button variant="faded" startContent={<GrupoIcon theme={props.theme}/>} onPress={() => props.onCrearGrupoPress?.()}>Crear grupo</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={props.theme}/>} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>
         </div>
-      } >
+      } 
+      tokenBackend={props.tokenBackend}
+      >
       <TableColumn key="numero" className="w-[100px] text-sm font-bold" align="center" >Grupo</TableColumn>
       <TableColumn key="integrantes" className="w-[400px] text-sm font-bold">Integrantes</TableColumn>
       <TableColumn key="correo" className="w-[400px] text-sm font-bold">Correo electrónico</TableColumn>

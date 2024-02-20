@@ -87,7 +87,8 @@ export default function CrearRubrica() {
           niveles: nivs
         }),
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          "Authorization": session.user.token || ''
         }
       });
 

@@ -22,11 +22,12 @@ type TokenAnadirCurso = {
     token: string
 }
 
-const fetcher = (url: string, idDocente: string) => (
+const fetcher = (url: string, idDocente: string, token: string) => (
     fetch(url, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Authorization': token
         },
         body: JSON.stringify({ idDocente }),
     })
@@ -42,7 +43,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
     const { data: session } = useSession()
 
     // fetch al backend para obtener el token
-    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${cursoId}`, (url: string) => fetcher(url, session?.user.id ?? ""))
+    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${cursoId}`, (url: string) => fetcher(url, session?.user.id ?? "", session?.user.token ?? ""))
     const urlQr = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/cursos/${cursoId}?token=${data?.token}`
 
     const [textCopied, setTextCopied] = useState(false)
@@ -65,7 +66,8 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
         return await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.enviarEmails(cursoId), {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'Authorization': session?.user.token ?? ''
             },
             body: JSON.stringify({ emails, token: data?.token, enviarInvitacionSiExiste: true }),
         })

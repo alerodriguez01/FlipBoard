@@ -24,8 +24,8 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { data: session, status, update } = useSession();
   const isDocente = session?.user.cursosDocente.includes(params.idCurso)
 
-  const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(params.idCurso) : null, (url: string) => fetch(url).then(res => res.json()));
-  const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url).then(res => res.json()));
+  const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(params.idCurso) : null, (url: string) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
+  const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
   let color = 0;
 
   const [selectedMural, setSelectedMural] = React.useState<Mural | undefined>();
@@ -89,7 +89,8 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/murales/${selectedMural?.id}?docente=${session?.user.id}`, {
       method: 'DELETE',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        "Authorization": session?.user.token || ""
       },
     });
 

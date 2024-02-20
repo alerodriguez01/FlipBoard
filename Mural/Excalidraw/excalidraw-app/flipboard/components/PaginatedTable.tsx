@@ -14,7 +14,8 @@ type TableProps = {
   renderCell: (item: any, columnKey: Key) => ReactNode;
   headerRightContent: ReactNode
   children: any,
-  theme?: 'light'|'dark'
+  theme?: 'light'|'dark',
+  tokenBackend: string
 }
 
 const PaginatedTable = (props: TableProps) => {
@@ -25,7 +26,7 @@ const PaginatedTable = (props: TableProps) => {
   const [nombre, setNombre] = useState("");
 
   const {data, error, isLoading} = useSWR(import.meta.env.VITE_FLIPBOARD_BACKEND_URL + props.endpoint + `?limit=${rows}&offset=${rows*(page-1)}&nombre=${nombre}`,
-      (url) => fetch(url).then(res => res.json()), { keepPreviousData: true });
+      (url) => fetch(url, { headers: { "Authorization": props.tokenBackend }}).then(res => res.json()), { keepPreviousData: true });
 
   const loadingState = isLoading ? "loading" : "idle";
 

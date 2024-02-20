@@ -28,7 +28,8 @@ type GridProps = {
     idMural?: string,
     idDocente: string,
     setObservaciones: (value: string) => void
-  }
+  },
+  tokenBackend: string
 }
 
 const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
@@ -58,6 +59,7 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        "Authorization": props.tokenBackend
       },
       body: JSON.stringify({
         idUsuario: props.dataToParcialUpdate?.idUsuario,
@@ -98,6 +100,7 @@ const RubricaGrid = React.forwardRef((props: GridProps, ref: any) => {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          "Authorization": props.tokenBackend
         }
       });
 

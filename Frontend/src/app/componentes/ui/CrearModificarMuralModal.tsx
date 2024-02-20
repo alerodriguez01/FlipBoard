@@ -54,6 +54,8 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
         resolver: zodResolver(muralSchema)
     })
 
+    const { data: session, status } = useSession();
+
     useEffect(() => {
         if (muralToModify) {
             setValue("nombre", muralToModify.nombre)
@@ -78,7 +80,8 @@ const CrearModificarMuralModal = ({ isOpen, onOpenChange, mutateData, cursoId, u
             const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + endpoint, {
                 method: type === "crear" ? 'POST' : 'PUT',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': session?.user.token || ''
                 },
                 body: JSON.stringify(mural),
             })
