@@ -136,8 +136,8 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   }
 
   if ((!isLoading && data?.error) || error) return (
-    <section className="flex flex-col flex-1 p-10">
-      {/* {error.message} */}
+    <section className="flex flex-col flex-1 p-8">
+      <PagesHeader title="Murales" searchable={false} />
       <h1 className="">No se pudieron obtener los murales</h1>
     </section>
   );

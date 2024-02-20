@@ -60,8 +60,8 @@ export default function Cursos() {
   }, [])
 
   if ((!isLoading && data?.error) || error) return (
-    <section className="flex flex-col flex-1 p-10">
-      {/* {error.message} */}
+    <section className="flex flex-col flex-1 p-8">
+      <PagesHeader title="Cursos" searchable={false} />
       <h1 className="">No se pudieron obtener los cursos</h1>
     </section>
   );

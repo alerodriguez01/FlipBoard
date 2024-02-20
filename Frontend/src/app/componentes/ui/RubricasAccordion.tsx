@@ -50,8 +50,8 @@ const RubricasAccordion = (props: AccordionProps) => {
     }
 
     if (!isLoading && data?.error) return (
-        <section className="flex flex-col flex-1 p-10">
-            {/* {error.message} */}
+        <section className="flex flex-col flex-1">
+            <PagesHeader title="Rúbricas" searchable={false} />
             <h1 className="">No se pudieron obtener las rúbricas</h1>
         </section>
     );
