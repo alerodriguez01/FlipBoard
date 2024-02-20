@@ -68,7 +68,6 @@ const SignIn = () => {
                 return
             }
 
-            console.log("ANTES DE INICIAR SESION: "+callbackUrl)
             // https://next-auth.js.org/getting-started/client#signin
             const resLogIn = await signIn("credentials", {
                 correo: data.correo,
@@ -84,9 +83,7 @@ const SignIn = () => {
 
             if (resLogIn?.ok)
                 router.push(callbackUrl)
-            
-            console.log("DESPUES DE INICIAR SESION: "+callbackUrl)
-            
+                        
             return
 
         } catch (error) {

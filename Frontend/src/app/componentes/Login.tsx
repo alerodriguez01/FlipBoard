@@ -25,17 +25,34 @@ export default function Login() {
     return "/?" + newSearchParams.toString()
   }
 
+  const sessionHasExpired = () => {
+
+    if(session) {
+      const timeExpires = new Date(session.expires)
+      const timeNow = new Date()
+      // si la session expiro, recargo la pagina
+      if (timeExpires < timeNow) {
+        window.location.reload() // recargo la pagina, se actualiza la session y queda como null
+        return true
+      }
+      return false
+    }
+
+    return true
+  }
+  
+
   useEffect(() => {
     // Si ya esta logueado, redirijo a la pagina que me pasaron por parametro o a la pagina de cursos
     if (session) router.push(callbackUrl)
   }, [session])
 
   return (
-    <section className={"flex flex-col items-center gap-3 p-8 h-fit my-5" + (status === 'unauthenticated' ? " border-2 border-gray-700 shadow-md shadow-gray-400 rounded" : "")}>
+    <section className={"flex flex-col items-center gap-3 p-8 h-fit my-5" + (status === 'unauthenticated' || sessionHasExpired() ? " border-2 border-gray-700 shadow-md shadow-gray-400 rounded" : "")}>
       <Image src="/flipboard-icon.png" alt="FlipBoard" width={100} height={100} />
       <h1 className="text-xl">¡Bienvenido!</h1>
       {
-        status === 'loading' || status === 'authenticated' ?
+        (status === 'loading' || status === 'authenticated') && !sessionHasExpired() ?
           <SpinnerNextUI />
           :
           <>
