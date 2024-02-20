@@ -117,6 +117,7 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
         if (val > -1) newMap.set(props.criterios[i].nombre, val);
       });
       setNivelSelecc(newMap);
+      field?.onChange(newMap);
       props.dataToParcialUpdate?.setObservaciones("observaciones", calificacion.observaciones);
       setRestaurada(true);
     })();
