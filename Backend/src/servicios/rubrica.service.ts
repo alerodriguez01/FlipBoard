@@ -3,6 +3,8 @@ import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js"
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
+import usuarioService from "./usuario.service.js";
 
 const rubricaRepository = RubricaRepository.getInstance();
 const cursoRepository = CursoRepository.getInstance();
@@ -105,11 +107,23 @@ async function asociateRubricaGruposToCurso(idCurso: string, idRubrica: string) 
 
 }
 
-async function deleteRubricaById(idRubrica: string, idUsuario: string) {
+async function deleteRubricaById(token: string, idRubrica: string) {
 
-    // Verificar que la rubrica le pertenezca al usuario
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // Verificar que la rubrica le pertenezca al usuario o sea superuser
     const rubrica = await getRubricaById(idRubrica);
-    if (rubrica.usuarioId !== idUsuario) throw new InvalidValueError('Rubrica', 'Usuario');
+    if (!isSuperUser)
+        if (rubrica.usuarioId !== superUserId) throw new InvalidValueError('Rubrica', 'Usuario');
 
     const rubricaDeleted = await rubricaRepository.deleteRubricaById(idRubrica);
     return rubricaDeleted;

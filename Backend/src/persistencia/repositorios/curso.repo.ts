@@ -77,5 +77,9 @@ export class CursoRepository implements CursoDataSource {
     async updateCurso(idCurso: string, curso: Curso): Promise<Curso> {
         return await this.cursoDAO.updateCurso(idCurso, curso);
     }
+
+    async addOrDeleteDocenteToCurso(idCurso: string, idDocente: string, agregar: boolean): Promise<Curso | null> {
+        return await this.cursoDAO.addOrDeleteDocenteToCurso(idCurso, idDocente, agregar);
+    }
     // demas metodos
 }

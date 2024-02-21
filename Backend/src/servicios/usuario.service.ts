@@ -7,6 +7,7 @@ import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
 import jwt from 'jsonwebtoken';
 import { TokenInvalido } from "../excepciones/TokenError.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 const usuarioRepository = UsuarioRepository.getInstance();
 const saltRepository = SaltRepository.getInstance();
@@ -51,7 +52,7 @@ async function createUsuario(user: Usuario) {
     // name is only letters and spaces
     if (!user.nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
         throw new InvalidValueError('Usuario', 'Nombre o apellido');
-    
+
     const salt = await bcryptjs.genSalt(15);
     const newUser = await usuarioRepository.createUsuario({
         ...user,
@@ -74,6 +75,74 @@ async function createUsuario(user: Usuario) {
     // retorno el usuario creado (aunque no haya terminado de guardar el salt)
     return { ...newUser, token };
 
+}
+
+/*
+    Actualizar un usuario
+*/
+async function updateUsuario(token: string, idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // if the user is not superuser and try to update another user
+    if (!isSuperUser && superUserId !== idUsuario) throw new NotAuthorizedError();
+
+    const user = await usuarioRepository.getUsuarioById(idUsuario);
+    if (!user) throw new NotFoundError('Usuario');
+
+    // name is only letters and spaces
+    if (nombre && !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
+        throw new InvalidValueError('Usuario', 'Nombre o apellido');
+
+    if (contrasena) {
+        /**
+         * Criterios password:
+         *  - 8 caracteres minimo
+         *  - 1 mayuscula
+         *  - 1 numero
+         */
+        if (contrasena.length < 8 || contrasena.toLowerCase() === contrasena || !contrasena.match(/\d/))
+            throw new InvalidValueError('Usuario', 'Contrasenia');
+    }
+
+    // hash password
+    if (contrasena) {
+        const salt = await saltRepository.getSaltByUsuarioId(idUsuario);
+        if (!salt) throw new NotFoundError("Salt");
+
+        contrasena = await bcryptjs.hash(contrasena, salt.salt);
+    }
+
+    return await usuarioRepository.updateUsuario(idUsuario, nombre, contrasena, superUser);
+}
+
+/*
+    Eliminar un usuario
+*/
+async function deleteUsuario(token: string, idUsuario: string) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // if the superuser is not superuser
+    if (!isSuperUser) throw new NotAuthorizedError();
+
+    return await usuarioRepository.deleteUsuario(idUsuario);
 }
 
 /*
@@ -179,7 +248,7 @@ async function addParticipanteToCurso(idCurso: string, idUser: string) {
     // buscar si ya pertenece al curso
     const user = await usuarioRepository.getUsuarioById(idUser);
     if (!user) throw new NotFoundError("Usuario");
-    if(user.cursosAlumno.includes(idCurso) || user.cursosDocente.includes(idCurso)) return;
+    if (user.cursosAlumno.includes(idCurso) || user.cursosDocente.includes(idCurso)) return;
 
     const curso = await cursoRepository.addUsuario(idCurso, idUser);
 
@@ -223,14 +292,28 @@ async function getUsuarioByCorreo(correo: string) {
     return user;
 }
 
-async function deleteAlumnoFromCurso(idCurso: string, idAlumno: string, docente: string) {
+async function deleteAlumnoFromCurso(token: string, idCurso: string, idAlumno: string) {
 
-    // Verificar que el docente sea el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
 
-    const curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
+
+    // Verificar que el docente sea superuser o el docente del curso
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+
+    curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
     return curso;
 }
 
@@ -251,5 +334,5 @@ async function getEstadoCorreos(correos: string[]): Promise<{ provider: boolean,
 
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario, deleteUsuario
 };

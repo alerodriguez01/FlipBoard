@@ -144,11 +144,11 @@ export class MuralPrismaDAO implements MuralDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // borro todas las calificaciones asociadas a este mural
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: { muralId: idMural }
                 })
 
-                return await this.prisma.mural.delete({
+                return await tx.mural.delete({
                     where: {
                         id: idMural
                     }

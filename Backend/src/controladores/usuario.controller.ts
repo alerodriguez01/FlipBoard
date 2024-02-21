@@ -7,6 +7,8 @@ import { TokenInvalido } from "../excepciones/TokenError.js";
 import validator from "validator";
 import nodemailer from 'nodemailer';
 import { templateHtml } from "../../lib/utils.js";
+import usuarioService from "../servicios/usuario.service.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
@@ -20,6 +22,7 @@ async function getUsuarioById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -31,7 +34,7 @@ async function createUsuario(req: Request, res: Response) {
     const usuarioBody = req.body;
 
     if (!usuarioBody.nombre || !usuarioBody.correo || !usuarioBody.contrasena)
-        return res.status(400).json("Faltan datos obligatorios")
+        return res.status(400).json({ error: "Faltan datos obligatorios" })
 
     const user = {
         nombre: usuarioBody.nombre,
@@ -45,8 +48,61 @@ async function createUsuario(req: Request, res: Response) {
         res.cookie('token', newUser.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
         return res.status(201).json(newUser);
     } catch (err) {
-        if (err instanceof InvalidValueError) return res.status(400).json(err.message);
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
+}
+
+/*
+    Actualizar un usuario
+ */
+async function updateUsuario(req: Request, res: Response) {
+
+    const idUsuario = req.params.idUsuario;
+    const { nombre, contrasena, superUser } = req.body;
+
+    // si no hay nada para actualizar
+    if (!nombre && !contrasena && superUser === undefined) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
+    // update the user
+    try {
+        const userUpdated = await service.updateUsuario(token, idUsuario, nombre, contrasena, superUser);
+        return res.status(201).json(userUpdated);
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
+    }
+
+}
+
+/*
+    Eliminar un usuario
+*/
+async function deleteUsuario(req: Request, res: Response) {
+
+    const idUsuario = req.params.idUsuario;
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
+    // delete the user
+    try {
+        await service.deleteUsuario(token, idUsuario);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
+    }
+
 }
 
 /*
@@ -71,6 +127,7 @@ async function getParticipantes(req: Request, res: Response) {
         res.status(200).json(users);
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -79,13 +136,14 @@ async function addParticipante(req: Request, res: Response) {
 
     const userBody = req.body;
 
-    if (!userBody.id) return res.status(400).json("Faltan datos obligatorios");
+    if (!userBody.id) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     try {
         await service.addParticipanteToCurso(req.params.idCurso, userBody.id);
         return res.status(204).send();
     } catch (error) {
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -96,15 +154,16 @@ async function updateUsuarioPassword(req: Request, res: Response) {
     const newPass = req.body.contrasena;
 
     if (!token || !newPass)
-        return res.status(400).json("Faltan datos obligatorios");
+        return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     try {
         let userUpdated = await service.updateUsuarioPassword(req.params.idUsuario, newPass, token);
         return res.status(200).json(userUpdated);
     } catch (error) {
         if (error instanceof TokenInvalido) return res.status(401).send();
-        if (error instanceof InvalidValueError) return res.status(400).json(error.message);
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -113,16 +172,19 @@ async function deleteAlumnoFromCurso(req: Request, res: Response) {
 
     const idAlumno = req.params.idAlumno;
     const idCurso = req.params.idCurso;
-    const docente = req.query.docente;
 
-    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     try {
-        await service.deleteAlumnoFromCurso(idCurso, idAlumno, docente as string);
+        await service.deleteAlumnoFromCurso(token, idCurso, idAlumno);
         return res.status(204).send();
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -143,7 +205,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
         if (!enviarInvitacionSiExiste) {
 
             const estadoCorreos = await service.getEstadoCorreos(correos);
-            
+
             // obtener los usuarios que no estan registrados
             correosAEnviar = estadoCorreos.filter((obj) => !obj.registered).map((obj) => obj.correo);
 
@@ -155,7 +217,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
             }
         }
 
-        if(correosAEnviar.length === 0) return res.status(204).send();
+        if (correosAEnviar.length === 0) return res.status(204).send();
 
         const curso = await cursoService.getCursoById(idCurso);
 
@@ -187,9 +249,9 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
         console.log(error)
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // ids invalidos
-        return res.status(400).json({ error: 'Hubo un problema al enviar los correos o añadir los alumnos' });
+        return res.status(500).json({ error: 'Hubo un problema al enviar los correos o añadir los alumnos' });
     }
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers };
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, updateUsuario, deleteUsuario };

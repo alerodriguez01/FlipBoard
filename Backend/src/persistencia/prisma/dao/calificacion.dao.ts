@@ -1,7 +1,7 @@
-import { Calificacion, PrismaClient } from "@prisma/client";
+import { Calificacion, Prisma, PrismaClient } from "@prisma/client";
 import CalificacionDataSource from "../../datasource/calificacion.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
-import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
+import { DefaultArgs, PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 import { InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { base64ToFile } from "../../../../lib/utils.js";
 import fs from "fs/promises";
@@ -75,7 +75,24 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
         }
     }
 
-    private async findCalificacionParcial(idRubrica: string, idMural: string | null, idDocente: string, idGrupo: string | null, idAlumno: string | null) {
+    private async findCalificacionParcial(idRubrica: string, idMural: string | null, idDocente: string, idGrupo: string | null, idAlumno: string | null, tx?: Omit<PrismaClient<Prisma.PrismaClientOptions, never, DefaultArgs>, "$connect" | "$disconnect" | "$on" | "$transaction" | "$use" | "$extends">) {
+
+        if(tx){
+            return await tx.calificacion.findFirst({
+                where: {
+                    // busco que exista una calificacion que sea parcial, tenga un user o grupo, coincida con el mural si existe y sea del docente
+                    // y que la rubrica coincida con la que se quiere crear (tiene que ser unica, por eso el uso de findFirst)
+                    AND: [
+                        { isParcial: true },
+                        { OR: [{ usuarioId: idAlumno }, { grupoId: idGrupo }] },
+                        { muralId: idMural || undefined },
+                        { docenteId: idDocente },
+                        { rubricaId: idRubrica }
+                    ]
+                }
+            })
+        }
+
         return await this.prisma.calificacion.findFirst({
             where: {
                 // busco que exista una calificacion que sea parcial, tenga un user o grupo, coincida con el mural si existe y sea del docente
@@ -115,13 +132,13 @@ export class CalificacionPrismaDAO implements CalificacionDataSource {
             
             return await this.prisma.$transaction(async (tx) => {
 
-                const calificacionParcial = await this.findCalificacionParcial(calificacion.rubricaId, calificacion.muralId, calificacion.docenteId, calificacion.grupoId, calificacion.usuarioId);
+                const calificacionParcial = await this.findCalificacionParcial(calificacion.rubricaId, calificacion.muralId, calificacion.docenteId, calificacion.grupoId, calificacion.usuarioId, tx);
                 // console.log(calificacionParcial)
 
                 const path = `./calificaciones/${calificacion.cursoId}`;
                 const fileName = `${calificacionParcial?.id}.jpeg`;
 
-                const calificacionReturn = await this.prisma.calificacion.upsert({
+                const calificacionReturn = await tx.calificacion.upsert({
                     where: {
                         id: calificacionParcial?.id ?? "333333333333333333333333" // me pide un id si o si
                     },

@@ -19,5 +19,6 @@ export default interface CursoDataSource {
     deleteCursoById(idCurso: string): Promise<Curso | null>;
     deleteAlumnoFromCurso(idCurso: string, idAlumno: string): Promise<Curso | null>;
     addParticipantesToCurso(idCurso: string, correos: string[]): Promise<Curso | null>;
+    addOrDeleteDocenteToCurso(idCurso: string, idDocente: string, agregar: boolean): Promise<Curso | null>;
     // ir agregando métodos restantes 
 }

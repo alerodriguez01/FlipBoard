@@ -3,6 +3,11 @@ import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { RubricaRepository } from "../persistencia/repositorios/rubrica.repo.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
+import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import usuarioService from "./usuario.service.js";
+
+const cursoRepository = CursoRepository.getInstance();
 
 const muralRepository = MuralRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
@@ -64,44 +69,80 @@ async function asociateRubricaToMural(idMural: string, idRubrica: string) {
 /*
     Crear un nuevo mural
 */
-async function createMural(mural: Mural, idDocente: string) {
+async function createMural(token: string, mural: Mural) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(mural.cursoId);
+    if (!curso) throw new NotFoundError("Curso");
 
     // Verificar que el docente sea superuser o el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(idDocente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.superUser) {
-        if (!docenteCurso.cursosDocente.includes(mural.cursoId)) throw new InvalidValueError("Curso", "Docente");
-    }
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
 
     return await muralRepository.createMural(mural);
 }
 
-async function deleteMuralById(idMural: string, docente: string) {
+async function deleteMuralById(token: string, idMural: string) {
 
     const mural = await muralRepository.getMuralById(idMural);
     if (!mural) throw new NotFoundError("Mural");
 
     const idCurso = mural.cursoId;
 
-    // Verificar que el docente sea superuser o el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.superUser) {
-        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
     }
+
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
+
+    // Verificar que el docente sea superuser o el docente del curso
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
 
     const muralDeleted = await muralRepository.deleteMuralById(idMural);
     return muralDeleted;
 }
 
-async function updateMural(idMural: string, mural: Mural, idCurso: string, idDocente: string) {
+async function updateMural(token: string, idMural: string, mural: Mural, idCurso: string) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
 
     // Verificar que el docente sea superuser o el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(idDocente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.superUser) {
-        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
-    }
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
 
     const muralUpdated = await muralRepository.updateMural(idMural, mural);
     return muralUpdated;

@@ -7,6 +7,8 @@ import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 import { GrupoRepository } from "../persistencia/repositorios/grupo.repo.js";
 import { MuralRepository } from "../persistencia/repositorios/mural.repo.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
+import usuarioService from "./usuario.service.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 const califcacionRepository = CalificacionRepository.getInstance();
 const rubricaRepository = RubricaRepository.getInstance();
@@ -25,20 +27,30 @@ async function getCalificacionesFromUser(idCurso: string, idUsuario: string, rub
 /*
     Crear calificacion
 */
-async function createCalificacion(calificacion: Calificacion) {
+async function createCalificacion(token: string, calificacion: Calificacion) {
 
     const curso = await cursoRepository.getCursoById(calificacion.cursoId);
     if (!curso)
         throw new NotFoundError("Curso");
 
-    if (calificacion.docenteId.length !== 24)
-        throw new InvalidValueError("Calificacion", "docenteId");
-
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+    
     // Verificar que quien califica sea super user o docente en el curso
-    const docenteOSuperUser = await usuarioRepository.getUsuarioById(calificacion.docenteId);
-    if (!docenteOSuperUser?.superUser) 
-        if (!curso.docentes.includes(calificacion.docenteId))
+    if (!isSuperUser) 
+        if (!curso.docentes.includes(superUserId))
             throw new NotFoundError("Docente en Curso");
+
+    // setear como docenteId el id del usuario que esta calificando
+    calificacion.docenteId = superUserId;
 
     // Si se califica a un usuario, verificar que el usuario pertenezca al curso
     if (calificacion.usuarioId && !curso.participantes.includes(calificacion.usuarioId))

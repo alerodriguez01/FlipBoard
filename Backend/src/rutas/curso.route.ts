@@ -192,6 +192,49 @@ router.put("/cursos/:idCurso", controller.updateCurso);
 
 /**
  * @swagger
+ * /api/cursos/{idCurso}/docentes/{idDocente}:
+ *   put:
+ *    summary: Agregar (o eliminar) un docente en un curso - El docente a agregar puede o no existir en el curso
+ *    tags: [Curso]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            agregar: true
+ *    responses:
+ *      201: 
+ *        description: Curso actualizado exitosamente
+ *        content:
+ *          application/json:
+ *            example:
+ *              id: 65326ed824fea7e06d01e20b
+ *              nombre: Curso de Matemáticas
+ *              tema: Matemáticas Avanzadas
+ *              sitioWeb: https://matematicas.com
+ *              descripcion: Curso de matemáticas avanzadas
+ *              emailContacto: contacto@matematicas.com
+ *              docentes: ["65326ed824fea7e06d01e207", "65326ed824fea7e06d01e208"]
+ *              rubricasGrupos: []
+ *              rubricasAlumnos: []
+ *              participantes: []
+ *      400:
+ *        description: Faltan datos obligatorios o el id del docente o curso es invalido
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: Faltan datos obligatorios
+ *      404:
+ *        description: No se encontro el docente o curso
+ *        content:
+ *          application/json:
+ *            example:
+ *              message: No se ha podido encontrar 'Docente' en la BDD
+ */
+router.put("/cursos/:idCurso/docentes/:idDocente", controller.addOrDeleteDocenteToCurso);
+
+/**
+ * @swagger
  * /api/cursos:
  *   get:
  *     summary: Obtener todos los cursos  

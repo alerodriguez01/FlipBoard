@@ -69,7 +69,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
         try {
             return await this.prisma.$transaction(async (tx) => {
 
-                const ultimoNro = await this.prisma.grupo.findFirst({
+                const ultimoNro = await tx.grupo.findFirst({
                     where: { cursoId: grupo.cursoId },
                     select: { numero: true },
                     orderBy: { numero: 'desc' }
@@ -81,7 +81,7 @@ export class GrupoPrismaDAO implements GrupoDataSource {
 
                 const integrantesObj = grupo.integrantes.map((id: string) => ({ id }));
 
-                const newGrupo = await this.prisma.grupo.create({
+                const newGrupo = await tx.grupo.create({
                     data: {
                         numero: nroGrupo,
                         integrantesModel: {
@@ -122,11 +122,11 @@ export class GrupoPrismaDAO implements GrupoDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // borro todas las calificaciones del grupo
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: { grupoId: idGrupo }
                 })
 
-                return await this.prisma.grupo.delete({
+                return await tx.grupo.delete({
                     where: {
                         id: idGrupo
                     }

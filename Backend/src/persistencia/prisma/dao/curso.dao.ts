@@ -1,7 +1,7 @@
 import { Curso, PrismaClient } from "@prisma/client";
 import CursoDataSource from "../../datasource/curso.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
-import { DeleteError, InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { DeleteError, InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export class CursoPrismaDAO implements CursoDataSource {
@@ -144,27 +144,27 @@ export class CursoPrismaDAO implements CursoDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // eliminar todas las calificaciones del curso
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
                 // eliminar todos los grupos del curso
-                await this.prisma.grupo.deleteMany({
+                await tx.grupo.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
                 // eliminar todos los murales del curso
-                await this.prisma.mural.deleteMany({
+                await tx.mural.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
-                const curso = await this.prisma.curso.delete({
+                const curso = await tx.curso.delete({
                     where: {
                         id: idCurso
                     }
@@ -187,15 +187,50 @@ export class CursoPrismaDAO implements CursoDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // borro todas las calificaciones de usuario
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: { AND: [
                         { usuarioId: idAlumno },
                         { cursoId: idCurso }
                     ] }
                 })
 
+                // eliminar usuario de todos los grupos en los que participa
+                /// obtener grupos
+                const grupos = await tx.grupo.findMany({
+                    where: {
+                        cursoId: idCurso,
+                        integrantes: { has: idAlumno }
+                    }
+                });
 
-                const curso = await this.prisma.curso.update({
+                /// sacar relacion usuario-grupo
+                await tx.usuario.update({
+                    where: {
+                        id: idAlumno
+                    },
+                    data: {
+                        gruposModel: {
+                            disconnect: grupos.map((grupo) => ({ id: grupo.id }))
+                        }
+                    }
+                });
+
+                /// eliminar calificaciones de grupos que quedan vacios
+                await tx.calificacion.deleteMany({
+                    where: { AND: [
+                        { grupoModel: {integrantes: {isEmpty: true}}},
+                        { cursoId: idCurso }
+                    ] }
+                })
+                /// eliminar grupos vacios
+                await tx.grupo.deleteMany({
+                    where: {
+                        cursoId: idCurso,
+                        integrantes: {isEmpty: true}
+                    }
+                });
+
+                const curso = await tx.curso.update({
                     where: {
                         id: idCurso
                     },
@@ -229,6 +264,33 @@ export class CursoPrismaDAO implements CursoDataSource {
             return curso;
 
         } catch (error) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+        }
+    }
+
+    async addOrDeleteDocenteToCurso(idCurso: string, idDocente: string, agregar: boolean): Promise<Curso | null> {
+        
+        let query: any = {
+            where: {
+                id: idCurso
+            },
+            data: {
+                docentesModel: {
+                    // connect: { id: idDocente }
+                }
+            }
+        };
+
+        if (agregar) {
+            query.data.docentesModel.connect = { id: idDocente };
+        } else {
+            query.data.docentesModel.disconnect = { id: idDocente };
+        }
+        
+        try {
+            return await this.prisma.curso.update(query);
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2025") throw new NotFoundError("Docente") // el docente no existe
             throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
     }

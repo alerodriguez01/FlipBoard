@@ -127,11 +127,11 @@ export class RubricaPrismaDAO implements RubricaDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // borro todas las calificaciones de la rubrica
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: { rubricaId: idRubrica }
                 })
 
-                const rubrica = await this.prisma.rubrica.delete({
+                const rubrica = await tx.rubrica.delete({
                     where: { id: idRubrica }
                 })
                 return rubrica;

@@ -2,7 +2,8 @@ import { Curso, Usuario } from '@prisma/client';
 import { PrismaClient } from "@prisma/client";
 import UsuarioDataSource from "../../datasource/usuario.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
-import { InvalidValueError } from '../../../excepciones/RepoErrors.js';
+import { InvalidValueError, NotFoundError } from '../../../excepciones/RepoErrors.js';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library.js';
 
 export class UsuarioPrismaDAO implements UsuarioDataSource {
 
@@ -38,6 +39,88 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     }
 
 
+  }
+
+  // Actualizar usuario
+  async updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean): Promise<Usuario> {
+
+    let query: any = {
+      where: { id: idUsuario },
+      data: {}
+    }
+
+    if (nombre) query.data.nombre = nombre.toLowerCase();
+    if (contrasena) query.data.contrasena = contrasena;
+    if (superUser !== undefined) query.data.superUser = superUser;
+
+    try {
+      return await this.prisma.usuario.update(query);
+    } catch (error) {
+      throw new InvalidValueError("Usuario", "idUsuario"); // el id no tiene los 12 bytes
+    }
+  }
+
+  // Eliminar usuario
+  async deleteUsuario(idUsuario: string): Promise<void> {
+
+    try {
+
+      await this.prisma.$transaction(async (tx) => {
+
+        // eliminar las apariciones del usuario en los cursos y grupos
+        const user = await tx.usuario.update({
+          where: { id: idUsuario },
+          data: {
+            cursosAlumnoModel: {set: []},
+            cursosDocenteModel: {set: []} ,
+            gruposModel: {set: []}
+          }
+        });
+
+        /// eliminar calificaciones de grupos que quedan vacios
+        await tx.calificacion.deleteMany({
+          where: { AND: [
+              { grupoModel: {integrantes: {isEmpty: true}}}
+          ] }
+        })
+        /// eliminar grupos vacios
+        await tx.grupo.deleteMany({
+            where: {
+                integrantes: {isEmpty: true}
+            }
+        });
+
+        // buscar todas las rubricas creadas por el usuario
+        const rubricas = await tx.rubrica.findMany({ where: { usuarioId: idUsuario } });
+        // obtener los ids de las rubricas
+        const rubricasIds = rubricas.map(rub => rub.id);
+
+        // eliminar todas las calificaciones del realizadas sobre el usuario, que realizo o que tiene una rubrica asociada creada por el
+        await tx.calificacion.deleteMany({
+          where: {
+            OR: [
+              { usuarioId: idUsuario },
+              { docenteId: idUsuario },
+              { rubricaId: { in: rubricasIds } }
+            ]
+          }
+        });
+
+        // eliminar todos las rubricas del usuario
+        await tx.rubrica.deleteMany({ where: { usuarioId: idUsuario } });
+
+        // eliminar la salt si es usuario propio (no es google)
+        if (!user.correo.startsWith("google|"))
+          await tx.salt.delete({ where: { usuarioId: idUsuario } });
+
+        // eliminar el usuario
+        await tx.usuario.delete({ where: { id: idUsuario } });
+      });
+
+    } catch (error) {
+      if (error instanceof PrismaClientKnownRequestError && error.code === "P2023") throw new InvalidValueError("Usuario", "id"); // el id no tiene los 12 bytes
+      throw new NotFoundError("Usuario"); // no se encontro alguna de las entidades
+    }
   }
 
   /*
@@ -94,8 +177,8 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
           cursosAlumnoModel: {
             orderBy: { nombre: 'asc' }
           },
-          cursosDocenteModel: { 
-            orderBy: { nombre: 'asc' } 
+          cursosDocenteModel: {
+            orderBy: { nombre: 'asc' }
           }
         }
       });
@@ -130,9 +213,9 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     try {
       const [users, count] = await this.prisma.$transaction([
         this.prisma.usuario.findMany(query),
-        this.prisma.usuario.count({where: query.where})
+        this.prisma.usuario.count({ where: query.where })
       ]);
-      return {count: count, result: users};
+      return { count: count, result: users };
     }
     catch (error) {
       throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
@@ -148,10 +231,12 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       skip: offset,
       where: {
         AND: [
-          {OR: [
-            { nombre: { contains: nombreUser.toLowerCase() } },
-            { correo: { contains: nombreUser.toLowerCase() } }
-          ]},
+          {
+            OR: [
+              { nombre: { contains: nombreUser.toLowerCase() } },
+              { correo: { contains: nombreUser.toLowerCase() } }
+            ]
+          },
           {
             OR: [
               { cursosAlumno: { has: idCurso } },
@@ -164,21 +249,21 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
     try {
 
-      if(limit === 0) {
+      if (limit === 0) {
         const [users, count] = await this.prisma.$transaction([
           this.prisma.usuario.findMany(query),
-          this.prisma.usuario.count({where: query.where})
+          this.prisma.usuario.count({ where: query.where })
         ]);
 
-        return {count: count, result: users}
+        return { count: count, result: users }
       }
-      
+
       const [users, count] = await this.prisma.$transaction([
-        this.prisma.usuario.findMany({...query, take: limit}),
-        this.prisma.usuario.count({where: query.where})
+        this.prisma.usuario.findMany({ ...query, take: limit }),
+        this.prisma.usuario.count({ where: query.where })
       ]);
 
-      return {count: count, result: users}
+      return { count: count, result: users }
 
     }
     catch (error) {
@@ -187,21 +272,21 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   }
 
   async updateUsuarioPassword(idUsuario: string, password: string) {
-      try {
-        return await this.prisma.usuario.update({
-          where: {id: idUsuario},
-          data: {contrasena: password}
-        });
-      } catch (error) {
-        throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
-      }
+    try {
+      return await this.prisma.usuario.update({
+        where: { id: idUsuario },
+        data: { contrasena: password }
+      });
+    } catch (error) {
+      throw new InvalidValueError("Usuario", "idCurso"); // el id no tiene los 12 bytes
+    }
   }
 
   async loginProvider(provider: string, nombre: string, correo: string) {
 
     // const idProvider = `${provider}|${id}` // "google|1234567890"
     const correoProvider = `${provider}|${correo}` // "google|juanperez@gmailcom"
-    
+
     try {
 
       return await this.prisma.usuario.upsert({
@@ -219,7 +304,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         }
       })
 
-    }catch(error) {
+    } catch (error) {
       throw new Error("Hubo un problema al crear/actualizar el usuario en la bd")
     }
 
