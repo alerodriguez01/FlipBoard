@@ -94,7 +94,7 @@ export default function CrearRubrica() {
       });
 
       if (!res.ok) {
-        setError("erroresExternos", { message: "Por favor, complete los campos correspondientes." });
+        setError("erroresExternos", { message: "Hubo un problema. Por favor, intente nuevamente." });
         return;
       }
 

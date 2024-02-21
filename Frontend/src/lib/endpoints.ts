@@ -133,6 +133,10 @@ function downloadScreenshot(idCurso: string, idCalificacion: string) {
     return `/api/cursos/${idCurso}/calificaciones/${idCalificacion}/screenshot`;
 }
 
+function getUserById(idUsuario: string) {
+    return `/api/usuarios/${idUsuario}`;
+}
+
 // TODO: Agregar demas rutas
 
 export default {
@@ -147,5 +151,5 @@ export default {
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
-    downloadScreenshot
+    downloadScreenshot, getUserById
 }
