@@ -1,5 +1,6 @@
 'use client';
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
+import ModificarUsuarioModal from "@/app/componentes/ui/ModificarUsuarioModal";
 import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { UsuariosTable } from "@/app/componentes/ui/UsuariosTable";
 import endpoints from "@/lib/endpoints";
@@ -17,6 +18,7 @@ export default function Usuarios() {
   const { data: session, status } = useSession();
   const [usuarioSelected, setUsuarioSelected] = React.useState<Usuario>();
   const { isOpen: isEliminarOpen, onOpen: onEliminarOpen, onOpenChange: onEliminarOpenChange } = useDisclosure();
+  const { isOpen: isModificar, onOpen: onModificarOpen, onOpenChange: onModificarOpenChange } = useDisclosure();
   const [mutateTableData, setMutateTableData] = React.useState(0);
 
   const onEliminarUsuario = async () => {
@@ -47,10 +49,17 @@ export default function Usuarios() {
   return (
     <section className="p-8">
       <PagesHeader title="Usuarios de la plataforma" searchable={false}/>
-      <UsuariosTable onEliminarPress={(user) => {setUsuarioSelected(user); onEliminarOpen();}} mutarDatos={mutateTableData} currentUserId={session?.user.id}/>
+      <UsuariosTable
+        onEliminarPress={(user) => {setUsuarioSelected(user); onEliminarOpen();}}
+        onModificarPress={(user) => {setUsuarioSelected(user); onModificarOpen();}}
+        mutarDatos={mutateTableData}
+        currentUserId={session?.user.id}
+      />
       <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={'alumno'}
                         entityName={`a ${toMayusFirstLetters(usuarioSelected?.nombre ?? "")}`}
-                        onEliminar={onEliminarUsuario} extraMessage="NOTA: Se eliminaran todos los datos asociados al usuario como Calificaciones, Rúbricas, etc. "/>
+                        onEliminar={onEliminarUsuario} extraMessage="NOTA: Se eliminaran todos los datos asociados al usuario como Calificaciones, Rúbricas, etc. "
+      />
+      <ModificarUsuarioModal isOpen={isModificar} onOpenChange={onModificarOpenChange}/>
     </section>
   );
 }
