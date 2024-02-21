@@ -68,13 +68,26 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
       await this.prisma.$transaction(async (tx) => {
 
         // eliminar las apariciones del usuario en los cursos y grupos
-        await tx.usuario.update({
+        const user = await tx.usuario.update({
           where: { id: idUsuario },
           data: {
-            cursosAlumnoModel: { disconnect: { id: idUsuario } },
-            cursosDocenteModel: { disconnect: { id: idUsuario } },
-            gruposModel: { disconnect: { id: idUsuario } }
+            cursosAlumnoModel: {set: []},
+            cursosDocenteModel: {set: []} ,
+            gruposModel: {set: []}
           }
+        });
+
+        /// eliminar calificaciones de grupos que quedan vacios
+        await tx.calificacion.deleteMany({
+          where: { AND: [
+              { grupoModel: {integrantes: {isEmpty: true}}}
+          ] }
+        })
+        /// eliminar grupos vacios
+        await tx.grupo.deleteMany({
+            where: {
+                integrantes: {isEmpty: true}
+            }
         });
 
         // buscar todas las rubricas creadas por el usuario
@@ -96,8 +109,9 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         // eliminar todos las rubricas del usuario
         await tx.rubrica.deleteMany({ where: { usuarioId: idUsuario } });
 
-        // eliminar la salt
-        await tx.salt.delete({ where: { usuarioId: idUsuario } });
+        // eliminar la salt si es usuario propio (no es google)
+        if (!user.correo.startsWith("google|"))
+          await tx.salt.delete({ where: { usuarioId: idUsuario } });
 
         // eliminar el usuario
         await tx.usuario.delete({ where: { id: idUsuario } });
