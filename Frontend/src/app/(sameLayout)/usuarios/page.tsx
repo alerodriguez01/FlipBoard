@@ -59,7 +59,8 @@ export default function Usuarios() {
                         entityName={`a ${toMayusFirstLetters(usuarioSelected?.nombre ?? "")}`}
                         onEliminar={onEliminarUsuario} extraMessage="NOTA: Se eliminaran todos los datos asociados al usuario como Calificaciones, Rúbricas, etc. "
       />
-      <ModificarUsuarioModal isOpen={isModificar} onOpenChange={onModificarOpenChange}/>
+      {usuarioSelected && 
+        <ModificarUsuarioModal isOpen={isModificar} onOpenChange={onModificarOpenChange} user={usuarioSelected}/> }
     </section>
   );
 }
