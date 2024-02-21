@@ -71,23 +71,25 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
         const user = await tx.usuario.update({
           where: { id: idUsuario },
           data: {
-            cursosAlumnoModel: {set: []},
-            cursosDocenteModel: {set: []} ,
-            gruposModel: {set: []}
+            cursosAlumnoModel: { set: [] },
+            cursosDocenteModel: { set: [] },
+            gruposModel: { set: [] }
           }
         });
 
         /// eliminar calificaciones de grupos que quedan vacios
         await tx.calificacion.deleteMany({
-          where: { AND: [
-              { grupoModel: {integrantes: {isEmpty: true}}}
-          ] }
+          where: {
+            AND: [
+              { grupoModel: { integrantes: { isEmpty: true } } }
+            ]
+          }
         })
         /// eliminar grupos vacios
         await tx.grupo.deleteMany({
-            where: {
-                integrantes: {isEmpty: true}
-            }
+          where: {
+            integrantes: { isEmpty: true }
+          }
         });
 
         // buscar todas las rubricas creadas por el usuario
@@ -103,6 +105,16 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
               { docenteId: idUsuario },
               { rubricaId: { in: rubricasIds } }
             ]
+          }
+        });
+
+        // desasociar las rubricas de los murales a los que se encuentra asociada
+        await tx.mural.updateMany({
+          where: {
+            rubricaId: { in: rubricasIds }
+          },
+          data: {
+            rubricaId: null
           }
         });
 
