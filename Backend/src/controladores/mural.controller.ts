@@ -2,6 +2,7 @@ import { Mural } from "@prisma/client";
 import service from "../servicios/mural.service.js";
 import { Request, Response } from "express";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Traer mural (opcionalmente junto a su rubrica asociada)
@@ -65,9 +66,9 @@ async function asociateRubricaToMural(req: Request, res: Response) {
 async function createMural(req: Request, res: Response) {
 
     const idCurso = req.params.idCurso;
-    const { nombre, contenido, descripcion, idRubrica, idDocente } = req.body;
+    const { nombre, contenido, descripcion, idRubrica } = req.body;
 
-    if (!nombre || !contenido || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if (!nombre || !contenido) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     const mural = {
         nombre,
@@ -77,13 +78,18 @@ async function createMural(req: Request, res: Response) {
         rubricaId: idRubrica ?? null
     }
 
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
     try {
-        const newMural = await service.createMural(mural as Mural, idDocente)
+        const newMural = await service.createMural(token, mural as Mural)
         return res.status(201).json(newMural);
 
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
+        if (err instanceof NotAuthorizedError) return res.status(401).json({ error: err.message });
         return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
@@ -92,9 +98,9 @@ async function createMural(req: Request, res: Response) {
 async function updateMural(req: Request, res: Response) {
 
     const idMural = req.params.idMural;
-    const { nombre, descripcion, idRubrica, idDocente, idCurso } = req.body;
+    const { nombre, descripcion, idRubrica, idCurso } = req.body;
 
-    if (!nombre || !idCurso || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if (!nombre || !idCurso) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     const mural = {
         nombre,
@@ -102,13 +108,18 @@ async function updateMural(req: Request, res: Response) {
         rubricaId: idRubrica
     }
 
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
     try {
-        const newMural = await service.updateMural(idMural, mural as Mural, idCurso, idDocente)
+        const newMural = await service.updateMural(token, idMural, mural as Mural, idCurso)
         return res.status(200).json(newMural);
 
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
+        if (err instanceof NotAuthorizedError) return res.status(401).json({ error: err.message });
         return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
@@ -117,16 +128,18 @@ async function updateMural(req: Request, res: Response) {
 async function deleteMuralById(req: Request, res: Response) {
 
     const idMural = req.params.idMural;
-    const docente = req.query.docente;
 
-    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     try {
-        await service.deleteMuralById(idMural, docente as string);
+        await service.deleteMuralById(token, idMural);
         return res.status(204).send();
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
         return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
