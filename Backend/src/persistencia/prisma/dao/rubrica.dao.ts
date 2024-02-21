@@ -60,18 +60,20 @@ export class RubricaPrismaDAO implements RubricaDataSource {
      */
     async getAllRubricasByUserId(userId: string, nombreRub?: string) {
         try {
+            console.log(nombreRub?.toLowerCase());
             return await this.prisma.rubrica.findMany({
                 where: {
                     AND: [
                         {usuarioId: userId},
                         {OR: [
-                            {nombre: {contains: nombreRub?.toLowerCase()}},
-                            {criterios: {some: {nombre: {contains: nombreRub?.toLowerCase()}}}},
+                            {nombre: {contains: nombreRub, mode: 'insensitive'}},
+                            {criterios: {some: {nombre: {contains: nombreRub, mode: 'insensitive'}}}},
                         ]}
                     ]
                 }
             });
         } catch (err) {
+            if(err instanceof PrismaClientKnownRequestError && err.code === "P2010") return [];
             throw new InvalidValueError("Rubrica", "idUsuario"); // el id no tiene los 12 bytes
         }
     }
