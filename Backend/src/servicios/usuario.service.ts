@@ -331,8 +331,29 @@ async function getEstadoCorreos(correos: string[]): Promise<{ provider: boolean,
     return usuarios;
 }
 
+async function getAllUsuarios(token: string, nombre: string, limit: number, offset: number) {
+
+    let isSuperUser = false
+    let superUserId = '';
+    
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    if (!isSuperUser) throw new NotAuthorizedError();
+
+    const users = await usuarioRepository.getUsuariosPaginated(nombre, limit, offset);
+
+    return users ?? { count: 0, result: [] };
+}
+
 
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario, deleteUsuario
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario, deleteUsuario,
+    getAllUsuarios
 };

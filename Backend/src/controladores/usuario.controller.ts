@@ -254,4 +254,27 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, updateUsuario, deleteUsuario };
+async function getAllUsuarios(req: Request, res: Response) {
+    
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
+    let limit = req.query.limit ? parseInt(req.query.limit as string) || 0 : 0
+    let offset = req.query.offset ? parseInt(req.query.offset as string) || 0 : 0
+    const nombre = req.query.nombre ? req.query.nombre.toString() : '';
+
+    if (limit < 0) limit = 0;
+    if (offset < 0) offset = 0;
+
+    try {
+        const users = await service.getAllUsuarios(token, nombre, limit, offset);
+        return res.status(200).json(users);
+    } catch (error) {
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
+    }
+}
+
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante,
+     updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, 
+     updateUsuario, deleteUsuario, getAllUsuarios };
