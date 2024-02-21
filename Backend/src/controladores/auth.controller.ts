@@ -78,6 +78,7 @@ async function logout(req: Request, res: Response) {
     return res.status(204).send();
 }
 
+// sent a reset password email
 async function resetPassword(req: Request, res: Response) {
 
     const correo = req.body.correo;
@@ -128,6 +129,9 @@ async function authentication(req: Request, res: Response, next: NextFunction) {
 
     // si la ruta no requiere autenticacion, continuo
     if (rutasSinAuth.includes(req.path)) return next()
+
+    // patrones de rutas mas especificas que no requieren autenticacion
+    if (req.path.startsWith("/api/usuarios") && req.path.endsWith("/password")) return next()
 
     // get jwt from header
     const token = req.header('Authorization');

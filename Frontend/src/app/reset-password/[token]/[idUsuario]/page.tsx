@@ -11,7 +11,6 @@ import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIco
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import endpoints from "@/lib/endpoints"
 import Link from "next/link"
-import { useSession } from "next-auth/react"
 
 const passSchema = z.object({
     contrasenaNueva: z.string()
@@ -27,7 +26,6 @@ type PasswordForm = z.infer<typeof passSchema> & { erroresExternos?: string };
 const ResetPassword = ({ params }: { params: { token: string, idUsuario: string } }) => {
 
     const router = useRouter();
-    const { data: session, status } = useSession();
 
     const {
         register,
@@ -54,7 +52,6 @@ const ResetPassword = ({ params }: { params: { token: string, idUsuario: string 
                 }),
                 headers: {
                     'Content-Type': 'application/json',
-                    "Authorization": session?.user.token || ""
                 }
             });
 
