@@ -14,5 +14,6 @@ export default interface UsuarioDataSource {
     getUsuariosFromCursoByNombrePaginated(idCurso: string, nombre: string, limit: number, offset: number): Promise<PaginatedUsers | null>;
     updateUsuarioPassword(idUsuario: string, password: string): Promise<Usuario | null>;
     loginProvider(provider: string, nombre: string, correo: string): Promise<Usuario>;
+    updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean): Promise<Usuario>;
     // ir agregando métodos restantes 
 }

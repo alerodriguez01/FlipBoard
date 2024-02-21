@@ -127,6 +127,56 @@ router.post("/usuarios", controller.createUsuario);
 
 /**
  * @swagger
+ * /api/usuarios/{idUsuario}:
+ *   patch:
+ *    summary: Actualizar un usuario (solo lo puede realizar un superuser o el usuario a si mismo)
+ *    parameters:
+ *      - name: idUsuario
+ *        in: path
+ *        required: true
+ *        description: El id del usuario
+ *        schema:
+ *          type: string
+ *        example:
+ *          65326ed824fea7e06d01e207
+ *    tags: [Usuario]
+ *    requestBody:
+ *      required: true
+ *      content:
+ *        application/json:
+ *          example:
+ *            nombre: Juan
+ *            contrasena: Contra123456
+ *            superUser: true
+ *    responses:
+ *      201: 
+ *        description: Usuario actualizado exitosamente
+ *        content:
+ *          application/json:
+ *            schema:
+ *              $ref: "#/components/schemas/Usuario"
+ *      400:
+ *        description: Valor invalido para el atributo nombre o password
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Valor invalido para el atributo Correo de Usuario
+ *      404:
+ *        description: Usuario no encontrado
+ *        content:
+ *          application/json:
+ *            examples:
+ *              usuarioNoEncontrado:
+ *                value:
+ *                  error: No se ha podido encontrar 'Usuario' en la BDD
+ *              faltaDatos:
+ *                value:
+ *                  error: El body no contiene los campos necesarios
+ */
+router.patch("/usuarios/:idUsuario", controller.updateUsuario);
+
+/**
+ * @swagger
  * /api/usuarios/{idUsuario}/password:
  *   put:
  *    summary: Cambiar la contraseña de un usuario

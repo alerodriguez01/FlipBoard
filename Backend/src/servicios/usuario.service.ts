@@ -77,6 +77,40 @@ async function createUsuario(user: Usuario) {
 }
 
 /*
+    Actualizar un usuario
+*/
+async function updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean) {
+
+    const user = await usuarioRepository.getUsuarioById(idUsuario);
+    if (!user) throw new NotFoundError('Usuario');
+
+    // name is only letters and spaces
+    if (nombre && !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
+        throw new InvalidValueError('Usuario', 'Nombre o apellido');
+
+    if(contrasena){
+        /**
+         * Criterios password:
+         *  - 8 caracteres minimo
+         *  - 1 mayuscula
+         *  - 1 numero
+         */
+        if (contrasena.length < 8 || contrasena.toLowerCase() === contrasena || !contrasena.match(/\d/))
+            throw new InvalidValueError('Usuario', 'Contrasenia');
+    }
+
+    // hash password
+    if (contrasena) {
+        const salt = await saltRepository.getSaltByUsuarioId(idUsuario);
+        if (!salt) throw new NotFoundError("Salt");
+
+        contrasena = await bcryptjs.hash(contrasena, salt.salt);
+    }
+
+    return await usuarioRepository.updateUsuario(idUsuario, nombre, contrasena, superUser);
+}
+
+/*
     login de usuario
 */
 type UsuarioWithJWT = Usuario & {
@@ -251,5 +285,5 @@ async function getEstadoCorreos(correos: string[]): Promise<{ provider: boolean,
 
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario
 };

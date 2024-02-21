@@ -40,6 +40,25 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
   }
 
+  // Actualizar usuario
+  async updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean): Promise<Usuario> {
+
+    let query: any = {
+      where: { id: idUsuario },
+      data : {}
+    }
+
+    if(nombre) query.data.nombre = nombre.toLowerCase();
+    if(contrasena) query.data.contrasena = contrasena;
+    if(superUser !== undefined) query.data.superUser = superUser;
+
+    try {
+      return await this.prisma.usuario.update(query);
+    } catch (error) {
+      throw new InvalidValueError("Usuario", "idUsuario"); // el id no tiene los 12 bytes
+    }
+  }
+
   /*
     Obtener usuario por id
   */

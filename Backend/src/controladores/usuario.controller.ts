@@ -7,6 +7,7 @@ import { TokenInvalido } from "../excepciones/TokenError.js";
 import validator from "validator";
 import nodemailer from 'nodemailer';
 import { templateHtml } from "../../lib/utils.js";
+import usuarioService from "../servicios/usuario.service.js";
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
@@ -47,6 +48,46 @@ async function createUsuario(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json(err.message);
     }
+}
+
+/*
+    Actualizar un usuario
+ */
+async function updateUsuario(req: Request, res: Response) {
+
+    const idUsuario = req.params.idUsuario;
+    const { nombre, contrasena, superUser } = req.body;
+
+    // si no hay nada para actualizar
+    if(!nombre && !contrasena && superUser === undefined) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
+
+    // get token from header
+    const token = req.header('Authorization');
+    if(!token) return res.status(401).json({error: 'Token expirado o no valido'});
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        return res.status(401).json({error: 'Token expirado o no valido'});
+    }
+
+    // if the user is not superuser and try to update another user
+    if(!isSuperUser && superUserId !== idUsuario) return res.status(401).json({error: 'No tiene permisos para realizar esta accion'});
+
+    // update the user
+    try {
+        const userUpdated = await service.updateUsuario(idUsuario, nombre, contrasena, superUser);
+        return res.status(201).json(userUpdated);
+    } catch (error) {
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+    }
+
 }
 
 /*
@@ -192,4 +233,4 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers };
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, updateUsuario };
