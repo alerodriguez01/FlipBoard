@@ -11,7 +11,8 @@ import { useTheme } from "next-themes";
 
 type TableProps = {
     onEliminarPress?: (user: Usuario) => void,
-    onModificarPress?: (user: Usuario) => void
+    onModificarPress?: (user: Usuario) => void,
+    mutarDatos?: number
 };
 
 const UsuariosTable = (props: TableProps) => {
@@ -58,6 +59,7 @@ const UsuariosTable = (props: TableProps) => {
             endpoint={endpoints.getAllUsuarios()} 
             itemType={"usuario"} 
             renderCell={(item, cKey) => renderCell(item,cKey)}
+            mutarDatos={props.mutarDatos}
             rows={15}
             isStriped
         >

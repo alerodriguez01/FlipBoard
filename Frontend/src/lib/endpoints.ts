@@ -136,6 +136,10 @@ function downloadScreenshot(idCurso: string, idCalificacion: string) {
 function getAllUsuarios() {
     return '/api/usuarios'
 }
+
+function deleteUsuario(idUser: string) {
+    return `/api/usuarios/${idUser}`;
+}
 // TODO: Agregar demas rutas
 
 export default {
@@ -150,5 +154,5 @@ export default {
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
-    downloadScreenshot, getAllUsuarios
+    downloadScreenshot, getAllUsuarios, deleteUsuario
 }
