@@ -8,6 +8,7 @@ import validator from "validator";
 import nodemailer from 'nodemailer';
 import { templateHtml } from "../../lib/utils.js";
 import usuarioService from "../servicios/usuario.service.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener usuario por id (opcionalmente con sus cursos)
@@ -101,25 +102,14 @@ async function deleteUsuario(req: Request, res: Response) {
     const token = req.header('Authorization');
     if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
-    // decode token and get the if is superuser
-    let isSuperUser = false
-    try {
-        const payload = usuarioService.verifyJWT(token);
-        isSuperUser = payload.superUser || false;
-    } catch (error) {
-        return res.status(401).json({ error: 'Token expirado o no valido' });
-    }
-
-    // if the user is not superuser
-    if (!isSuperUser) return res.status(401).json({ error: 'No tiene permisos para realizar esta accion' });
-
     // delete the user
     try {
-        await service.deleteUsuario(idUsuario);
+        await service.deleteUsuario(token, idUsuario);
         return res.status(204).send();
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
     }
 
 }

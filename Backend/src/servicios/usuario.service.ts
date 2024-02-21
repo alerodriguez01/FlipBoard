@@ -7,6 +7,7 @@ import { SaltRepository } from "../persistencia/repositorios/salt.repo.js";
 import jwt from 'jsonwebtoken';
 import { TokenInvalido } from "../excepciones/TokenError.js";
 import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 const usuarioRepository = UsuarioRepository.getInstance();
 const saltRepository = SaltRepository.getInstance();
@@ -113,7 +114,20 @@ async function updateUsuario(idUsuario: string, nombre?: string, contrasena?: st
 /*
     Eliminar un usuario
 */
-async function deleteUsuario(idUsuario: string) {
+async function deleteUsuario(token: string, idUsuario: string) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // if the superuser is not superuser
+    if(!isSuperUser) throw new NotAuthorizedError();
+
     return await usuarioRepository.deleteUsuario(idUsuario);
 }
 
