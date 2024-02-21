@@ -14,6 +14,7 @@ import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { toMayusFirstLetters } from "@/lib/utils";
 import AgregarAlumnoModal from "@/app/componentes/ui/AgregarAlumnoModal";
 import CompartirCursoModal from "@/app/componentes/ui/CompartirCursoModal";
+import AgregarEliminarDocenteModal from "@/app/componentes/ui/AgregarEliminarDocenteModal";
 
 
 export default function Participantes({ params }: { params: { idCurso: string } }) {
@@ -30,7 +31,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const [entityType, setEntityType] = React.useState<"Usuario" | "Grupo" | undefined>();
     const [asignarMode, setAsignarMode] = React.useState<'alumno' | 'grupo'>();
 
-    // para que se refresque la tabla de grupos cuando se crea uno nuevo
+    // para que se refresque la tabla de grupos cuando se crea uno nuevo, o cuando se elimina un alumno o agrega/elimina un docente
     const [mutateTableData, setMutateTableData] = useState(0);
     const mutarTableData = () => {
         setMutateTableData(prev => prev + 1);
@@ -58,6 +59,35 @@ export default function Participantes({ params }: { params: { idCurso: string } 
         }
     }
 
+    const { isOpen: isModificarDocenteOpen, onOpen: onModificarDocenteOpen, onOpenChange: onModificarDocenteOpenChange } = useDisclosure();
+
+    // entity para modificar docente
+    const [modificarEntity, setModificarEntity] = useState<Usuario>();
+    // para saber si el user seleccionado en la tabla es actualmente docente o no
+    const [userEstadoActual, setUserEstadoActual] = useState<boolean>(true);
+
+    const onModificarDocente = async (user: Usuario, estadoActual: boolean) => {
+        
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${params.idCurso}/docentes/${user.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": session?.user.token || ''
+            },
+            body: JSON.stringify({ agregar: !estadoActual })
+        });
+
+        if (res.ok) {
+            mutarTableData()
+            return true
+
+        } else {
+            return false
+        }
+
+    }
+
+
     if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
@@ -83,6 +113,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         onAgregarAlumnoPress={() => onAgregarAlumnoOpen()}
                         onAsignarRubricaPress={() => { setAsignarMode('alumno'); onAsignarOpen(); }}
                         onEliminarPress={(user) => { setEvaluarEntity(user); setEntityType('Usuario'); onEliminarOpen() }}
+                        onModificarDocentePress={(user, estadoActual) => { setModificarEntity(user); setUserEstadoActual(estadoActual); onModificarDocenteOpen(); }}
                         mutarDatos={mutateTableData} />
                 </Tab>
                 <Tab key="grupos" title="Grupos">
@@ -108,6 +139,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
                         entityName={entityType === 'Usuario' ? `a ${toMayusFirstLetters((evaluarEntity as Usuario)?.nombre)}` : `Grupo ${(evaluarEntity as Grupo)?.numero}`}
                         onEliminar={onEliminarEntity} extraMessage="NOTA: Se eliminará junto a todas sus calificaciones."/>
                     <CompartirCursoModal isOpen={isAgregarAlumnoOpen} onOpenChange={onAgregarAlumnoOpenChange} cursoId={params.idCurso} cursoTitle={""} />
+                    <AgregarEliminarDocenteModal isOpen={isModificarDocenteOpen} onOpenChange={onModificarDocenteOpenChange} onModificarDocente={onModificarDocente} estadoActual={userEstadoActual} entity={modificarEntity} />
                 </>
             }
         </section>

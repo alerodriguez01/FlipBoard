@@ -48,6 +48,9 @@ export class CursoPrismaDAO implements CursoDataSource {
                 ...curso,
                 docentesModel: {
                     connect: [{ id: curso.docentes[0] }]
+                },
+                participantesUser: {
+                    connect: [{ id: curso.docentes[0] }]
                 }
             }
         });
@@ -62,9 +65,6 @@ export class CursoPrismaDAO implements CursoDataSource {
             },
             data: {
                 ...curso,
-                docentesModel: {
-                    connect: [{ id: curso.docentes[0] }]
-                }
             }
         });
 
@@ -164,6 +164,30 @@ export class CursoPrismaDAO implements CursoDataSource {
                     }
                 });
 
+                // desconectar todos los docentes y alumnos
+                const usuarios = await tx.usuario.findMany({
+                    where: {
+                        OR: [
+                            { cursosAlumnoModel: { some: { id: idCurso } } },
+                            { cursosDocenteModel: { some: { id: idCurso } } },
+                        ]
+                    }
+                });
+                await tx.curso.update({
+                    where: {
+                        id: idCurso
+                    },
+                    data: {
+                        docentesModel: {
+                            disconnect: usuarios.map((usuario) => ({ id: usuario.id }))
+                        },
+                        participantesUser: {
+                            disconnect: usuarios.map((usuario) => ({ id: usuario.id }))
+                        }
+                    }
+                })
+
+                // eliminar el curso
                 const curso = await tx.curso.delete({
                     where: {
                         id: idCurso
@@ -188,10 +212,12 @@ export class CursoPrismaDAO implements CursoDataSource {
 
                 // borro todas las calificaciones de usuario
                 await tx.calificacion.deleteMany({
-                    where: { AND: [
-                        { usuarioId: idAlumno },
-                        { cursoId: idCurso }
-                    ] }
+                    where: {
+                        AND: [
+                            { usuarioId: idAlumno },
+                            { cursoId: idCurso }
+                        ]
+                    }
                 })
 
                 // eliminar usuario de todos los grupos en los que participa
@@ -217,16 +243,18 @@ export class CursoPrismaDAO implements CursoDataSource {
 
                 /// eliminar calificaciones de grupos que quedan vacios
                 await tx.calificacion.deleteMany({
-                    where: { AND: [
-                        { grupoModel: {integrantes: {isEmpty: true}}},
-                        { cursoId: idCurso }
-                    ] }
+                    where: {
+                        AND: [
+                            { grupoModel: { integrantes: { isEmpty: true } } },
+                            { cursoId: idCurso }
+                        ]
+                    }
                 })
                 /// eliminar grupos vacios
                 await tx.grupo.deleteMany({
                     where: {
                         cursoId: idCurso,
-                        integrantes: {isEmpty: true}
+                        integrantes: { isEmpty: true }
                     }
                 });
 
@@ -269,7 +297,7 @@ export class CursoPrismaDAO implements CursoDataSource {
     }
 
     async addOrDeleteDocenteToCurso(idCurso: string, idDocente: string, agregar: boolean): Promise<Curso | null> {
-        
+
         let query: any = {
             where: {
                 id: idCurso
@@ -282,11 +310,11 @@ export class CursoPrismaDAO implements CursoDataSource {
         };
 
         if (agregar) {
-            query.data.docentesModel.connect = { id: idDocente };
+            query.data.docentesModel.connect = { id: idDocente }; // lo conecto como docente
         } else {
-            query.data.docentesModel.disconnect = { id: idDocente };
+            query.data.docentesModel.disconnect = { id: idDocente }; // lo desconecto como docente
         }
-        
+
         try {
             return await this.prisma.curso.update(query);
         } catch (error) {

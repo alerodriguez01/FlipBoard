@@ -81,40 +81,35 @@ export default function Cursos() {
             <h3 className="px-3">No hay cursos</h3>
             :
             <>
-              {data.cursosDocenteModel.length > 0 &&
-                data.cursosDocenteModel.map((c: Curso) => {
-                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase())) return null;
-                  return (<CursoCard
-                    key={crypto.randomUUID()}
-                    title={c.nombre}
-                    description={c.descripcion}
-                    cursoId={c.id}
-                    color={color++ % 2}
-                    editable
-                    idUser={session?.user.id}
-                    mutar={mutate}
-                    onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
-                    onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
-                    onModificarPress={(id, nombre) => { setCursoSelected(c); onOpenModificar(); }}
-                  />)
-                })
-              }
               {data.cursosAlumnoModel.length > 0 &&
+
                 data.cursosAlumnoModel.map((c: Curso) => {
-                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase())) return null;
-                  return (<CursoCard
-                    key={crypto.randomUUID()}
-                    title={c.nombre}
-                    description={c.descripcion}
-                    cursoId={c.id}
-                    color={color++ % 2}
-                    idUser={session?.user.id}
-                    mutar={mutate}
-                    onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
-                    onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
-                    onModificarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenModificar(); }}
-                  />)
+                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase()))
+                    return null;
+
+                  return (
+                    <CursoCard
+                      key={crypto.randomUUID()}
+                      title={c.nombre}
+                      description={c.descripcion}
+                      cursoId={c.id}
+                      color={color++ % 2}
+                      editable={data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id)}
+                      idUser={session?.user.id}
+                      mutar={mutate}
+                      onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
+                      onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                      onModificarPress={(id, nombre) => {
+                        // if (data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id))
+                        setCursoSelected(c);
+                        // else
+                        //   setCursoSelected({ id, nombre } as Curso);
+                        onOpenModificar();
+                      }}
+                    />
+                  )
                 })
+
               }
             </>
         }
@@ -128,10 +123,10 @@ export default function Cursos() {
 
       {!!session &&
         <>
-          <CrearModificarCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmitCurso={mutate} idDocente={session.user.id} type="crear"/>
-          <CrearModificarCursoModal isOpen={isOpenModificar} onOpenChange={onOpenChangeModificar} onSubmitCurso={mutate} idDocente={session.user.id} type="modificar" data={cursoSelected}/>
-          <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={cursoSelected?.id  || ""} cursoTitle={cursoSelected?.nombre || ""} />
-          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""} extraMessage="NOTA: Se eliminará el curso y todo su contenido."/>
+          <CrearModificarCursoModal isOpen={isOpen} onOpenChange={onOpenChange} onSubmitCurso={mutate} idDocente={session.user.id} type="crear" />
+          <CrearModificarCursoModal isOpen={isOpenModificar} onOpenChange={onOpenChangeModificar} onSubmitCurso={mutate} idDocente={session.user.id} type="modificar" data={cursoSelected} />
+          <CompartirCursoModal isOpen={isOpenCompartir} onOpenChange={onOpenChangeCompartir} cursoId={cursoSelected?.id || ""} cursoTitle={cursoSelected?.nombre || ""} />
+          <EliminarModal isOpen={isOpenEliminar} onOpenChange={onOpenChangeEliminar} onEliminar={eliminarCurso} type="curso" entityName={cursoSelected?.nombre || ""} extraMessage="NOTA: Se eliminará el curso y todo su contenido." />
         </>
       }
 
