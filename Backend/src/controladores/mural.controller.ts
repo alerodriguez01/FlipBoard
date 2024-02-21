@@ -26,9 +26,10 @@ async function getMuralesFromCurso(req: Request, res: Response) {
 
     const idCurso = req.params.idCurso;
     const traerRubrica = req.query.rubrica === "true";
+    const nombre = req.query.nombre as string ?? null;
 
     try {
-        const murales = await service.getMuralesFromCurso(idCurso, traerRubrica);
+        const murales = await service.getMuralesFromCurso(idCurso, traerRubrica, nombre);
         return res.status(200).json(murales);
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
