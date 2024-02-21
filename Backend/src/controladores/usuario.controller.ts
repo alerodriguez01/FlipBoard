@@ -32,7 +32,7 @@ async function createUsuario(req: Request, res: Response) {
     const usuarioBody = req.body;
 
     if (!usuarioBody.nombre || !usuarioBody.correo || !usuarioBody.contrasena)
-        return res.status(400).json("Faltan datos obligatorios")
+        return res.status(400).json({ error: "Faltan datos obligatorios" })
 
     const user = {
         nombre: usuarioBody.nombre,
@@ -46,7 +46,7 @@ async function createUsuario(req: Request, res: Response) {
         res.cookie('token', newUser.token, { httpOnly: true, maxAge: 1000 * 60 * 60 * 48 });
         return res.status(201).json(newUser);
     } catch (err) {
-        if (err instanceof InvalidValueError) return res.status(400).json(err.message);
+        if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
     }
 }
 
@@ -59,11 +59,11 @@ async function updateUsuario(req: Request, res: Response) {
     const { nombre, contrasena, superUser } = req.body;
 
     // si no hay nada para actualizar
-    if(!nombre && !contrasena && superUser === undefined) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
+    if (!nombre && !contrasena && superUser === undefined) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
 
     // get token from header
     const token = req.header('Authorization');
-    if(!token) return res.status(401).json({error: 'Token expirado o no valido'});
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     // decode token and get the if is superuser and its id
     let isSuperUser = false
@@ -73,11 +73,11 @@ async function updateUsuario(req: Request, res: Response) {
         isSuperUser = payload.superUser || false;
         superUserId = payload.id;
     } catch (error) {
-        return res.status(401).json({error: 'Token expirado o no valido'});
+        return res.status(401).json({ error: 'Token expirado o no valido' });
     }
 
     // if the user is not superuser and try to update another user
-    if(!isSuperUser && superUserId !== idUsuario) return res.status(401).json({error: 'No tiene permisos para realizar esta accion'});
+    if (!isSuperUser && superUserId !== idUsuario) return res.status(401).json({ error: 'No tiene permisos para realizar esta accion' });
 
     // update the user
     try {
@@ -99,7 +99,7 @@ async function deleteUsuario(req: Request, res: Response) {
 
     // get token from header
     const token = req.header('Authorization');
-    if(!token) return res.status(401).json({error: 'Token expirado o no valido'});
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     // decode token and get the if is superuser
     let isSuperUser = false
@@ -107,11 +107,11 @@ async function deleteUsuario(req: Request, res: Response) {
         const payload = usuarioService.verifyJWT(token);
         isSuperUser = payload.superUser || false;
     } catch (error) {
-        return res.status(401).json({error: 'Token expirado o no valido'});
+        return res.status(401).json({ error: 'Token expirado o no valido' });
     }
 
     // if the user is not superuser
-    if(!isSuperUser) return res.status(401).json({error: 'No tiene permisos para realizar esta accion'});
+    if (!isSuperUser) return res.status(401).json({ error: 'No tiene permisos para realizar esta accion' });
 
     // delete the user
     try {
@@ -154,13 +154,13 @@ async function addParticipante(req: Request, res: Response) {
 
     const userBody = req.body;
 
-    if (!userBody.id) return res.status(400).json("Faltan datos obligatorios");
+    if (!userBody.id) return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     try {
         await service.addParticipanteToCurso(req.params.idCurso, userBody.id);
         return res.status(204).send();
     } catch (error) {
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
     }
 
 }
@@ -171,15 +171,15 @@ async function updateUsuarioPassword(req: Request, res: Response) {
     const newPass = req.body.contrasena;
 
     if (!token || !newPass)
-        return res.status(400).json("Faltan datos obligatorios");
+        return res.status(400).json({ error: "Faltan datos obligatorios" });
 
     try {
         let userUpdated = await service.updateUsuarioPassword(req.params.idUsuario, newPass, token);
         return res.status(200).json(userUpdated);
     } catch (error) {
         if (error instanceof TokenInvalido) return res.status(401).send();
-        if (error instanceof InvalidValueError) return res.status(400).json(error.message);
-        if (error instanceof NotFoundError) return res.status(404).json(error.message);
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
     }
 
 }
@@ -218,7 +218,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
         if (!enviarInvitacionSiExiste) {
 
             const estadoCorreos = await service.getEstadoCorreos(correos);
-            
+
             // obtener los usuarios que no estan registrados
             correosAEnviar = estadoCorreos.filter((obj) => !obj.registered).map((obj) => obj.correo);
 
@@ -230,7 +230,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
             }
         }
 
-        if(correosAEnviar.length === 0) return res.status(204).send();
+        if (correosAEnviar.length === 0) return res.status(204).send();
 
         const curso = await cursoService.getCursoById(idCurso);
 
