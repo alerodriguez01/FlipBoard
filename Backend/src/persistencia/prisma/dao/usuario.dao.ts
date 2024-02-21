@@ -66,19 +66,32 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     try {
 
       await this.prisma.$transaction(async (tx) => {
-        
+
         // eliminar las apariciones del usuario en los cursos y grupos
         await tx.usuario.update({
           where: { id: idUsuario },
-          data: { 
+          data: {
             cursosAlumnoModel: { disconnect: { id: idUsuario } },
-            cursosDocenteModel: { disconnect: { id: idUsuario } }, 
-            gruposModel: { disconnect: { id: idUsuario } } 
+            cursosDocenteModel: { disconnect: { id: idUsuario } },
+            gruposModel: { disconnect: { id: idUsuario } }
           }
         });
 
-        // eliminar todas las calificaciones del usuario
-        await tx.calificacion.deleteMany({ where: { usuarioId: idUsuario } });
+        // buscar todas las rubricas creadas por el usuario
+        const rubricas = await tx.rubrica.findMany({ where: { usuarioId: idUsuario } });
+        // obtener los ids de las rubricas
+        const rubricasIds = rubricas.map(rub => rub.id);
+
+        // eliminar todas las calificaciones del realizadas sobre el usuario, que realizo o que tiene una rubrica asociada creada por el
+        await tx.calificacion.deleteMany({
+          where: {
+            OR: [
+              { usuarioId: idUsuario },
+              { docenteId: idUsuario },
+              { rubricaId: { in: rubricasIds } }
+            ]
+          }
+        });
 
         // eliminar todos las rubricas del usuario
         await tx.rubrica.deleteMany({ where: { usuarioId: idUsuario } });
