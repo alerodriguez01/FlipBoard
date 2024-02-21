@@ -292,14 +292,28 @@ async function getUsuarioByCorreo(correo: string) {
     return user;
 }
 
-async function deleteAlumnoFromCurso(idCurso: string, idAlumno: string, docente: string) {
+async function deleteAlumnoFromCurso(token: string, idCurso: string, idAlumno: string) {
 
-    // Verificar que el docente sea el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
 
-    const curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
+
+    // Verificar que el docente sea superuser o el docente del curso
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+
+    curso = await cursoRepository.deleteAlumnoFromCurso(idCurso, idAlumno);
     return curso;
 }
 

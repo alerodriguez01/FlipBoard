@@ -172,16 +172,18 @@ async function deleteAlumnoFromCurso(req: Request, res: Response) {
 
     const idAlumno = req.params.idAlumno;
     const idCurso = req.params.idCurso;
-    const docente = req.query.docente;
 
-    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     try {
-        await service.deleteAlumnoFromCurso(idCurso, idAlumno, docente as string);
+        await service.deleteAlumnoFromCurso(token, idCurso, idAlumno);
         return res.status(204).send();
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
         return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
