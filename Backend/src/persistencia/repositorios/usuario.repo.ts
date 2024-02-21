@@ -74,5 +74,9 @@ export class UsuarioRepository implements UsuarioDataSource {
         return await this.usuarioDAO.updateUsuario(idUsuario, nombre, contrasena, superUser);
     }
 
+    async deleteUsuario(idUsuario: string): Promise<void> {
+        return await this.usuarioDAO.deleteUsuario(idUsuario);
+    }
+
     // demas metodos
 }

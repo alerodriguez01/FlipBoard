@@ -144,27 +144,27 @@ export class CursoPrismaDAO implements CursoDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // eliminar todas las calificaciones del curso
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
                 // eliminar todos los grupos del curso
-                await this.prisma.grupo.deleteMany({
+                await tx.grupo.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
                 // eliminar todos los murales del curso
-                await this.prisma.mural.deleteMany({
+                await tx.mural.deleteMany({
                     where: {
                         cursoId: idCurso
                     }
                 });
 
-                const curso = await this.prisma.curso.delete({
+                const curso = await tx.curso.delete({
                     where: {
                         id: idCurso
                     }
@@ -187,7 +187,7 @@ export class CursoPrismaDAO implements CursoDataSource {
             return await this.prisma.$transaction(async (tx) => {
 
                 // borro todas las calificaciones de usuario
-                await this.prisma.calificacion.deleteMany({
+                await tx.calificacion.deleteMany({
                     where: { AND: [
                         { usuarioId: idAlumno },
                         { cursoId: idCurso }
@@ -195,7 +195,7 @@ export class CursoPrismaDAO implements CursoDataSource {
                 })
 
 
-                const curso = await this.prisma.curso.update({
+                const curso = await tx.curso.update({
                     where: {
                         id: idCurso
                     },

@@ -111,6 +111,13 @@ async function updateUsuario(idUsuario: string, nombre?: string, contrasena?: st
 }
 
 /*
+    Eliminar un usuario
+*/
+async function deleteUsuario(idUsuario: string) {
+    return await usuarioRepository.deleteUsuario(idUsuario);
+}
+
+/*
     login de usuario
 */
 type UsuarioWithJWT = Usuario & {
@@ -285,5 +292,5 @@ async function getEstadoCorreos(correos: string[]): Promise<{ provider: boolean,
 
 export default {
     getUsuarioById, createUsuario, login, verifyJWT, getParticipantes, addParticipanteToCurso, generateResetJWT,
-    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario
+    updateUsuarioPassword, getUsuarioByCorreo, loginProvider, deleteAlumnoFromCurso, getEstadoCorreos, updateUsuario, deleteUsuario
 };

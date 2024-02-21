@@ -15,5 +15,6 @@ export default interface UsuarioDataSource {
     updateUsuarioPassword(idUsuario: string, password: string): Promise<Usuario | null>;
     loginProvider(provider: string, nombre: string, correo: string): Promise<Usuario>;
     updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean): Promise<Usuario>;
+    deleteUsuario(idUsuario: string): Promise<void>;
     // ir agregando métodos restantes 
 }

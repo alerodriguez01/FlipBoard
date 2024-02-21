@@ -91,6 +91,40 @@ async function updateUsuario(req: Request, res: Response) {
 }
 
 /*
+    Eliminar un usuario
+*/
+async function deleteUsuario(req: Request, res: Response) {
+
+    const idUsuario = req.params.idUsuario;
+
+    // get token from header
+    const token = req.header('Authorization');
+    if(!token) return res.status(401).json({error: 'Token expirado o no valido'});
+
+    // decode token and get the if is superuser
+    let isSuperUser = false
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+    } catch (error) {
+        return res.status(401).json({error: 'Token expirado o no valido'});
+    }
+
+    // if the user is not superuser
+    if(!isSuperUser) return res.status(401).json({error: 'No tiene permisos para realizar esta accion'});
+
+    // delete the user
+    try {
+        await service.deleteUsuario(idUsuario);
+        return res.status(204).send();
+    } catch (error) {
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+    }
+
+}
+
+/*
     Buscar participantes de un curso
 */
 async function getParticipantes(req: Request, res: Response) {
@@ -233,4 +267,4 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
 
 }
 
-export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, updateUsuario };
+export default { getUsuarioById, createUsuario, getParticipantes, addParticipante, updateUsuarioPassword, deleteAlumnoFromCurso, addOrSendInvitationToUsers, updateUsuario, deleteUsuario };

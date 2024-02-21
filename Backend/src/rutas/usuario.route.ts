@@ -177,6 +177,39 @@ router.patch("/usuarios/:idUsuario", controller.updateUsuario);
 
 /**
  * @swagger
+ * /api/usuarios/{idUsuario}:
+ *   delete:
+ *    summary: Eliminar un usuario (solo lo puede realizar un superuser)
+ *    parameters:
+ *      - name: idUsuario
+ *        in: path
+ *        required: true
+ *        description: El id del usuario
+ *        schema:
+ *          type: string
+ *        example:
+ *          65326ed824fea7e06d01e207
+ *    tags: [Usuario]
+ *    responses:
+ *      204: 
+ *        description: Usuario actualizado exitosamente
+ *      401:
+ *        description: No tiene permisos para realizar esta accion
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No tiene permisos para realizar esta accion
+ *      404:
+ *        description: Usuario no encontrado
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No se ha podido encontrar 'Usuario' en la BDD
+ */
+router.delete("/usuarios/:idUsuario", controller.deleteUsuario);
+
+/**
+ * @swagger
  * /api/usuarios/{idUsuario}/password:
  *   put:
  *    summary: Cambiar la contraseña de un usuario
