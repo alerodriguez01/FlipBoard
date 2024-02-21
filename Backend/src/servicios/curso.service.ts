@@ -5,6 +5,8 @@ import { CursoRepository } from "../persistencia/repositorios/curso.repo.js";
 import { UsuarioRepository } from "../persistencia/repositorios/usuario.repo.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import validator from "validator";
+import usuarioService from "./usuario.service.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 const cursoRepository = CursoRepository.getInstance();
 const usuarioRepository = UsuarioRepository.getInstance();
@@ -89,6 +91,35 @@ async function addParticipantesToCurso(idCurso: string, correos: string[]) {
     return curso;
 }
 
+// Agregar docente a un curso
+async function addOrDeleteDocenteToCurso(token: string, idCurso: string, idDocente: string, agregar: boolean) {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // get the Curso
+    const curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
+
+    // if the superuser is not superuser or is not the docente of the curso
+    if(!isSuperUser || !curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+
+    // add the docente to the curso
+    const cursoUpdated = await cursoRepository.addOrDeleteDocenteToCurso(idCurso, idDocente, agregar);
+    if (!cursoUpdated) throw new NotFoundError("Curso");
+
+    return cursoUpdated;
+
+}
+
 // demas metodos
 
-export default { getCursoById, createCurso, getCursos, deleteCursoById, addParticipantesToCurso, updateCurso };
+export default { getCursoById, createCurso, getCursos, deleteCursoById, addParticipantesToCurso, updateCurso, addOrDeleteDocenteToCurso };

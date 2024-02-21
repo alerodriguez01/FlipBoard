@@ -2,7 +2,7 @@ import { Curso } from "@prisma/client";
 import service from "../servicios/curso.service.js";
 import { Request, Response } from "express";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
-
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener curso por id
@@ -103,4 +103,31 @@ async function updateCurso(req: Request, res: Response) {
 
 }
 
-export default { getCursoById, saveCurso, getCursos, deleteCursoById, updateCurso };
+// Agregar docente a un curso
+async function addOrDeleteDocenteToCurso(req: Request, res: Response) {
+
+    const idCurso = req.params.idCurso;
+    const idDocente = req.params.idDocente;
+
+    const { agregar } = req.body;
+    if (agregar === undefined) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    
+    // verificar si es boolean
+    if (typeof agregar !== 'boolean') return res.status(400).json({ error: "Tipos de datos incorrectos" });
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'No autorizado' });
+
+    try {
+        const curso = await service.addOrDeleteDocenteToCurso(token, idCurso, idDocente, agregar);
+        return res.status(201).json(curso);
+    } catch (error) {
+        if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+    }
+
+}
+
+export default { getCursoById, saveCurso, getCursos, deleteCursoById, updateCurso, addOrDeleteDocenteToCurso };

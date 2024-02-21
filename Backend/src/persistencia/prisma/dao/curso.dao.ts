@@ -1,7 +1,7 @@
 import { Curso, PrismaClient } from "@prisma/client";
 import CursoDataSource from "../../datasource/curso.datasource.js";
 import PrismaSingleton from "./dbmanager.js";
-import { DeleteError, InvalidValueError } from "../../../excepciones/RepoErrors.js";
+import { DeleteError, InvalidValueError, NotFoundError } from "../../../excepciones/RepoErrors.js";
 import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library.js";
 
 export class CursoPrismaDAO implements CursoDataSource {
@@ -229,6 +229,33 @@ export class CursoPrismaDAO implements CursoDataSource {
             return curso;
 
         } catch (error) {
+            throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
+        }
+    }
+
+    async addOrDeleteDocenteToCurso(idCurso: string, idDocente: string, agregar: boolean): Promise<Curso | null> {
+        
+        let query: any = {
+            where: {
+                id: idCurso
+            },
+            data: {
+                docentesModel: {
+                    // connect: { id: idDocente }
+                }
+            }
+        };
+
+        if (agregar) {
+            query.data.docentesModel.connect = { id: idDocente };
+        } else {
+            query.data.docentesModel.disconnect = { id: idDocente };
+        }
+        
+        try {
+            return await this.prisma.curso.update(query);
+        } catch (error) {
+            if (error instanceof PrismaClientKnownRequestError && error.code === "P2025") throw new NotFoundError("Docente") // el docente no existe
             throw new InvalidValueError("Curso", "idCurso"); // el id no tiene los 12 bytes
         }
     }
