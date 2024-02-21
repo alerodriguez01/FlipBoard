@@ -38,7 +38,7 @@ export default function Usuarios() {
     return false;
   }
   
-  if (status === 'loading')
+  if (status === 'loading' || !session)
     return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
   if (!session?.user?.superUser)
@@ -47,7 +47,7 @@ export default function Usuarios() {
   return (
     <section className="p-8">
       <PagesHeader title="Usuarios de la plataforma" searchable={false}/>
-      <UsuariosTable onEliminarPress={(user) => {setUsuarioSelected(user); onEliminarOpen();}} mutarDatos={mutateTableData}/>
+      <UsuariosTable onEliminarPress={(user) => {setUsuarioSelected(user); onEliminarOpen();}} mutarDatos={mutateTableData} currentUserId={session?.user.id}/>
       <EliminarModal isOpen={isEliminarOpen} onOpenChange={onEliminarOpenChange} type={'alumno'}
                         entityName={`a ${toMayusFirstLetters(usuarioSelected?.nombre ?? "")}`}
                         onEliminar={onEliminarUsuario} extraMessage="NOTA: Se eliminaran todos los datos asociados al usuario como Calificaciones, Rúbricas, etc. "/>

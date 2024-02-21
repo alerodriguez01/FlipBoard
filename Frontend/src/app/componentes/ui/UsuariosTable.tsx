@@ -12,7 +12,8 @@ import { useTheme } from "next-themes";
 type TableProps = {
     onEliminarPress?: (user: Usuario) => void,
     onModificarPress?: (user: Usuario) => void,
-    mutarDatos?: number
+    mutarDatos?: number,
+    currentUserId: string
 };
 
 const UsuariosTable = (props: TableProps) => {
@@ -20,8 +21,7 @@ const UsuariosTable = (props: TableProps) => {
     const {theme} = useTheme();
 
     const renderCell = React.useCallback((user: Usuario, columnKey: Key) => {
-    
-        if (columnKey === "eliminar") 
+        if (columnKey === "eliminar" && user.id !== props.currentUserId) 
           return (
             <Button onPress={() => props.onEliminarPress?.(user)} isIconOnly variant="light">
               <CrossIcon/>
