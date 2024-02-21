@@ -19,6 +19,7 @@ type TableProps = {
   mutarDatos?: number
   searchParams?: string
   isStriped?: boolean
+  rows?: number
 }
 
 const PaginatedTable = (props: TableProps) => {
@@ -27,7 +28,7 @@ const PaginatedTable = (props: TableProps) => {
   const currentTheme = theme === "dark" ? "dark" : "light";
   
   const [page, setPage] = useState(1);
-  const rows = 10;
+  const rows = props.rows || 10;
 
   const [nombre, setNombre] = useState("");
   const { data: session, status } = useSession();
