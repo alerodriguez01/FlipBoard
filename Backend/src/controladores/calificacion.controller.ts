@@ -6,6 +6,7 @@ import csv from "csv-writer";
 import { randomUUID } from "crypto";
 import fs from "fs";
 import calificacionService from "../servicios/calificacion.service.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener las calificaciones de un usuario
@@ -48,10 +49,14 @@ async function createCalificacion(req: Request, res: Response) {
     const idGrupo = req.params.idGrupo;
     const idCurso = req.params.idCurso;
 
-    const { valores, observaciones, idRubrica, idMural, idDocente, isParcial, screenshot } = req.body;
+    const { valores, observaciones, idRubrica, idMural, isParcial, screenshot } = req.body;
 
     // Datos obligatorios
-    if (!valores || !idRubrica || !idDocente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    if (!valores || !idRubrica) return res.status(400).json({ error: "Faltan datos obligatorios" });
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     // valores debe ser un array de numeros
     if (!Array.isArray(valores) || valores.some((valor: any) => typeof valor !== 'number')) return res.status(400).json({ error: "Valores debe ser un array de numeros. Ejemplo: valores: [1, 3]" });
@@ -62,7 +67,6 @@ async function createCalificacion(req: Request, res: Response) {
         rubricaId: idRubrica,
         cursoId: idCurso,
         muralId: idMural ?? null,
-        docenteId: idDocente,
         isParcial: isParcial ?? false,
         screenshot: screenshot ?? null
     }
@@ -71,12 +75,13 @@ async function createCalificacion(req: Request, res: Response) {
     if (idGrupo) calificacion.grupoId = idGrupo;
 
     try {
-        const newCalificacion = await service.createCalificacion(calificacion as Calificacion);
+        const newCalificacion = await service.createCalificacion(token, calificacion as Calificacion);
         return res.status(201).json(newCalificacion);
 
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message }); // alguno de los id esta mal formado
         if (error instanceof NotFoundError) res.status(404).json({ error: error.message }); // no se encontro alguna de las entidades
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
     }
 
 }
@@ -247,8 +252,6 @@ async function getScreenshotCalificacion(req: Request, res: Response) {
 
     const idCurso = req.params.idCurso;
     const idCalificacion = req.params.idCalif;
-
-
 
     try {
         const path = await calificacionService.getScreenshotPath(idCurso, idCalificacion);
