@@ -58,7 +58,6 @@ const CalificacionesAlumno = ({ idCurso, idAlumno }: CalificacionesAlumnoProps) 
             <PaginatedTable
                 className={""}
                 label={"Tabla de calificaciones"}
-                idCurso={idCurso}
                 endpoint={endpoints.getCalificacionesAlumnos(idCurso, idAlumno)}
                 itemType={"calificaciones"}
                 renderCell={(item: Calificacion, cKey: Key) => renderCell(item, cKey)}

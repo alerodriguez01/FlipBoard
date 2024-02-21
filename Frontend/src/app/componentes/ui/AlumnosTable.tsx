@@ -65,7 +65,6 @@ const AlumnosTable = (props: TableProps) => {
     <PaginatedTable 
       className={""} 
       label={"Tabla de alumnos"} 
-      idCurso={props.idCurso} 
       endpoint={endpoints.getAllAlumnos(props.idCurso)} 
       itemType={"alumno"} 
       renderCell={(item, cKey) => renderCell(item,cKey)}

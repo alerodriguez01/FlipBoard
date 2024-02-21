@@ -74,7 +74,6 @@ const GruposTable = (props: TableProps) => {
     <PaginatedTable 
       className={""} 
       label={"Tabla de grupos"} 
-      idCurso={props.idCurso} 
       endpoint={endpoints.getAllGrupos(props.idCurso)} 
       itemType={"grupo"} 
       renderCell={(item, cKey) => renderCell(item,cKey)}

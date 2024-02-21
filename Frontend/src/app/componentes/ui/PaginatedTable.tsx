@@ -10,7 +10,6 @@ import { useSession } from "next-auth/react";
 type TableProps = {
   className: string,
   label: string,
-  idCurso: string,
   endpoint: string,
   itemType: string,
   renderCell: (item: any, columnKey: Key) => ReactNode;
