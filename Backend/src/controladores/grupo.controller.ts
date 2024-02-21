@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import service from "../servicios/grupo.service.js";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
 import { Grupo } from "@prisma/client";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener grupos de un curso idCurso
@@ -62,16 +63,18 @@ async function deleteGrupoFromCurso(req: Request, res: Response) {
 
     const idGrupo = req.params.idGrupo;
     const idCurso = req.params.idCurso;
-    const docente = req.query.docente;
 
-    if (!docente) return res.status(400).json({ error: "Faltan datos obligatorios" });
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     try {
-        await service.deleteGrupoFromCurso(idGrupo, idCurso, docente as string);
+        await service.deleteGrupoFromCurso(token, idGrupo, idCurso);
         return res.status(204).send();
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
         return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
