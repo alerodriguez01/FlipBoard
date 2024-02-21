@@ -28,6 +28,7 @@ async function getGruposFromCurso(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -53,6 +54,7 @@ async function createGrupo(req: Request, res: Response) {
         return res.status(201).json(newGrupo);
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -70,6 +72,7 @@ async function deleteGrupoFromCurso(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }

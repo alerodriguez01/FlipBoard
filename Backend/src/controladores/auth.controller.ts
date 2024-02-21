@@ -34,7 +34,7 @@ async function login(req: Request, res: Response) {
     } catch (error) {
         // Error de correo sin formato o inexistente o contrasena incorrecta
         if (error instanceof InvalidValueError) return res.status(404).json({ error: error.message });
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -115,6 +115,7 @@ async function resetPassword(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }

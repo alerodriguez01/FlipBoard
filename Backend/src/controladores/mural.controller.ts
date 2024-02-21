@@ -18,6 +18,7 @@ async function getMuralById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -32,6 +33,7 @@ async function getMuralesFromCurso(req: Request, res: Response) {
         return res.status(200).json(murales);
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -52,7 +54,7 @@ async function asociateRubricaToMural(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -82,7 +84,7 @@ async function createMural(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -107,7 +109,7 @@ async function updateMural(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idMural invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el mural o la rubrica
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -125,6 +127,7 @@ async function deleteMuralById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 

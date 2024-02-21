@@ -36,6 +36,7 @@ async function getCalificacionesFromUser(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -82,6 +83,7 @@ async function createCalificacion(req: Request, res: Response) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message }); // alguno de los id esta mal formado
         if (error instanceof NotFoundError) res.status(404).json({ error: error.message }); // no se encontro alguna de las entidades
         if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -105,11 +107,12 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
 
         try {
             const calificacion = await service.getCalificacionParcial(idRubrica.toString(), idMural?.toString() ?? null, idDocente.toString(), idGrupo?.toString() ?? null, idAlumno?.toString() ?? null)
-            if(!calificacion) return res.status(404).json({ error: "No hay calificacion parcial" });
+            if (!calificacion) return res.status(404).json({ error: "No hay calificacion parcial" });
             return res.status(200).json(calificacion);
 
         } catch (error) {
             if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+            return res.status(500).json({ error: "Ocurrio un problema inesperado" });
         }
 
     }
@@ -132,6 +135,7 @@ async function getCalificacionesFromCurso(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -164,6 +168,7 @@ async function getCalificacionesOfGruposFromCurso(req: Request, res: Response) {
 
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -195,56 +200,57 @@ async function getCalificacionesOfAlumnosFromCurso(req: Request, res: Response) 
 
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
 
 async function getCSVofCalificacionesFromCurso(req: Request, res: Response) {
 
-        const idCurso = req.params.idCurso;
+    const idCurso = req.params.idCurso;
 
-        // get data from service sorted by date
-        let calificaciones: CalificacionCSV[] = [];
-        try {
-            calificaciones = await service.getCSVofCalificacionesFromCurso(idCurso);
-        } catch (error) {
-            if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
-        }
+    // get data from service sorted by date
+    let calificaciones: CalificacionCSV[] = [];
+    try {
+        calificaciones = await service.getCSVofCalificacionesFromCurso(idCurso);
+    } catch (error) {
+        if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+    }
 
-        // define csv writer
-        const path = `temp_csv/calificaciones_${randomUUID()}.csv`
-        
-        // find the max number of criterios
-        let cantCriterios = 0; 
-        calificaciones.forEach(cal => {
-            if (Object.keys(cal).length - 8 > cantCriterios) cantCriterios = Object.keys(cal).length - 8;
-        })
-        let criterios: any = []
-        for (let i = 0; i < cantCriterios; i++) {
-            criterios.push({id: `criterio${i+1}`, title: `Criterio ${i+1} (nivel evaluado)`})
-        }
-        
-        const csvWriter = csv.createObjectCsvWriter({
-            path: path,
-            header: [
-                {id: 'fecha', title: 'Fecha'},
-                {id: "alumno", title: "Alumno"},
-                {id: "grupo", title: "Grupo"},
-                {id: "tipo_evaluacion", title: "Tipo de evaluacion"},
-                {id: "mural", title: "Mural"},
-                {id: "rubrica", title: "Rubrica"},
-                {id: "puntaje", title: "Puntaje"},
-                {id: "observaciones", title: "Observaciones"},
-                ...criterios
-            ]
-        });
+    // define csv writer
+    const path = `temp_csv/calificaciones_${randomUUID()}.csv`
 
-        // write data to csv
-        await csvWriter.writeRecords(calificaciones);
+    // find the max number of criterios
+    let cantCriterios = 0;
+    calificaciones.forEach(cal => {
+        if (Object.keys(cal).length - 8 > cantCriterios) cantCriterios = Object.keys(cal).length - 8;
+    })
+    let criterios: any = []
+    for (let i = 0; i < cantCriterios; i++) {
+        criterios.push({ id: `criterio${i + 1}`, title: `Criterio ${i + 1} (nivel evaluado)` })
+    }
 
-        res.setHeader('Content-Type', 'text/csv');
-        res.setHeader('Content-Disposition', 'attachment; filename=calificaciones.csv');
-        return res.status(200).sendFile(process.cwd() + "/" + path);
+    const csvWriter = csv.createObjectCsvWriter({
+        path: path,
+        header: [
+            { id: 'fecha', title: 'Fecha' },
+            { id: "alumno", title: "Alumno" },
+            { id: "grupo", title: "Grupo" },
+            { id: "tipo_evaluacion", title: "Tipo de evaluacion" },
+            { id: "mural", title: "Mural" },
+            { id: "rubrica", title: "Rubrica" },
+            { id: "puntaje", title: "Puntaje" },
+            { id: "observaciones", title: "Observaciones" },
+            ...criterios
+        ]
+    });
+
+    // write data to csv
+    await csvWriter.writeRecords(calificaciones);
+
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', 'attachment; filename=calificaciones.csv');
+    return res.status(200).sendFile(process.cwd() + "/" + path);
 
 }
 
@@ -257,7 +263,7 @@ async function getScreenshotCalificacion(req: Request, res: Response) {
         const path = await calificacionService.getScreenshotPath(idCurso, idCalificacion);
         res.setHeader('Content-Type', 'image/jpeg');
         res.setHeader('Content-Disposition', 'attachment; filename=mural.jpeg');
-        return res.status(200).sendFile(process.cwd()+path.substring(1));
+        return res.status(200).sendFile(process.cwd() + path.substring(1));
     } catch (error: any) {
         console.log(error);
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
@@ -267,6 +273,8 @@ async function getScreenshotCalificacion(req: Request, res: Response) {
 
 }
 
-export default { getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso, 
+export default {
+    getCalificacionesFromUser, createCalificacion, getCalificacionesFromCurso,
     getCalificacionesOfGruposFromCurso, getCalificacionesOfAlumnosFromCurso, getCSVofCalificacionesFromCurso,
-    getScreenshotCalificacion, };
+    getScreenshotCalificacion,
+};

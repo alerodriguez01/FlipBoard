@@ -15,6 +15,7 @@ async function getRubricaById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -42,6 +43,7 @@ async function createRubrica(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idUsuario invalido o rubrica invalida
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el usuario
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -59,6 +61,7 @@ async function getAllRubricasByUserId(req: Request, res: Response) {
 
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -78,7 +81,7 @@ async function getRubricasAlumnosFromCurso(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -98,7 +101,7 @@ async function getRubricasGruposFromCurso(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -120,7 +123,7 @@ async function asociateRubricaAlumnosToCurso(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idRubrica invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso o la rubrica
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -142,7 +145,7 @@ async function asociateRubricaGruposToCurso(req: Request, res: Response) {
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message }); // idCurso o idRubrica invalido
         if (err instanceof NotFoundError) return res.status(404).json({ error: err.message }); // no se encontro el curso o la rubrica
-
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -158,6 +161,7 @@ async function deleteRubricaById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // ids invalidos o la rubrica no le pertence al usuario
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 

@@ -22,6 +22,7 @@ async function getUsuarioById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -48,6 +49,7 @@ async function createUsuario(req: Request, res: Response) {
         return res.status(201).json(newUser);
     } catch (err) {
         if (err instanceof InvalidValueError) return res.status(400).json({ error: err.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -74,6 +76,7 @@ async function updateUsuario(req: Request, res: Response) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -97,6 +100,7 @@ async function deleteUsuario(req: Request, res: Response) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -123,6 +127,7 @@ async function getParticipantes(req: Request, res: Response) {
         res.status(200).json(users);
     } catch (error) {
         if (error instanceof InvalidValueError) res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -138,6 +143,7 @@ async function addParticipante(req: Request, res: Response) {
         return res.status(204).send();
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -157,6 +163,7 @@ async function updateUsuarioPassword(req: Request, res: Response) {
         if (error instanceof TokenInvalido) return res.status(401).send();
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -175,6 +182,7 @@ async function deleteAlumnoFromCurso(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso o ids invalidos
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -239,7 +247,7 @@ async function addOrSendInvitationToUsers(req: Request, res: Response) {
         console.log(error)
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // ids invalidos
-        return res.status(400).json({ error: 'Hubo un problema al enviar los correos o añadir los alumnos' });
+        return res.status(500).json({ error: 'Hubo un problema al enviar los correos o añadir los alumnos' });
     }
 
 }

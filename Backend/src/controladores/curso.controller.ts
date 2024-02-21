@@ -17,6 +17,7 @@ async function getCursoById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -45,6 +46,7 @@ async function saveCurso(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message }); // No existe el docente
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // email invalido
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 
@@ -73,6 +75,7 @@ async function deleteCursoById(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // el docente no es docente del curso
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 }
 
@@ -99,6 +102,7 @@ async function updateCurso(req: Request, res: Response) {
     } catch (error) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message }); // No existe el docente
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message }); // email invalido
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
@@ -126,6 +130,7 @@ async function addOrDeleteDocenteToCurso(req: Request, res: Response) {
         if (error instanceof NotFoundError) return res.status(404).json({ error: error.message });
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
         if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
     }
 
 }
