@@ -1,6 +1,6 @@
 'use client'
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@nextui-org/react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CrearGrupoTable } from "./CrearGrupoTable";
 import { SearchIcon } from "./icons/SearchIcon";
 import { useTheme } from "next-themes";
@@ -14,14 +14,14 @@ import { Spinner } from "./Spinner";
 import { useSession } from "next-auth/react";
 
 
-const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void, user?: Usuario}) => {
+const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: string, onCrearGrupoSuccess?: () => void, user?: Usuario, mutarDatos?: number}) => {
   
   const {theme} = useTheme();
   const currentTheme = theme === "dark" ? "dark" : "light";
 
   const { data: session, status } = useSession();
   const [nombre, setNombre] = useState("");
-  const {data: alumnosData, isLoading} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllAlumnos(props.idCurso) + `?nombre=${nombre}`,
+  const {data: alumnosData, isLoading, mutate} = useSWR(process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllAlumnos(props.idCurso) + `?nombre=${nombre}`,
       (url) => fetch(url, { headers: { "Authorization": session?.user.token || "" }}).then(res => res.json()), { keepPreviousData: true });
   
   const [integrantes, setIntegrantes] = React.useState<Usuario[]>(props.user ? [props.user] : []); 
@@ -48,6 +48,10 @@ const CrearGrupoModal = (props: {isOpen: boolean, onOpenChange: any, idCurso: st
   const {
     field
   } = useController({name: "integrantes", control});
+
+  useEffect(() => {
+    mutate();
+  }, [props.mutarDatos]);
 
   const onSubmit = async (data: GrupoForm, onClose: any) => {
     try {
