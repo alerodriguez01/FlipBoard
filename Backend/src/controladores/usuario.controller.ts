@@ -148,6 +148,7 @@ async function addParticipante(req: Request, res: Response) {
 
 }
 
+// Actualizar la contraseña de un usuario
 async function updateUsuarioPassword(req: Request, res: Response) {
 
     const token = req.body.token;

@@ -78,6 +78,7 @@ async function logout(req: Request, res: Response) {
     return res.status(204).send();
 }
 
+// sent a reset password email
 async function resetPassword(req: Request, res: Response) {
 
     const correo = req.body.correo;
