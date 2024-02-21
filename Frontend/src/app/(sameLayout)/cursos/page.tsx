@@ -83,7 +83,7 @@ export default function Cursos() {
             <>
               {data.cursosDocenteModel.length > 0 &&
                 data.cursosDocenteModel.map((c: Curso) => {
-                  if (search !== "" && !c.nombre.toLowerCase().includes(search.toLowerCase())) return null;
+                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase())) return null;
                   return (<CursoCard
                     key={crypto.randomUUID()}
                     title={c.nombre}
@@ -101,7 +101,7 @@ export default function Cursos() {
               }
               {data.cursosAlumnoModel.length > 0 &&
                 data.cursosAlumnoModel.map((c: Curso) => {
-                  if (search !== "" && !c.nombre.toLowerCase().includes(search.toLowerCase())) return null;
+                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase())) return null;
                   return (<CursoCard
                     key={crypto.randomUUID()}
                     title={c.nombre}
