@@ -21,7 +21,7 @@ async function getMuralById(idMural: string, rubrica: boolean): Promise<Mural | 
     return mural;
 }
 
-async function getMuralesFromCurso(idCurso: string, rubrica: boolean): Promise<Mural[]> {
+async function getMuralesFromCurso(idCurso: string, rubrica: boolean, nombre?: string): Promise<Mural[]> {
 
     const murales = await muralRepository.getMuralesFromCurso(idCurso);
 
@@ -41,10 +41,15 @@ async function getMuralesFromCurso(idCurso: string, rubrica: boolean): Promise<M
 
         }));
 
-        return muralesWithRubrica;
+        // filtro por nombre de rubrica y criterio tambien para que quede consistente
+        return muralesWithRubrica.filter((m) => 
+            m.nombre.toLowerCase().includes(nombre?.toLowerCase() ?? "") ||
+            m.rubricaModel?.nombre.toLowerCase().includes(nombre?.toLowerCase() ?? "") ||
+            m.rubricaModel?.criterios.some((c) => c.nombre.toLowerCase().includes(nombre?.toLowerCase() ?? ""))
+        );
     }
 
-    return murales;
+    return murales.filter((m) => m.nombre.toLowerCase().includes(nombre?.toLowerCase() ?? ""));
 }
 
 /*
