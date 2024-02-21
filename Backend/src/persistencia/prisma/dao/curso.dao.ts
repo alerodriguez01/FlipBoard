@@ -194,6 +194,41 @@ export class CursoPrismaDAO implements CursoDataSource {
                     ] }
                 })
 
+                // eliminar usuario de todos los grupos en los que participa
+                /// obtener grupos
+                const grupos = await tx.grupo.findMany({
+                    where: {
+                        cursoId: idCurso,
+                        integrantes: { has: idAlumno }
+                    }
+                });
+
+                /// sacar relacion usuario-grupo
+                await tx.usuario.update({
+                    where: {
+                        id: idAlumno
+                    },
+                    data: {
+                        gruposModel: {
+                            disconnect: grupos.map((grupo) => ({ id: grupo.id }))
+                        }
+                    }
+                });
+
+                /// eliminar calificaciones de grupos que quedan vacios
+                await tx.calificacion.deleteMany({
+                    where: { AND: [
+                        { grupoModel: {integrantes: {isEmpty: true}}},
+                        { cursoId: idCurso }
+                    ] }
+                })
+                /// eliminar grupos vacios
+                await tx.grupo.deleteMany({
+                    where: {
+                        cursoId: idCurso,
+                        integrantes: {isEmpty: true}
+                    }
+                });
 
                 const curso = await tx.curso.update({
                     where: {
