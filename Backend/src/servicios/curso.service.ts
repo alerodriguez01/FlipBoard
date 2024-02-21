@@ -48,14 +48,29 @@ async function createCurso(token: string, body: Curso): Promise<Curso> {
     return cursoSaved;
 }
 
-async function updateCurso(idCurso: string, body: Curso): Promise<Curso> {
+async function updateCurso(token: string, idCurso: string, body: Curso): Promise<Curso> {
+
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
 
     // Verificar que el docente sea superuser o el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(body.docentes[0]);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.superUser) {
-        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
-    }
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+
+    // set docente
+    body.docentes = [superUserId];
 
     // check if mail is valid
     if (!validator.default.isEmail(body.emailContacto))
@@ -75,16 +90,28 @@ async function getCursos() {
     return cursos;
 }
 
-async function deleteCursoById(idCurso: string, docente: string) {
+async function deleteCursoById(token: string, idCurso: string) {
 
-    // Verificar que el docente sea superuser o el docente del curso
-    const docenteCurso = await usuarioRepository.getUsuarioById(docente);
-    if (!docenteCurso) throw new NotFoundError("Docente");
-    if (!docenteCurso.superUser) {
-        if (!docenteCurso.cursosDocente.includes(idCurso)) throw new InvalidValueError("Curso", "Docente");
+    // decode token and get the if is superuser and its id
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
     }
 
-    const curso = await cursoRepository.deleteCursoById(idCurso);
+    // get the Curso
+    let curso = await cursoRepository.getCursoById(idCurso);
+    if (!curso) throw new NotFoundError("Curso");
+
+    // Verificar que el docente sea superuser o el docente del curso
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+
+    curso = await cursoRepository.deleteCursoById(idCurso);
     return curso;
 }
 
@@ -117,7 +144,8 @@ async function addOrDeleteDocenteToCurso(token: string, idCurso: string, idDocen
     if (!curso) throw new NotFoundError("Curso");
 
     // if the superuser is not superuser or is not the docente of the curso
-    if(!isSuperUser || !curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
+    if(!isSuperUser)
+        if(!curso.docentes.includes(superUserId)) throw new NotAuthorizedError();
 
     // add the docente to the curso
     const cursoUpdated = await cursoRepository.addOrDeleteDocenteToCurso(idCurso, idDocente, agregar);
