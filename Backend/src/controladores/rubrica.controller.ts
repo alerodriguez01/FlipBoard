@@ -152,10 +152,14 @@ async function asociateRubricaGruposToCurso(req: Request, res: Response) {
 
 async function deleteRubricaById(req: Request, res: Response) {
 
-    const { idUsuario, idRubrica } = req.params;
+    const { idRubrica } = req.params;
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
 
     try {
-        await service.deleteRubricaById(idRubrica, idUsuario);
+        await service.deleteRubricaById(token, idRubrica);
         return res.status(204).send();
 
     } catch (error) {
