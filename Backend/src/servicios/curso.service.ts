@@ -25,12 +25,19 @@ async function getCursoById(idCurso: string): Promise<Curso> {
 /*
     Guardar curso
 */
-async function createCurso(body: Curso): Promise<Curso> {
+async function createCurso(token: string, body: Curso): Promise<Curso> {
 
-    // Verificar existencia de docentes
-    const docente = await usuarioRepository.getUsuarioById(body.docentes[0])
+    // decode token and get the its id
+    let docente = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        docente = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
 
-    if (!docente) throw new NotFoundError("Docente");
+    // set docente
+    body.docentes = [docente];
 
     // check if mail is valid
     if (!validator.default.isEmail(body.emailContacto))
