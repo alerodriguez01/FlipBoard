@@ -127,7 +127,7 @@ export const authOptions: NextAuthOptions = { // https://next-auth.js.org/config
             if (account?.provider === "google" && user) {
                 token.id = user.id;
                 token.nombre = user.name || "";
-                token.correo = user.email || "";
+                token.correo = !!user.email ? "google|"+user.email : "";
                 token.imagen = user.image || "";
                 token.cursosAlumno = user.cursosAlumno;
                 token.cursosDocente = user.cursosDocente;
