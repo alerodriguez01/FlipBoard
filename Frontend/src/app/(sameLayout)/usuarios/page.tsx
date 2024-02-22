@@ -64,7 +64,7 @@ export default function Usuarios() {
           isOpen={isModificar}
           onOpenChange={onModificarOpenChange}
           onUsuarioModificado={() => setMutateTableData(prev => prev + 1)}
-          user={usuarioSelected} token={session.user.token} 
+          user={usuarioSelected} sessionUser={session.user} 
           showExtraFields/> }
     </section>
   );

@@ -6,13 +6,14 @@ import { z } from 'zod';
 import { Spinner } from "./Spinner";
 import endpoints from "@/lib/endpoints";
 import { useEffect } from "react";
+import { getCorreoFromProvider } from "@/lib/utils";
 
 type ModalProps = {
     isOpen: boolean,
     onOpenChange: any,
     user: Usuario,
     showExtraFields?: boolean,
-    token: string,
+    sessionUser: Usuario,
     onUsuarioModificado?: () => void
 };
 
@@ -48,7 +49,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
 
     useEffect(() => {
         setValue("nombre", props.user.nombre);
-        setValue("correo", props.user.correo);
+        setValue("correo", getCorreoFromProvider(props.user.correo));
         setValue("contrasena", "");
         setValue("superUser", props.user.superUser);
     }, [props.user]);
@@ -65,7 +66,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
               }),
               headers: {
                 'Content-Type': 'application/json',
-                "Authorization": props.token || ''
+                "Authorization": props.sessionUser.token || ''
               }
             });
 
@@ -86,7 +87,8 @@ const ModificarUsuarioModal = (props: ModalProps) => {
         <Modal
             isOpen={props.isOpen}
             onOpenChange={props.onOpenChange}
-            placement="center"    
+            placement="center"
+            classNames={{ closeButton: "m-3"}}
         >
             <ModalContent>
                 { (onClose) => (
@@ -112,14 +114,16 @@ const ModificarUsuarioModal = (props: ModalProps) => {
                                     label="Correo"
                                     isRequired
                                     isInvalid={!!errors.correo}
+                                    isDisabled={!!props.user.correo.startsWith("google|")}
                                     errorMessage={errors.correo?.message}
-                                    defaultValue={props.user.correo}
+                                    defaultValue={getCorreoFromProvider(props.user.correo)}
                                     {...register("correo")}
                                 />
                                 <Input
                                     variant="bordered"
                                     label="Nueva contraseña"
                                     isInvalid={!!errors.contrasena}
+                                    isDisabled={!!props.user.correo.startsWith("google|")}
                                     errorMessage={errors.contrasena?.message}
                                     {...register("contrasena")}
                                 />
@@ -140,6 +144,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
                                                     size="sm"
                                                     isSelected={field.value}
                                                     onChange={field.onChange}
+                                                    isDisabled={props.user.id === props.sessionUser.id}
                                                 >Administrador</Switch>
                                             )}
                                         />
