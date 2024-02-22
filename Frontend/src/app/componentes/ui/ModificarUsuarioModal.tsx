@@ -14,7 +14,7 @@ type ModalProps = {
     user: Usuario,
     showExtraFields?: boolean,
     sessionUser: Usuario,
-    onUsuarioModificado?: () => void
+    onUsuarioModificado?: (userData: {correo: string, nombre: string}) => void
 };
 
 const userSchema = z.object({
@@ -75,7 +75,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
               return;
             }
             
-            props.onUsuarioModificado?.();
+            props.onUsuarioModificado?.({correo: data.correo, nombre: data.nombre});
             onClose();
       
           } catch (err) {
