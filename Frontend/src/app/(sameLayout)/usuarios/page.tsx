@@ -60,7 +60,12 @@ export default function Usuarios() {
                         onEliminar={onEliminarUsuario} extraMessage="NOTA: Se eliminaran todos los datos asociados al usuario como Calificaciones, Rúbricas, etc. "
       />
       {usuarioSelected && 
-        <ModificarUsuarioModal isOpen={isModificar} onOpenChange={onModificarOpenChange} user={usuarioSelected}/> }
+        <ModificarUsuarioModal
+          isOpen={isModificar}
+          onOpenChange={onModificarOpenChange}
+          onUsuarioModificado={() => setMutateTableData(prev => prev + 1)}
+          user={usuarioSelected} token={session.user.token} 
+          showExtraFields/> }
     </section>
   );
 }

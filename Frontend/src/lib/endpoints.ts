@@ -140,6 +140,11 @@ function getAllUsuarios() {
 function deleteUsuario(idUser: string) {
     return `/api/usuarios/${idUser}`;
 }
+
+function updateUsuario(idUser: string) {
+    return `/api/usuarios/${idUser}`;
+
+}
 // TODO: Agregar demas rutas
 
 export default {
@@ -154,5 +159,5 @@ export default {
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
-    downloadScreenshot, getAllUsuarios, deleteUsuario
+    downloadScreenshot, getAllUsuarios, deleteUsuario, updateUsuario
 }
