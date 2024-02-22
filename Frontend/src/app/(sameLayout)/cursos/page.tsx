@@ -17,7 +17,9 @@ import useSWR from 'swr';
 export default function Cursos() {
 
   const { data: session, status } = useSession();
-  const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getUserWithCursos(session.user.id) : null, (url) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
+  const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + (!!session.user.superUser ? endpoints.getAllCursos() : endpoints.getUserWithCursos(session.user.id)) : null, 
+      (url) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
+  
   let color = 0;
   // para crear curso
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
@@ -76,42 +78,75 @@ export default function Cursos() {
       <PagesHeader title="Cursos" searchable={true} placeholder="Buscar curso" onSearch={(value: string) => setSearch(value)} />
 
       <div className="flex flex-wrap gap-6">
-        {
-          data.cursosDocenteModel.length === 0 && data.cursosAlumnoModel.length === 0 ?
-            <h3 className="px-3">No hay cursos</h3>
-            :
-            <>
-              {data.cursosAlumnoModel.length > 0 &&
+        {!!session?.user.superUser && // lo pongo asi para que quede legible el caso normal
+          (
+            data.length === 0 ? // todos en los que soy docente tambien soy alumno
+              <h3 className="px-3">No hay cursos</h3>
+              :
+              data.map((c: Curso) => {
+                if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase()))
+                return null;
 
-                data.cursosAlumnoModel.map((c: Curso) => {
-                  if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase()))
-                    return null;
+                return (
+                  <CursoCard
+                    key={crypto.randomUUID()}
+                    title={c.nombre}
+                    description={c.descripcion}
+                    cursoId={c.id}
+                    color={color++ % 2}
+                    editable={true}
+                    idUser={session?.user.id}
+                    mutar={mutate}
+                    onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
+                    onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                    onModificarPress={(id, nombre) => {
+                      // if (data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id))
+                      setCursoSelected(c);
+                      // else
+                      //   setCursoSelected({ id, nombre } as Curso);
+                      onOpenModificar();
+                    }}
+                  />
+                )
+              })
+          )
+        }
+        
+        { !session?.user.superUser &&
+            (
+              data.cursosAlumnoModel.length === 0 ? // todos en los que soy docente tambien soy alumno
+              <h3 className="px-3">No hay cursos</h3>
+              :
+              <>
+                {data.cursosAlumnoModel.map((c: Curso) => {
+                    if (!!search && !c.nombre.toLowerCase().includes(search.toLowerCase()) && !c.descripcion?.toLowerCase().includes(search.toLowerCase()))
+                      return null;
 
-                  return (
-                    <CursoCard
-                      key={crypto.randomUUID()}
-                      title={c.nombre}
-                      description={c.descripcion}
-                      cursoId={c.id}
-                      color={color++ % 2}
-                      editable={session?.user.superUser || data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id)}
-                      idUser={session?.user.id}
-                      mutar={mutate}
-                      onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
-                      onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
-                      onModificarPress={(id, nombre) => {
-                        // if (data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id))
-                        setCursoSelected(c);
-                        // else
-                        //   setCursoSelected({ id, nombre } as Curso);
-                        onOpenModificar();
-                      }}
-                    />
-                  )
-                })
-
-              }
-            </>
+                    return (
+                      <CursoCard
+                        key={crypto.randomUUID()}
+                        title={c.nombre}
+                        description={c.descripcion}
+                        cursoId={c.id}
+                        color={color++ % 2}
+                        editable={data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id)}
+                        idUser={session?.user.id}
+                        mutar={mutate}
+                        onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}
+                        onEliminarPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenEliminar(); }}
+                        onModificarPress={(id, nombre) => {
+                          // if (data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id))
+                          setCursoSelected(c);
+                          // else
+                          //   setCursoSelected({ id, nombre } as Curso);
+                          onOpenModificar();
+                        }}
+                      />
+                    )
+                  })
+                }
+              </>
+            )
         }
       </div>
 
