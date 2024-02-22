@@ -25,7 +25,7 @@ export async function GET(req: NextRequest, { params: { idCurso } }: { params: {
         if (decoded.idCurso !== idCurso) throw new Error()
 
         // 2. Agregar alumno al curso
-        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/cursos/${idCurso}/alumnos`, {
+        const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL_CONTAINER}/api/cursos/${idCurso}/alumnos`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
