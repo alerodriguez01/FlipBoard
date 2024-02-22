@@ -6,7 +6,7 @@ import { z } from 'zod';
 import { Spinner } from "./Spinner";
 import endpoints from "@/lib/endpoints";
 import { useEffect } from "react";
-import { getCorreoFromProvider } from "@/lib/utils";
+import { getCorreoFromProvider, toMayusFirstLetters } from "@/lib/utils";
 
 type ModalProps = {
     isOpen: boolean,
@@ -48,7 +48,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
     });
 
     useEffect(() => {
-        setValue("nombre", props.user.nombre);
+        setValue("nombre", toMayusFirstLetters(props.user.nombre));
         setValue("correo", getCorreoFromProvider(props.user.correo));
         setValue("contrasena", "");
         setValue("superUser", props.user.superUser);
@@ -106,7 +106,7 @@ const ModificarUsuarioModal = (props: ModalProps) => {
                                     isRequired
                                     isInvalid={!!errors.nombre}
                                     errorMessage={errors.nombre?.message}
-                                    defaultValue={props.user.nombre.split(' ').map(w => w[0].toUpperCase()+w.substring(1)).join(' ')}
+                                    defaultValue={toMayusFirstLetters(props.user.nombre)}
                                     {...register("nombre")}
                                 />
                                 <Input
@@ -127,6 +127,8 @@ const ModificarUsuarioModal = (props: ModalProps) => {
                                     errorMessage={errors.contrasena?.message}
                                     {...register("contrasena")}
                                 />
+                                {props.user.correo.startsWith("google|") &&
+                                    <p className="text-sm text-start text-gray-400">El correo y contraseña de cuentas creadas con Google no pueden modificarse.</p>}
                                 <input type="text" className="hidden"  {...register("erroresExternos")}/>
                                 {errors.erroresExternos &&
                                     <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
