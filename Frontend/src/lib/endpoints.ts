@@ -154,6 +154,9 @@ function getAllCursos() {
     return '/api/cursos';
 }
 
+function getAllRubricas() {
+    return '/api/rubricas';
+}
 // TODO: Agregar demas rutas
 
 export default {
@@ -169,5 +172,5 @@ export default {
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
     downloadScreenshot, getAllUsuarios, deleteUsuario, updateUsuario,
-    getUserById, getAllCursos
+    getUserById, getAllCursos, getAllRubricas
 }
