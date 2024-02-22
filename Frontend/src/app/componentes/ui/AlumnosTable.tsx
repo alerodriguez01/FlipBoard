@@ -9,7 +9,6 @@ import { PersonAddIcon } from "./icons/PersonAddIcon";
 import { useTheme } from "next-themes";
 import { RubricaIcon } from "./icons/RubricaIcon";
 import { getCorreoFromProvider } from "@/lib/utils";
-import { InfoIcon } from "./icons/InfoIcon";
 import { useSession } from "next-auth/react";
 import { TeacherIcon } from "./icons/TeacherIcon";
 import { StudentIcon } from "./icons/StudentIcon";

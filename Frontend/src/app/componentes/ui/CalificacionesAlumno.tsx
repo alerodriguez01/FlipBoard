@@ -1,11 +1,10 @@
 import endpoints from '@/lib/endpoints';
-import { Calificacion, Rubrica } from '@/lib/types';
+import { Calificacion } from '@/lib/types';
 import { toMayusFirstLetters } from '@/lib/utils';
 import { Button, TableColumn, useDisclosure } from '@nextui-org/react';
 import React, { Key, useCallback, useState } from 'react'
 import { PaginatedTable } from './PaginatedTable';
 import CalificacionModal from './CalificacionModal';
-import { RubricaIcon } from './icons/RubricaIcon';
 
 type CalificacionesAlumnoProps = {
     idCurso: string,

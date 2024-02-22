@@ -12,7 +12,6 @@ import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import Link from "next/link";
 import EliminarModal from "@/app/componentes/ui/EliminarModal";
 import { toMayusFirstLetters } from "@/lib/utils";
-import AgregarAlumnoModal from "@/app/componentes/ui/AgregarAlumnoModal";
 import CompartirCursoModal from "@/app/componentes/ui/CompartirCursoModal";
 import AgregarEliminarDocenteModal from "@/app/componentes/ui/AgregarEliminarDocenteModal";
 
@@ -26,7 +25,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     const { isOpen: isEvaluarOpen, onOpen: onEvaluarOpen, onOpenChange: onEvaluarOpenChange } = useDisclosure();
     const { isOpen: isAgregarAlumnoOpen, onOpen: onAgregarAlumnoOpen, onOpenChange: onAgregarAlumnoOpenChange } = useDisclosure();
 
-    const esDocente = !!session?.user.cursosDocente.includes(params.idCurso);
+    const esDocente = !!session?.user.cursosDocente.includes(params.idCurso) || !!session?.user.superUser;
     const [evaluarEntity, setEvaluarEntity] = React.useState<Usuario | Grupo>();
     const [entityType, setEntityType] = React.useState<"Usuario" | "Grupo" | undefined>();
     const [asignarMode, setAsignarMode] = React.useState<'alumno' | 'grupo'>();
@@ -91,7 +90,7 @@ export default function Participantes({ params }: { params: { idCurso: string } 
     if (status === 'loading' || !session?.user)
         return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
-    if (!session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
+    if (!session.user.superUser && !session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
         return (
             <section className="flex flex-col flex-1 justify-center items-center">
                 <h1>No tienes acceso a este curso</h1>

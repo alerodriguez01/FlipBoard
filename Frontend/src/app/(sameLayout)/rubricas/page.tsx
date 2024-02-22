@@ -6,7 +6,6 @@ import endpoints from "@/lib/endpoints";
 import { Button, Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
 export default function Rubricas() {
@@ -29,7 +28,13 @@ export default function Rubricas() {
 
     return (
         <section className="p-8 overflow-auto">
-            <RubricasAccordion endpoint={endpoints.getAllRubricasFromUser(session.user.id)} type={"editable"} searchable title={"Rúbricas"} userId={session?.user.id} />
+            <RubricasAccordion 
+                endpoint={!!session.user.superUser ? endpoints.getAllRubricas() : endpoints.getAllRubricasFromUser(session.user.id)} 
+                type={"editable"}
+                searchable
+                title={"Rúbricas"}
+                userId={session?.user.id}
+            />
             <Link href={'/rubricas/crear'} passHref>
                 <Button
                     className="bg-[#181e25] text-white fixed bottom-10 right-10 dark:border dark:border-gray-700"

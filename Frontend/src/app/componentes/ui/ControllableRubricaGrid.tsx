@@ -1,6 +1,5 @@
 'use client';
 import { Criterio } from "@/lib/types";
-
 import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React, { Key, useEffect, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";

@@ -147,6 +147,16 @@ export class RubricaPrismaDAO implements RubricaDataSource {
 
     }
 
+    async getAllRubricas(): Promise<Rubrica[] | null> {
+        try {
+            const rubs = await this.prisma.rubrica.findMany();
+            return rubs;
+        } catch (err) {
+            console.error(err);
+            return null;
+        }
+    }
+
     // demas metodos
 
 }

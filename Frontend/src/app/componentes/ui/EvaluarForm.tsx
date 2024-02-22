@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect } from "react";
+import React from "react";
 import { Button, Textarea } from "@nextui-org/react";
 import { Rubrica } from "@/lib/types";
 import { useForm } from "react-hook-form";

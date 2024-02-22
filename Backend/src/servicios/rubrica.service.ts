@@ -129,8 +129,24 @@ async function deleteRubricaById(token: string, idRubrica: string) {
     return rubricaDeleted;
 }
 
+async function getAllRubricas(token: string) {
+    let isSuperUser = false
+    let superUserId = '';
+    try {
+        const payload = usuarioService.verifyJWT(token);
+        isSuperUser = payload.superUser || false;
+        superUserId = payload.id;
+    } catch (error) {
+        throw new NotAuthorizedError();
+    }
+
+    if (!isSuperUser) throw new NotAuthorizedError();
+
+    return await rubricaRepository.getAllRubricas() ?? [];
+}
+
 export default { 
     getRubricaById, createRubrica, getAllRubricasByUserId, 
     getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso,
-    asociateRubricaGruposToCurso, deleteRubricaById
+    asociateRubricaGruposToCurso, deleteRubricaById, getAllRubricas
  };

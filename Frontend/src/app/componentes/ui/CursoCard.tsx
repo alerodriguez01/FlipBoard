@@ -2,9 +2,6 @@
 import React from "react";
 import { FBCard } from "./FBCard";
 import { useRouter } from "next/navigation";
-import { useDisclosure } from "@nextui-org/react";
-import CompartirCursoModal from "./CompartirCursoModal";
-import EliminarModal from "./EliminarModal";
 
 type CardProps = {
   title: string,

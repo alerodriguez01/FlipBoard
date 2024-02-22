@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { Button, Divider } from "@nextui-org/react";
-import { redirect, usePathname } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { signOut, useSession } from "next-auth/react";
 import { Spinner as SpinnerNextUI } from "@nextui-org/react";
 
@@ -16,7 +16,7 @@ const Navbar = () => {
   const pathname = usePathname()
   const cursoId = pathname.split("/")[2] // si estoy en una ruta que no tiene cursoId, esto va a ser undefined
 
-  const isDocente = session?.user.cursosDocente.includes(cursoId)
+  const isDocente = session?.user.cursosDocente.includes(cursoId); // ACA NO HAY QUE AGREGAR CONDICION DE SUPERUSER
 
   const handleCerrarSesion = async () => {
 

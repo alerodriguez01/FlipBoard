@@ -5,7 +5,7 @@ import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import Image from "next/image"
 import { Button, Input } from "@nextui-org/react";
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Spinner } from "@/app/componentes/ui/Spinner";
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon"
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"

@@ -3,6 +3,7 @@ import controller from "../controladores/rubrica.controller.js";
 
 const routerUsuario = Router(); // Router para rutas "/usuarios/rubricas"
 const routerCurso = Router(); // Router para rutas "/cursos/rubricas"
+const routerRubrica = Router(); //router para /rubricas
 
 /**
  * @swagger
@@ -550,5 +551,59 @@ routerCurso.put("/:idCurso/rubricas/alumnos", controller.asociateRubricaAlumnosT
  */
 routerCurso.put("/:idCurso/rubricas/grupos", controller.asociateRubricaGruposToCurso)
 
+// ------------------- RUTAS QUE VAN A /api/rubricas
 
-export { routerUsuario, routerCurso };
+/**
+ * @swagger
+ * /api/rubricas:
+ *   get:
+ *    summary: Obtener todas las rubricas de todos los usuarios
+ *    tags: [Rubrica]
+ *    parameters:
+ *    responses:
+ *      200:
+ *        description: Rubricas encontradas
+ *        content:
+ *          application/json:
+ *            example:
+ *              - criterios:
+ *                  - nombre: Precisión
+ *                    descripciones:
+ *                      - Muy preciso
+ *                      - Preciso
+ *                      - Poco preciso
+ *                  - nombre: Complejidad
+ *                    descripciones:
+ *                      - Muy complejo
+ *                      - Complejo
+ *                      - Poco complejo
+ *                niveles:
+ *                  - nombre: Nivel 1
+ *                    puntaje: 1
+ *                  - nombre: Nivel 2
+ *                    puntaje: 2
+ *                  - nombre: Nivel 3
+ *                    puntaje: 3
+ *                id: 653968d5642003e96a382248
+ *                nombre: Rubrica de Matemáticas
+ *                gruposCursos:
+ *                  - 653968d5642003e96a382246
+ *                alumnosCursos:
+ *                  - 653968d5642003e96a382246
+ *                usuarioId: 653968d5642003e96a382242
+ *      401:
+ *        description: El token es invalido o el usuario no tiene permisos
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: No tienes permisos para realizar esta accion
+ *      500:
+ *        description: Ocurrio un error no considerado durante la ejecucion
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Ocurrio un problema inesperado
+ */
+routerRubrica.get("/", controller.getAllRubricas);
+
+export { routerUsuario, routerCurso, routerRubrica };

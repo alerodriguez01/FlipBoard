@@ -150,6 +150,13 @@ function getUserById(idUsuario: string) {
     return `/api/usuarios/${idUsuario}`;
 }
 
+function getAllCursos() {
+    return '/api/cursos';
+}
+
+function getAllRubricas() {
+    return '/api/rubricas';
+}
 // TODO: Agregar demas rutas
 
 export default {
@@ -165,5 +172,5 @@ export default {
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
     downloadScreenshot, getAllUsuarios, deleteUsuario, updateUsuario,
-    getUserById
+    getUserById, getAllCursos, getAllRubricas
 }

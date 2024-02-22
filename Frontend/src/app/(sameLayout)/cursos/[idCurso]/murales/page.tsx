@@ -22,7 +22,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   const { isOpen: isCrearOpen, onOpen: onCrearOpen, onOpenChange: onCrearOpenChange } = useDisclosure();
 
   const { data: session, status, update } = useSession();
-  const isDocente = session?.user.cursosDocente.includes(params.idCurso)
+  const isDocente = session?.user.cursosDocente.includes(params.idCurso) || !!session?.user.superUser;
 
   const { data: curso, error: errorCurso, isLoading: isLoadingCurso } = useSWR<Curso>(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getCursoById(params.idCurso) : null, (url: string) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
   const { data, error, isLoading, mutate } = useSWR(session ? process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getAllMuralesWithRubricas(params.idCurso) : null, (url) => fetch(url, { headers: { 'Authorization': session?.user.token || '' } }).then(res => res.json()));
@@ -127,7 +127,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
   if (status === 'loading' || isLoading)
     return <Spinner color="primary" size="lg" className="justify-center items-center h-full" />
 
-  if (!session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
+  if (!session?.user.superUser && !session?.user.cursosAlumno.includes(params.idCurso) && !session?.user.cursosDocente.includes(params.idCurso)) {
     return (
       <section className="flex flex-col flex-1 justify-center items-center">
         <h1>No tienes acceso a este curso</h1>
@@ -164,7 +164,7 @@ export default function Murales({ params }: { params: { idCurso: string } }) {
                   room={m.contenido}
                   rubrica={m.rubricaModel?.nombre}
                   color={color++ % 2}
-                  editable={session?.user.cursosDocente.includes(m.cursoId)}
+                  editable={session?.user.cursosDocente.includes(m.cursoId) || session?.user.superUser}
                   onPress={(redirectFun) => handleCardPress(redirectFun)}
                   onAsignarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural);  setTypeMuralModal("crear"); onAsignarOpen(); }}
                   onEliminarPress={(id, nombre) => { setSelectedMural({ id, nombre } as Mural); onEliminarOpen(); }}

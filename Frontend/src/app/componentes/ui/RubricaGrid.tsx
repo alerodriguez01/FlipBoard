@@ -3,7 +3,6 @@ import { Criterio } from "@/lib/types";
 import { Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@nextui-org/react";
 import React, { Key, useState } from "react";
 import { RubricaGridCell } from "./RubricaGridCell";
-import { useController } from "react-hook-form";
 
 type GridProps = {
   label: string,
