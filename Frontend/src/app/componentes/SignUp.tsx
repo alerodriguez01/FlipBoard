@@ -2,9 +2,8 @@
 import { useForm } from "react-hook-form"
 import { useRouter, useSearchParams } from "next/navigation"
 import { z } from "zod"
-import Link from "next/link"
 import { zodResolver } from "@hookform/resolvers/zod"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { Button, Input } from "@nextui-org/react";
 import { EyeFilledIcon } from "@/app/componentes/ui/icons/EyeFilledIcon"
 import { EyeSlashFilledIcon } from "@/app/componentes/ui/icons/EyeSlashFilledIcon";

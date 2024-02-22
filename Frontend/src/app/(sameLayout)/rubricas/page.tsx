@@ -6,7 +6,6 @@ import endpoints from "@/lib/endpoints";
 import { Button, Spinner } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import useSWR from "swr";
 
 export default function Rubricas() {

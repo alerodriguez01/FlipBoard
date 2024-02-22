@@ -1,4 +1,4 @@
-import { Button, Input, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
+import { Button, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from "@nextui-org/react";
 import React, { Key, ReactNode } from "react";
 import { Spinner } from "./Spinner";
 import { Usuario } from "@/lib/types";

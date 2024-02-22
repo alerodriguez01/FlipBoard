@@ -94,7 +94,7 @@ export default function Cursos() {
                       description={c.descripcion}
                       cursoId={c.id}
                       color={color++ % 2}
-                      editable={data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id)}
+                      editable={session?.user.superUser || data.cursosDocenteModel.some((cursoDocente: Curso) => cursoDocente.id === c.id)}
                       idUser={session?.user.id}
                       mutar={mutate}
                       onCompartirPress={(id, nombre) => { setCursoSelected({ id, nombre } as Curso); onOpenCompartir(); }}

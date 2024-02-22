@@ -1,7 +1,7 @@
 'use client';
 import React, { Key } from "react";
 import { PaginatedTable } from "./PaginatedTable";
-import { Button, Chip, Divider, TableColumn, getKeyValue } from "@nextui-org/react";
+import { Button, Divider, TableColumn, getKeyValue } from "@nextui-org/react";
 import { Grupo, Usuario } from "@/lib/types";
 import { CrossIcon } from "./icons/CrossIcon";
 import endpoints from "@/lib/endpoints";

@@ -2,7 +2,7 @@ import endpoints from '@/lib/endpoints';
 import { Calificacion, Mural, Rubrica, Usuario } from '@/lib/types';
 import { toMayusFirstLetters } from '@/lib/utils';
 import { Button, TableColumn, useDisclosure } from '@nextui-org/react';
-import React, { Key, ReactNode, useCallback, useState } from 'react'
+import React, { Key, useCallback, useState } from 'react'
 import { PaginatedTable } from './PaginatedTable';
 import CalificacionModal from './CalificacionModal';
 import { BackArrowIcon } from './icons/BackArrowIcon';

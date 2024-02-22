@@ -1,9 +1,7 @@
 "use client"
 import CalificacionesAlumno from "@/app/componentes/ui/CalificacionesAlumno";
 import CalificacionesDocente from "@/app/componentes/ui/CalificacionesDocente";
-import PagesHeader from "@/app/componentes/ui/PagesHeader";
 import { DownloadIcon } from "@/app/componentes/ui/icons/DownloadIcon";
-import { InfoIcon } from "@/app/componentes/ui/icons/InfoIcon";
 import endpoints from "@/lib/endpoints";
 import { Button, Spinner, Tooltip } from "@nextui-org/react";
 import { useSession } from "next-auth/react";
@@ -12,7 +10,7 @@ import Link from "next/link";
 export default function Calificaciones({ params: { idCurso } }: { params: { idCurso: string } }) {
 
     const { data: session, status } = useSession();
-    const isDocente = session?.user.cursosDocente.includes(idCurso)
+    const isDocente = session?.user.cursosDocente.includes(idCurso) || !!session?.user.superUser;
 
     const downloadCsv = async () => {
         try {
