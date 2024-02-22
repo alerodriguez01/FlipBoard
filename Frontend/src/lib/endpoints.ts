@@ -133,6 +133,19 @@ function downloadScreenshot(idCurso: string, idCalificacion: string) {
     return `/api/cursos/${idCurso}/calificaciones/${idCalificacion}/screenshot`;
 }
 
+function getAllUsuarios() {
+    return '/api/usuarios'
+}
+
+function deleteUsuario(idUser: string) {
+    return `/api/usuarios/${idUser}`;
+}
+
+function updateUsuario(idUser: string) {
+    return `/api/usuarios/${idUser}`;
+
+}
+
 function getUserById(idUsuario: string) {
     return `/api/usuarios/${idUsuario}`;
 }
@@ -151,5 +164,6 @@ export default {
     crearMural, enviarEmails, getCalificacionesAlumnos,
     getCalificacionesCurso, deleteRubrica, getCalificacionesGruposCurso,
     getCalificacionesAlumnosCurso, updateCurso, updateMural, downloadCalificaciones,
-    downloadScreenshot, getUserById
+    downloadScreenshot, getAllUsuarios, deleteUsuario, updateUsuario,
+    getUserById
 }

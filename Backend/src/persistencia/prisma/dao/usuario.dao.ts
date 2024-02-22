@@ -322,5 +322,40 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
 
   }
 
+  async getUsuariosPaginated(nombre: string, limit: number, offset: number): Promise<{ count: number, result: Usuario[] } | null> {
+      
+    let query = {
+        skip: offset,
+        where: {
+          OR: [
+            { nombre: { contains: nombre.toLowerCase() } },
+            { correo: { contains: nombre.toLowerCase() } }
+          ]
+        },
+      }
+
+      try {
+
+        if (limit === 0) {
+          const [users, count] = await this.prisma.$transaction([
+            this.prisma.usuario.findMany(query),
+            this.prisma.usuario.count({ where: query.where })
+          ]);
+
+          return { count: count, result: users }
+        }
+
+        const [users, count] = await this.prisma.$transaction([
+          this.prisma.usuario.findMany({ ...query, take: limit }),
+          this.prisma.usuario.count({ where: query.where })
+        ]);
+
+        return { count: count, result: users }
+    }
+    catch (error) {
+      return null;
+    }
+  }
+
   // demas metodos
 }

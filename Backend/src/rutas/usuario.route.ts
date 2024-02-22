@@ -255,4 +255,82 @@ router.delete("/usuarios/:idUsuario", controller.deleteUsuario);
  */
 router.put("/usuarios/:idUsuario/password", controller.updateUsuarioPassword);
 
+
+/**
+ * @swagger
+ * /api/usuarios:
+ *   get:
+ *    summary: Obtener todos los usuarios de la plataforma
+ *    tags: [Usuario]
+ *    parameters:
+ *      - name: nombre
+ *        in: query
+ *        required: false
+ *        description: Nombre y/o apellido del usuario a buscar
+ *        schema:
+ *          type: string
+ *        example:
+ *          Juan
+ *      - name: limit
+ *        in: query
+ *        required: false
+ *        description: Limite de usuarios a obtener
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
+ *      - name: offset
+ *        in: query
+ *        required: false
+ *        description: Numero de usuarios a saltar
+ *        schema:
+ *          type: number
+ *        example:
+ *          5
+ *    responses:
+ *      200:
+ *        description: Usuarios encontrados
+ *        content:
+ *          application/json:
+ *            example:
+ *              count: 10
+ *              result:
+ *              - id: "653460ae39e91bc002bf42f1"
+ *                nombre: "Juan"
+ *                correo: "juan@example.com"
+ *                contrasena: "$2a$10$RSPl7lG2beDJMvGZSpOcC./0oe4aFSILusGYZUFIKjNwhRFGSQEq6"
+ *                cursosAlumno:
+ *                  - "653460ae39e91bc002bf42f5"
+ *                  - "653460ae39e91bc002bf42f6"
+ *                cursosDocente:
+ *                  - "653460ae39e91bc002bf42f5"
+ *                  - "65368e734dcb343388ce78a1"
+ *                grupos:
+ *                  - "653460ae39e91bc002bf42f9"
+ *                  - "653460ae39e91bc002bf42fa"
+ *              
+ *              - id: "653460ae39e91bc002bf42f2"
+ *                nombre: "Maria"
+ *                correo: "maria@example.com"
+ *                contrasena: "$2a$10$tzUI6s7ajVJIM2ukmwhed.CZACun7iDJcGAwu3g4jLZaYBK/vSdtS"
+ *                cursosAlumno:
+ *                  - "653460ae39e91bc002bf42f6"
+ *                cursosDocente: []
+ *                grupos:
+ *                  - "653460ae39e91bc002bf42f9"
+ *      401:
+ *        description: El usuario no esta autorizado o expiro su token
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Token expirado o no valido 
+ *      500:
+ *        description: Ha ocurrido un error imprevisto
+ *        content:
+ *          application/json:
+ *            example:
+ *              error: Ocurrio un problema inesperado 
+*/
+router.get("/usuarios", controller.getAllUsuarios);
+
 export default router;

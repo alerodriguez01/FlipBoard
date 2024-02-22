@@ -96,14 +96,13 @@ const AlumnosTable = (props: TableProps) => {
   }, []);
 
   return (
-    <PaginatedTable
-      className={""}
-      label={"Tabla de alumnos"}
-      idCurso={props.idCurso}
-      endpoint={endpoints.getAllAlumnos(props.idCurso)}
-      itemType={"alumno"}
-      renderCell={(item, cKey) => renderCell(item, cKey)}
-      headerRightContent={props.editable &&
+    <PaginatedTable 
+      className={""} 
+      label={"Tabla de alumnos"} 
+      endpoint={endpoints.getAllAlumnos(props.idCurso)} 
+      itemType={"alumno"} 
+      renderCell={(item, cKey) => renderCell(item,cKey)}
+      headerRightContent={ props.editable &&
         <div className="flex gap-3">
           <Button variant="faded" startContent={<PersonAddIcon theme={currentTheme} />} onPress={() => props.onAgregarAlumnoPress?.()}>Agregar alumnos</Button>
           <Button variant="faded" startContent={<RubricaIcon toggle={true} theme={currentTheme} />} onPress={() => props.onAsignarRubricaPress?.()}>Asignar rúbrica</Button>

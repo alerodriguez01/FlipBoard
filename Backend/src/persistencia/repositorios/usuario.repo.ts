@@ -78,5 +78,8 @@ export class UsuarioRepository implements UsuarioDataSource {
         return await this.usuarioDAO.deleteUsuario(idUsuario);
     }
 
-    // demas metodos
+    async getUsuariosPaginated(nombre: string, limit: number, offset: number): Promise<{count: number, result: Usuario[]} | null>{
+        return await this.usuarioDAO.getUsuariosPaginated(nombre, limit, offset);
+    }
+
 }
