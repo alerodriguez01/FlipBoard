@@ -80,7 +80,7 @@ async function createUsuario(user: Usuario) {
 /*
     Actualizar un usuario
 */
-async function updateUsuario(token: string, idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean) {
+async function updateUsuario(token: string, idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean, correo?: string) {
 
     // decode token and get the if is superuser and its id
     let isSuperUser = false
@@ -103,6 +103,9 @@ async function updateUsuario(token: string, idUsuario: string, nombre?: string, 
     if (nombre && !nombre.match(/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/))
         throw new InvalidValueError('Usuario', 'Nombre o apellido');
 
+    if(correo && (!validator.default.isEmail(correo) || correo.startsWith('google|')))
+        throw new InvalidValueError('Usuario', 'Correo');
+
     if (contrasena) {
         /**
          * Criterios password:
@@ -122,7 +125,7 @@ async function updateUsuario(token: string, idUsuario: string, nombre?: string, 
         contrasena = await bcryptjs.hash(contrasena, salt.salt);
     }
 
-    return await usuarioRepository.updateUsuario(idUsuario, nombre, contrasena, superUser);
+    return await usuarioRepository.updateUsuario(idUsuario, nombre, contrasena, superUser, correo);
 }
 
 /*
