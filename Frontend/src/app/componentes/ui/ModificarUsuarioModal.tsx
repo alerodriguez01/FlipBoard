@@ -60,8 +60,8 @@ const ModificarUsuarioModal = (props: ModalProps) => {
               method: 'PATCH',
               body: JSON.stringify({
                 nombre: data.nombre,
-                correo: data.correo,
-                contrasena: data.contrasena,
+                correo: props.user.correo.startsWith("google|") ? undefined : data.correo,
+                contrasena: props.user.correo.startsWith("google|") ? undefined : data.contrasena,
                 superUser: data.superUser ?? false
               }),
               headers: {
@@ -75,7 +75,9 @@ const ModificarUsuarioModal = (props: ModalProps) => {
               return;
             }
             
-            props.onUsuarioModificado?.({correo: data.correo, nombre: data.nombre});
+            const correoToSet = props.user.correo.startsWith("google|") ? props.user.correo : data.correo;
+
+            props.onUsuarioModificado?.({correo: correoToSet, nombre: data.nombre});
             onClose();
       
           } catch (err) {

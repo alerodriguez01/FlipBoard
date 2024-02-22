@@ -312,7 +312,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
           // idProvider: idProvider,
         },
         update: {
-          nombre: nombre.toLowerCase(),
+          // nombre: nombre.toLowerCase(),
           correo: correoProvider
         }
       })
