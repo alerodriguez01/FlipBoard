@@ -1,10 +1,11 @@
-import { Calificacion } from '@/lib/types'
+import { Calificacion, Usuario } from '@/lib/types'
 import { toMayusFirstLetters } from '@/lib/utils'
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea } from '@nextui-org/react'
 import React from 'react'
 import { RubricaGrid } from './RubricaGrid'
 import endpoints from '@/lib/endpoints'
 import { useSession } from 'next-auth/react'
+import useSWR from 'swr'
 
 type CalificacionModalProps = {
   isOpen: boolean,
@@ -13,6 +14,11 @@ type CalificacionModalProps = {
 }
 
 const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionModalProps) => {
+
+  const { data: session, status } = useSession();
+
+  const { data: docente, error, isLoading } = useSWR<Usuario>(isOpen && session && process.env.NEXT_PUBLIC_BACKEND_URL + endpoints.getUserById(calificacion?.docenteId || ""),
+        (url: string) => fetch(url, { headers: { "Authorization": session?.user.token || "" } }).then(res => res.json()));
   
   const nombreRubrica = toMayusFirstLetters(calificacion?.rubricaModel?.nombre || "")
   const tipo = calificacion?.muralId ? ("Mural (" + (calificacion?.grupoId ? `grupal)` : "individual)"))
@@ -36,8 +42,6 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
 
   const [downloadError, setDownloadError] = React.useState("");
   const [downloading, setDownloading] = React.useState(false);
-
-  const { data: session, status } = useSession();
 
   const handleDescargar = async () => {
     setDownloadError("");
@@ -95,6 +99,7 @@ const CalificacionModal = ({ isOpen, onOpenChange, calificacion }: CalificacionM
                   </ul>
                   <aside className='flex flex-col justify-between'>
                     <p><span className='font-semibold'>Fecha de calificación:</span> {fechaAMostrar}</p>
+                    <p><span className='font-semibold'>Docente: </span>{toMayusFirstLetters(docente?.nombre || "")}</p>
                     { calificacion?.muralId &&
                       <Button 
                         color='primary' variant='light' className='ml-auto w-fit italic p-2'
