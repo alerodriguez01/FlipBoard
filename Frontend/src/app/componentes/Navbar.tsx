@@ -20,6 +20,14 @@ const Navbar = () => {
 
   const isDocente = session?.user.cursosDocente.includes(cursoId); // ACA NO HAY QUE AGREGAR CONDICION DE SUPERUSER
 
+  const inicialesNombre = () => {
+    const words = nombreUser?.split(" ") || []
+    if (words.length > 2) {
+      return words[0][0] + words[1][0]
+    }
+    return words.flatMap((word: string) => word[0])
+  }
+
   const { isOpen: isModificar, onOpen: onModificarOpen, onOpenChange: onModificarOpenChange } = useDisclosure();
 
   const handleCerrarSesion = async () => {
@@ -54,32 +62,32 @@ const Navbar = () => {
               <>
                 {session?.user.imagen ?
                   <img src={session?.user.imagen} alt="Imagen del usuario" className="w-20 h-20 rounded-full mb-1 shadow-md shadow-gray-600" />
-                :
-                <div className="flex items-center justify-center min-w-[80px] min-h-[80px] rounded-full border-2 bg-gray-800 shadow-md shadow-gray-600 mb-1">
-                  <p className="text-2xl">
-                    {(nombreUser?.split(" ").flatMap((word: string) => word[0]))}
-                  </p>
-                </div>}
-                
+                  :
+                  <div className="flex items-center justify-center min-w-[80px] min-h-[80px] rounded-full border-2 bg-gray-800 shadow-md shadow-gray-600 mb-1">
+                    <p className="text-2xl">
+                      {inicialesNombre()}
+                    </p>
+                  </div>}
+
                 <a href="#" className="group" onClick={() => onModificarOpen()}>
                   <div className="flex flex-row place-items-center">
                     <h2 className="font-medium text-center group-hover:underline">
                       {(nombreUser)}
                     </h2>
-                    <EditIcon className="hidden group-hover:block" theme={'light'} size="sm"/>
+                    <EditIcon className="hidden group-hover:block" theme={'light'} size="sm" />
                   </div>
-                
+
                 </a>
-                
+
                 {pathname.startsWith('/cursos/') && !session?.user.superUser ?
                   <p className="text-gray-400">
                     {isDocente ? "Docente" : "Estudiante"}
                   </p>
                   :
                   session?.user.superUser ?
-                    <p className="text-gray-400">Administrador</p> : <br/>
+                    <p className="text-gray-400">Administrador</p> : <br />
                 }
-                
+
               </>
           }
 
@@ -119,7 +127,7 @@ const Navbar = () => {
           </Link>
           {session?.user.superUser &&
             <Link href="/usuarios"
-            className={`${pathname === '/usuarios' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+              className={`${pathname === '/usuarios' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
             >
               Ver usuarios
             </Link>
@@ -127,12 +135,12 @@ const Navbar = () => {
         </div>
 
       </section>
-      
+
       <footer className="flex flex-col gap-1 w-full">
         <Link href="/ayuda"
-              className={`${pathname === '/ayuda' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
-            >
-              Ayuda
+          className={`${pathname === '/ayuda' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+        >
+          Ayuda
         </Link>
         <div className="border-l-1 border-gray-600">
           <Button
@@ -145,8 +153,8 @@ const Navbar = () => {
         </div>
       </footer>
       {!!session?.user &&
-        <ModificarUsuarioModal 
-          isOpen={isModificar} onOpenChange={onModificarOpenChange} 
+        <ModificarUsuarioModal
+          isOpen={isModificar} onOpenChange={onModificarOpenChange}
           user={session.user} sessionUser={session.user} showExtraFields={session.user.superUser}
           onUsuarioModificado={async (userData) => {
             await update({
@@ -156,8 +164,8 @@ const Navbar = () => {
                 nombre: userData.nombre,
                 correo: userData.correo
               }
-      });
-          }}/>
+            });
+          }} />
       }
 
     </aside>
