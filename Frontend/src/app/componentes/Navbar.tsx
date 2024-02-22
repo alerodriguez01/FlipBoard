@@ -60,13 +60,15 @@ const Navbar = () => {
                 <h2 className="font-medium text-center">
                   {(nombreUser)}
                 </h2>
-                {pathname.startsWith('/cursos/') ?
+                {pathname.startsWith('/cursos/') && !session?.user.superUser ?
                   <p className="text-gray-400">
                     {isDocente ? "Docente" : "Estudiante"}
                   </p>
                   :
-                  <br />
+                  session?.user.superUser ?
+                    <p className="text-gray-400">Administrador</p> : <br/>
                 }
+                
               </>
           }
 
