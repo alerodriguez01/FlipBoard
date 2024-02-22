@@ -2,7 +2,7 @@
 
 # IT IS NECESSARY TO BE IN THIS DIRECTORY (docker/production) TO RUN THE SCRIPT
 
-export FLIPBOARD_VERSION=1.1.1
+export FLIPBOARD_VERSION=latest
 
 # 1. build images
 docker build -t docker-nextjs --platform linux/amd64 ../../Frontend --target prod
