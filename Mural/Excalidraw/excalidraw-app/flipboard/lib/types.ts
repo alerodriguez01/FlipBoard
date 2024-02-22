@@ -21,6 +21,7 @@ export type Usuario = {
     cursosDocente: string[];
     grupos: string[];
     token: string; // cuando hace el login, retorna el token en el body tmb
+    superUser?: boolean,
 } & Error;
 export type Session = { 
     loggedIn: boolean,
