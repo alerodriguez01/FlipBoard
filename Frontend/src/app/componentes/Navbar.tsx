@@ -1,15 +1,17 @@
 "use client"
 
 import Link from "next/link"
-import { Button, Divider } from "@nextui-org/react";
+import { Button, Divider, useDisclosure } from "@nextui-org/react";
 import { usePathname } from 'next/navigation'
 import { signOut, useSession } from "next-auth/react";
 import { Spinner as SpinnerNextUI } from "@nextui-org/react";
+import { EditIcon } from "./ui/icons/EditIcon";
+import ModificarUsuarioModal from "./ui/ModificarUsuarioModal";
 
 
 const Navbar = () => {
 
-  const { data: session, status } = useSession(); // https://next-auth.js.org/getting-started/client#usesession
+  const { data: session, status, update } = useSession(); // https://next-auth.js.org/getting-started/client#usesession
 
   const nombreUser = session?.user.nombre.split(" ").flatMap((word: string) => word[0].toUpperCase() + word.slice(1)).join(" ")
 
@@ -17,6 +19,8 @@ const Navbar = () => {
   const cursoId = pathname.split("/")[2] // si estoy en una ruta que no tiene cursoId, esto va a ser undefined
 
   const isDocente = session?.user.cursosDocente.includes(cursoId); // ACA NO HAY QUE AGREGAR CONDICION DE SUPERUSER
+
+  const { isOpen: isModificar, onOpen: onModificarOpen, onOpenChange: onModificarOpenChange } = useDisclosure();
 
   const handleCerrarSesion = async () => {
 
@@ -56,10 +60,17 @@ const Navbar = () => {
                     {(nombreUser?.split(" ").flatMap((word: string) => word[0]))}
                   </p>
                 </div>}
-
-                <h2 className="font-medium text-center">
-                  {(nombreUser)}
-                </h2>
+                
+                <a href="#" className="group" onClick={() => onModificarOpen()}>
+                  <div className="flex flex-row place-items-center">
+                    <h2 className="font-medium text-center group-hover:underline">
+                      {(nombreUser)}
+                    </h2>
+                    <EditIcon className="hidden group-hover:block" theme={'light'} size="sm"/>
+                  </div>
+                
+                </a>
+                
                 {pathname.startsWith('/cursos/') && !session?.user.superUser ?
                   <p className="text-gray-400">
                     {isDocente ? "Docente" : "Estudiante"}
@@ -133,7 +144,21 @@ const Navbar = () => {
           </Button>
         </div>
       </footer>
-      
+      {!!session?.user &&
+        <ModificarUsuarioModal 
+          isOpen={isModificar} onOpenChange={onModificarOpenChange} 
+          user={session.user} sessionUser={session.user} showExtraFields={session.user.superUser}
+          onUsuarioModificado={async (userData) => {
+            await update({
+              ...session,
+              user: {
+                ...session?.user,
+                nombre: userData.nombre,
+                correo: userData.correo
+              }
+      });
+          }}/>
+      }
 
     </aside>
   )
