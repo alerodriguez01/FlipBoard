@@ -106,6 +106,13 @@ const Navbar = () => {
           >
             Mis rúbricas
           </Link>
+          {session?.user.superUser &&
+            <Link href="/usuarios"
+            className={`${pathname === '/usuarios' ? "border-l-4 border-gray-600" : ""} p-3 text-sm hover:bg-gray-600 hover:bg-opacity-10`}
+            >
+              Ver usuarios
+            </Link>
+          }
         </div>
 
       </section>
