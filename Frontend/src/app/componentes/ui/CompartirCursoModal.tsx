@@ -15,7 +15,8 @@ type CompartirCursoModalProps = {
     isOpen: boolean,
     onOpenChange: () => void,
     cursoId: string,
-    cursoTitle: string
+    cursoTitle: string,
+    onClose?: () => void
 }
 
 type TokenAnadirCurso = {
@@ -35,7 +36,7 @@ const fetcher = (url: string, idDocente: string, token: string) => (
 )
 
 
-const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: CompartirCursoModalProps) => {
+const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle, onClose }: CompartirCursoModalProps) => {
 
     const { theme, systemTheme, setTheme } = useTheme()
     const currentTheme = theme === "system" ? systemTheme : theme
@@ -43,7 +44,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
     const { data: session } = useSession()
 
     // fetch al backend para obtener el token
-    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(`${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${cursoId}`, (url: string) => fetcher(url, session?.user.id ?? "", session?.user.token ?? ""))
+    const { data, isLoading, error } = useSWR<TokenAnadirCurso>(cursoId && `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/token/cursos/${cursoId}`, (url: string) => fetcher(url, session?.user.id ?? "", session?.user.token ?? ""))
     const urlQr = `${process.env.NEXT_PUBLIC_FRONTEND_URL}/api/cursos/${cursoId}?token=${data?.token}`
 
     const [textCopied, setTextCopied] = useState(false)
@@ -81,6 +82,7 @@ const CompartirCursoModal = ({ isOpen, onOpenChange, cursoId, cursoTitle }: Comp
         if (!isOpen) {
             // reiniciar el estado del modal si se cierra
             setResetState(true)
+            onClose?.();
         }
 
         // funcion del hook para cerrar el modal

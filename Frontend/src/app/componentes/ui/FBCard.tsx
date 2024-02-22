@@ -37,7 +37,7 @@ const FBCard = (props: FBProps) => {
                   <ThreeDotsVerticalIcon />
                 </Button>
               </DropdownTrigger>
-              <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()}>
+              <DropdownMenu items={props.dropDownItems} onAction={(key) => props.dropDownItems.find(di => di.key === key)?.onAction()} aria-label="drop">
                 {(item: any) => (
                   <DropdownItem
                     key={item.key}
