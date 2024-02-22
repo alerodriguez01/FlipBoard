@@ -760,6 +760,9 @@ const ExcalidrawWrapper = () => {
   // obtengo el token del usuario logueado para hacer las peticiones al backend
   const jwtBackend = session?.user?.token || "";
 
+  // obtener el usuario desde el backend para verificar si existe
+  const { data: usuario, error: errorUsuario, isLoading: isLoadingUsuario } = useSWR<Usuario>(!isLoadingSession && `${FLIPBOARD_BACKEND}/api/usuarios/${session?.user?.id}`, (url: string) => fetch(url, { headers: { "Authorization": jwtBackend } }).then(res => res.json()));
+
   // obtengo el mural
   const { data: mural, error: errorMural, isLoading: isLoadingMural } = useSWR<Mural>(!isLoadingSession && `${FLIPBOARD_BACKEND}/api/cursos/murales/${idMural}?rubrica=true`, (url: string) => fetch(url, { headers: { "Authorization": jwtBackend } }).then(res => res.json()));
 
@@ -775,6 +778,15 @@ const ExcalidrawWrapper = () => {
   useEffect(() => {
     if (session?.user?.nombre && collabAPI) collabAPI.setUsername(formatNombre(session.user.nombre))
   }, [session, collabAPI])
+
+  // si no existe el usuario en el backend (el superuser lo elimino), muestro un mensaje de error
+  if (!isLoadingUsuario && usuario?.error)
+    return (
+      <section className="flex flex-col justify-center items-center h-full w-full">
+        <h1>No tienes acceso a este mural</h1>
+        <a href={`${FLIPBOARD_FRONTEND}/cursos`} className="text-blue-600 hover:underline">Volver a FlipBoard</a>
+      </section>
+    )
 
   // si no existe el mural o el curso, muestro un mensaje de error
   if ((!isLoadingMural && mural?.error) || (!isLoadingCurso && curso?.error)) return errorEntidadInexistente(!mural?.error, !curso?.error)
@@ -976,7 +988,7 @@ const ExcalidrawWrapper = () => {
             </Sidebar.Tab>
 
             <Sidebar.Tab tab="grupos" className="max-h-[calc(99vh-117px)] overflow-auto my-2">
-              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tokenBackend={jwtBackend}  tipo="Grupo" />
+              <EvaluarMural api={excalidrawAPI} rubrica={mural?.rubricaModel} theme={theme} idCurso={idCurso || ""} idMural={idMural || ""} idUser={session?.user?.id || ""} tokenBackend={jwtBackend} tipo="Grupo" />
             </Sidebar.Tab>
 
 
