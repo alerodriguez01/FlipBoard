@@ -42,7 +42,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
   }
 
   // Actualizar usuario
-  async updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean): Promise<Usuario> {
+  async updateUsuario(idUsuario: string, nombre?: string, contrasena?: string, superUser?: boolean, correo?: string): Promise<Usuario> {
 
     let query: any = {
       where: { id: idUsuario },
@@ -52,6 +52,7 @@ export class UsuarioPrismaDAO implements UsuarioDataSource {
     if (nombre) query.data.nombre = nombre.toLowerCase();
     if (contrasena) query.data.contrasena = contrasena;
     if (superUser !== undefined) query.data.superUser = superUser;
+    if (correo) query.data.correo = correo;
 
     try {
       return await this.prisma.usuario.update(query);

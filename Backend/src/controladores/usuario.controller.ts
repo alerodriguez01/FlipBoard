@@ -59,10 +59,10 @@ async function createUsuario(req: Request, res: Response) {
 async function updateUsuario(req: Request, res: Response) {
 
     const idUsuario = req.params.idUsuario;
-    const { nombre, contrasena, superUser } = req.body;
+    const { nombre, contrasena, superUser, correo } = req.body;
 
     // si no hay nada para actualizar
-    if (!nombre && !contrasena && superUser === undefined) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
+    if (!nombre && !contrasena && superUser === undefined && !correo) return res.status(400).json({ error: 'El body no contiene los campos necesarios' });
 
     // get token from header
     const token = req.header('Authorization');
@@ -70,7 +70,7 @@ async function updateUsuario(req: Request, res: Response) {
 
     // update the user
     try {
-        const userUpdated = await service.updateUsuario(token, idUsuario, nombre, contrasena, superUser);
+        const userUpdated = await service.updateUsuario(token, idUsuario, nombre, contrasena, superUser, correo);
         return res.status(201).json(userUpdated);
     } catch (error) {
         if (error instanceof InvalidValueError) return res.status(400).json({ error: error.message });
