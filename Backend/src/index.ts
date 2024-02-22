@@ -9,6 +9,7 @@ import alumnoRouter from "./rutas/alumno.route.js";
 import grupoRouter from "./rutas/grupo.route.js";
 import { routerCurso as rubricaRouterCurso } from "./rutas/rubrica.route.js";
 import { routerUsuario as rubricaRouterUsuario } from "./rutas/rubrica.route.js";
+import { routerRubrica as rubricaRouter } from "./rutas/rubrica.route.js";
 import calificacionRouter from "./rutas/calificacion.route.js";
 import cookieParser from "cookie-parser";
 import swaggerUi from "swagger-ui-express";
@@ -76,6 +77,9 @@ app.use("/api/usuarios", rubricaRouterUsuario)
 
 // Rutas de autenticacion
 app.use("/api/auth", authRouter)
+
+// Rutas de rubricas
+app.use("/api/rubricas", rubricaRouter);
 
 
 // Cargar datos iniciales en la base de datos

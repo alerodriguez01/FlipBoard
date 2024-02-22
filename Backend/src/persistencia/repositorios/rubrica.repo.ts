@@ -59,5 +59,9 @@ export class RubricaRepository implements RubricaDataSource {
         return await this.rubricaDAO.deleteRubricaById(idRubrica);
     }
 
+    async getAllRubricas(): Promise<Rubrica[] | null> {
+        return await this.rubricaDAO.getAllRubricas();
+    }
+
     // demas metodos
 }

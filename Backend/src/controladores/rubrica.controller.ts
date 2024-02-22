@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import service from "../servicios/rubrica.service.js";
 import { Rubrica } from "@prisma/client";
 import { InvalidValueError, NotFoundError } from "../excepciones/RepoErrors.js";
+import { NotAuthorizedError } from "../excepciones/ServiceErrors.js";
 
 /*
     Obtener rubrica por id
@@ -169,8 +170,23 @@ async function deleteRubricaById(req: Request, res: Response) {
     }
 }
 
+async function getAllRubricas(req: Request, res: Response) {
+
+    // get token from header
+    const token = req.header('Authorization');
+    if (!token) return res.status(401).json({ error: 'Token expirado o no valido' });
+
+    try {
+        const rubs = await service.getAllRubricas(token);
+        return res.status(200).json(rubs);
+    } catch (error) {
+        if (error instanceof NotAuthorizedError) return res.status(401).json({ error: error.message });
+        return res.status(500).json({ error: "Ocurrio un problema inesperado" });
+    }
+}
+
 export default {
     getRubricaById, createRubrica, getAllRubricasByUserId,
     getRubricasAlumnosFromCurso, getRubricasGruposFromCurso, asociateRubricaAlumnosToCurso,
-    asociateRubricaGruposToCurso, deleteRubricaById
+    asociateRubricaGruposToCurso, deleteRubricaById, getAllRubricas
 };
