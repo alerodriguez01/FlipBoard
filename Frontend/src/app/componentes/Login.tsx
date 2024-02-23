@@ -40,12 +40,20 @@ export default function Login() {
 
     return true
   }
-  
 
+  // Si ya esta logueado, redirijo a la pagina que me pasaron por parametro o a la pagina de cursos
+  if (session) router.push(callbackUrl)
+
+  // useEffect que se ejecuta cuando se renderiza el componente y que tiene como dependencia a status. 
+  // Si pasan mas de 5 segundos y el status es authenticated, recargo la pagina.
+  // Es la unica manera de solucionar un bug de nextauth. https://github.com/alerodriguez01/FlipBoard/issues/197 
+  // A otros le paso lo mismo: https://github.com/nextauthjs/next-auth/issues/8424 y no encontraron solucion.
   useEffect(() => {
-    // Si ya esta logueado, redirijo a la pagina que me pasaron por parametro o a la pagina de cursos
-    if (session) router.push(callbackUrl)
-  }, [session])
+    const timer = setTimeout(() => {
+      if (status === 'authenticated') window.location.reload()
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [status])
 
   return (
     <section className={"flex flex-col items-center gap-3 p-8 h-fit my-5" + (status === 'unauthenticated' || sessionHasExpired() ? " border-2 border-gray-700 shadow-md shadow-gray-400 rounded" : "")}>
