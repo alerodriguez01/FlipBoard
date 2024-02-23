@@ -142,11 +142,11 @@ const CrearModificarCursoModal = (props: { isOpen: boolean, onOpenChange: any, i
                   isInvalid={!!errors.contacto}
                   errorMessage={errors.contacto?.message}
                   {...register("contacto")} />
+                
+                <input type="text" className="hidden" {...register("erroresExternos")} />
+                {errors.erroresExternos &&
+                  <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
               </ModalBody>
-
-              <input type="text" className="hidden" {...register("erroresExternos")} />
-              {errors.erroresExternos &&
-                <p className="text-red-500 text-sm">{`${errors.erroresExternos.message}`}</p>}
 
               <ModalFooter className="flex flex-row justify-between items-center">
                 <p className="text-red-600 text-sm">* Campos obligatorios</p>
