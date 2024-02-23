@@ -47,7 +47,7 @@ export default function Usuarios() {
     router.replace(`/cursos`);
 
   return (
-    <section className="p-8">
+    <section className="p-8 overflow-auto">
       <PagesHeader title="Usuarios de la plataforma" searchable={false}/>
       <UsuariosTable
         onEliminarPress={(user) => {setUsuarioSelected(user); onEliminarOpen();}}
