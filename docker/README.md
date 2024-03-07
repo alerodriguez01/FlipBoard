@@ -1,27 +1,17 @@
 # FlipBoard Infraestructure
-Contenedores requeridos para levantar el backend, frontend y la base de datos de FlipBoard.
+Contenedores requeridos para desplegar la plataforma.
 
-> Fuente para usar prisma con docker: https://www.youtube.com/watch?v=mj5MxsEiHe8
-
-
-## Inicialización
-
-Shortcut:
-```bash
-cd ../Backend && npm install && cd ../Frontend && npm install && cd ../docker && docker-compose up -d
-```
-
-1. Instalar las dependencias de cada proyecto (backend y frontend):
-```bash
-cd ../Backend && npm install && cd ../Frontend && npm install && cd ../docker
-```
-
-2. Buildear y correr los contenedores desde `./docker`:
+## Desarrollo
+Para levantar todos los contenedores de la plataforma en modo *dev*, ejecutar el [compose.yaml](compose.yaml):
 ```bash
 docker-compose up -d
 ```
+> Nota: esto instalará las dependencias dentro de cada contenendor. En caso de instalar una nueva dependencia, debe eliminarse la imagen del respectivo contenedor y *buildearlo* nuevamente, dado que el volumen montado NO incluye las dependencias descargadas.
 
-3. Cargar la base de datos en Mongo:
-```bash
-docker exec api npx prisma db push --schema=./database/prisma/schema.prisma
-```
+> Para que el IDE reconozca las dependencias, es necesario instalarlas manualmente, ejecutando `npm install` dentro de [Backend](../Backend) y [Frontend](../Frontend), y `yarn` dentro de [Excalidraw](../Mural/Excalidraw) y [RoomWebSocket](../Mural/RoomWebSocket).
+
+El *hot reload* está habilitado en todos los contenedores.
+
+
+## Producción
+Las instrucciones para desplegar la plataforma en producción se encuentran en el directorio [production](./production).
