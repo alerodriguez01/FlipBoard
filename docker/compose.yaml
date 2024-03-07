@@ -54,18 +54,20 @@ services:
       - ./../Backend:/app
       - /app/node_modules
 
-  # nextjs:
-  #   container_name: frontend
-  #   build: 
-  #     context: ./../Frontend
-  #     target: dev
-  #   ports:
-  #    - 3000:3000
-  #   networks:
-  #     - mynetwork
-  #   volumes:
-  #     - ./../Frontend:/app
-  #     - /app/node_modules
+  nextjs:
+    container_name: frontend
+    build: 
+      context: ./../Frontend
+      target: dev
+    ports:
+     - 3000:3000
+    environment: # Enable this for live reload on Mac os (reload takes 4.4 seconds) https://github.com/vercel/next.js/issues/36774#issuecomment-1757580349
+      - WATCHPACK_POLLING=true
+    networks:
+      - mynetwork
+    volumes:
+      - ./../Frontend:/app
+      - /app/node_modules
 
   mural-room-web-socket:
     container_name: mural-room-web-socket
