@@ -32,7 +32,7 @@
   </h1>
 </div>
 
-<video controls src="/docs/presentation.mp4" title="FlipBoard Presentation"></video>
+<img src="/docs/presentation.gif" width="100%" height="100%">
 
 # Features
 - 🆓&nbsp;De código abierto y uso gratuito.
