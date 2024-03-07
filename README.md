@@ -30,10 +30,20 @@
         </a>
     </p>
   </h1>
-  
 </div>
 
+<video controls src="/docs/presentation.mp4" title="FlipBoard Presentation"></video>
+
 # Features
+- 🆓&nbsp;De código abierto y uso gratuito.
+- 🧑‍🏫&nbsp;Gestión de cursos.
+- 🎨&nbsp;Murales colaborativos de [**_Excalidraw_**](https://github.com/excalidraw/excalidraw).
+- 👥&nbsp;Gestión de alumnos y grupos.
+- 📝&nbsp;Evaluación a través de rúbricas.
+- 📊&nbsp;Gestión de calificaciones.
+- 👮&nbsp;Usuario administrador.
+- 🌓&nbsp;Modo oscuro.
+
 
 # Sobre el proyecto
 ## Contribuidores
