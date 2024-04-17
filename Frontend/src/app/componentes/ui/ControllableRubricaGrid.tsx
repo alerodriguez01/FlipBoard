@@ -105,6 +105,7 @@ const ControllableRubricaGrid = React.forwardRef((props: GridProps, ref: any) =>
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': session?.user.token || ''
         }
       });
 
